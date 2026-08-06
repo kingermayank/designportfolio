@@ -1,49 +1,2330 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Koto style system */
+  --color-canvas: #161616;
+  --color-surface: #242424;
+  --color-border: #303030;
+  --color-faint: #595959;
+  --color-muted: #989898;
+  --color-body: #b4b4b4;
+  --color-text: #ffffff;
+  --color-accent: #ffe800;
+  --color-accent-orange: #ff6a1f;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  /* Spacing — 4px base (DESIGN.md) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 36px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-section: 90px;
+  --space-media: 14px;
+  --space-bar: 120px;
 
-html {
-  height: 100%;
-}
+  /* Radii */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-pill: 999px;
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+  /* Type roles
+     Display (Greed Narrow): 400 Regular at large sizes, 600 SemiBold for page titles
+     Body (Geist): 400 Regular copy, 500 Medium labels/active, 600 SemiBold headings */
+  --font-display: var(--font-greed-narrow), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-geist), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --text-display-lg: 44px;
+  --text-display: 36px;
+  --text-display-sm: 30px;
+  --text-lede: 16px;
+  --text-heading: 16px;
+  --text-body: 14px;
+  --text-ui: 13px;
+  --text-caption: 11px;
 
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* App aliases */
+  --bg: var(--color-canvas);
+  --window: var(--color-canvas);
+  --surface: var(--color-surface);
+  --border: var(--color-border);
+  --text: var(--color-text);
+  --body-text: var(--color-body);
+  --muted: var(--color-muted);
+  --faint: var(--color-faint);
 }
 
 * {
   box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
   padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--body-text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+.stage {
+  height: 100vh;
+  padding: 0;
+}
+
+.window {
+  width: 100%;
+  height: 100%;
+  background: var(--window);
+  display: flex;
+  overflow: hidden;
+}
+
+/* ---------- Canvas ---------- */
+
+.canvasWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  background: var(--window);
+}
+
+.scroller {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-7) var(--space-media) var(--space-bar);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-media);
+  align-items: stretch;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-media);
+  justify-content: flex-start;
+}
+
+.tile {
+  border-radius: var(--radius-lg);
+  cursor: zoom-in;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.tileFill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.tile.focal {
+  cursor: zoom-out;
+}
+
+.selectRing {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-text);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* ---------- Floating controls ---------- */
+
+.bottomBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  pointer-events: none;
+  padding: 0 var(--space-4);
+}
+
+.segmented {
+  pointer-events: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+}
+
+.segmented button {
+  position: relative;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 150ms ease;
+}
+
+.segmented button.active {
+  color: var(--text);
+}
+
+.segThumb {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-surface) 82%, #fff 4%);
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 8%, transparent);
+}
+
+.segLabel {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Mode transition ---------- */
+
+.viewLayer {
+  position: absolute;
+  inset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .riseInner,
+  .csTitleLayer,
+  .csDescLayer,
+  .csList,
+  .csDetail,
+  .csFade,
+  .csNextText,
+  .csNavItem,
+  .csCursorChip,
+  .segmented button {
+    transition: none;
+  }
+}
+
+.zoomCtl {
+  pointer-events: auto;
+  position: absolute;
+  right: var(--space-4);
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+  border-radius: var(--radius-pill);
+  padding: 10px 14px;
+  color: var(--muted);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+}
+
+.zoomCtl input[type="range"] {
+  width: 108px;
+  height: 3px;
+  accent-color: var(--color-muted);
+  cursor: pointer;
+}
+
+.zoomDivider {
+  width: 1px;
+  height: 14px;
+  background: var(--color-border);
+}
+
+/* ---------- Case studies (koto-style) ---------- */
+
+.csRoot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--window);
+}
+
+/* Work → case: thumbnail expands into the right-side hero */
+.caseOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: auto;
+}
+
+.csRoot.csFromWork {
+  background: transparent;
+}
+
+.csRoot.csFromWorkSolid {
+  background: var(--window);
+}
+
+.csWorkScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--window);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.mono {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.csList,
+.csDetail {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition:
+    opacity 300ms ease,
+    transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.csList.faded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Back-navigation: incoming list rises gently as it fades in */
+.csList.entering {
+  transform: translateY(16px);
+}
+
+/* Outgoing detail page fades out fast, koto-style */
+.csDetail.closing {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 200ms;
+}
+
+.csListInner,
+.csDetailInner {
+  display: flex;
+  align-items: flex-start;
+}
+
+.csPanel {
+  width: 36%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--space-media);
+  padding-left: var(--space-5);
+  padding-right: var(--space-5);
+}
+
+.csBrand {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.csDot {
+  color: var(--color-accent-orange);
+}
+
+.csBio {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.csWorkBlock {
+  margin-top: auto;
+  margin-bottom: var(--space-media);
+  display: flex;
+  flex-direction: column;
+}
+
+.csTitleMask {
+  position: relative;
+  overflow: hidden;
+}
+
+.csTitleLayer {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.csDescWrap {
+  margin-top: var(--space-5);
+  display: grid;
+}
+
+.csDescLayer {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.csDesc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.csMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-media);
+}
+
+.csThumb {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.csTagline {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.csYear {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  margin-top: var(--space-1);
+}
+
+.csTiles {
+  width: 64%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-media);
+  padding: var(--space-media) var(--space-media) 45vh 0;
+}
+
+.csTile {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  cursor: none;
+}
+
+.csFill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.csYoutube {
+  border: 0;
+  object-fit: unset;
+  pointer-events: auto;
+}
+
+/* Detail */
+
+.csDetailPanel {
+  width: 25%; /* 3 of 12 — same as Work 1 left rail */
+  padding-top: var(--space-8);
+  padding-right: var(--space-5);
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+}
+
+.csDetailPanel:has(.csBack) {
+  padding-top: calc(var(--space-8) - 40px);
+}
+
+.csDetailPanel:not(:has(.csBack)) {
+  padding-top: var(--space-5);
+}
+
+.riseMask {
+  overflow: hidden;
+}
+
+.riseInner {
+  will-change: transform;
+}
+
+.csDetailHead {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.csDetailPanel:not(:has(.csBack)) .csDetailHead {
+  margin-top: 0;
+}
+
+.csBack {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: 8px 14px 8px 10px;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.csBack:hover {
+  background: #2e2e2e;
+  border-color: #3d3d3d;
+}
+
+.csFade {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.csFade.in {
+  opacity: 1;
+}
+
+.csNav .riseMask {
+  display: block;
+}
+
+.csDetailTitle {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.csDetailTitleCesare {
+  font-family: var(--font-cesare), "Times New Roman", serif;
+  font-size: clamp(36px, 3.2vw, 48px);
+  font-weight: 400;
+  line-height: calc(1.12em - 5px);
+  letter-spacing: normal;
+}
+
+.csHighlights {
+  margin-top: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.csHighlightLabel {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--highlight-accent, #c4b5e0);
+  margin-bottom: var(--space-2);
+}
+
+.csHighlightBody {
+  margin: 0;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.csWebsiteCta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-7);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: #ff0257;
+  color: #fff;
+  cursor: pointer;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+  padding: 11px 16px 11px 18px;
+  transition:
+    filter 150ms ease,
+    transform 150ms ease;
+}
+
+.csWebsiteCta:hover {
+  filter: brightness(1.08);
+}
+
+.csWebsiteCta:active {
+  transform: scale(0.98);
+}
+
+.csWebsiteCta svg {
+  flex-shrink: 0;
+}
+
+/* Sentence-length display (About) stays Regular — SemiBold is for short titles */
+.aboutGreeting {
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+.csDetailSub {
+  margin-top: var(--space-3);
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.csDetailMeta {
+  margin-top: var(--space-3);
+  color: var(--muted);
+}
+
+.csDetailTagline {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.csDetailYear {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+  margin-top: var(--space-4);
+}
+
+.csDetailYear.mono {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+}
+
+.csNav {
+  margin-top: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.csNavItem {
+  position: relative;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--faint);
+  transition: color 250ms ease;
+  padding-left: var(--space-media);
+}
+
+.csNavItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: var(--text);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.csNavItem.on {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.csNavItem.on::before {
+  opacity: 1;
+}
+
+.csContent {
+  width: 75%; /* 9 of 12 — same as Work 1 project grid */
+  padding: var(--space-media) var(--space-media) var(--space-bar) 0;
+}
+
+.csHero {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+}
+
+.csHeading {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.csFigure {
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Uniform 8px gutters — same as Work 1 — horizontal + vertical */
+.csMediaRail,
+.csMediaStack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+.csMediaStack {
+  margin-top: 0;
+}
+
+.csMediaSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: stretch;
+}
+
+/*
+ * Default split: left fills the row; row height is owned by the right stack.
+ * Absolute fill media kills left intrinsic height so portrait left media
+ * can't open a dark gap beside shorter right tiles.
+ */
+.csMediaSplit > .csFigure {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.csMediaSplit > .csFigure .csMediaFill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  aspect-ratio: auto !important;
+}
+
+/* Natural-AR split: left keeps its real ratio; right stack sits beside it. */
+.csMediaSplitNatural {
+  align-items: start;
+}
+
+.csMediaSplitNatural > .csFigure {
+  overflow: visible;
+}
+
+.csMediaSplitRight {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.csMediaSplitRight > .csFigure {
+  margin: 0;
+}
+
+.csMediaFill {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto !important;
+}
+
+.csMediaRail .csHero {
+  margin: 0;
+}
+
+/* Work 1–tight gutters: kill the default media top margin inside the rail */
+.csMediaRail .csMedia {
+  margin-top: 0;
+}
+
+.csCaption {
+  display: block;
+  margin: var(--space-3) 0 var(--space-1);
+  color: var(--faint);
+}
+
+.csCredits {
+  margin-top: auto;
+  padding-bottom: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-media);
+}
+
+.csCreditLabel {
+  color: var(--faint);
+  margin-bottom: var(--space-1);
+}
+
+.csCreditValue {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.csSection {
+  margin: var(--space-section) 0;
+}
+
+.csBody {
+  margin: 0 0 var(--space-5);
+  width: 100%;
+  max-width: 42rem;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.csMedia {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  margin-top: var(--space-media);
+}
+
+/* Next-up footer */
+
+.csFooter {
+  position: relative;
+  margin-top: 120px;
+}
+
+.csNextLabel {
+  position: absolute;
+  top: 34%;
+  left: 0;
+  color: var(--muted);
+}
+
+.csNextText {
+  position: absolute;
+  top: 32%;
+  left: 22%;
+  opacity: 0;
+  transition: opacity 350ms ease;
+}
+
+.csNextText.in {
+  opacity: 1;
+}
+
+.csViewAll {
+  position: absolute;
+  top: 8%;
+  right: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.csViewAll:hover {
+  color: var(--text);
+}
+
+.csViewAll span {
+  color: var(--faint);
+}
+
+.csNextTile {
+  position: absolute;
+  overflow: hidden;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  transform-origin: 100% 100%;
+  cursor: none;
+  will-change: transform;
+}
+
+.csClone.out {
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.csClone {
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  border-radius: 4px;
+  z-index: 80;
+  pointer-events: none;
+}
+
+.csCursorChip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 95;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+  padding: 6px 10px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+  white-space: nowrap;
+}
+
+.csList::-webkit-scrollbar,
+.csDetail::-webkit-scrollbar {
+  width: 8px;
+}
+
+.csList::-webkit-scrollbar-thumb,
+.csDetail::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Subtle overlay-style scrollbar */
+.scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroller::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- About ---------- */
+
+.aboutLede {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 0 var(--space-5);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.aboutHero {
+  margin: 0 0 var(--space-7);
+  width: 100%;
+}
+
+.aboutHero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.aboutLink {
+  display: inline-block;
+  color: var(--muted);
+  text-decoration: none;
+  padding: var(--space-1) 0;
+  transition: color 150ms ease;
+}
+
+.aboutLink:hover {
+  color: var(--text);
+}
+
+.aboutPrinciples {
+  width: 100%;
+  max-width: 42rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-3);
+}
+
+.aboutPrincipleTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--space-2);
+}
+
+.aboutPrincipleText {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.aboutQuotes {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.aboutQuote {
+  margin: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+}
+
+.aboutQuote blockquote {
+  margin: 0 0 var(--space-4);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.aboutQuote figcaption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.aboutQuoteAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--color-border);
+}
+
+.aboutQuoteMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.aboutQuoteName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.aboutQuoteRole {
+  color: var(--faint);
+}
+
+.aboutPtoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-media);
+  align-items: start;
+}
+
+.aboutPtoItem {
+  margin: 0;
+}
+
+.aboutPtoItem img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.aboutPtoCaption {
+  display: block;
+  margin-top: var(--space-3);
+  color: var(--faint);
+}
+
+.aboutOutro {
+  padding-bottom: var(--space-bar);
+}
+
+.aboutCta {
+  display: inline-block;
+  margin-left: 0;
+  border: 1px solid var(--color-text);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+
+.aboutCta:hover {
+  background: var(--color-surface);
+}
+
+@media (max-width: 900px) {
+  .aboutQuotes,
+  .aboutPtoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Work (koto.com/work) ---------- */
+
+.workRoot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  background: var(--window);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.workPanel {
+  width: 25%; /* 3 of 12 columns */
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-7) var(--space-5) var(--space-5) var(--space-5);
+  border-right: 1px solid transparent;
+}
+
+.workPanelTop {
+  display: flex;
+  flex-direction: column;
+}
+
+.workTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.workSubtitle {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--body-text);
+  max-width: 22em;
+  text-wrap: pretty;
+}
+
+.workNav {
+  margin-top: var(--space-7);
+  display: flex;
+  flex-direction: column;
+}
+
+.workNavItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: var(--space-3) 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.workNavLabel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--muted);
+  transition: color 200ms ease;
+}
+
+.workNavItem.on .workNavLabel,
+.workNavItem:hover .workNavLabel {
+  color: var(--text);
+}
+
+.workNavDot {
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 50%;
+  background: var(--text);
+  transform: scale(0);
+  transition: transform 333ms cubic-bezier(0.38, 0.02, 0.41, 0.98);
+}
+
+.workNavDot.show {
+  transform: scale(1);
+}
+
+.workNavDescWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 333ms cubic-bezier(0.38, 0.02, 0.41, 0.98);
+}
+
+.workNavDescWrap.open {
+  grid-template-rows: 1fr;
+}
+
+.workNavDescInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.workNavDesc {
+  display: block;
+  padding-top: 6px;
+  padding-bottom: 4px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.workFeatured {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  text-align: left;
+  background: var(--color-surface);
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  cursor: pointer;
+  color: inherit;
+  position: relative;
+  transition: background-color 167ms linear;
+}
+
+.workFeatured:hover {
+  background: #2e2e2e;
+}
+
+.workFeaturedThumb {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.workFeaturedThumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.workFeaturedText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  padding-right: var(--space-4);
+}
+
+.workFeaturedTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.workFeaturedTag {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.workFeaturedCat {
+  margin-top: var(--space-2);
+  color: var(--faint);
+}
+
+.workFeaturedArrow {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.workMain {
+  flex: 1;
+  min-width: 0;
+  overflow: visible;
+  padding: 16px 8px 120px 8px;
+}
+
+/* Two independent columns — koto masonry (no shared row heights / gaps) */
+.workGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.workCol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Work 1 — even 4:3 grid, same two-column gap */
+.workGridUniform {
+  align-items: stretch;
+}
+
+/* Work 1 category lenses (above the grid) */
+.workLenses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 0 20px;
+}
+
+.workLens {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--faint);
+  cursor: pointer;
+  transition: color 167ms linear;
+}
+
+.workLens:hover {
+  color: var(--muted);
+}
+
+.workLens.on {
+  color: var(--text);
+}
+
+.workLensDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--text);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 167ms linear, transform 167ms linear;
+}
+
+.workLensDot.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Systems Thinking — thumbnail + text rows */
+.workList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+}
+
+.workListRow {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  margin: 0;
+  padding: 10px 0;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  transition: background-color 167ms linear;
+}
+
+.workListRow:hover,
+.workListRow:focus-visible {
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+}
+
+.workListRow:focus-visible {
+  outline: 1px solid var(--color-border);
+  outline-offset: 0;
+}
+
+.workListRow:disabled {
+  cursor: default;
+}
+
+.workListThumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.workListThumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.workListCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 4px 4px 4px 0;
+}
+
+.workListTitle {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.workListMeta {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.workListBody {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+/* Design Engineering — 3-column expandable component grid */
+.engGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0;
+  align-items: start;
+}
+
+.engCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  overflow: hidden;
+  transition: background-color 200ms ease;
+}
+
+.engCardOpen {
+  grid-column: span 2;
+}
+
+.engCardHit {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.engCardMedia {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: #202020;
+}
+
+.engCardOpen .engCardMedia {
+  aspect-ratio: 16 / 9;
+}
+
+.engCardMedia img,
+.engCardMedia video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.engCardBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 2px 2px;
+}
+
+.engCardName {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.engCardKind {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.engCardChevron {
+  width: 18px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.engCardPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.engCardPanelInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.engCardPanel.open {
+  grid-template-rows: 1fr;
+}
+
+.engCardBody {
+  margin: 0;
+  padding: 0 2px 4px;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.engCardCase {
+  display: inline-flex;
+  align-self: flex-start;
+  margin: 8px 2px 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 167ms linear;
+}
+
+.engCardCase:hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workLens,
+  .workLensDot,
+  .workListRow,
+  .engCard,
+  .engCardPanel,
+  .engCardCase {
+    transition: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .engGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .engCardOpen {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .workLenses {
+    gap: 16px 20px;
+  }
+
+  .workListRow {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
+    padding: 8px 0;
+  }
+
+  .engGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .engCardOpen {
+    grid-column: span 1;
+  }
+}
+
+/* Work 1 type: Condensed → display slots, Regular → body/UI (Regular only) */
+.workUniform {
+  --font-display: var(--font-walsheim-condensed), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
+}
+
+.workUniform .workPanel {
+  padding-top: 28px; /* 48px − 20px */
+}
+
+.workBrand {
+  margin: 0;
+  font-family: var(--font-cesare), "Times New Roman", serif;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.workBrandDot {
+  color: var(--color-accent-orange);
+}
+
+.workUniform .workSubtitle {
+  max-width: none;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Match kingermayank.com social rings (36px here; site uses 40) */
+.workSocials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.workSocial {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1.5px solid #404040;
+  color: #ffffff;
+  background: transparent;
+  flex-shrink: 0;
+  outline: none;
+  transition: none;
+}
+
+.workSocial svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  opacity: 0.5;
+  transition: opacity 167ms linear;
+}
+
+.workSocial:hover svg,
+.workSocial:focus-visible svg {
+  opacity: 1;
+}
+
+.workSocial:focus-visible {
+  border-color: #ffffff;
+}
+
+/* Work 1 — fit CTA (kingermayank.com sidebar) */
+.workFit {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 28em;
+}
+
+.workFitCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.workFitTitle {
+  margin: 0;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.workFitBody {
+  margin: 0;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #cccccc;
+  text-wrap: pretty;
+}
+
+.workFitActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.workFitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: opacity 167ms linear, background-color 167ms linear,
+    border-color 167ms linear, color 167ms linear;
+}
+
+.workFitBtnGhost {
+  background: transparent;
+  border: 1.5px solid #404040;
+  color: #fafafa;
+}
+
+.workFitBtnGhost:hover {
+  border-color: #ffffff;
+}
+
+.workFitBtnSolid {
+  background: #ffffff;
+  border: 1.5px solid #ffffff;
+  color: #121413;
+}
+
+.workFitBtnSolid:hover {
+  opacity: 0.88;
+}
+
+.workFitBtn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Hiring letter note overlay */
+.letterScrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, #000 45%, transparent);
+  cursor: pointer;
+}
+
+.letterNote {
+  position: relative;
+  width: min(646px, 100%);
+  padding: 40px 40px 28px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f0efeb 0%, #d4d3c7 100%);
+  box-shadow: 2px 4px 4px rgba(171, 171, 171, 0.25);
+  color: #121413;
+  cursor: default;
+}
+
+.letterGreeting {
+  margin: 0 0 16px;
+  font-family: var(--font-letter), "Segoe Print", "Comic Sans MS", cursive;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 0.9;
+  color: #050505;
+}
+
+.letterBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.letterBody p {
+  margin: 0;
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #121413;
+  text-wrap: pretty;
+}
+
+.letterSignoff {
+  margin: 16px 0 0;
+  font-family: var(--font-letter), "Segoe Print", "Comic Sans MS", cursive;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.15;
+  color: #050505;
+}
+
+.letterCta {
+  position: absolute;
+  right: 40px;
+  bottom: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: #121413;
+  color: #ffffff;
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 167ms linear;
+}
+
+.letterCta:hover {
+  opacity: 0.88;
+}
+
+.letterCta:focus-visible {
+  outline: 2px solid #121413;
+  outline-offset: 2px;
+}
+
+.letterHint {
+  margin: 36px 0 0;
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: color-mix(in srgb, #121413 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workFitBtn,
+  .letterCta {
+    transition: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .letterNote {
+    padding: 28px 22px 22px;
+  }
+
+  .letterGreeting {
+    font-size: 28px;
+  }
+
+  .letterCta {
+    position: static;
+    margin-top: 20px;
+  }
+
+  .letterHint {
+    margin-top: 16px;
+  }
+}
+
+.workUniform .workSubtitle,
+.workUniform .workNavLabel,
+.workUniform .workNavDesc,
+.workUniform .workFeaturedTitle,
+.workUniform .workFeaturedTag,
+.workUniform .workFeaturedCat,
+.workUniform .workCardName,
+.workUniform .workCardTagline,
+.workUniform .workCardPlaceholder,
+.workUniform .mono {
+  font-weight: 400;
+}
+
+/* Work 1 — case-study-style project info, pinned to panel bottom */
+.workHoverInfo {
+  position: absolute;
+  left: var(--space-5);
+  right: var(--space-5);
+  bottom: var(--space-5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 167ms linear;
+}
+
+.workHoverInfo.on {
+  opacity: 1;
+}
+
+.workHoverDescWrap {
+  display: grid;
+  align-items: end;
+}
+
+.workHoverDescLayer {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  align-self: end;
+  width: 100%;
+}
+
+.workHoverDesc {
+  margin: 0;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.workHoverMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-media);
+}
+
+.workHoverThumb {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.workHoverThumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.workHoverName {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.workHoverYear {
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  margin-top: var(--space-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workHoverDescLayer {
+    transition: none !important;
+  }
+}
+
+.workCard {
+  position: relative;
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+/* Fixed aspect frame; media shrinks on hover to reveal caption below (koto) */
+.workCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.workCardMediaWrap {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-radius: 6px;
+  transition: bottom 167ms linear;
+}
+
+.workCard:hover .workCardMediaWrap,
+.workCard:focus-visible .workCardMediaWrap {
+  bottom: 24px;
+}
+
+.workCardMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.workCardPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--muted);
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Caption sits in the 24px strip revealed under the media — not an overlay */
+.workCardCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 167ms linear;
+  transition-delay: 0ms;
+  pointer-events: none;
+}
+
+.workCard:hover .workCardCaption,
+.workCard:focus-visible .workCardCaption {
+  opacity: 1;
+  transition-delay: 167ms;
+}
+
+.workCardName {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.workCardTagline {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--muted);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .csListInner,
+  .csDetailInner {
+    flex-direction: column;
+  }
+
+  .csPanel,
+  .csDetailPanel,
+  .csDetailPanel:not(:has(.csBack)) {
+    width: 100%;
+    position: relative;
+    height: auto !important;
+    padding: var(--space-5) var(--space-4) var(--space-4);
+  }
+
+  .csDetailHead {
+    flex: none;
+  }
+
+  .csCredits {
+    margin-top: var(--space-6);
+    padding-bottom: 0;
+  }
+
+  .csWorkBlock {
+    margin-top: var(--space-6);
+    margin-bottom: 0;
+  }
+
+  .csBrand {
+    font-size: 36px;
+  }
+
+  .csTitleLayer {
+    font-size: 28px;
+    white-space: normal;
+  }
+
+  .csDetailTitle {
+    font-size: 30px;
+  }
+
+  .csDetailSub {
+    font-size: 13.5px;
+  }
+
+  .csDetailTagline {
+    font-size: 14px;
+  }
+
+  .csTiles,
+  .csContent {
+    width: 100%;
+    padding: 0 var(--space-4) var(--space-bar);
+  }
+
+  .csTiles {
+    gap: var(--space-3);
+  }
+
+  .csSection {
+    margin: var(--space-7) 0;
+  }
+
+  .csBody {
+    margin-bottom: var(--space-5);
+  }
+
+  .csFooter {
+    margin-top: var(--space-7);
+    height: auto !important;
+    min-height: 420px;
+  }
+
+  .bottomBar {
+    bottom: max(var(--space-3), env(safe-area-inset-bottom));
+  }
+
+  .segmented button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .zoomCtl {
+    display: none;
+  }
+
+  .workRoot {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .workPanel {
+    position: static;
+    height: auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    padding: var(--space-5) var(--space-4) var(--space-3);
+  }
+
+  .workTitle {
+    font-size: 36px;
+  }
+
+  .workFeatured {
+    display: none;
+  }
+
+  .workMain {
+    overflow: visible;
+    padding: 8px 14px 110px;
+  }
+
+  .workGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workNavDot,
+  .workNavDescWrap,
+  .workCardCaption,
+  .workCardMediaWrap {
+    transition: none;
   }
 }
