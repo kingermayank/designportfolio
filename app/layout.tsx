@@ -75,6 +75,29 @@ const caveat = Caveat({
   display: "swap",
 });
 
+// PathAI Region Comments UI — Figma uses Gotham Narrow Book (325) / Medium (350, 500)
+const gothamNarrow = localFont({
+  src: [
+    {
+      path: "../public/fonts/GothamNarrow-Book.otf",
+      weight: "325",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/GothamNarrow-Medium.otf",
+      weight: "350",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/GothamNarrow-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+  ],
+  variable: "--font-gotham-narrow",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Mayank Kinger",
   description:
@@ -89,7 +112,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${greedNarrow.variable} ${geist.variable} ${geistMono.variable} ${walsheim.variable} ${walsheimCondensed.variable} ${cesare.variable} ${caveat.variable}`}
+      className={`${greedNarrow.variable} ${geist.variable} ${geistMono.variable} ${walsheim.variable} ${walsheimCondensed.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
     >
       <body>{children}</body>
     </html>

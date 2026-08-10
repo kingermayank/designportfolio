@@ -1,8 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
 import { ABOUT_INTRO } from "@/lib/about";
 import { CASE_STUDIES } from "@/lib/caseStudies";
+import {
+  ENG_COMPONENTS,
+  SYSTEMS_LIST,
+  WORK_LENSES,
+  type EngComponent,
+  type WorkLensId,
+  type WorkListItem,
+} from "@/lib/workLenses";
+
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
 
@@ -51,6 +61,12 @@ const SOCIAL_ICONS: Record<string, ReactNode> = {
 
 type Aspect = "4 / 5" | "5 / 3" | "4 / 3";
 const ASPECTS: Aspect[] = ["4 / 5", "5 / 3", "4 / 3", "4 / 5", "5 / 3", "4 / 3"];
+/** Per-project overrides for masonry card frames. */
+const ASPECT_BY_SLUG: Partial<Record<string, Aspect>> = {
+  pathai: "4 / 3",
+  bigbasket: "4 / 3",
+  walkity: "4 / 3",
+};
 
 function thumbFor(src?: string): string | undefined {
   if (!src) return undefined;
@@ -116,23 +132,15 @@ const PROJECTS: Card[] = CASE_STUDIES.map((s, i) => {
     video: coverVideo ? true : still ? false : s.hero?.video,
     thumb,
     logo: LOGO_BY_SLUG[s.slug],
-    aspect: ASPECTS[i % ASPECTS.length],
+    aspect: ASPECT_BY_SLUG[s.slug] ?? ASPECTS[i % ASPECTS.length],
   };
 });
 
-type Props = {
-  onOpenCase?: (slug: string, el: HTMLElement) => void;
-  /** masonry = mixed ratios; uniform = all 4:3 */
-  layout?: "masonry" | "uniform";
-};
-
 function WorkCard({
   card,
-  onOpen,
   onHover,
 }: {
   card: Card;
-  onOpen?: (slug: string, el: HTMLElement) => void;
   onHover?: (card: Card | null) => void;
 }) {
   const gridSrc =
@@ -143,16 +151,10 @@ function WorkCard({
       : undefined;
 
   return (
-    <button
-      type="button"
+    <Link
+      href={`/work/${card.slug}`}
       className="workCard"
       style={{ aspectRatio: card.aspect }}
-      onClick={(e) => {
-        const media =
-          (e.currentTarget.querySelector(".workCardMediaWrap") as HTMLElement | null) ??
-          e.currentTarget;
-        onOpen?.(card.slug, media);
-      }}
       onMouseEnter={() => onHover?.(card)}
       onFocus={() => onHover?.(card)}
       onBlur={() => onHover?.(null)}
@@ -186,24 +188,120 @@ function WorkCard({
           <span className="workCardTagline">{card.tagline}</span>
         </span>
       </div>
-    </button>
+    </Link>
   );
 }
 
-export default function Work({
-  onOpenCase,
-  layout = "masonry",
-}: Props) {
+function WorkListRow({ item }: { item: WorkListItem }) {
+  const body = (
+    <>
+      <span className="workListThumb" style={{ background: item.shade }}>
+        {item.thumb ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={item.thumb} alt="" />
+        ) : null}
+      </span>
+      <span className="workListCopy">
+        <span className="workListTitle">
+          {item.title}
+          {item.slug ? (
+            <span className="workListArrow" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M3.5 10.5 10.5 3.5M5.5 3.5h5v5"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          ) : null}
+        </span>
+        <span className="workListMeta">{item.meta}</span>
+        <span className="workListBody">{item.body}</span>
+      </span>
+    </>
+  );
+
+  if (!item.slug) {
+    return (
+      <div className="workListRow workListRowStatic" aria-disabled="true">
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <Link href={`/work/${item.slug}`} className="workListRow">
+      {body}
+    </Link>
+  );
+}
+
+function EngCard({
+  item,
+  expanded,
+  onToggle,
+}: {
+  item: EngComponent;
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className={"engCard" + (expanded ? " engCardOpen" : "")}>
+      <button
+        type="button"
+        className="engCardHit"
+        aria-expanded={expanded}
+        onClick={onToggle}
+      >
+        <span className="engCardMedia" style={{ background: item.shade }}>
+          {item.video ? (
+            <video
+              src={item.src}
+              poster={item.thumb}
+              muted
+              loop
+              playsInline
+              autoPlay
+              preload="metadata"
+            />
+          ) : item.thumb || item.src ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={item.thumb || item.src} alt="" />
+          ) : null}
+        </span>
+        <span className="engCardBar">
+          <span className="engCardName">{item.title}</span>
+          <span className="engCardKind">{item.kind}</span>
+          <span className="engCardChevron" aria-hidden>
+            {expanded ? "−" : "+"}
+          </span>
+        </span>
+      </button>
+      <div className={"engCardPanel" + (expanded ? " open" : "")}>
+        <div className="engCardPanelInner">
+          <p className="engCardBody">{item.body}</p>
+          {item.slug ? (
+            <Link href={`/work/${item.slug}`} className="engCardCase">
+              Open case study ↗
+            </Link>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Work() {
   const [hoverIdx, setHoverIdx] = useState(-1);
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
-  // Lenses (Visual Craft / Systems / Design Engineering) hidden for now —
-  // project grid sits at the top of the rail.
-  const uniform = layout === "uniform";
+  const [lens, setLens] = useState<WorkLensId>("visual");
+  const [engOpen, setEngOpen] = useState<string | null>(null);
+  const showingProjects = lens === "visual";
 
-  const cards = useMemo(() => {
-    if (!uniform) return PROJECTS;
-    return PROJECTS.map((c) => ({ ...c, aspect: "4 / 3" as Aspect }));
-  }, [uniform]);
+  const cards = PROJECTS;
 
   // Koto packs by alternating columns (DOM order: L,R,L,R…) so each column
   // stacks independently — no shared row height, no phantom gaps.
@@ -260,67 +358,102 @@ export default function Work({
           </div>
         </div>
 
-        <div className={"workHoverInfo" + (hoverOn ? " on" : "")}>
-          <div className="workHoverDescWrap">
-            {cards.map((c, i) => (
-              <div
-                key={c.slug}
-                className="workHoverDescLayer"
-                style={{
-                  opacity: i === activeIdx ? 1 : 0,
-                  transition: TEXT_FADE,
-                  transitionDelay: i === activeIdx ? "333ms" : "0ms",
-                }}
-              >
-                <p className="workHoverDesc">{c.description}</p>
-                <div className="workHoverMeta">
-                  <div
-                    className="workHoverThumb"
-                    style={c.logo ? undefined : { background: c.shade }}
-                  >
-                    {c.logo || c.thumb ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={c.logo || c.thumb} alt="" />
-                    ) : null}
-                  </div>
-                  <div>
-                    <div className="workHoverName">{c.title}</div>
-                    <div className="workHoverYear">
-                      {c.year}, {c.category.toUpperCase()}
+        {showingProjects && (
+          <div className={"workHoverInfo" + (hoverOn ? " on" : "")}>
+            <div className="workHoverDescWrap">
+              {cards.map((c, i) => (
+                <div
+                  key={c.slug}
+                  className="workHoverDescLayer"
+                  style={{
+                    opacity: i === activeIdx ? 1 : 0,
+                    transition: TEXT_FADE,
+                    transitionDelay: i === activeIdx ? "333ms" : "0ms",
+                  }}
+                >
+                  <p className="workHoverDesc">{c.description}</p>
+                  <div className="workHoverMeta">
+                    <div
+                      className="workHoverThumb"
+                      style={c.logo ? undefined : { background: c.shade }}
+                    >
+                      {c.logo || c.thumb ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={c.logo || c.thumb} alt="" />
+                      ) : null}
+                    </div>
+                    <div>
+                      <div className="workHoverName">{c.title}</div>
+                      <div className="workHoverYear">
+                        {c.year}, {c.category.toUpperCase()}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </aside>
 
-      <div className="workMain" onMouseLeave={() => setHoverCard(null)}>
-        {uniform ? (
-          <div className="workGrid workGridUniform" key="uniform">
-            {cards.map((card) => (
-              <WorkCard
-                key={card.slug}
-                card={card}
-                onOpen={onOpenCase}
-                onHover={setHoverCard}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="workGrid" key="masonry">
+      <div
+        className="workMain"
+        onMouseLeave={() => {
+          if (showingProjects) setHoverCard(null);
+        }}
+      >
+        <nav className="workLenses" aria-label="Work categories">
+          {WORK_LENSES.map((l) => {
+            const active = lens === l.id;
+            return (
+              <button
+                key={l.id}
+                type="button"
+                className={"workLens" + (active ? " on" : "")}
+                onClick={() => {
+                  setLens(l.id);
+                  setEngOpen(null);
+                  setHoverIdx(-1);
+                }}
+              >
+                {l.label}
+                <span className={"workLensDot" + (active ? " show" : "")} aria-hidden />
+              </button>
+            );
+          })}
+        </nav>
+
+        {showingProjects ? (
+          <div className="workGrid" key="visual-masonry">
             {columns.map((col, ci) => (
               <div className="workCol" key={ci}>
                 {col.map((card) => (
                   <WorkCard
                     key={card.slug}
                     card={card}
-                    onOpen={onOpenCase}
                     onHover={setHoverCard}
                   />
                 ))}
               </div>
+            ))}
+          </div>
+        ) : lens === "systems" ? (
+          <div className="workList" key="systems">
+            {SYSTEMS_LIST.map((item) => (
+              <WorkListRow key={item.id} item={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="engGrid" key="engineering">
+            {ENG_COMPONENTS.map((item) => (
+              <EngCard
+                key={item.id}
+                item={item}
+                expanded={engOpen === item.id}
+                onToggle={() =>
+                  setEngOpen((cur) => (cur === item.id ? null : item.id))
+                }
+              />
             ))}
           </div>
         )}

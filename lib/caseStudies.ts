@@ -15,15 +15,32 @@ export type CaseSection = {
   media: CaseMedia[];
 };
 
+/** Interactive embed rendered inside a case-study media stack. */
+export type MediaEmbedId =
+  | "pathai-comment-states"
+  | "pathai-comment-anatomy"
+  | "pathai-region-edge-cases";
+
 /** Full-width row, or left tile + right column (one or more stacked). */
 export type MediaBlock =
-  | { type: "full"; media: CaseMedia }
+  | {
+      type: "full";
+      media: CaseMedia;
+      /** Edge-to-edge — breaks out of the editorial content max-width. */
+      bleed?: boolean;
+    }
   | {
       type: "split";
       left: CaseMedia;
       right: CaseMedia[];
       /** When false, left keeps its natural AR instead of stretching to the right stack. */
       fillLeft?: boolean;
+    }
+  | {
+      type: "embed";
+      embed: MediaEmbedId;
+      shade: string;
+      ar: number;
     };
 
 export type CaseHighlight = {
@@ -82,9 +99,9 @@ const toolbox: CaseStudy = {
   title: "Ikon Technologies",
   detailTitle:
     "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion",
-  tagline: "An enterprise-ready platform for dealership operations",
+  tagline: "An enterprise-ready platform for dealership operations.",
   description:
-    "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion: 134 new dealerships secured before public release.",
+    "I led everything design-related for Toolbox as we onboarded dealerships from legacy to the new NextGen platform — 450 dealerships onboarded, and 40 directions across 450 relationships migrated from legacy. Showcasing the product at NADA 2026 drove 132 more dealership signups.",
   year: 2025,
   category: "Design Engineering",
   shade: "#282828",
@@ -164,7 +181,7 @@ const warpbnb: CaseStudy = {
   slug: "warpbnb",
   title: "Warpbnb",
   detailTitle: "Reimagining Airbnb for time travel across areas",
-  tagline: "Reimagining Airbnb for time travel across eras",
+  tagline: "Reimagining Airbnb for time travel across eras.",
   description:
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
   year: 2025,
@@ -355,7 +372,7 @@ const pathai: CaseStudy = {
   slug: "pathai",
   title: "PathAI",
   detailTitle: "Empowering pathologists to diagnose with confidence and speed",
-  tagline: "Empowering pathologists to diagnose with confidence and speed",
+  tagline: "Empowering pathologists to diagnose with confidence and speed.",
   description:
     "I designed and shipped Region Comments, a collaboration tool on PathAI's Patient Diagnostics platform. It cut second-opinion turnaround times by ~45% and noticeably increased the number of cases pathologists sign out daily.",
   year: 2022,
@@ -397,6 +414,33 @@ const pathai: CaseStudy = {
     { type: "full", media: pa("/pathai/new/path6.mp4", 1538 / 2048, true) },
     { type: "full", media: pa("/pathai/new/path8.mp4", 3840 / 2160, true) },
     { type: "full", media: pa("/pathai/new/path9.mp4", 3668 / 2064, true) },
+    // Mid-case product shot — full bleed, edge to edge (not the editorial max grid).
+    {
+      type: "full",
+      bleed: true,
+      media: pa("/pathai/new/path12.png", 3680 / 2760),
+    },
+    // Region Comments input-state walkthrough (Default → Focus → Typing → Completed).
+    {
+      type: "embed",
+      embed: "pathai-comment-states",
+      shade: "#dce0e9",
+      ar: 16 / 9,
+    },
+    // Anatomy of a completed comment card (name / date / message → assembled).
+    {
+      type: "embed",
+      embed: "pathai-comment-anatomy",
+      shade: "#dce0e9",
+      ar: 16 / 9,
+    },
+    // Region selection edge cases (nested, overlap priority, draw-over, z-index).
+    {
+      type: "embed",
+      embed: "pathai-region-edge-cases",
+      shade: "#e8ebf2",
+      ar: 16 / 9,
+    },
     { type: "full", media: pa("/pathai/new/path10.png", 1680 / 2742) },
     { type: "full", media: pa("/pathai/new/path3.png", 2685 / 1791) },
   ],
@@ -499,7 +543,7 @@ const walkity: CaseStudy = {
   slug: "walkity",
   title: "Walkity",
   detailTitle: "Brand strategy and landing page from scratch",
-  tagline: "Brand strategy and landing page from scratch",
+  tagline: "Brand strategy and landing page from scratch.",
   description:
     "Creating Walkity's brand strategy and landing page from scratch, with accessibility at the center of the work.",
   year: 2023,
@@ -521,15 +565,18 @@ const walkity: CaseStudy = {
       body: "Shipped a cohesive brand system and marketing site that makes Walkity's purpose immediate: never walk alone.",
     },
   ],
-  // Detail hero: watch loop. Work 1 card: still from the same asset.
-  workStill: true,
+  // Cover hero + Work card: brand.png. Case stack continues with walk11 → walk13.
+  workCover: "/walkity/new/brand.png",
   hero: {
     shade: "#222222",
-    src: "/walkity/walk10.mp4",
-    video: true,
-    ar: 1920 / 1280,
+    src: "/walkity/new/walk10.png",
+    ar: 6000 / 4500,
   },
   mediaBlocks: [
+    { type: "full", media: wk("/walkity/new/walk11.png", 6000 / 4500) },
+    { type: "full", media: wk("/walkity/new/walk12.png", 6000 / 4000) },
+    { type: "full", media: wk("/walkity/new/brand.png", 3354 / 2514) },
+    { type: "full", media: wk("/walkity/new/walk13.png", 3642 / 2731) },
     { type: "full", media: wk("/walkity/new/walk2.png", 4143 / 2734) },
     { type: "full", media: wk("/walkity/new/walk5.png", 2894 / 2172) },
     {
@@ -577,7 +624,7 @@ const bigbasket: CaseStudy = {
   slug: "bigbasket",
   title: "BigBasket",
   detailTitle: "A design system for India's largest grocery app",
-  tagline: "A design system for India's largest grocery app",
+  tagline: "A design system for India's largest grocery app.",
   description:
     "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
   year: 2021,
@@ -645,7 +692,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   stub(
     "ikon-pm",
     "Ikon Technologies",
-    "Untangling legacy chaos to drive revenue",
+    "Untangling legacy chaos to drive revenue.",
     "Stepping beyond design to untangle legacy chaos and drive growth: product management work at Ikon Technologies.",
     2024,
     "Product Management",

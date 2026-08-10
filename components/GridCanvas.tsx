@@ -3,13 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { TILES, packRows } from "@/lib/tiles";
-import CaseStudies from "@/components/CaseStudies";
 import Work from "@/components/Work";
-
-type WorkCaseOpen = {
-  slug: string;
-  from: { x: number; y: number; w: number; h: number };
-};
 
 type Target = {
   x: number;
@@ -35,14 +29,13 @@ const NEIGHBOR_BLUR = 1.5;
 
 const IDLE: Target = { x: 0, y: 0, scale: 1, opacity: 1, blur: 0, radius: 6, delay: 0 };
 
-type Mode = "grid" | "work" | "work1";
+type Mode = "work" | "grid";
 
 // Views live side by side in one space, left to right.
-const ORDER: Mode[] = ["work", "work1", "grid"];
+const ORDER: Mode[] = ["work", "grid"];
 const LABEL: Record<Mode, string> = {
   work: "Option 1",
-  work1: "Option 2",
-  grid: "Option 3",
+  grid: "Option 2",
 };
 
 // Spatial shift between modes: the incoming view enters from whichever side it
@@ -305,16 +298,6 @@ export default function GridCanvas() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const [workCase, setWorkCase] = useState<WorkCaseOpen | null>(null);
-
-  const openWorkCase = useCallback((slug: string, el: HTMLElement) => {
-    const r = el.getBoundingClientRect();
-    setWorkCase({
-      slug,
-      from: { x: r.left, y: r.top, w: r.width, h: r.height },
-    });
-  }, []);
-
   const switchMode = useCallback(
     (m: Mode) => {
       if (m === mode) return;
@@ -322,7 +305,6 @@ export default function GridCanvas() {
       setFocused(null);
       setLastFocused(null);
       setTargets(null);
-      setWorkCase(null);
       setDir(ORDER.indexOf(m) - ORDER.indexOf(mode));
       setMode(m);
     },
@@ -344,9 +326,7 @@ export default function GridCanvas() {
           exit={anim.exit}
         >
           {mode === "work" ? (
-            <Work layout="uniform" onOpenCase={openWorkCase} />
-          ) : mode === "work1" ? (
-            <Work layout="masonry" onOpenCase={openWorkCase} />
+            <Work />
           ) : (
             <>
               <div ref={scrollRef} className="scroller" onClick={() => closeRef.current()}>
@@ -443,20 +423,6 @@ export default function GridCanvas() {
           )}
         </motion.div>
       </AnimatePresence>
-
-      {workCase && (
-        <div className="caseOverlay">
-          <CaseStudies
-            key={`${workCase.slug}-${Math.round(workCase.from.x)}-${Math.round(workCase.from.y)}`}
-            externalEntry={{
-              slug: workCase.slug,
-              from: workCase.from,
-              onClose: () => setWorkCase(null),
-              transition: "morph",
-            }}
-          />
-        </div>
-      )}
 
       <div className="bottomBar">
         <div className="segmented">

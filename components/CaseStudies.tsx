@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import {
   CASE_STUDIES,
   type CaseMedia,
   type MediaBlock,
 } from "@/lib/caseStudies";
+import CommentFieldStates from "@/components/pathai/CommentFieldStates";
+import CommentCardAnatomy from "@/components/pathai/CommentCardAnatomy";
+import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
 
 // /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg — every asset has one, so a
 // video shows its first frame immediately instead of flashing its backdrop.
@@ -59,15 +61,20 @@ function MediaFill({ media }: { media?: CaseMedia }) {
 function MediaTile({
   media,
   fill,
+  bleed,
 }: {
   media: CaseMedia;
   /** Stretch to fill a split-cell instead of locking aspect-ratio. */
   fill?: boolean;
+  /** Edge-to-edge — breaks out of the editorial content max-width. */
+  bleed?: boolean;
 }) {
   return (
-    <figure className="csFigure">
+    <figure className={"csFigure" + (bleed ? " csFigureBleed" : "")}>
       <div
-        className={"csMedia" + (fill ? " csMediaFill" : "")}
+        className={
+          "csMedia" + (fill ? " csMediaFill" : "") + (bleed ? " csMediaBleed" : "")
+        }
         style={
           fill
             ? { background: media.shade }
@@ -80,6 +87,19 @@ function MediaTile({
   );
 }
 
+function MediaEmbed({ embed }: { embed: MediaBlock & { type: "embed" } }) {
+  if (embed.embed === "pathai-comment-states") {
+    return <CommentFieldStates />;
+  }
+  if (embed.embed === "pathai-comment-anatomy") {
+    return <CommentCardAnatomy />;
+  }
+  if (embed.embed === "pathai-region-edge-cases") {
+    return <RegionEdgeCases />;
+  }
+  return null;
+}
+
 function MediaBlocks({
   blocks,
   bare,
@@ -90,7 +110,9 @@ function MediaBlocks({
 }) {
   const items = blocks.map((block, i) =>
     block.type === "full" ? (
-      <MediaTile key={i} media={block.media} />
+      <MediaTile key={i} media={block.media} bleed={block.bleed} />
+    ) : block.type === "embed" ? (
+      <MediaEmbed key={i} embed={block} />
     ) : (
       <div
         key={i}
@@ -111,34 +133,82 @@ function MediaBlocks({
   return <div className="csMediaStack">{items}</div>;
 }
 
+/**
+ * Editorial media stack: grid-bound tiles stay in the max-width column;
+ * `bleed` full blocks render as siblings at 100% width (same as the hero).
+ */
+function EditorialMediaFlow({
+  blocks,
+  fallback,
+}: {
+  blocks?: MediaBlock[];
+  fallback: CaseMedia[];
+}) {
+  if (!blocks?.length) {
+    return (
+      <div className="csEditorialMedia">
+        {fallback.map((media, i) => (
+          <MediaTile key={i} media={media} />
+        ))}
+      </div>
+    );
+  }
+
+  const segments: (
+    | { kind: "grid"; blocks: MediaBlock[]; key: string }
+    | { kind: "bleed"; media: CaseMedia; key: string }
+  )[] = [];
+
+  let gridBatch: MediaBlock[] = [];
+  const flushGrid = (key: string) => {
+    if (!gridBatch.length) return;
+    segments.push({ kind: "grid", blocks: gridBatch, key });
+    gridBatch = [];
+  };
+
+  blocks.forEach((block, i) => {
+    if (block.type === "full" && block.bleed) {
+      flushGrid(`grid-${i}`);
+      segments.push({ kind: "bleed", media: block.media, key: `bleed-${i}` });
+      return;
+    }
+    gridBatch.push(block);
+  });
+  flushGrid("grid-end");
+
+  return (
+    <div className="csEditorialMediaFlow">
+      {segments.map((seg) =>
+        seg.kind === "bleed" ? (
+          <div key={seg.key} className="csEditorialBleed">
+            <MediaTile media={seg.media} bleed />
+          </div>
+        ) : (
+          <div key={seg.key} className="csEditorialMedia">
+            <MediaBlocks blocks={seg.blocks} bare />
+          </div>
+        ),
+      )}
+    </div>
+  );
+}
+
 // Timings lifted from koto.com's DOM:
 // - title roll: incoming 333ms cubic-bezier(0,0,0,1), outgoing 133ms cubic-bezier(0.75,0,0.85,1)
 // - description/meta: opacity 167ms linear, incoming delayed 333ms
-// - tile -> hero expansion: JS-driven; ~0.9s strong in-out to match the observed choreography
 const TITLE_IN = "transform 333ms cubic-bezier(0, 0, 0, 1)";
 const TITLE_OUT = "transform 133ms cubic-bezier(0.75, 0, 0.85, 1)";
 const DESC_FADE = "opacity 167ms linear";
-const MORPH_DUR = 0.9;
-const MORPH_EASE = [0.8, 0, 0.2, 1] as const;
 
-type Rect = { x: number; y: number; w: number; h: number };
-type Pending =
-  | { type: "open"; idx: number }
-  | { type: "next"; idx: number }
-  | { type: "close"; idx: number };
+type Pending = { type: "close"; idx: number };
 
-/** Open detail from Work — thumbnail expands into the right-side hero. */
+/** Open detail from Work — jump straight into the case (no morph). */
 export type CaseExternalEntry = {
   slug: string;
-  from: Rect;
   onClose: () => void;
-  transition?: "morph";
+  /** When set, “next case” updates the route instead of swapping in place. */
+  onNavigate?: (slug: string) => void;
 };
-
-// Detail rail matches Work 1: 3/12 left, 9/12 media. Morph target uses the
-// same ratio so the clicked tile expands into the real hero bounds.
-const DETAIL_PANEL_RATIO = 0.25;
-const PAD = 14;
 
 // koto's text entrance: lines rise from one line-height below, behind an
 // overflow-hidden mask — 650ms cubic-bezier(0.36,0.54,0,0.99), staggered.
@@ -169,11 +239,18 @@ function Rise({
 }
 
 type Props = {
-  /** When set, skip the case list and morph open from a Work card into detail. */
+  /** When set, skip the case list and open detail from a Work card. */
   externalEntry?: CaseExternalEntry | null;
+  /** Editorial edge-to-edge project detail treatment. */
+  layout?: "standard" | "editorial";
 };
 
-export default function CaseStudies({ externalEntry = null }: Props) {
+function indexForSlug(slug: string): number {
+  const idx = CASE_STUDIES.findIndex((s) => s.slug === slug);
+  return idx >= 0 ? idx : 0;
+}
+
+export default function CaseStudies({ externalEntry = null, layout = "standard" }: Props) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const chipRef = useRef<HTMLDivElement | null>(null);
   const listScrollRef = useRef<HTMLDivElement | null>(null);
@@ -188,26 +265,19 @@ export default function CaseStudies({ externalEntry = null }: Props) {
   externalRef.current = externalEntry;
   const startedExternal = useRef(false);
 
+  const initialIdx = externalEntry ? indexForSlug(externalEntry.slug) : 0;
+
   const [rootH, setRootH] = useState(600);
-  const [view, setView] = useState<"list" | "detail">("list");
-  const [active, setActive] = useState(0);
-  const [detailIdx, setDetailIdx] = useState(0);
-  const [morph, setMorph] = useState<null | {
-    shade: string;
-    media?: CaseMedia;
-    from: Rect;
-    to: Rect;
-  }>(null);
+  const [view, setView] = useState<"list" | "detail">(externalEntry ? "detail" : "list");
+  const [active, setActive] = useState(initialIdx);
+  const [detailIdx, setDetailIdx] = useState(initialIdx);
   const [listFade, setListFade] = useState(false);
   const [listEntering, setListEntering] = useState(false);
   const [closing, setClosing] = useState(false);
-  const [morphFading, setMorphFading] = useState(false);
-  const [contentIn, setContentIn] = useState(!externalEntry);
+  const [contentIn, setContentIn] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
   const [footerProgress, setFooterProgress] = useState(0);
 
-  const morphRef = useRef(morph);
-  morphRef.current = morph;
   const viewRef = useRef(view);
   viewRef.current = view;
 
@@ -221,82 +291,52 @@ export default function CaseStudies({ externalEntry = null }: Props) {
     return () => ro.disconnect();
   }, []);
 
-  const relRect = useCallback((el: HTMLElement): Rect => {
-    const rr = rootRef.current!.getBoundingClientRect();
-    const r = el.getBoundingClientRect();
-    return { x: r.left - rr.left, y: r.top - rr.top, w: r.width, h: r.height };
-  }, []);
-
-  const viewportToLocal = useCallback((from: Rect): Rect => {
-    const rr = rootRef.current!.getBoundingClientRect();
-    return { x: from.x - rr.left, y: from.y - rr.top, w: from.w, h: from.h };
-  }, []);
-
-  const heroRect = useCallback((): Rect => {
-    const rw = rootRef.current!.clientWidth;
-    const panel = Math.round(rw * DETAIL_PANEL_RATIO);
-    const w = rw - panel - PAD;
-    return { x: panel, y: PAD, w, h: (w * 9) / 16 };
+  const showDetail = useCallback((idx: number) => {
+    setDetailIdx(idx);
+    setActive(idx);
+    setView("detail");
+    setActiveSection(0);
+    setFooterProgress(0);
+    setListFade(false);
+    setContentIn(true);
+    requestAnimationFrame(() => detailScrollRef.current?.scrollTo(0, 0));
   }, []);
 
   const openCase = useCallback(
-    (idx: number, el: HTMLElement) => {
-      if (morphRef.current) return;
-      pendingRef.current = { type: "open", idx };
-      setContentIn(false);
-      setListFade(true);
-      setMorph({
-        shade: CASE_STUDIES[idx].shade,
-        media: CASE_STUDIES[idx].hero,
-        from: relRect(el),
-        to: heroRect(),
-      });
+    (idx: number, _el?: HTMLElement) => {
+      showDetail(idx);
     },
-    [relRect, heroRect],
+    [showDetail],
   );
 
-  // Work → case: expand the clicked thumbnail into the full right-side hero.
+  // Work → case: open the matching study immediately (no expand morph).
   useLayoutEffect(() => {
-    if (!externalEntry || startedExternal.current || !rootRef.current) return;
+    if (!externalEntry || startedExternal.current) return;
     const idx = CASE_STUDIES.findIndex((s) => s.slug === externalEntry.slug);
     if (idx < 0) {
       externalEntry.onClose();
       return;
     }
     startedExternal.current = true;
-    pendingRef.current = { type: "open", idx };
-    setDetailIdx(idx);
-    setActive(idx);
-    setContentIn(false);
-    setMorph({
-      shade: CASE_STUDIES[idx].shade,
-      media: CASE_STUDIES[idx].hero,
-      from: viewportToLocal(externalEntry.from),
-      to: heroRect(),
-    });
-  }, [externalEntry, viewportToLocal, heroRect]);
+    showDetail(idx);
+  }, [externalEntry, showDetail]);
 
   const nextCase = useCallback(() => {
-    if (morphRef.current || !footerTileRef.current) return;
-    const idx = (detailIdx + 1) % CASE_STUDIES.length;
-    pendingRef.current = { type: "next", idx };
-    setContentIn(false);
-    setMorph({
-      shade: CASE_STUDIES[idx].shade,
-      media: CASE_STUDIES[idx].hero,
-      from: relRect(footerTileRef.current),
-      to: heroRect(),
-    });
-  }, [detailIdx, relRect, heroRect]);
+    const nextIdx = (detailIdx + 1) % CASE_STUDIES.length;
+    const entry = externalRef.current;
+    if (entry?.onNavigate) {
+      entry.onNavigate(CASE_STUDIES[nextIdx].slug);
+      return;
+    }
+    showDetail(nextIdx);
+  }, [detailIdx, showDetail]);
 
   // Back to the list, koto-style: the detail page fades out fast, then the
   // list fades in with a subtle rise, pre-scrolled so the case you were
-  // reading is centered. No reverse morph — the hero is usually scrolled far
-  // off-screen, and a clone flying in from nowhere reads as a glitch.
-  // From Work, Back dismisses the overlay and returns to the work grid.
+  // reading is centered. From Work, Back dismisses the overlay.
   const closingRef = useRef(false);
   const startClose = useCallback(() => {
-    if (morphRef.current || viewRef.current !== "detail" || closingRef.current) return;
+    if (viewRef.current !== "detail" || closingRef.current) return;
     closingRef.current = true;
     setClosing(true);
     const entry = externalRef.current;
@@ -337,29 +377,6 @@ export default function CaseStudies({ externalEntry = null }: Props) {
       setListEntering(false);
     }, 30);
   }, [view]);
-
-  const finishMorph = useCallback(() => {
-    const p = pendingRef.current;
-    pendingRef.current = null;
-    if (!p || p.type === "close") return setMorph(null);
-    setDetailIdx(p.idx);
-    setView("detail");
-    setActiveSection(0);
-    setFooterProgress(0);
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        detailScrollRef.current?.scrollTo(0, 0);
-        setContentIn(true);
-        // Hold the clone over the hero for a beat, then dissolve it — removing
-        // it outright flashed the backdrop before the hero had painted.
-        setMorphFading(true);
-        window.setTimeout(() => {
-          setMorph(null);
-          setMorphFading(false);
-        }, 260);
-      }),
-    );
-  }, []);
 
   useEffect(() => {
     detailScrollRef.current?.scrollTo(0, 0);
@@ -419,6 +436,10 @@ export default function CaseStudies({ externalEntry = null }: Props) {
   const next = CASE_STUDIES[(detailIdx + 1) % CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
+  const editorial = layout === "editorial";
+  const overview = study.sections[0]?.body[0] ?? study.description;
+  const industry = study.credits?.find((credit) => credit.label === "Industry")?.value;
+  const role = study.credits?.find((credit) => credit.label === "Role")?.value;
 
   return (
     <div
@@ -516,7 +537,57 @@ export default function CaseStudies({ externalEntry = null }: Props) {
           className={"csDetail" + (closing ? " closing" : "")}
           onScroll={onDetailScroll}
         >
-          <div className="csDetailInner">
+          <div className={"csDetailInner" + (editorial ? " csEditorialDetail" : "")}>
+            {editorial ? (
+              <div className="csEditorialContent">
+                {/* Title above hero — stacked like Ericson, not overlaid on media */}
+                <header className="csEditorialHead">
+                  <button className="csEditorialBack" onClick={startClose} type="button">
+                    <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    All projects
+                  </button>
+                  <div className="csEditorialTitleWrap">
+                    <Rise show={contentIn} delay={0}>
+                      <h1 className="csEditorialTitle">
+                        {study.tagline}
+                      </h1>
+                    </Rise>
+                  </div>
+                </header>
+
+                <div
+                  ref={heroRef}
+                  className="csEditorialHero"
+                  style={{
+                    background: study.hero?.shade ?? study.shade,
+                    aspectRatio: study.hero?.ar ?? 16 / 9,
+                  }}
+                >
+                  <MediaFill media={study.hero} />
+                </div>
+
+                <section className={"csEditorialIntro csFade" + (contentIn ? " in" : "")}>
+                  <div className="csEditorialMeta" aria-label="Project details">
+                    <div><span>Scope</span><p>{study.category}</p></div>
+                    {industry && <div><span>Industry</span><p>{industry}</p></div>}
+                    {role && <div><span>Role</span><p>{role}</p></div>}
+                  </div>
+                  <div className="csEditorialOverview">
+                    <span>Overview</span>
+                    <p>{overview}</p>
+                  </div>
+                </section>
+
+                <div className={"csFade" + (contentIn ? " in" : "")}>
+                  <EditorialMediaFlow
+                    blocks={study.mediaBlocks}
+                    fallback={study.sections.flatMap((sec) => sec.media)}
+                  />
+                </div>
+              </div>
+            ) : <>
             <div className="csPanel csDetailPanel" style={{ height: rootH }}>
               <button
                 className={"csBack csFade" + (contentIn ? " in" : "")}
@@ -543,7 +614,7 @@ export default function CaseStudies({ externalEntry = null }: Props) {
                       (study.highlights ? " csDetailTitleCesare" : "")
                     }
                   >
-                    {study.detailTitle ?? study.title}
+                    {study.tagline}
                   </div>
                 </Rise>
                 {study.highlights ? (
@@ -760,21 +831,9 @@ export default function CaseStudies({ externalEntry = null }: Props) {
                 </>
               )}
             </div>
+            </>}
           </div>
         </div>
-      )}
-
-      {morph && (
-        <motion.div
-          className={"csClone" + (morphFading ? " out" : "")}
-          initial={{ x: morph.from.x, y: morph.from.y, width: morph.from.w, height: morph.from.h }}
-          animate={{ x: morph.to.x, y: morph.to.y, width: morph.to.w, height: morph.to.h }}
-          transition={{ duration: MORPH_DUR, ease: MORPH_EASE }}
-          style={{ background: morph.shade }}
-          onAnimationComplete={finishMorph}
-        >
-          <MediaFill media={morph.media} />
-        </motion.div>
       )}
 
       <div ref={chipRef} className="csCursorChip mono">

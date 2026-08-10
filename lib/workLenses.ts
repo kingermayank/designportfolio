@@ -1,6 +1,6 @@
 /**
- * Work 1 content lenses — each category switches the right-rail view.
- * Visual Craft keeps the existing project grid; the rest use curated lists / DE cards.
+ * Work content lenses — each category switches the right-rail view.
+ * Visual Craft keeps the project grid; the rest use curated lists / DE cards.
  */
 
 export type WorkLensId = "visual" | "systems" | "engineering";
@@ -32,7 +32,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "melon",
     slug: "bigbasket",
-    title: "Melon Design System",
+    title: "Hundreds of drifted styles → one Melon system",
     meta: "BigBasket · Design Systems · 2021",
     body: "Audited hundreds of drifted colors, text styles, and elevations, then built Melon — foundations, components, and patterns shared across India's largest grocery app.",
     thumb: "/bigbasket/thumbs/cover.jpg",
@@ -41,7 +41,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "toolbox-system",
     slug: "toolbox",
-    title: "Toolbox component foundation",
+    title: "One LLM-ready system behind every dealer workflow",
     meta: "Ikon Technologies · Design Engineering · 2025",
     body: "An LLM-aware design system exposing tokens and components to the model — the shared layer behind inventory, keys, service, and dealer workflows.",
     thumb: "/toolbox/thumbs/cover2.jpg",
@@ -50,7 +50,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "region-comments",
     slug: "pathai",
-    title: "Region Comments collaboration layer",
+    title: "Second opinions on the slide — not in email",
     meta: "PathAI · Product Design · 2022",
     body: "A contextual system for second opinions on digital slides — replacing screenshots and email with a workflow pathologists actually use.",
     thumb: "/pathai/thumbs/path1.jpg",
@@ -59,7 +59,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "ikon-ops",
     slug: "ikon-pm",
-    title: "Legacy ops → coherent product",
+    title: "Fragmented dealership tools → one operating model",
     meta: "Ikon Technologies · Product Management · 2024",
     body: "Untangled fragmented dealership tools into a clearer operating model — aligning design, product, and engineering around one system.",
     thumb: "/logos/ikon.png",
@@ -86,7 +86,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "melon-impact",
     slug: "bigbasket",
-    title: "One language across grocery UX",
+    title: "One shared language across grocery UX",
     meta: "BigBasket · Melon · 2021",
     body: "A documented design system that streamlined UX process and gave designers and engineers a common language for cohesive experiences.",
     thumb: "/bigbasket/thumbs/cover.jpg",
@@ -100,15 +100,6 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     body: "Solo end-to-end build — design, code, imagery, content, and a commercial — proving AI can expand velocity when taste still leads.",
     thumb: "/warpbnb/thumbs/warp11.jpg",
     shade: "#2b2b2b",
-  },
-  {
-    id: "walkity-brand",
-    slug: "walkity",
-    title: "Brand + site from a blank page",
-    meta: "Walkity · Brand Design · 2023",
-    body: "Brand strategy and landing page from scratch, with accessibility at the center — a clear first impression for an early-stage product.",
-    thumb: "/walkity/thumbs/walk2.jpg",
-    shade: "#262626",
   },
 ];
 
