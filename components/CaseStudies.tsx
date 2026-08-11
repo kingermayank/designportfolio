@@ -588,6 +588,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 <div ref={heroRef}>
                   <CaseHero
                     {...heroOnly}
+                    accent={overviewAccent}
                     className="csCaseHero"
                     back={{ label: "All projects", onClick: startClose }}
                   />
