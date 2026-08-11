@@ -6,8 +6,8 @@ export type Tile = {
   kind: "IMAGE" | "VIDEO";
   w: number; // true pixel dimensions, shown in the header
   h: number;
-  thumb: string; // lightweight 900px still (poster / image fallback)
-  grid: string; // what the grid plays: 720px loop for video, thumb for stills
+  thumb: string; // still image, or poster for video
+  grid: string; // what the grid plays: video loop, or same as thumb for stills
   full: string; // original asset, shown when a tile is zoomed
   video: boolean;
   project: string;
@@ -17,66 +17,39 @@ export type Row = { h: number; tiles: Tile[] };
 
 type Asset = [proj: string, file: string, video: boolean, w: number, h: number];
 
-// Every asset from the three ported case studies. Dimensions measured from the
-// files themselves so the grid never distorts or crops anything.
+// PathAI + Warpbnb (vibe code) only — current case-study media stack.
 const ASSETS: Asset[] = [
-  // — Toolbox (Ikon Technologies)
-  ["toolbox", "hero.mp4", true, 3840, 2048],
-  ["toolbox", "ai-chat.mp4", true, 3840, 2048],
-  ["toolbox", "inventory.mp4", true, 3840, 2048],
-  ["toolbox", "configurations.mp4", true, 3840, 2048],
-  ["toolbox", "device-pairing.mp4", true, 3840, 2048],
-  ["toolbox", "dashboard.mp4", true, 1920, 1080],
-  ["toolbox", "invoices.mp4", true, 3840, 2048],
-  ["toolbox", "gateways.mp4", true, 3840, 2048],
-  ["toolbox", "design-system.mp4", true, 1920, 1080],
-  ["toolbox", "impact.mp4", true, 1672, 1080],
-  ["toolbox", "nada-1.jpg", false, 1000, 750],
-  ["toolbox", "nada-2.jpg", false, 1000, 750],
-  ["toolbox", "nada-3.jpg", false, 2048, 1321],
-  // — Warpbnb
-  ["warpbnb", "warp11.mp4", true, 1440, 1080],
-  ["warpbnb", "figma-screens.mp4", true, 1680, 1080],
-  ["warpbnb", "storybook.mp4", true, 1672, 1080],
-  ["warpbnb", "reviews.mp4", true, 1922, 1080],
-  ["warpbnb", "icons.png", false, 3840, 2160],
-  ["warpbnb", "thiings.png", false, 3840, 2160],
-  ["warpbnb", "prompt-arch.png", false, 3840, 2160],
-  ["warpbnb", "automation-fail.png", false, 3840, 2160],
-  ["warpbnb", "topaz.mp4", true, 1920, 1080],
-  ["warpbnb", "particles.mp4", true, 1920, 1080],
-  ["warpbnb", "snap.mp4", true, 1920, 1080],
-  ["warpbnb", "rive-logo.mp4", true, 1920, 1080],
-  ["warpbnb", "commercial.png", false, 3840, 2160],
-  ["warpbnb", "voiceover.png", false, 3840, 2160],
-  ["warpbnb", "slop.png", false, 3840, 2160],
   // — PathAI
-  ["pathai", "path1.png", false, 5000, 3733],
-  ["pathai", "problem.png", false, 1920, 892],
-  ["pathai", "research-strip.mp4", true, 1864, 1080],
-  ["pathai", "insights.png", false, 3840, 1400],
-  ["pathai", "explorations-refs.png", false, 3050, 1964],
-  ["pathai", "card-explorations.png", false, 2820, 1348],
-  ["pathai", "card-iterations.png", false, 1788, 920],
-  ["pathai", "decision-panel.png", false, 1410, 936],
-  ["pathai", "decision-pivot.png", false, 1410, 767],
-  ["pathai", "decision-tradeoffs.png", false, 1920, 1080],
-  ["pathai", "workflow-create.mp4", true, 2476, 1716],
-  ["pathai", "workflow-receive.mp4", true, 2082, 1482],
-  ["pathai", "edge-cases.png", false, 2844, 1870],
-  ["pathai", "spec-sheet.png", false, 2714, 1810],
+  ["pathai", "path1-1.png", false, 1742, 1966],
+  ["pathai", "path1-2.png", false, 5462, 4096],
+  ["pathai", "path2.png", false, 3224, 1816],
+  ["pathai", "path3.png", false, 3288, 2192],
+  ["pathai", "path7.mp4", true, 3668, 2064],
+  ["pathai", "path8.png", false, 2700, 1520],
+  ["pathai", "path9.png", false, 2720, 1814],
+  ["pathai", "path10.mp4", true, 3840, 2160],
+  ["pathai", "path11.png", false, 2738, 1542],
+  // — Warpbnb
+  ["warpbnb", "warp1.png", false, 3840, 2160],
+  ["warpbnb", "warp2.png", false, 2146, 1138],
+  ["warpbnb", "warp3-1.mp4", true, 3348, 2160],
+  ["warpbnb", "warp3-2.mp4", true, 3840, 1820],
+  ["warpbnb", "warp4.png", false, 4066, 2285],
+  ["warpbnb", "warp5.png", false, 4074, 2292],
+  ["warpbnb", "warp6.mp4", true, 1922, 1080],
+  ["warpbnb", "warp7.mp4", true, 3340, 2160],
+  ["warpbnb", "warp8.mp4", true, 1920, 1080],
 ];
 
 const SHADES = ["#262626", "#222222", "#2a2a2a", "#202020", "#242424", "#282828"];
 
 const PROJECT_LABEL: Record<string, string> = {
-  toolbox: "TOOLBOX",
   warpbnb: "WARPBNB",
   pathai: "PATHAI",
 };
 
-// Interleave the three projects so neighbouring tiles come from different work —
-// the grid should read as one mixed gallery, not three stacked albums.
+// Interleave so neighbouring tiles come from different work —
+// the grid should read as one mixed gallery, not stacked albums.
 function interleave(assets: Asset[]): Asset[] {
   const buckets = new Map<string, Asset[]>();
   for (const a of assets) {
@@ -97,7 +70,7 @@ function interleave(assets: Asset[]): Asset[] {
 const ORDERED = interleave(ASSETS);
 
 export const TILES: Tile[] = ORDERED.map(([proj, file, video, w, h], i) => {
-  const base = file.replace(/\.[^.]+$/, "");
+  const src = `/${proj}/${file}`;
   return {
     id: i + 1,
     ar: +(w / h).toFixed(3),
@@ -106,9 +79,11 @@ export const TILES: Tile[] = ORDERED.map(([proj, file, video, w, h], i) => {
     kind: video ? "VIDEO" : "IMAGE",
     w,
     h,
-    thumb: `/${proj}/thumbs/${base}.jpg`,
-    grid: video ? `/${proj}/grid/${file}` : `/${proj}/thumbs/${base}.jpg`,
-    full: `/${proj}/${file}`,
+    // No separate thumbs/grid exports for the current stack — use the
+    // authored files directly; videos borrow the project cover as poster.
+    thumb: video ? `/${proj}/cover.png` : src,
+    grid: src,
+    full: src,
     video,
     project: proj,
   };

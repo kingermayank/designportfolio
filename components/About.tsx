@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ABOUT_INTRO, ABOUT_PTO, ABOUT_SECTIONS, TESTIMONIALS } from "@/lib/about";
+import Rise from "@/components/Rise";
 
 export default function About() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -180,29 +181,3 @@ export default function About() {
   );
 }
 
-// Same masked line rise used across the case studies.
-function Rise({
-  show,
-  delay,
-  children,
-}: {
-  show: boolean;
-  delay: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="riseMask">
-      <div
-        className="riseInner"
-        style={{
-          transform: show ? "translateY(0%)" : "translateY(110%)",
-          transition: show
-            ? `transform 650ms cubic-bezier(0.36, 0.54, 0, 0.99) ${delay}ms`
-            : "none",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}

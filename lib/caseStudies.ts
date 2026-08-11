@@ -5,6 +5,14 @@ export type CaseMedia = {
   /** Embed a YouTube player instead of a local image/video. */
   youtube?: boolean;
   ar?: number; // natural aspect ratio (width / height); defaults to 16/9
+  /** How the asset fills the frame. Default cover; contain letterboxes into `shade`. */
+  fit?: "cover" | "contain";
+  /** Inset the asset inside the frame (px). Use with `fit: "contain"` to pad into `shade`. */
+  pad?: { top?: number; bottom?: number; left?: number; right?: number };
+  /** Decorative frame around a contained asset (e.g. glass stroke). */
+  frame?: "glass";
+  /** HTML video playbackRate (1 = normal). */
+  playbackRate?: number;
   caption?: string;
 };
 
@@ -35,6 +43,8 @@ export type MediaBlock =
       right: CaseMedia[];
       /** When false, left keeps its natural AR instead of stretching to the right stack. */
       fillLeft?: boolean;
+      /** Column flex fractions for left / right. Defaults to equal `[1, 1]`. */
+      columns?: [number, number];
     }
   | {
       type: "embed";
@@ -98,7 +108,7 @@ const toolbox: CaseStudy = {
   slug: "toolbox",
   title: "Ikon Technologies",
   detailTitle:
-    "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion",
+    "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion.",
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
     "I led everything design-related for Toolbox as we onboarded dealerships from legacy to the new NextGen platform — 450 dealerships onboarded, and 40 directions across 450 relationships migrated from legacy. Showcasing the product at NADA 2026 drove 132 more dealership signups.",
@@ -106,7 +116,7 @@ const toolbox: CaseStudy = {
   category: "Design Engineering",
   shade: "#282828",
   mediaOnly: true,
-  accent: "#76C874", // Ikon / Toolbox green
+  accent: "#03BB7D", // Ikon brand green
   highlights: [
     {
       label: "Problem",
@@ -127,7 +137,7 @@ const toolbox: CaseStudy = {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
     video: true,
-    ar: 3840 / 2048,
+    ar: 16 / 9,
   },
   mediaBlocks: [
     { type: "full", media: tb("/toolbox/design-system.mp4", 1920 / 1080, true) },
@@ -180,7 +190,7 @@ const wb = (
 const warpbnb: CaseStudy = {
   slug: "warpbnb",
   title: "Warpbnb",
-  detailTitle: "Reimagining Airbnb for time travel across areas",
+  detailTitle: "Reimagining Airbnb for time travel across eras",
   tagline: "Reimagining Airbnb for time travel across eras.",
   description:
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
@@ -188,7 +198,7 @@ const warpbnb: CaseStudy = {
   category: "Full-Stack AI Build",
   shade: "#2b2b2b",
   websiteUrl: "https://www.warpbnb.com/",
-  accent: "#ff0257",
+  accent: "#FF0459",
   mediaOnly: true,
   highlights: [
     {
@@ -205,33 +215,41 @@ const warpbnb: CaseStudy = {
     },
   ],
   // Detail hero stays on warp11; Work 1 card uses warp12 from /warpbnb/new.
-  workCover: "/warpbnb/new/warp12.mp4",
+  workCover: "/warpbnb/thumbnail.mp4",
   hero: {
     shade: "#2b2b2b",
-    src: "/warpbnb/warp11.mp4",
-    video: true,
-    ar: 4 / 3,
+    src: "/warpbnb/cover.png",
+    ar: 16 / 9,
   },
-  // Editorial stack: full rows, then 8|9, full rows, then 6|(7/10).
-  // (No warp1 file in /warpbnb/new — stack starts at warp2.)
+  // Numbered stack: 3-1 / 3-2 sit side by side; the commercial closes it out.
   mediaBlocks: [
-    { type: "full", media: wb("/warpbnb/new/warp2.png", 1920 / 1080) },
-    { type: "full", media: wb("/warpbnb/new/warp3.png", 2146 / 1138) },
+    { type: "full", media: wb("/warpbnb/warp1.png", 3840 / 2160) },
+    { type: "full", media: wb("/warpbnb/warp2.png", 2146 / 1138) },
     {
       type: "split",
-      left: wb("/warpbnb/new/warp8.mp4", 864 / 1080, true),
-      right: [wb("/warpbnb/new/warp9.mp4", 2276 / 1080, true)],
-    },
-    { type: "full", media: wb("/warpbnb/new/warp4.png", 4066 / 2285) },
-    { type: "full", media: wb("/warpbnb/new/warp5.png", 4074 / 2292) },
-    {
-      type: "split",
-      left: wb("/warpbnb/new/warp6.png", 1944 / 2421),
+      // Wide clips letterboxed into matching square frames (white bars top/bottom).
+      left: {
+        shade: "#ffffff",
+        src: "/warpbnb/warp3-1.mp4",
+        video: true,
+        ar: 1,
+        fit: "contain",
+      },
       right: [
-        wb("/warpbnb/new/warp7.mp4", 1922 / 1080, true),
-        wb("/warpbnb/new/warp10.mp4", 1920 / 1080, true),
+        {
+          shade: "#ffffff",
+          src: "/warpbnb/warp3-2.mp4",
+          video: true,
+          ar: 1,
+          fit: "contain",
+        },
       ],
     },
+    { type: "full", media: wb("/warpbnb/warp4.png", 4066 / 2285) },
+    { type: "full", media: wb("/warpbnb/warp5.png", 4074 / 2292) },
+    { type: "full", media: wb("/warpbnb/warp6.mp4", 1922 / 1080, true) },
+    { type: "full", media: wb("/warpbnb/warp7.mp4", 3340 / 2160, true) },
+    { type: "full", media: wb("/warpbnb/warp8.mp4", 1920 / 1080, true) },
     {
       type: "full",
       media: {
@@ -371,15 +389,15 @@ const pa = (
 const pathai: CaseStudy = {
   slug: "pathai",
   title: "PathAI",
-  detailTitle: "Empowering pathologists to diagnose with confidence and speed",
-  tagline: "Empowering pathologists to diagnose with confidence and speed.",
+  detailTitle: "Empowering pathologists to diagnose with speed and confidence.",
+  tagline: "Empowering pathologists to diagnose with speed and confidence.",
   description:
     "I designed and shipped Region Comments, a collaboration tool on PathAI's Patient Diagnostics platform. It cut second-opinion turnaround times by ~45% and noticeably increased the number of cases pathologists sign out daily.",
   year: 2022,
   category: "Product Design",
   shade: "#282828",
   mediaOnly: true,
-  accent: "#a78bfa", // purple
+  accent: "#D18BFF", // PathAI brand purple
   highlights: [
     {
       label: "Problem",
@@ -397,52 +415,47 @@ const pathai: CaseStudy = {
   // Cover drives Work 1 card + detail hero (~4:3 monitor shot).
   hero: {
     shade: "#282828",
-    src: "/pathai/path1.png",
-    ar: 5000 / 3733,
+    src: "/pathai/cover.png",
+    ar: 16 / 9,
   },
-  // Editorial stack: AISight | (login / roles) → scrolling UI → rest → buttons sheet last.
+  workCover: "/pathai/thumbnail.png",
+  // Numbered stack: files are laid out by number, `n-1`/`n-2` sit side by side.
+  // 4/5/6 are the interactive Region Comments pieces, not image files.
   mediaBlocks: [
     {
       type: "split",
-      left: pa("/pathai/new/path2.png", 1336 / 1812),
-      right: [
-        pa("/pathai/new/path5.png", 2284 / 1288),
-        pa("/pathai/new/path4.png", 2280 / 1984),
-      ],
+      columns: [2, 3],
+      left: pa("/pathai/path1-1.png", 1742 / 1966),
+      right: [pa("/pathai/path1-2.png", 5462 / 4096)],
     },
-    // Scrolling AISight UI: full width, original portrait ratio (no split/fill crop).
-    { type: "full", media: pa("/pathai/new/path6.mp4", 1538 / 2048, true) },
-    { type: "full", media: pa("/pathai/new/path8.mp4", 3840 / 2160, true) },
-    { type: "full", media: pa("/pathai/new/path9.mp4", 3668 / 2064, true) },
-    // Mid-case product shot — full bleed, edge to edge (not the editorial max grid).
-    {
-      type: "full",
-      bleed: true,
-      media: pa("/pathai/new/path12.png", 3680 / 2760),
-    },
-    // Region Comments input-state walkthrough (Default → Focus → Typing → Completed).
+    { type: "full", media: pa("/pathai/path2.png", 3224 / 1816) },
+    { type: "full", media: pa("/pathai/path3.png", 3288 / 2192) },
+    // 4 — Region selection edge cases (nested, overlap priority, draw-over).
     {
       type: "embed",
-      embed: "pathai-comment-states",
+      embed: "pathai-region-edge-cases",
       shade: "#dce0e9",
       ar: 16 / 9,
     },
-    // Anatomy of a completed comment card (name / date / message → assembled).
+    // 5 — Anatomy of a completed comment card (name / date / message).
     {
       type: "embed",
       embed: "pathai-comment-anatomy",
       shade: "#dce0e9",
       ar: 16 / 9,
     },
-    // Region selection edge cases (nested, overlap priority, draw-over, z-index).
+    // 6 — Input states (Default → Focus → Typing → Completed).
     {
       type: "embed",
-      embed: "pathai-region-edge-cases",
-      shade: "#e8ebf2",
+      embed: "pathai-comment-states",
+      shade: "#dce0e9",
       ar: 16 / 9,
     },
-    { type: "full", media: pa("/pathai/new/path10.png", 1680 / 2742) },
-    { type: "full", media: pa("/pathai/new/path3.png", 2685 / 1791) },
+    { type: "full", media: pa("/pathai/path7.mp4", 3668 / 2064, true) },
+    { type: "full", media: pa("/pathai/path8.png", 2700 / 1520) },
+    { type: "full", media: pa("/pathai/path9.png", 2720 / 1814) },
+    { type: "full", media: { ...pa("/pathai/path10.mp4", 3840 / 2160, true), playbackRate: 0.5 } },
+    { type: "full", media: pa("/pathai/path11.png", 2738 / 1542) },
   ],
   credits: [
     {
@@ -550,7 +563,7 @@ const walkity: CaseStudy = {
   category: "Brand Design",
   shade: "#222222",
   mediaOnly: true,
-  accent: "#2dd4bf", // cyan
+  accent: "#00DFA8", // Walkity brand cyan
   highlights: [
     {
       label: "Motivation",
@@ -566,28 +579,38 @@ const walkity: CaseStudy = {
     },
   ],
   // Cover hero + Work card: brand.png. Case stack continues with walk11 → walk13.
-  workCover: "/walkity/new/brand.png",
+  workCover: "/walkity/thumbnail.png",
   hero: {
     shade: "#222222",
-    src: "/walkity/new/walk10.png",
-    ar: 6000 / 4500,
+    src: "/walkity/cover.png",
+    ar: 16 / 9,
   },
+  // Numbered stack: 4 / 4-2 are the paired squares, side by side.
   mediaBlocks: [
-    { type: "full", media: wk("/walkity/new/walk11.png", 6000 / 4500) },
-    { type: "full", media: wk("/walkity/new/walk12.png", 6000 / 4000) },
-    { type: "full", media: wk("/walkity/new/brand.png", 3354 / 2514) },
-    { type: "full", media: wk("/walkity/new/walk13.png", 3642 / 2731) },
-    { type: "full", media: wk("/walkity/new/walk2.png", 4143 / 2734) },
-    { type: "full", media: wk("/walkity/new/walk5.png", 2894 / 2172) },
+    { type: "full", media: wk("/walkity/walk1.png", 4016 / 2241) },
+    { type: "full", media: wk("/walkity/walk2.png", 3354 / 2514) },
+    { type: "full", media: wk("/walkity/walk3.png", 6000 / 4500) },
     {
       type: "split",
-      left: wk("/walkity/new/walk7.png", 2515 / 2515),
-      right: [wk("/walkity/new/walk8.png", 2515 / 2515)],
+      left: wk("/walkity/walk4.png", 2515 / 2515),
+      right: [wk("/walkity/walk4-2.png", 2515 / 2515)],
     },
-    { type: "full", media: wk("/walkity/new/walk3.png", 4096 / 2734) },
-    { type: "full", media: wk("/walkity/new/walk4.png", 2694 / 1768) },
-    { type: "full", media: wk("/walkity/new/walk6.mp4", 2160 / 1624, true) },
-    { type: "full", media: wk("/walkity/new/walk9.mp4", 1920 / 1080, true) },
+    { type: "full", media: wk("/walkity/walk5.png", 6000 / 4000) },
+    { type: "full", media: wk("/walkity/walk6.png", 6000 / 4500) },
+    { type: "full", media: wk("/walkity/walk7.png", 6000 / 4000) },
+    { type: "full", media: wk("/walkity/walk8.mp4", 3 / 2, true) },
+    {
+      type: "full",
+      media: {
+        shade: "#D0DBE2",
+        src: "/walkity/walk9.mp4",
+        video: true,
+        ar: 3 / 2,
+        fit: "contain",
+        pad: { top: 100, bottom: 100 },
+        frame: "glass",
+      },
+    },
   ],
   credits: [
     { label: "Role", value: "Brand strategy, visual identity, landing page design" },
@@ -631,7 +654,7 @@ const bigbasket: CaseStudy = {
   category: "Design Systems",
   shade: "#242424",
   mediaOnly: true,
-  accent: "#84cc16", // green
+  accent: "#6DE96C", // BigBasket brand green
   highlights: [
     {
       label: "Problem",
@@ -649,7 +672,7 @@ const bigbasket: CaseStudy = {
   hero: {
     shade: "#242424",
     src: "/bigbasket/cover.png",
-    ar: 3006 / 2254,
+    ar: 16 / 9,
   },
   // Order follows the reference stack after cover.
   mediaBlocks: [

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Caveat, Geist, Geist_Mono } from "next/font/google";
+import PageTransition from "@/components/PageTransition";
 import "./globals.css";
 
 // Display: Greed Narrow — Regular for large display, SemiBold for mid titles.
@@ -41,11 +42,20 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// Work 1 only — GT Walsheim Regular + Condensed Regular (trial)
+// Work 1 — GT Walsheim Regular + Medium (trial)
 const walsheim = localFont({
-  src: "../public/fonts/GT-Walsheim-Regular.woff2",
-  weight: "400",
-  style: "normal",
+  src: [
+    {
+      path: "../public/fonts/GT-Walsheim-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/GT-Walsheim-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+  ],
   variable: "--font-walsheim",
   display: "swap",
 });
@@ -114,7 +124,9 @@ export default function RootLayout({
       lang="en"
       className={`${greedNarrow.variable} ${geist.variable} ${geistMono.variable} ${walsheim.variable} ${walsheimCondensed.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <PageTransition>{children}</PageTransition>
+      </body>
     </html>
   );
 }

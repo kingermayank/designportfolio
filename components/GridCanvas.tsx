@@ -66,8 +66,8 @@ function viewAnim(dir: number, reduce: boolean) {
 }
 
 // Grid layout + drift
-const SIDE_PAD = 14;
-const GAP = 14;
+const SIDE_PAD = 16;
+const GAP = 16;
 const DRIFT_PX_PER_SEC = 33; // 1.5× prior pace — still readable, more alive
 const COPY_STRIDE = 100000; // uid namespace per duplicated copy
 

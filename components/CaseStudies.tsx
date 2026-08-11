@@ -1,14 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   CASE_STUDIES,
   type CaseMedia,
   type MediaBlock,
 } from "@/lib/caseStudies";
+import { caseHeroProps } from "@/lib/caseHero";
+import { CaseHero, MetadataList, PrimaryButton, onAccent } from "@/components/case-hero";
 import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import CommentCardAnatomy from "@/components/pathai/CommentCardAnatomy";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
+import Rise from "@/components/Rise";
 
 // /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg — every asset has one, so a
 // video shows its first frame immediately instead of flashing its backdrop.
@@ -42,20 +45,59 @@ function MediaFill({ media }: { media?: CaseMedia }) {
       />
     );
   }
-  return media.video ? (
+
+  const contain = media.fit === "contain";
+  const fillClass = "csFill" + (contain ? " csFillContain" : "");
+  const asset = media.video ? (
     <video
-      className="csFill"
+      className={fillClass}
       src={media.src}
       poster={posterFor(media.src)}
       autoPlay
       muted
       loop
       playsInline
+      ref={(el) => {
+        if (!el) return;
+        const rate = media.playbackRate ?? 1;
+        if (el.playbackRate !== rate) el.playbackRate = rate;
+      }}
     />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className="csFill" src={media.src} alt="" />
+    <img className={fillClass} src={media.src} alt="" />
   );
+
+  // Contained media sits in a padded stage so object-fit:contain can shrink
+  // the frame into the shade — never cover/crop/overflow the outer 3:2 box.
+  if (contain) {
+    const pad = media.pad;
+    const padY = (n?: number) =>
+      n != null && n > 0 ? `clamp(1.25rem, 6.5vw, ${n}px)` : "0px";
+    const padX = (n?: number) =>
+      n != null && n > 0 ? `clamp(0.75rem, 4vw, ${n}px)` : "0px";
+    return (
+      <div
+        className="csMediaStage"
+        style={
+          {
+            "--cs-media-pad-top": padY(pad?.top),
+            "--cs-media-pad-bottom": padY(pad?.bottom),
+            "--cs-media-pad-left": padX(pad?.left),
+            "--cs-media-pad-right": padX(pad?.right),
+          } as CSSProperties
+        }
+      >
+        {media.frame === "glass" ? (
+          <div className="csMediaGlass">{asset}</div>
+        ) : (
+          asset
+        )}
+      </div>
+    );
+  }
+
+  return asset;
 }
 
 function MediaTile({
@@ -73,15 +115,24 @@ function MediaTile({
     <figure className={"csFigure" + (bleed ? " csFigureBleed" : "")}>
       <div
         className={
-          "csMedia" + (fill ? " csMediaFill" : "") + (bleed ? " csMediaBleed" : "")
+          "csMedia csMediaHover" +
+          (fill ? " csMediaFill" : "") +
+          (bleed ? " csMediaBleed" : "")
         }
         style={
           fill
-            ? { background: media.shade }
-            : { background: media.shade, aspectRatio: media.ar ?? 16 / 9 }
+            ? undefined
+            : { aspectRatio: media.ar ?? 16 / 9 }
         }
+        tabIndex={0}
       >
-        <MediaFill media={media} />
+        <div
+          className="csMediaHoverWrap"
+          style={{ background: media.shade }}
+        >
+          <MediaFill media={media} />
+        </div>
+        <span className="csMediaHoverCaption">Lorem ipsum</span>
       </div>
     </figure>
   );
@@ -118,6 +169,13 @@ function MediaBlocks({
         key={i}
         className={
           "csMediaSplit" + (block.fillLeft === false ? " csMediaSplitNatural" : "")
+        }
+        style={
+          block.columns
+            ? {
+                gridTemplateColumns: `${block.columns[0]}fr ${block.columns[1]}fr`,
+              }
+            : undefined
         }
       >
         <MediaTile media={block.left} fill={block.fillLeft !== false} />
@@ -210,33 +268,6 @@ export type CaseExternalEntry = {
   onNavigate?: (slug: string) => void;
 };
 
-// koto's text entrance: lines rise from one line-height below, behind an
-// overflow-hidden mask — 650ms cubic-bezier(0.36,0.54,0,0.99), staggered.
-function Rise({
-  show,
-  delay,
-  children,
-}: {
-  show: boolean;
-  delay: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="riseMask">
-      <div
-        className="riseInner"
-        style={{
-          transform: show ? "translateY(0%)" : "translateY(110%)",
-          transition: show
-            ? `transform 650ms cubic-bezier(0.36, 0.54, 0, 0.99) ${delay}ms`
-            : "none",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
 
 type Props = {
   /** When set, skip the case list and open detail from a Work card. */
@@ -437,9 +468,23 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
   const fromWork = !!externalEntry;
   const editorial = layout === "editorial";
-  const overview = study.sections[0]?.body[0] ?? study.description;
-  const industry = study.credits?.find((credit) => credit.label === "Industry")?.value;
-  const role = study.credits?.find((credit) => credit.label === "Role")?.value;
+  const overview = study.description;
+  const heroProps = caseHeroProps(study);
+  const {
+    meta: heroMeta,
+    metaTags: heroMetaTags,
+    description: _heroDescription,
+    ctaHref: overviewCtaHref,
+    ctaLabel: overviewCtaLabel,
+    accent: overviewAccent,
+    ...heroOnly
+  } = heroProps;
+  const overviewCtaStyle: CSSProperties | undefined = overviewAccent
+    ? {
+        ["--ch-accent"]: overviewAccent,
+        ["--ch-on-accent"]: onAccent(overviewAccent) ?? "#ffffff",
+      }
+    : undefined;
 
   return (
     <div
@@ -540,44 +585,29 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
           <div className={"csDetailInner" + (editorial ? " csEditorialDetail" : "")}>
             {editorial ? (
               <div className="csEditorialContent">
-                {/* Title above hero — stacked like Ericson, not overlaid on media */}
-                <header className="csEditorialHead">
-                  <button className="csEditorialBack" onClick={startClose} type="button">
-                    <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    All projects
-                  </button>
-                  <div className="csEditorialTitleWrap">
-                    <Rise show={contentIn} delay={0}>
-                      <h1 className="csEditorialTitle">
-                        {study.tagline}
-                      </h1>
-                    </Rise>
-                  </div>
-                </header>
-
-                <div
-                  ref={heroRef}
-                  className="csEditorialHero"
-                  style={{
-                    background: study.hero?.shade ?? study.shade,
-                    aspectRatio: study.hero?.ar ?? 16 / 9,
-                  }}
-                >
-                  <MediaFill media={study.hero} />
+                <div ref={heroRef}>
+                  <CaseHero
+                    {...heroOnly}
+                    className="csCaseHero"
+                    back={{ label: "All projects", onClick: startClose }}
+                  />
                 </div>
 
                 <section className={"csEditorialIntro csFade" + (contentIn ? " in" : "")}>
-                  <div className="csEditorialMeta" aria-label="Project details">
-                    <div><span>Scope</span><p>{study.category}</p></div>
-                    {industry && <div><span>Industry</span><p>{industry}</p></div>}
-                    {role && <div><span>Role</span><p>{role}</p></div>}
-                  </div>
                   <div className="csEditorialOverview">
                     <span>Overview</span>
                     <p>{overview}</p>
+                    {overviewCtaHref ? (
+                      <div className="csEditorialCta" style={overviewCtaStyle}>
+                        <PrimaryButton href={overviewCtaHref}>
+                          {overviewCtaLabel ?? "View website"}
+                        </PrimaryButton>
+                      </div>
+                    ) : null}
                   </div>
+                  {heroMeta?.length || heroMetaTags?.values.length ? (
+                    <MetadataList items={heroMeta ?? []} tags={heroMetaTags} />
+                  ) : null}
                 </section>
 
                 <div className={"csFade" + (contentIn ? " in" : "")}>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
 import { ABOUT_INTRO } from "@/lib/about";
+import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import {
   ENG_COMPONENTS,
@@ -113,8 +114,10 @@ type Card = {
 const PROJECTS: Card[] = CASE_STUDIES.map((s, i) => {
   const cover = s.workCover;
   const coverVideo = isVideoSrc(cover);
+  // A workCover is a purpose-built card asset (thumbnail.png / .mp4) — use it
+  // as given. Only fall back to the derived /thumbs/ path when there isn't one.
   const thumb =
-    (cover && !coverVideo ? thumbFor(cover) ?? cover : undefined) ??
+    (cover && !coverVideo ? cover : undefined) ??
     (coverVideo ? thumbFor(cover) : undefined) ??
     thumbFor(s.hero?.src) ??
     s.hero?.src;
@@ -143,18 +146,23 @@ function WorkCard({
   card: Card;
   onHover?: (card: Card | null) => void;
 }) {
-  const gridSrc =
-    card.video && card.media
-      ? card.media.includes("/grid/") || card.media.includes("/new/")
-        ? card.media
-        : card.media.replace(/^\/([^/]+)\//, "/$1/grid/")
-      : undefined;
+  const { open } = usePageTransition();
+  // Video covers play from the path as authored — the old /grid/ rewrite only
+  // ever applied to assets that already lived under /grid/ or /new/.
+  const gridSrc = card.video ? card.media : undefined;
 
   return (
     <Link
       href={`/work/${card.slug}`}
       className="workCard"
       style={{ aspectRatio: card.aspect }}
+      onNavigate={(e) => {
+        e.preventDefault();
+        open(`/work/${card.slug}`, {
+          title: card.title,
+          subtitle: `${card.category}, ${card.year}`,
+        });
+      }}
       onMouseEnter={() => onHover?.(card)}
       onFocus={() => onHover?.(card)}
       onBlur={() => onHover?.(null)}
@@ -193,6 +201,7 @@ function WorkCard({
 }
 
 function WorkListRow({ item }: { item: WorkListItem }) {
+  const { open } = usePageTransition();
   const body = (
     <>
       <span className="workListThumb" style={{ background: item.shade }}>
@@ -233,7 +242,14 @@ function WorkListRow({ item }: { item: WorkListItem }) {
   }
 
   return (
-    <Link href={`/work/${item.slug}`} className="workListRow">
+    <Link
+      href={`/work/${item.slug}`}
+      className="workListRow"
+      onNavigate={(e) => {
+        e.preventDefault();
+        open(`/work/${item.slug}`, { title: item.title, subtitle: item.meta });
+      }}
+    >
       {body}
     </Link>
   );
@@ -248,6 +264,7 @@ function EngCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { open } = usePageTransition();
   return (
     <div className={"engCard" + (expanded ? " engCardOpen" : "")}>
       <button
@@ -284,7 +301,17 @@ function EngCard({
         <div className="engCardPanelInner">
           <p className="engCardBody">{item.body}</p>
           {item.slug ? (
-            <Link href={`/work/${item.slug}`} className="engCardCase">
+            <Link
+              href={`/work/${item.slug}`}
+              className="engCardCase"
+              onNavigate={(e) => {
+                e.preventDefault();
+                open(`/work/${item.slug}`, {
+                  title: item.title,
+                  subtitle: item.kind,
+                });
+              }}
+            >
               Open case study ↗
             </Link>
           ) : null}

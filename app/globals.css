@@ -20,7 +20,7 @@
   --space-7: 48px;
   --space-8: 64px;
   --space-section: 90px;
-  --space-media: 14px;
+  --space-media: 16px;
   --space-bar: 120px;
 
   /* Radii */
@@ -366,23 +366,6 @@ body {
   padding-bottom: var(--space-bar);
 }
 
-.csEditorialHead {
-  width: calc(100% - (var(--cs-editorial-inset) * 2));
-  margin: 0 auto;
-  padding: var(--space-5) 0 clamp(2rem, 5vw, 3.5rem);
-}
-
-.csEditorialHero {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background: var(--color-surface);
-}
-
-.csEditorialHero .csFill {
-  object-fit: cover;
-}
-
 .csEditorialBack {
   display: inline-flex;
   align-items: center;
@@ -404,78 +387,38 @@ body {
   color: var(--text);
 }
 
-.csEditorialTitleWrap {
-  width: 100%;
-  color: var(--text);
-}
-
-.csEditorialTitleWrap .riseMask,
-.csEditorialTitleWrap .riseInner {
-  width: 100%;
-}
-
-/* Rise uses overflow:hidden — give descenders / trailing periods room. */
-.csEditorialTitleWrap .riseMask {
-  padding-bottom: 0.18em;
-  margin-bottom: -0.08em;
-}
-
-.csEditorialTitle {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  font-family: var(--font-cesare), "Times New Roman", serif;
-  font-size: 72px;
-  font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: 0;
-  text-wrap: balance;
-  padding-bottom: 0.06em;
-}
-
-.csEditorialTagline {
-  max-width: 48rem;
-  margin: var(--space-5) 0 0;
-  font: 400 clamp(1.15rem, 2vw, 1.75rem)/1.3 var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: -0.02em;
-  color: var(--color-body);
-  text-wrap: balance;
-}
-
+/* Overview + project meta sit side by side below the hero. */
 .csEditorialIntro {
+  /* MetadataList reads --ch-* tokens; mirror the hero scope here. */
+  --ch-space-1: 4px;
+  --ch-space-2: 8px;
+  --ch-space-5: 24px;
+  --ch-text-eyebrow: 11px;
+  --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
+  --ch-tracking-label: 0.09em;
+  --ch-muted: #d4d4d4;
+  --ch-faint: #c8c8c8;
   display: grid;
-  grid-template-columns: minmax(10rem, 0.72fr) minmax(0, 1.4fr);
-  gap: clamp(3rem, 9vw, 11rem);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4rem);
   width: calc(100% - (var(--cs-editorial-inset) * 2));
-  margin: clamp(4rem, 10vw, 10rem) auto;
+  margin: clamp(3.5rem, 8vw, 8rem) auto;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
 }
 
-.csEditorialMeta,
 .csEditorialOverview {
   font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
 }
 
-.csEditorialMeta {
-  display: grid;
-  align-content: start;
-  gap: var(--space-5);
-}
-
-.csEditorialMeta span,
 .csEditorialOverview > span {
   display: block;
   margin-bottom: var(--space-2);
-  color: var(--faint);
+  color: #c8c8c8;
   font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.csEditorialMeta p {
-  margin: 0;
-  color: var(--text);
-  font-size: 1rem;
-  line-height: 1.45;
 }
 
 .csEditorialOverview p {
@@ -488,29 +431,43 @@ body {
   text-wrap: balance;
 }
 
+.csEditorialCta {
+  /* PrimaryButton tokens (normally scoped on .chHero) */
+  --ch-space-2: 8px;
+  --ch-space-5: 24px;
+  --ch-radius-sm: 4px;
+  --ch-font-body: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  --ch-accent: var(--text);
+  --ch-on-accent: #111111;
+  --ch-text: #ffffff;
+  --ch-border: rgba(255, 255, 255, 0.14);
+  --ch-muted: #d4d4d4;
+  margin-top: var(--space-6);
+}
+
 .csEditorialMediaFlow {
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: 8px;
   width: 100%;
 }
 
 .csEditorialMedia {
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: 8px;
   width: calc(100% - (var(--cs-editorial-inset) * 2));
   margin: 0 auto;
 }
 
 .csEditorialMedia .csMediaSplit,
 .csEditorialMedia .csMediaSplitRight {
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: 8px;
 }
 
 .csEditorialMedia .csMedia {
   margin-top: 0;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 /* Full-bleed media: sibling of the max-width column, same plane as the hero. */
@@ -636,7 +593,7 @@ body {
   width: 64%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-media);
+  gap: 8px;
   padding: var(--space-media) var(--space-media) 45vh 0;
 }
 
@@ -645,7 +602,7 @@ body {
   overflow: hidden;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   cursor: none;
 }
 
@@ -655,8 +612,95 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   pointer-events: none;
   border-radius: inherit;
+}
+
+/* Padded contain stage: insets the asset into the shade without cropping. */
+.csMediaStage {
+  position: absolute;
+  top: var(--cs-media-pad-top, 0px);
+  right: var(--cs-media-pad-right, 0px);
+  bottom: var(--cs-media-pad-bottom, 0px);
+  left: var(--cs-media-pad-left, 0px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Size to the visible frame so radius rounds the video, not the letterbox. */
+.csMediaStage .csFill,
+.csMediaStage .csFillContain {
+  position: relative;
+  inset: auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transform: none;
+  border-radius: 8px;
+}
+
+/* Glass stroke: 8px frosted ring with an 8px gap before the video edge. */
+.csMediaGlass {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 8px;
+  border: 8px solid rgba(255, 255, 255, 0.34);
+  border-radius: 24px;
+  background: transparent;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.csMediaGlass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.22) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 8px;
+}
+
+.csMediaGlass .csFill,
+.csMediaGlass .csFillContain {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+}
+
+.csFillContain {
+  object-fit: contain;
+  object-position: center;
 }
 
 .csYoutube {
@@ -916,7 +960,7 @@ body {
   overflow: hidden;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
 }
 
 .csHeading {
@@ -936,7 +980,7 @@ body {
   margin: 0;
 }
 
-/* Uniform 8px gutters — same as Work 1 — horizontal + vertical */
+/* Uniform 8px gutters — horizontal + vertical */
 .csMediaRail,
 .csMediaStack {
   display: flex;
@@ -977,6 +1021,10 @@ body {
   aspect-ratio: auto !important;
 }
 
+.csMediaSplit > .csFigure .csMediaHover {
+  overflow: visible;
+}
+
 /* Natural-AR split: left keeps its real ratio; right stack sits beside it. */
 .csMediaSplitNatural {
   align-items: start;
@@ -1008,7 +1056,8 @@ body {
 }
 
 /* Work 1–tight gutters: kill the default media top margin inside the rail */
-.csMediaRail .csMedia {
+.csMediaRail .csMedia,
+.csMediaStack .csMedia {
   margin-top: 0;
 }
 
@@ -1057,8 +1106,57 @@ body {
   overflow: hidden;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   margin-top: var(--space-media);
+}
+
+/* Case media hover — same push-up reveal as Work option 1 cards */
+.csMediaHover {
+  overflow: visible;
+}
+
+.csMediaHoverWrap {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  transition: bottom 167ms linear;
+}
+
+.csMediaHover:hover .csMediaHoverWrap,
+.csMediaHover:focus-visible .csMediaHoverWrap {
+  bottom: 24px;
+}
+
+.csMediaHoverCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 167ms linear;
+  transition-delay: 0ms;
+  pointer-events: none;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+}
+.csMediaHover:hover .csMediaHoverCaption,
+.csMediaHover:focus-visible .csMediaHoverCaption {
+  opacity: 1;
+  transition-delay: 167ms;
 }
 
 .csMediaRail .csCommentStates,
@@ -2400,24 +2498,6 @@ body {
 }
 
 @media (max-width: 900px) {
-  .csEditorialHead {
-    padding-top: var(--space-4);
-  }
-
-  .csEditorialTitle {
-    font-size: clamp(2.5rem, 10vw, 72px);
-  }
-
-  .csEditorialIntro {
-    grid-template-columns: 1fr;
-    gap: var(--space-7);
-  }
-
-  .csEditorialMeta {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-
   .csListInner,
   .csDetailInner {
     flex-direction: column;
@@ -2541,7 +2621,614 @@ body {
   .workNavDot,
   .workNavDescWrap,
   .workCardCaption,
-  .workCardMediaWrap {
+  .workCardMediaWrap,
+  .csMediaHoverWrap,
+  .csMediaHoverCaption {
     transition: none;
   }
+}
+
+/* ---------- Page transition (koto overlay) ---------- */
+
+#main {
+  height: 100%;
+}
+
+/* Full-bleed black curtain. Idle state is clipped away to nothing at the
+   bottom edge; the cover beat wipes that clip open upward. */
+.txCurtain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  clip-path: inset(100% 0% 0% 0%);
+  pointer-events: none;
+  will-change: clip-path, transform;
+}
+
+.txCurtain.on {
+  pointer-events: auto;
+}
+
+.txLabel {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  padding: 0 28px 0 32px;
+  overflow: hidden;
+}
+
+.txLabelInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.txTitle {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.txSubtitle {
+  flex: none;
+  margin-left: auto;
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .txCurtain {
+    display: none;
+  }
+}
+
+/* ================================================================== *
+ * Case hero — reusable hero template
+ * Full-bleed media + gradient scrim, with a content card pulled up
+ * over the lower edge of the image. See components/case-hero/.
+ * ================================================================== */
+
+.chHero {
+  /* — Spacing (4px base) — */
+  --ch-space-1: 4px;
+  --ch-space-2: 8px;
+  --ch-space-3: 12px;
+  --ch-space-4: 16px;
+  --ch-space-5: 24px;
+  --ch-space-6: 32px;
+  --ch-space-7: 48px;
+  --ch-space-8: 64px;
+
+  /* — Radii — */
+  --ch-radius-sm: 4px;
+  --ch-radius-md: 10px;
+  --ch-radius-lg: 16px;
+  --ch-radius-pill: 999px;
+
+  /* — Typography — */
+  --ch-font-display: var(--font-cesare), "Times New Roman", serif;
+  --ch-font-body: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  --ch-text-eyebrow: 11px;
+  --ch-text-title: clamp(2.5rem, 5.2vw, 4rem);
+  --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
+  --ch-tracking-label: 0.09em;
+
+  /* — Layout — */
+  --ch-gutter: clamp(1rem, 5vw, 5rem);
+  --ch-max-width: 71.25rem;
+  --ch-measure: 34rem;
+  /* The cover is never cropped: the frame takes the art's own ratio and
+     flows to whatever height that is. No viewport height, no cap. */
+  --ch-hero-ratio: 16 / 9;
+  /* How far the content group rides up into the bottom of the cover… */
+  --ch-overlap: clamp(14rem, 38vh, 26rem);
+  /* …and how far it is then nudged back down. */
+  --ch-content-offset: 40px;
+
+  /* — Neutral foreground (default) — */
+  --ch-surface: #161616;
+  --ch-text: #ffffff;
+  /* Secondary ramp: light gray on dark art — clearly readable, still
+     subordinate to the title. Contrast on #161616: muted ~11:1, faint ~6:1. */
+  --ch-muted: #d4d4d4;
+  --ch-faint: #a0a0a0;
+  --ch-border: rgba(255, 255, 255, 0.14);
+  --ch-back-color: #ffffff;
+
+  /* — Accent (neutral until a study passes one) — */
+  --ch-accent: var(--ch-text);
+  --ch-on-accent: #111111;
+
+  position: relative;
+  width: 100%;
+  font-family: var(--ch-font-body);
+}
+
+/* Tones only remap the foreground ramp — layout and spacing are identical. */
+.chHero.chToneDark {
+  --ch-surface: #0d0d0d;
+  --ch-text: #ffffff;
+  --ch-muted: #d4d4d4;
+  --ch-faint: #a0a0a0;
+  --ch-border: rgba(255, 255, 255, 0.1);
+  --ch-on-accent: #0d0d0d;
+}
+
+.chHero.chToneLight {
+  --ch-surface: #fbfbfa;
+  --ch-text: #131313;
+  --ch-muted: #3f3f3f;
+  --ch-faint: #6b6b6b;
+  --ch-border: rgba(0, 0, 0, 0.14);
+  --ch-accent: #131313;
+  --ch-on-accent: #ffffff;
+  --ch-back-color: #131313;
+}
+
+/* ---------- HeroImage ---------- */
+
+/* Full-bleed cover. The art is laid in at its own width — edge to edge — and
+   takes whatever height that gives it. No absolute fill, no `cover` zoom: the
+   image is simply fitted and anchored to the top. */
+.chMedia {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--ch-shade, var(--color-surface, #242424));
+}
+
+/* Ratio unknown — let the file alone decide the height. */
+.chMediaAuto .chMediaFill {
+  aspect-ratio: auto;
+}
+
+/* Study without hero art — keep a band for the content to sit on, not a void. */
+.chMediaEmpty {
+  aspect-ratio: auto;
+  height: clamp(9rem, 26vh, 16rem);
+}
+
+/* …and with no cover to ride up into, the content sits just under that band. */
+.chHero:has(.chMediaEmpty) {
+  --ch-overlap: 1.5rem;
+  --ch-content-offset: 0px;
+}
+
+.chMediaRounded {
+  border-radius: var(--ch-radius-md);
+}
+
+.chMediaFill {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Reserves the box before the file lands, so nothing shifts on load. */
+  aspect-ratio: var(--ch-hero-ratio);
+  object-fit: contain;
+  object-position: top center;
+  border: 0;
+}
+
+/* ---------- Back control (fixed to the viewport) ---------- */
+
+.chBack {
+  position: fixed;
+  top: var(--ch-space-5);
+  left: var(--ch-space-5);
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+  border-radius: var(--ch-radius-pill);
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  color: var(--ch-back-color, #ffffff);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+  cursor: pointer;
+  transition:
+    opacity 167ms linear,
+    transform 167ms ease-out,
+    background-color 167ms linear,
+    border-color 167ms linear;
+  opacity: 1;
+  text-decoration: none;
+}
+
+.chBack:hover {
+  background: color-mix(in srgb, var(--color-surface) 82%, #fff 4%);
+  border-color: color-mix(in srgb, #fff 14%, transparent);
+  transform: translateX(-2px);
+}
+
+.chBack:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---------- ContentCard — unboxed, overlapping the image ---------- */
+
+.chCard {
+  position: relative;
+  z-index: 1;
+  width: min(100% - (var(--ch-gutter) * 2), var(--ch-max-width));
+  margin-inline: auto;
+  margin-top: calc(var(--ch-content-offset) - var(--ch-overlap));
+  color: var(--ch-text);
+}
+
+/* Transform + opacity only, so the entrance can never shift layout. */
+@media (prefers-reduced-motion: no-preference) {
+  .chCard {
+    animation: chCardIn 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes chCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chCardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(var(--ch-space-6), 5vw, var(--ch-space-8));
+  align-items: start;
+}
+
+.chLead {
+  min-width: 0;
+}
+
+.chEyebrow {
+  margin: 0 0 var(--ch-space-4);
+  color: #c8c8c8;
+  font-size: var(--ch-text-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--ch-tracking-label);
+  text-transform: uppercase;
+}
+
+.chTitleWrap {
+  max-width: var(--ch-measure);
+}
+
+.chTitleWrap .riseMask,
+.chTitleWrap .riseInner {
+  width: 100%;
+}
+
+/* Rise uses overflow:hidden — give descenders / trailing periods room. */
+.chTitleWrap .riseMask {
+  padding-bottom: 0.18em;
+  margin-bottom: -0.08em;
+}
+
+/* Same display face and metrics as the case-study title it replaces. */
+.chTitle {
+  width: 100%;
+  margin: 0;
+  color: var(--ch-text);
+  font-family: var(--ch-font-display);
+  font-size: var(--ch-text-title);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-wrap: balance;
+  padding-bottom: 0.06em;
+}
+
+.chTitleAccent {
+  color: var(--ch-accent);
+}
+
+.chDesc {
+  max-width: var(--ch-measure);
+  margin: var(--ch-space-5) 0 0;
+  color: var(--ch-muted);
+  font-size: var(--ch-text-body);
+  line-height: 1.55;
+}
+
+.chActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ch-space-3);
+  margin-top: var(--ch-space-7);
+}
+
+/* ---------- PrimaryButton ---------- */
+
+.chBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ch-space-2);
+  min-height: 44px;
+  padding: 0 var(--ch-space-5);
+  border: 1px solid transparent;
+  border-radius: var(--ch-radius-sm);
+  background: var(--ch-accent);
+  color: var(--ch-on-accent);
+  font-family: var(--ch-font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 167ms linear, transform 167ms ease-out;
+}
+
+.chBtn:hover {
+  opacity: 0.88;
+}
+
+.chBtn:active {
+  transform: translateY(1px);
+}
+
+.chBtn:focus-visible {
+  outline: 2px solid var(--ch-text);
+  outline-offset: 3px;
+}
+
+.chBtnGhost {
+  border-color: var(--ch-border);
+  background: transparent;
+  color: var(--ch-text);
+}
+
+.chBtnGhost:hover {
+  border-color: var(--ch-muted);
+  opacity: 1;
+}
+
+.chBtnIcon {
+  display: inline-block;
+  transition: transform 167ms ease-out;
+}
+
+.chBtn:hover .chBtnIcon {
+  transform: translateX(2px);
+}
+
+/* ---------- MetadataList ---------- */
+
+.chMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ch-space-5);
+  margin: 0;
+  font-size: var(--ch-text-body);
+}
+
+.chMetaRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--ch-space-1);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+
+.chMetaRow:first-child {
+  padding-top: 0;
+}
+
+.chMetaLabel,
+.chMetaValue {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.chMetaLabel {
+  color: #c8c8c8;
+  font-size: var(--ch-text-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--ch-tracking-label);
+  line-height: 1.6;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chMetaValue {
+  color: #ffffff;
+  font-size: calc(var(--ch-text-body) + 1px);
+  line-height: 1.5;
+}
+
+/* Trailing full-width tag row (e.g. Focus area, Tools). */
+.chMetaTags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--ch-space-1);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+
+.chMetaTags dd {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.chMetaTagsLabel {
+  display: block;
+  width: 100%;
+  margin: 0;
+  color: #c8c8c8;
+  font-size: var(--ch-text-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--ch-tracking-label);
+  line-height: 1.6;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.chMetaTagsList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0 var(--ch-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #ffffff;
+  font-size: calc(var(--ch-text-body) + 1px);
+  line-height: 1.55;
+  text-align: left;
+}
+
+.chMetaTagsList li + li::before {
+  content: "•";
+  margin-right: var(--ch-space-2);
+  color: var(--ch-faint);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .csEditorialIntro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+
+  .chHero {
+    /* Narrow screens keep only a shallow overlap: the cover is a full
+       viewport tall, so a deep one would strand the whole content group on
+       top of the art with nothing but the art carrying contrast. */
+    --ch-overlap: clamp(6rem, 16vh, 10rem);
+    --ch-content-offset: 64px;
+    --ch-text-title: clamp(2.25rem, 7vw, 3.25rem);
+  }
+
+  .chCardGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ch-space-7);
+  }
+
+  .chTitle,
+  .chDesc {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .chHero {
+    --ch-overlap: clamp(4rem, 12vh, 7rem);
+    --ch-content-offset: 40px;
+    --ch-gutter: 1rem;
+  }
+
+  .chBack {
+    top: var(--ch-space-3);
+    left: var(--ch-space-3);
+  }
+
+  .chActions {
+    margin-top: var(--ch-space-6);
+  }
+
+  .chBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ---------- Case hero template page (/case-hero) ---------- */
+
+.chDemo {
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--space-7) 0 var(--space-bar);
+  background: var(--bg);
+}
+
+.chDemoHead {
+  width: min(100% - 2rem, 71.25rem);
+  margin: 0 auto var(--space-8);
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+}
+
+.chDemoHead h1 {
+  margin: 0 0 var(--space-3);
+  color: var(--text);
+  font-family: var(--font-cesare), "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+}
+
+.chDemoHead p {
+  max-width: 46rem;
+  margin: 0;
+  color: var(--color-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.chDemoBlock {
+  margin-bottom: clamp(3rem, 8vw, 7rem);
+}
+
+.chDemoLabel {
+  width: min(100% - 2rem, 71.25rem);
+  margin: 0 auto var(--space-5);
+  color: var(--faint);
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.chDemoOnLight {
+  padding: var(--space-8) 0;
+  background: #e9e9e6;
+}
+
+.chDemoMeta {
+  width: min(100% - 2rem, 32rem);
+  margin: 0 auto;
+  padding: var(--space-6);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-surface);
+}
+
+.chDemo code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.9em;
 }
