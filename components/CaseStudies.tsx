@@ -482,7 +482,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     accent: overviewAccent,
     ...heroOnly
   } = heroProps;
-  const overviewCtaStyle: CSSProperties | undefined = overviewAccent
+  const overviewCtaStyle: (CSSProperties & Record<string, string>) | undefined = overviewAccent
     ? {
         ["--ch-accent"]: overviewAccent,
         ["--ch-on-accent"]: onAccent(overviewAccent) ?? "#ffffff",
