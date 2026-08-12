@@ -4,7 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ABOUT_INTRO, ABOUT_PTO, ABOUT_SECTIONS, TESTIMONIALS } from "@/lib/about";
 import Rise from "@/components/Rise";
 
-export default function About() {
+type AboutProps = {
+  onClose?: () => void;
+};
+
+export default function About({ onClose }: AboutProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const sectionRefs = useRef(new Map<number, HTMLElement>());
   const [activeSection, setActiveSection] = useState(0);
@@ -39,6 +43,13 @@ export default function About() {
     setActiveSection(idx);
   }, []);
 
+  const scrollToSection = (i: number) => {
+    const el = sectionRefs.current.get(i);
+    const sc = scrollRef.current;
+    if (!el || !sc) return;
+    sc.scrollTo({ top: el.offsetTop - 24, behavior: "smooth" });
+  };
+
   const navItems = [...ABOUT_SECTIONS.map((s) => s.nav), "Words", "PTO"];
 
   return (
@@ -46,29 +57,53 @@ export default function About() {
       <div ref={scrollRef} className="csDetail" onScroll={onScroll}>
         <div className="csDetailInner">
           <div className="csPanel csDetailPanel" style={{ height: rootH }}>
-            <div className="csDetailHead">
+            {onClose ? (
               <Rise show={contentIn} delay={0}>
-                <div className="csDetailTitle aboutGreeting">{ABOUT_INTRO.greeting}</div>
+                <button type="button" className="csBack" onClick={onClose}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                    <path
+                      d="M8.5 3.5 4.5 7l4 3.5"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Back
+                </button>
               </Rise>
-              <Rise show={contentIn} delay={70}>
-                <div className="csDetailMeta mono">{ABOUT_INTRO.pronunciation}</div>
+            ) : null}
+            <div className="csDetailHead">
+              <Rise show={contentIn} delay={40}>
+                <div className="csDetailTitle aboutGreeting">
+                  Hey there,
+                  <br />
+                  I&apos;m Mayank<span className="workBrandDot">.</span>
+                </div>
               </Rise>
-              <nav className="csNav">
+              <Rise show={contentIn} delay={110}>
+                <a
+                  className="aboutPronunciation"
+                  href={ABOUT_INTRO.pronunciationHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {ABOUT_INTRO.pronunciation}
+                </a>
+              </Rise>
+              <nav className="csNav" aria-label="About sections">
                 {navItems.map((nav, i) => (
-                  <Rise key={nav} show={contentIn} delay={160 + i * 50}>
-                    <div className={"csNavItem" + (i === activeSection ? " on" : "")}>{nav}</div>
+                  <Rise key={nav} show={contentIn} delay={200 + i * 50}>
+                    <button
+                      type="button"
+                      className={"csNavItem" + (i === activeSection ? " on" : "")}
+                      onClick={() => scrollToSection(i)}
+                    >
+                      {nav}
+                    </button>
                   </Rise>
                 ))}
               </nav>
-              <div className="csCredits">
-                {ABOUT_INTRO.links.map((l, i) => (
-                  <Rise key={l.label} show={contentIn} delay={380 + i * 60}>
-                    <a className="aboutLink mono" href={l.href} target="_blank" rel="noreferrer">
-                      {l.label} ↗
-                    </a>
-                  </Rise>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -94,7 +129,7 @@ export default function About() {
                   }}
                   className="csSection"
                 >
-                  <h3 className="csHeading">{sec.heading}</h3>
+                  <h3 className="csHeading aboutHeading">{sec.heading}</h3>
                   {sec.body.map((p, k) => (
                     <p key={k} className="csBody">
                       {p}
@@ -120,7 +155,7 @@ export default function About() {
                 }}
                 className="csSection"
               >
-                <h3 className="csHeading">In the words of those I&rsquo;ve worked closely with.</h3>
+                <h3 className="csHeading aboutHeading">In the words of those I&rsquo;ve worked closely with.</h3>
                 <div className="aboutQuotes">
                   {TESTIMONIALS.map((t) => (
                     <figure key={t.name} className="aboutQuote">
@@ -147,31 +182,40 @@ export default function About() {
                 }}
                 className="csSection"
               >
-                <h3 className="csHeading">How I recharge when I&rsquo;m on PTO.</h3>
+                <h3 className="csHeading aboutHeading">How I recharge when I&rsquo;m on PTO.</h3>
                 <div className="aboutPtoGrid">
-                  {ABOUT_PTO.map((photo) => (
-                    <figure key={photo.src} className="aboutPtoItem">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={photo.src}
-                        alt={photo.alt}
+                  {ABOUT_PTO.map((photo) => {
+                    const caption =
+                      photo.alt && !photo.alt.startsWith("Travel")
+                        ? photo.alt
+                        : null;
+                    return (
+                      <figure
+                        key={photo.src}
+                        className={
+                          "aboutPtoItem" + (caption ? " aboutPtoItemCaptioned" : "")
+                        }
                         style={{ aspectRatio: photo.ar }}
-                      />
-                      {photo.alt && !photo.alt.startsWith("Travel") ? (
-                        <figcaption className="aboutPtoCaption mono">{photo.alt}</figcaption>
-                      ) : null}
-                    </figure>
-                  ))}
+                      >
+                        <div className="aboutPtoInner">
+                          <div className="aboutPtoMediaWrap">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              className="aboutPtoMedia"
+                              src={photo.src}
+                              alt={photo.alt}
+                            />
+                          </div>
+                          {caption ? (
+                            <figcaption className="aboutPtoCaption">
+                              {caption}
+                            </figcaption>
+                          ) : null}
+                        </div>
+                      </figure>
+                    );
+                  })}
                 </div>
-              </section>
-
-              <section className="csSection aboutOutro">
-                <h3 className="csHeading">
-                  If my work resonates or simply sparks your curiosity, I&rsquo;d love to chat.
-                </h3>
-                <a className="aboutCta mono" href="mailto:kingermayank@gmail.com">
-                  KINGERMAYANK@GMAIL.COM ↗
-                </a>
               </section>
             </div>
           </div>
@@ -180,4 +224,3 @@ export default function About() {
     </div>
   );
 }
-

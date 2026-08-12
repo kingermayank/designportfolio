@@ -9,10 +9,13 @@ export type CaseMedia = {
   fit?: "cover" | "contain";
   /** Inset the asset inside the frame (px). Use with `fit: "contain"` to pad into `shade`. */
   pad?: { top?: number; bottom?: number; left?: number; right?: number };
-  /** Decorative frame around a contained asset (e.g. glass stroke). */
-  frame?: "glass";
   /** HTML video playbackRate (1 = normal). */
   playbackRate?: number;
+  /**
+   * Flat black overlay on the hero. `true` = 80% (Toolbox default);
+   * a number is opacity 0–1 (e.g. 0.2 for PathAI).
+   */
+  scrim?: boolean | number;
   caption?: string;
 };
 
@@ -85,6 +88,13 @@ export type CaseStudy = {
   websiteUrl?: string;
   /** Brand accent for highlight labels (and website CTA). */
   accent?: string;
+  /**
+   * When false, the project is not linked to a case-study page.
+   * Defaults to true. Use with `externalUrl` for outbound Work-grid links.
+   */
+  linkable?: boolean;
+  /** Opens from the Work grid in a new tab instead of a case-study route. */
+  externalUrl?: string;
 };
 
 const G = "#262626";
@@ -97,12 +107,24 @@ const tb = (
   src: string,
   ar: number,
   video?: boolean,
+  caption?: string,
+  extras?: Partial<CaseMedia>,
 ): CaseMedia => ({
   shade: "#282828",
   src,
   ar,
   video,
+  caption,
+  ...extras,
 });
+
+/** Desktop product shots — 16:9 frame, gray mat, vertical inset. */
+const tbDesktop = (src: string, caption: string): CaseMedia =>
+  tb(src, 16 / 9, true, caption, {
+    shade: "#BCBEC4",
+    fit: "contain",
+    pad: { top: 64, bottom: 64 },
+  });
 
 const toolbox: CaseStudy = {
   slug: "toolbox",
@@ -131,30 +153,69 @@ const toolbox: CaseStudy = {
       body: "Pre-launch drove a 33% surge in dealership signups and secured 134 new dealerships before public release, with Toolbox showcased at NADA 2025.",
     },
   ],
-  // Detail hero loops; Work 1 card uses cover.mp4 from /toolbox/new.
+  // Work card keeps the desk-monitor cover; case hero uses the live-site Agent video.
   workCover: "/toolbox/new/cover.mp4",
   hero: {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
     video: true,
     ar: 16 / 9,
+    scrim: true,
   },
   mediaBlocks: [
-    { type: "full", media: tb("/toolbox/design-system.mp4", 1920 / 1080, true) },
-    { type: "full", media: tb("/toolbox/ai-chat.mp4", 3840 / 2048, true) },
-    { type: "full", media: tb("/toolbox/inventory.mp4", 3840 / 2048, true) },
-    { type: "full", media: tb("/toolbox/configurations.mp4", 3840 / 2048, true) },
-    { type: "full", media: tb("/toolbox/device-pairing.mp4", 3840 / 2048, true) },
-    { type: "full", media: tb("/toolbox/dashboard.mp4", 1920 / 1080, true) },
-    { type: "full", media: tb("/toolbox/invoices.mp4", 3840 / 2048, true) },
-    { type: "full", media: tb("/toolbox/gateways.mp4", 3840 / 2048, true) },
-    { type: "full", media: tb("/toolbox/impact.mp4", 1672 / 1080, true) },
+    // Filenames on disk are out of sync with content — map by what's in the frame.
     {
-      type: "split",
-      left: tb("/toolbox/nada-1.jpg", 1000 / 750),
-      right: [tb("/toolbox/nada-2.jpg", 1000 / 750)],
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/inventory.mp4", // Agent chat UI
+        "Giving dealers a conversational way to understand inventory, customers, service opportunities, and operational risks.",
+      ),
     },
-    { type: "full", media: tb("/toolbox/nada-3.jpg", 2048 / 1321) },
+    {
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/configurations.mp4", // Inventory map
+        "Helping sales teams find vehicles and keys faster so customers are not left waiting during test drives.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/device-pairing.mp4", // Configurations
+        "Giving dealers control over sell-first rules and battery thresholds so they can prioritize the right vehicles before problems happen.",
+      ),
+    },
+    {
+      type: "full",
+      // Phone mockups already include their own gray art — no CSS mat/padding.
+      media: tb(
+        "/toolbox/dashboard.mp4",
+        16 / 9,
+        true,
+        "Making the pairing process reliable and frustration-free to prevent returning perfectly good hardware.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/invoices.mp4", // Dashboard
+        "Helping dealers monitor operational health and catch issues before they become costly problems.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/invoices-ui.mp4", // Invoices
+        "Reducing billing confusion by bringing invoice visibility and dispute resolution into the dealer's portal.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/gateways.mp4",
+        "Bringing key-tracking infrastructure in-house to improve location accuracy and reduce operational costs.",
+      ),
+    },
   ],
   credits: [
     { label: "Company", value: "Ikon Technologies" },
@@ -190,7 +251,7 @@ const wb = (
 const warpbnb: CaseStudy = {
   slug: "warpbnb",
   title: "Warpbnb",
-  detailTitle: "Reimagining Airbnb for time travel across eras",
+  detailTitle: "Reimagining Airbnb for time travel across eras.",
   tagline: "Reimagining Airbnb for time travel across eras.",
   description:
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
@@ -220,6 +281,7 @@ const warpbnb: CaseStudy = {
     shade: "#2b2b2b",
     src: "/warpbnb/cover.png",
     ar: 16 / 9,
+    scrim: 0.6,
   },
   // Numbered stack: 3-1 / 3-2 sit side by side; the commercial closes it out.
   mediaBlocks: [
@@ -417,6 +479,7 @@ const pathai: CaseStudy = {
     shade: "#282828",
     src: "/pathai/cover.png",
     ar: 16 / 9,
+    scrim: 0.4,
   },
   workCover: "/pathai/thumbnail.png",
   // Numbered stack: files are laid out by number, `n-1`/`n-2` sit side by side.
@@ -452,10 +515,10 @@ const pathai: CaseStudy = {
       ar: 16 / 9,
     },
     { type: "full", media: pa("/pathai/path7.mp4", 3668 / 2064, true) },
-    { type: "full", media: pa("/pathai/path8.png", 2700 / 1520) },
     { type: "full", media: pa("/pathai/path9.png", 2720 / 1814) },
     { type: "full", media: { ...pa("/pathai/path10.mp4", 3840 / 2160, true), playbackRate: 0.5 } },
     { type: "full", media: pa("/pathai/path11.png", 2738 / 1542) },
+    { type: "full", media: pa("/pathai/path8.png", 2700 / 1520) },
   ],
   credits: [
     {
@@ -514,29 +577,6 @@ const soon = (nav: string, body: string): CaseSection => ({
   media: [{ shade: G, ar: 16 / 9 }],
 });
 
-const stub = (
-  slug: string,
-  title: string,
-  tagline: string,
-  description: string,
-  year: number,
-  category: string,
-  shade: string,
-): CaseStudy => ({
-  slug,
-  title,
-  tagline,
-  description,
-  year,
-  category,
-  shade,
-  sections: [
-    soon("Overview", "Full case study coming soon. Read it today at kingermayank.com."),
-    soon("Process", "Full case study coming soon. Read it today at kingermayank.com."),
-    soon("Outcome", "Full case study coming soon. Read it today at kingermayank.com."),
-  ],
-});
-
 /* ------------------------------------------------------------------ *
  * Walkity
  * ------------------------------------------------------------------ */
@@ -555,13 +595,14 @@ const wk = (
 const walkity: CaseStudy = {
   slug: "walkity",
   title: "Walkity",
-  detailTitle: "Brand strategy and landing page from scratch",
+  detailTitle: "Brand strategy and landing page from scratch.",
   tagline: "Brand strategy and landing page from scratch.",
   description:
     "Creating Walkity's brand strategy and landing page from scratch, with accessibility at the center of the work.",
   year: 2023,
   category: "Brand Design",
   shade: "#222222",
+  websiteUrl: "https://walkity.vercel.app/",
   mediaOnly: true,
   accent: "#00DFA8", // Walkity brand cyan
   highlights: [
@@ -608,7 +649,6 @@ const walkity: CaseStudy = {
         ar: 3 / 2,
         fit: "contain",
         pad: { top: 100, bottom: 100 },
-        frame: "glass",
       },
     },
   ],
@@ -643,10 +683,20 @@ const bb = (
   video,
 });
 
+/** Figma screen recordings — 16:9 frame, light gray mat, video contained. */
+const bbFigma = (src: string): CaseMedia => ({
+  shade: "#F5F5F5",
+  src,
+  video: true,
+  ar: 16 / 9,
+  fit: "contain",
+  pad: { top: 48, bottom: 48, left: 48, right: 48 },
+});
+
 const bigbasket: CaseStudy = {
   slug: "bigbasket",
   title: "BigBasket",
-  detailTitle: "A design system for India's largest grocery app",
+  detailTitle: "A design system for India's largest grocery app.",
   tagline: "A design system for India's largest grocery app.",
   description:
     "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
@@ -655,6 +705,7 @@ const bigbasket: CaseStudy = {
   shade: "#242424",
   mediaOnly: true,
   accent: "#6DE96C", // BigBasket brand green
+  workCover: "/bigbasket/thumbnail.png?v=2",
   highlights: [
     {
       label: "Problem",
@@ -671,7 +722,8 @@ const bigbasket: CaseStudy = {
   ],
   hero: {
     shade: "#242424",
-    src: "/bigbasket/cover.png",
+    src: "/bigbasket/cover.mp4",
+    video: true,
     ar: 16 / 9,
   },
   // Order follows the reference stack after cover.
@@ -680,12 +732,12 @@ const bigbasket: CaseStudy = {
     { type: "full", media: bb("/bigbasket/Audit.png", 1840 / 536) },
     { type: "full", media: bb("/bigbasket/foundations_layout2.png", 1786 / 1286) },
     { type: "full", media: bb("/bigbasket/button.png", 1920 / 857) },
-    { type: "full", media: bb("/bigbasket/components.mp4", 1280 / 800, true) },
+    { type: "full", media: bbFigma("/bigbasket/components.mp4") },
     { type: "full", media: bb("/bigbasket/ios-vs-android.png", 1920 / 857) },
     { type: "full", media: bb("/bigbasket/melon3.png", 3200 / 1118) },
     { type: "full", media: bb("/bigbasket/spider.mp4", 2880 / 1800, true) },
     { type: "full", media: bb("/bigbasket/Artboard.png", 2688 / 1680) },
-    { type: "full", media: bb("/bigbasket/guidelines.mp4", 1280 / 712, true) },
+    { type: "full", media: bbFigma("/bigbasket/guidelines.mp4") },
   ],
   credits: [
     {
@@ -706,19 +758,35 @@ const bigbasket: CaseStudy = {
   ],
 };
 
+const rolipoli: CaseStudy = {
+  slug: "rolipoli",
+  title: "Rolipoli",
+  tagline: "An adaptive product to fold and store your sleeping bag.",
+  description:
+    "An adaptive product to fold and store your sleeping bag.",
+  year: 2024,
+  category: "Product Design",
+  shade: "#262626",
+  workCover: "/rolipoli/thumbnail.png",
+  linkable: false,
+  externalUrl: "https://www.youtube.com/watch?v=u9v3gzVkyDk",
+  sections: [
+    soon("Overview", "Full case study coming soon."),
+  ],
+};
+
 export const CASE_STUDIES: CaseStudy[] = [
   toolbox,
   pathai,
   walkity,
   warpbnb,
   bigbasket,
-  stub(
-    "ikon-pm",
-    "Ikon Technologies",
-    "Untangling legacy chaos to drive revenue.",
-    "Stepping beyond design to untangle legacy chaos and drive growth: product management work at Ikon Technologies.",
-    2024,
-    "Product Management",
-    "#262626",
-  ),
+  rolipoli,
 ];
+
+export function isCaseLinkable(study: CaseStudy): boolean {
+  return study.linkable !== false;
+}
+
+/** Case studies that open a detail page (excludes Work-grid-only teasers). */
+export const LINKABLE_CASE_STUDIES = CASE_STUDIES.filter(isCaseLinkable);

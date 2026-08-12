@@ -15,6 +15,8 @@ export type HeroImageProps = {
   ratio?: number;
   /** Fill shown before the media paints (and behind transparent art). */
   shade?: string;
+  /** Flat black overlay. `true` = 80%; a number is opacity 0–1. */
+  scrim?: boolean | number;
   rounded?: boolean;
   className?: string;
 };
@@ -31,12 +33,18 @@ export default function HeroImage({
   poster,
   ratio,
   shade,
+  scrim,
   rounded,
   className,
 }: HeroImageProps) {
   const style: CSSProperties & Record<string, string | undefined> = {};
   if (ratio) style["--ch-hero-ratio"] = String(ratio);
   if (shade) style["--ch-shade"] = shade;
+  if (typeof scrim === "number") {
+    style["--ch-scrim-opacity"] = String(scrim);
+  } else if (scrim) {
+    style["--ch-scrim-opacity"] = "0.8";
+  }
 
   return (
     <figure
@@ -46,6 +54,7 @@ export default function HeroImage({
         (ratio ? "" : " chMediaAuto") +
         // No art yet — collapse to a tinted band instead of a viewport-tall void.
         (src ? "" : " chMediaEmpty") +
+        (scrim ? " chMediaScrim" : "") +
         (rounded ? " chMediaRounded" : "") +
         (className ? ` ${className}` : "")
       }

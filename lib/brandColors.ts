@@ -4,10 +4,9 @@
  * Ikon → WarpBnB → PathAI → BigBasket → Walkity.
  */
 export const BRAND_COLORS = {
-  /** Ikon Technologies — Toolbox + Ikon PM */
+  /** Ikon Technologies — Toolbox */
   ikon: "#03BB7D",
   toolbox: "#03BB7D",
-  "ikon-pm": "#03BB7D",
 
   /** WarpBnB */
   warpbnb: "#FF0459",

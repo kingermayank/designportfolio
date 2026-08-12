@@ -35,13 +35,7 @@ export default function MetadataList({ items, tags, className }: MetadataListPro
       {tags?.values.length ? (
         <div className="chMetaTags">
           <dt className="chMetaTagsLabel">{tags.label}</dt>
-          <dd>
-            <ul className="chMetaTagsList">
-              {tags.values.map((value) => (
-                <li key={value}>{value}</li>
-              ))}
-            </ul>
-          </dd>
+          <dd className="chMetaTagsList">{tags.values.join(", ")}</dd>
         </div>
       ) : null}
     </dl>

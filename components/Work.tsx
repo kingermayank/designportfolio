@@ -1,8 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type ReactNode } from "react";
+import {
+  useMemo,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { ABOUT_INTRO } from "@/lib/about";
+import { WORK_FIT_CTA } from "@/lib/letter";
+import CopyEmailButton from "@/components/CopyEmailButton";
+import EngCardPreview from "@/components/EngCardPreview";
+import EngDetailModal from "@/components/EngDetailModal";
 import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import {
@@ -67,6 +76,7 @@ const ASPECT_BY_SLUG: Partial<Record<string, Aspect>> = {
   pathai: "4 / 3",
   bigbasket: "4 / 3",
   walkity: "4 / 3",
+  rolipoli: "4 / 3",
 };
 
 function thumbFor(src?: string): string | undefined {
@@ -86,6 +96,20 @@ function isVideoSrc(src?: string): boolean {
   return Boolean(src && /\.(mp4|webm|mov)$/i.test(src));
 }
 
+function subscribeNarrow(onChange: () => void) {
+  const mql = window.matchMedia("(max-width: 560px)");
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+
+function useIsNarrow() {
+  return useSyncExternalStore(
+    subscribeNarrow,
+    () => window.matchMedia("(max-width: 560px)").matches,
+    () => false,
+  );
+}
+
 /** Square brand marks for the Work hover meta thumb. */
 const LOGO_BY_SLUG: Record<string, string> = {
   toolbox: "/logos/toolbox.png?v=2",
@@ -93,7 +117,6 @@ const LOGO_BY_SLUG: Record<string, string> = {
   pathai: "/logos/pathai.png?v=2",
   bigbasket: "/logos/bigbasket.png?v=2",
   walkity: "/logos/walkity.png?v=2",
-  "ikon-pm": "/logos/ikon.png?v=2",
 };
 
 type Card = {
@@ -109,6 +132,8 @@ type Card = {
   thumb?: string;
   logo?: string;
   aspect: Aspect;
+  linkable: boolean;
+  externalUrl?: string;
 };
 
 const PROJECTS: Card[] = CASE_STUDIES.map((s, i) => {
@@ -136,6 +161,8 @@ const PROJECTS: Card[] = CASE_STUDIES.map((s, i) => {
     thumb,
     logo: LOGO_BY_SLUG[s.slug],
     aspect: ASPECT_BY_SLUG[s.slug] ?? ASPECTS[i % ASPECTS.length],
+    linkable: s.linkable !== false,
+    externalUrl: s.externalUrl,
   };
 });
 
@@ -151,6 +178,72 @@ function WorkCard({
   // ever applied to assets that already lived under /grid/ or /new/.
   const gridSrc = card.video ? card.media : undefined;
 
+  const inner = (
+    <div className="workCardInner">
+      <div className="workCardMediaWrap" style={{ background: card.shade }}>
+        {gridSrc ? (
+          <video
+            className="workCardMedia"
+            src={gridSrc}
+            poster={card.thumb}
+            muted
+            loop
+            playsInline
+            autoPlay
+            preload="metadata"
+          />
+        ) : card.thumb || card.media ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            className="workCardMedia"
+            src={card.thumb || card.media}
+            alt=""
+          />
+        ) : (
+          <span className="workCardPlaceholder">{card.title}</span>
+        )}
+      </div>
+      <span className="workCardCaption">
+        <span className="workCardName">{card.title}</span>
+        <span className="workCardTagline">{card.tagline}</span>
+      </span>
+    </div>
+  );
+
+  const hoverProps = {
+    onMouseEnter: () => onHover?.(card),
+    onFocus: () => onHover?.(card),
+    onBlur: () => onHover?.(null),
+  };
+
+  if (card.externalUrl) {
+    return (
+      <a
+        href={card.externalUrl}
+        className="workCard"
+        style={{ aspectRatio: card.aspect }}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${card.title} (opens in a new tab)`}
+        {...hoverProps}
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  if (!card.linkable) {
+    return (
+      <div
+        className="workCard workCardStatic"
+        style={{ aspectRatio: card.aspect }}
+        {...hoverProps}
+      >
+        {inner}
+      </div>
+    );
+  }
+
   return (
     <Link
       href={`/work/${card.slug}`}
@@ -163,39 +256,9 @@ function WorkCard({
           subtitle: `${card.category}, ${card.year}`,
         });
       }}
-      onMouseEnter={() => onHover?.(card)}
-      onFocus={() => onHover?.(card)}
-      onBlur={() => onHover?.(null)}
+      {...hoverProps}
     >
-      <div className="workCardInner">
-        <div className="workCardMediaWrap" style={{ background: card.shade }}>
-          {gridSrc ? (
-            <video
-              className="workCardMedia"
-              src={gridSrc}
-              poster={card.thumb}
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="metadata"
-            />
-          ) : card.thumb || card.media ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              className="workCardMedia"
-              src={card.thumb || card.media}
-              alt=""
-            />
-          ) : (
-            <span className="workCardPlaceholder">{card.title}</span>
-          )}
-        </div>
-        <span className="workCardCaption">
-          <span className="workCardName">{card.title}</span>
-          <span className="workCardTagline">{card.tagline}</span>
-        </span>
-      </div>
+      {inner}
     </Link>
   );
 }
@@ -257,75 +320,41 @@ function WorkListRow({ item }: { item: WorkListItem }) {
 
 function EngCard({
   item,
-  expanded,
-  onToggle,
+  onOpen,
 }: {
   item: EngComponent;
-  expanded: boolean;
-  onToggle: () => void;
+  onOpen: () => void;
 }) {
-  const { open } = usePageTransition();
   return (
-    <div className={"engCard" + (expanded ? " engCardOpen" : "")}>
-      <button
-        type="button"
-        className="engCardHit"
-        aria-expanded={expanded}
-        onClick={onToggle}
-      >
-        <span className="engCardMedia" style={{ background: item.shade }}>
-          {item.video ? (
-            <video
-              src={item.src}
-              poster={item.thumb}
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="metadata"
-            />
-          ) : item.thumb || item.src ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.thumb || item.src} alt="" />
-          ) : null}
-        </span>
-        <span className="engCardBar">
-          <span className="engCardName">{item.title}</span>
-          <span className="engCardKind">{item.kind}</span>
-          <span className="engCardChevron" aria-hidden>
-            {expanded ? "−" : "+"}
-          </span>
-        </span>
-      </button>
-      <div className={"engCardPanel" + (expanded ? " open" : "")}>
-        <div className="engCardPanelInner">
-          <p className="engCardBody">{item.body}</p>
-          {item.slug ? (
-            <Link
-              href={`/work/${item.slug}`}
-              className="engCardCase"
-              onNavigate={(e) => {
-                e.preventDefault();
-                open(`/work/${item.slug}`, {
-                  title: item.title,
-                  subtitle: item.kind,
-                });
-              }}
-            >
-              Open case study ↗
-            </Link>
-          ) : null}
-        </div>
-      </div>
+    <div
+      className="engCard"
+      role="button"
+      tabIndex={0}
+      aria-haspopup="dialog"
+      onClick={onOpen}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
+    >
+      <EngCardPreview item={item} />
+      <span className="engCardBar">
+        <span className="engCardName">{item.title}</span>
+        <span className="engCardKind">{item.kind}</span>
+      </span>
     </div>
   );
 }
 
 export default function Work() {
+  const { open } = usePageTransition();
+  const isNarrow = useIsNarrow();
   const [hoverIdx, setHoverIdx] = useState(-1);
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
   const [lens, setLens] = useState<WorkLensId>("visual");
-  const [engOpen, setEngOpen] = useState<string | null>(null);
+  const [engActive, setEngActive] = useState<EngComponent | null>(null);
   const showingProjects = lens === "visual";
 
   const cards = PROJECTS;
@@ -365,6 +394,26 @@ export default function Work() {
             founder&apos;s mindset who ships experiences with speed, taste,
             and judgement.
           </p>
+
+          <div className="workFit">
+            <div className="workFitActions">
+              <Link
+                href="/about"
+                className="workFitBtn workFitBtnSolid"
+                onNavigate={(e) => {
+                  e.preventDefault();
+                  open("/about", { title: "About Me" });
+                }}
+              >
+                {WORK_FIT_CTA.aboutLabel}
+              </Link>
+              <CopyEmailButton
+                email={WORK_FIT_CTA.email}
+                label={WORK_FIT_CTA.copyEmailLabel}
+              />
+            </div>
+          </div>
+
           <div className="workSocials">
             {ABOUT_INTRO.links.map((link) => (
               <a
@@ -439,7 +488,7 @@ export default function Work() {
                 className={"workLens" + (active ? " on" : "")}
                 onClick={() => {
                   setLens(l.id);
-                  setEngOpen(null);
+                  setEngActive(null);
                   setHoverIdx(-1);
                 }}
               >
@@ -451,19 +500,31 @@ export default function Work() {
         </nav>
 
         {showingProjects ? (
-          <div className="workGrid" key="visual-masonry">
-            {columns.map((col, ci) => (
-              <div className="workCol" key={ci}>
-                {col.map((card) => (
-                  <WorkCard
-                    key={card.slug}
-                    card={card}
-                    onHover={setHoverCard}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
+          isNarrow ? (
+            <div className="workGrid workGridFlat" key="visual-flat">
+              {cards.map((card) => (
+                <WorkCard
+                  key={card.slug}
+                  card={card}
+                  onHover={setHoverCard}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="workGrid" key="visual-masonry">
+              {columns.map((col, ci) => (
+                <div className="workCol" key={ci}>
+                  {col.map((card) => (
+                    <WorkCard
+                      key={card.slug}
+                      card={card}
+                      onHover={setHoverCard}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          )
         ) : lens === "systems" ? (
           <div className="workList" key="systems">
             {SYSTEMS_LIST.map((item) => (
@@ -476,15 +537,16 @@ export default function Work() {
               <EngCard
                 key={item.id}
                 item={item}
-                expanded={engOpen === item.id}
-                onToggle={() =>
-                  setEngOpen((cur) => (cur === item.id ? null : item.id))
-                }
+                onOpen={() => setEngActive(item)}
               />
             ))}
           </div>
         )}
       </div>
+
+      {engActive ? (
+        <EngDetailModal item={engActive} onClose={() => setEngActive(null)} />
+      ) : null}
     </div>
   );
 }

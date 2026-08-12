@@ -21,8 +21,9 @@ export type AboutPhoto = {
 export const ABOUT_INTRO = {
   greeting: "Hey there, I'm Mayank.",
   pronunciation: "{pronounced my-yunk}",
+  pronunciationHref: "https://www.youtube.com/watch?v=yisa-f1HAH4",
   summary:
-    "I am a pi-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products, with 5+ years of experience crafting web platforms, mobile apps, and design systems.",
+    "I am a pi-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   hero: {
     src: "/about/hero.jpg",
     alt: "Mayank Kinger",
@@ -38,6 +39,9 @@ export const ABOUT_INTRO = {
     },
     { label: "Email", href: "mailto:kingermayank@gmail.com" },
   ],
+  /** Same Drive file as the Resume social — used by the Option 1 fit CTA. */
+  resumeHref:
+    "https://drive.google.com/file/d/1ARMGtXzDuXnK0jrYjc3dxizeUVrlPWTF/view?usp=sharing",
 };
 
 export const ABOUT_SECTIONS: AboutSection[] = [
@@ -45,63 +49,62 @@ export const ABOUT_SECTIONS: AboutSection[] = [
     nav: "Origin",
     heading: "Where it all began.",
     body: [
-      "I've always been passionate about creating and about technology, so pursuing a degree in Computer Science felt like a natural choice. But I quickly realized I was more interested in the principles and rationale behind the code I was writing than the code itself.",
-      "That led me to explore design and adjacent creative fields — visual design, AR/VR, game design, filmmaking — while working with student organizations and early-stage startups. Through those experiences I developed a deep appreciation for the creative problem-solving involved in design.",
-      "This background shaped me into a designer who values scalability and embraces systems thinking, which lets me thrive in ambiguous environments alongside cross-functional teams.",
+      "I've always been passionate about creating and technology, so pursuing a degree in Computer Science during my undergraduate studies felt like a natural choice. However, I quickly realized that I was more interested in understanding the underlying principles and rationale behind the code I was writing. This led me to explore the world of design and creative fields like visual design, AR/VR, game design, and filmmaking, while working with student organizations and early-stage startups. Through these experiences, I developed a deep appreciation for the creative problem-solving involved in design.",
+      "This background has shaped me into a designer who values scalability and embraces a systems-thinking approach, enabling me to thrive in ambiguous environments while collaborating with cross-functional teams.",
     ],
   },
   {
     nav: "AI",
     heading: "How my work is evolving with AI.",
     body: [
-      "My goal this year is to transition from an AI-enabled designer to a design engineer — someone who not only ships what he designs, but can debug sloppy code and fully own the front end.",
-      "I primarily iterate through code-based workflows using tools like Cursor and Claude Code, turning ideas directly into working prototypes. At work I'm building an LLM-aware design system that exposes tokens and components directly to the model, enabling context-aware, agentic development. That extends into a vibe-coding starter kit that lets product teams rapidly spin up production-quality proofs of concept.",
-      "I've built a solid foundation in React and TypeScript, and I'm going deeper into motion with GSAP and Framer Motion. At the same time I'm intentionally pushing my visual craft, brand design, and creative direction. AI can get you to a 7/10 experience by default; the real leverage now is taking that to a 15/10. I've been experimenting with Rive and Figma Weave to go beyond static design into rich, expressive, interactive work.",
-      "It's intense and sometimes exhausting, but it's unlocking a level of velocity and creative expression I couldn't reach before — and I'm all in.",
+      "My goal this year is to transition from an AI-enabled designer to a design engineer, someone who not only ships what he designs, but also debug sloppy code and fully own the front-end.",
+      "I primarily iterate using code-based workflows using tools like Cursor and Claude Code, turning ideas directly into working prototypes. At work, I'm building an LLM-aware design system that exposes tokens and components directly to the model, enabling context-aware, agentic development. This extends into a \"vibe coding\" starter kit that allows product teams to rapidly experiment and spin up production-quality proofs of concept.",
+      "I've built a solid foundation in React and TypeScript, and I'm going deeper into motion with GSAP and Framer Motion. At the same time, I'm intentionally pushing my visual craft, brand design, and creative direction. AI can get you to a 7/10 experience by default, but the real leverage now is in taking that to a 15/10. I've been experimenting with Rive and Figma Weave to go beyond static design into rich, expressive, and interactive visual experiences.",
+      "It's intense and sometimes exhausting, but it's unlocking a level of velocity and creative expression I couldn't reach before and I'm all in.",
     ],
   },
   {
     nav: "Philosophy",
     heading: "My work philosophy.",
     body: [
-      "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. Designers owe a certain responsibility not just to their work, but to society and its people.",
+      "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. I feel that designers owe a certain amount of responsibility not just towards their work but also towards society and its people.",
     ],
     principles: [
       {
         title: "Beauty is in the details.",
-        text: "Great design lives in the nuances. I put in the extra effort to make sure every interaction feels just right, guided by a sense of taste built over years.",
+        text: "I believe that great design is in the nuances, and I put in the extra effort to make sure every interaction feels just right. Over the years, I've developed a keen sense of taste that guides me in creating designs that are both refined and impactful.",
       },
       {
         title: "Stay hungry. Stay foolish.",
-        text: "I never shy away from being vulnerable, admitting mistakes, and asking questions. I don't believe in pretending to be perfect — no one is.",
+        text: "I never shy away from being vulnerable, admitting mistakes and asking questions. I don't believe in pretending to be perfect—no one is.",
       },
       {
         title: "Bruce Lee's 'Be Water' approach.",
-        text: "I prioritize quality, but I know when a tent is better than a castle. Like water, I shape myself to fit tight timelines and constraints while maintaining conviction.",
+        text: "I prioritize quality, but I know when a tent is better than a castle. Like water, I shape myself to fit tight timelines and constraints, staying flexible while maintaining my conviction. My experience across organizations of various sizes and maturity levels has taught me to unlearn, relearn, and find the most impactful ways to contribute.",
       },
       {
         title: "Teamwork makes the dream work.",
-        text: "The best products are built through strong collaboration. I bring engineers into discovery early and partner closely with PMs to align on strategy.",
+        text: "I believe that the best products are built through strong collaboration. I like bringing engineers into the discovery process early and partnering closely with product managers to align on strategy. It's all about creating a shared vision and working together to make it a reality.",
       },
       {
         title: "Feedback is a gift.",
-        text: "Giving or receiving, candid feedback is the fastest route to growth — both for me and for the products I work on.",
+        text: "Whether it's giving or receiving, I believe that candid feedback is the fastest route to growth, both for myself and the products I work on.",
       },
       {
         title: "Say what needs to be said.",
-        text: "I don't like beating around the bush and wasting everyone's time. If something needs to be said, I'll speak up.",
+        text: "I don't like beating around the bush and wasting the time of everyone involved. I'm not one to hold back my thoughts, if something needs to be said, I'll speak up.",
       },
       {
         title: "Design without borders.",
-        text: "I don't stay constrained by my job title. Whether it's writing PRDs, troubleshooting with developers, or creating training materials — if something needs doing, I'll step up.",
+        text: "I don't like to remain constrained by my job title. I bring my T-shaped skills and founder mentality to every project, understanding what it means to take full ownership. If something needs to be done, I'll step up—whether it's writing PRD's, troubleshooting with developers, or creating training materials, whatever helps the team succeed.",
       },
       {
         title: "Ambiguity fuels creativity.",
-        text: "The unknown doesn't intimidate me, it energizes me. I thrive when things are unclear — finding a path forward is what makes the process rewarding.",
+        text: "I believe that ambiguity is where the magic happens. The unknown doesn't intimidate me—it energizes and excites me. I embrace challenges, push through the initial overwhelm, and find clarity on the other side. I thrive when things are unclear—it's the challenge of finding a path forward that makes the process exciting and rewarding.",
       },
       {
         title: "Commitment to giving back.",
-        text: "I'm passionate about helping others grow. I've received help from countless people I could never repay, and I'm committed to paying it forward.",
+        text: "I'm passionate about helping others grow. I've been fortunate to receive help from countless people I could never fully repay, and I'm committed to giving back and supporting others to the best of my ability.",
       },
     ],
   },
@@ -124,14 +127,14 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "Mayank was a great addition to our design team at bb. His eagerness to learn and passion for visual design was evident in the quality of the work he produced. He built a design system with the help of team members by quickly adapting and understanding of our design standards and bringing fresh ideas to the table. I have no doubt that Mayank will continue to excel in his career.",
+      "Mayank was a great addition to our design team at bb. His eagerness to learn and passion for visual design was evident in the quality of the work he produced. He built a design system with the help of team members by quickly adapting and understanding of our design standards and bringing fresh ideas to the table. I have no doubt that Mayank will continue to excel in his career and I highly recommend him for any design opportunities in the future.",
     name: "Abhiteja Vulapu",
     role: "Head of Design, BigBasket",
     avatar: "/about/avatar-abhiteja.png",
   },
   {
     quote:
-      "Mayank is a very talented and dedicated designer who brings storytelling and visual communication to the fore. His ability to clearly articulate his thoughts and think rationally made it a joy to work and have meaningful conversations with him. He is a quick learner and has an inquisitive mind that helped him learn and unlearn various concepts here at bigbasket — especially on the design system project.",
+      "Mayank is a very talented and dedicated designer who brings storytelling and visual communication to the fore. His ability to clearly articulate his thoughts and think rationally, made it a joy to work and have meaningful conversations with him. He is a quick learner and has an inquisitive mind that helped him learn and unlearn various concepts here at bigbasket - especially on the design system project.",
     name: "Raghav Vasudevan",
     role: "Senior Product Designer, BigBasket",
     avatar: "/about/avatar-raghav.jpeg",

@@ -14,8 +14,7 @@ export const HIRING_LETTER = {
 };
 
 export const WORK_FIT_CTA = {
-  title: "Let's see if this could be a great fit?",
-  body: "Learn more about me and a letter to my future hiring manager.",
   aboutLabel: "About Me",
-  letterLabel: "Read Letter",
+  copyEmailLabel: "Copy Email",
+  email: "kingermayank@gmail.com",
 };

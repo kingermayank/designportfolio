@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
-  CASE_STUDIES,
+  LINKABLE_CASE_STUDIES,
   type CaseMedia,
   type MediaBlock,
 } from "@/lib/caseStudies";
@@ -88,11 +88,7 @@ function MediaFill({ media }: { media?: CaseMedia }) {
           } as CSSProperties
         }
       >
-        {media.frame === "glass" ? (
-          <div className="csMediaGlass">{asset}</div>
-        ) : (
-          asset
-        )}
+        {asset}
       </div>
     );
   }
@@ -111,28 +107,35 @@ function MediaTile({
   /** Edge-to-edge — breaks out of the editorial content max-width. */
   bleed?: boolean;
 }) {
+  const caption = media.caption?.trim();
   return (
     <figure className={"csFigure" + (bleed ? " csFigureBleed" : "")}>
       <div
         className={
-          "csMedia csMediaHover" +
+          "csMedia" +
+          (caption ? " csMediaHover" : "") +
           (fill ? " csMediaFill" : "") +
           (bleed ? " csMediaBleed" : "")
         }
-        style={
-          fill
-            ? undefined
-            : { aspectRatio: media.ar ?? 16 / 9 }
-        }
-        tabIndex={0}
+        style={{
+          ...(caption ? undefined : { background: media.shade }),
+          ...(fill ? undefined : { aspectRatio: media.ar ?? 16 / 9 }),
+        }}
+        tabIndex={caption ? 0 : undefined}
       >
-        <div
-          className="csMediaHoverWrap"
-          style={{ background: media.shade }}
-        >
+        {caption ? (
+          <div
+            className="csMediaHoverWrap"
+            style={{ background: media.shade }}
+          >
+            <MediaFill media={media} />
+          </div>
+        ) : (
           <MediaFill media={media} />
-        </div>
-        <span className="csMediaHoverCaption">Lorem ipsum</span>
+        )}
+        {caption ? (
+          <span className="csMediaHoverCaption">{caption}</span>
+        ) : null}
       </div>
     </figure>
   );
@@ -277,7 +280,7 @@ type Props = {
 };
 
 function indexForSlug(slug: string): number {
-  const idx = CASE_STUDIES.findIndex((s) => s.slug === slug);
+  const idx = LINKABLE_CASE_STUDIES.findIndex((s) => s.slug === slug);
   return idx >= 0 ? idx : 0;
 }
 
@@ -343,7 +346,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   // Work → case: open the matching study immediately (no expand morph).
   useLayoutEffect(() => {
     if (!externalEntry || startedExternal.current) return;
-    const idx = CASE_STUDIES.findIndex((s) => s.slug === externalEntry.slug);
+    const idx = LINKABLE_CASE_STUDIES.findIndex((s) => s.slug === externalEntry.slug);
     if (idx < 0) {
       externalEntry.onClose();
       return;
@@ -353,10 +356,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   }, [externalEntry, showDetail]);
 
   const nextCase = useCallback(() => {
-    const nextIdx = (detailIdx + 1) % CASE_STUDIES.length;
+    const nextIdx = (detailIdx + 1) % LINKABLE_CASE_STUDIES.length;
     const entry = externalRef.current;
     if (entry?.onNavigate) {
-      entry.onNavigate(CASE_STUDIES[nextIdx].slug);
+      entry.onNavigate(LINKABLE_CASE_STUDIES[nextIdx].slug);
       return;
     }
     showDetail(nextIdx);
@@ -463,8 +466,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     }
   }, []);
 
-  const study = CASE_STUDIES[detailIdx];
-  const next = CASE_STUDIES[(detailIdx + 1) % CASE_STUDIES.length];
+  const study = LINKABLE_CASE_STUDIES[detailIdx];
+  const next = LINKABLE_CASE_STUDIES[(detailIdx + 1) % LINKABLE_CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
   const editorial = layout === "editorial";
@@ -515,7 +518,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
               </p>
               <div className="csWorkBlock">
                 <div className="csTitleMask">
-                  {CASE_STUDIES.map((s, i) => (
+                  {LINKABLE_CASE_STUDIES.map((s, i) => (
                     <div
                       key={s.slug}
                       className="csTitleLayer"
@@ -530,7 +533,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   ))}
                 </div>
                 <div className="csDescWrap">
-                  {CASE_STUDIES.map((s, i) => (
+                  {LINKABLE_CASE_STUDIES.map((s, i) => (
                     <div
                       key={s.slug}
                       className="csDescLayer"
@@ -556,7 +559,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
               </div>
             </div>
             <div className="csTiles">
-              {CASE_STUDIES.map((s, i) => (
+              {LINKABLE_CASE_STUDIES.map((s, i) => (
                 <div
                   key={s.slug}
                   ref={(el) => {
@@ -843,7 +846,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                         type="button"
                       >
                         [ VIEW ALL PROJECTS ]{" "}
-                        <span>({CASE_STUDIES.length})</span>
+                        <span>({LINKABLE_CASE_STUDIES.length})</span>
                       </button>
                       <div
                         ref={footerTileRef}

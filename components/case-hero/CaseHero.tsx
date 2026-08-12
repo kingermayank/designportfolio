@@ -92,9 +92,8 @@ function titleWithAccent(title: string, accent?: string) {
 }
 
 /**
- * One continuous hero: the image is the background layer, and the content
- * group sits unboxed over its lower edge and flows on into the page. No
- * scrim is drawn — the art is expected to carry its own gradient.
+ * One continuous hero: the cover fills the first viewport, and the content
+ * group (company + title) sits centered over the media.
  */
 export default function CaseHero({
   eyebrow,

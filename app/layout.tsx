@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Caveat, Geist, Geist_Mono } from "next/font/google";
+import { Caveat } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
 import "./globals.css";
 
@@ -27,22 +27,7 @@ const greedNarrow = localFont({
   display: "swap",
 });
 
-// Body / UI — Regular for copy, Medium/SemiBold for headings & labels
-const geist = Geist({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-geist",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-geist-mono",
-  display: "swap",
-});
-
-// Work 1 — GT Walsheim Regular + Medium (trial)
+// Body / UI — GT Walsheim Regular + Medium (trial)
 const walsheim = localFont({
   src: [
     {
@@ -65,6 +50,19 @@ const walsheimCondensed = localFont({
   weight: "400",
   style: "normal",
   variable: "--font-walsheim-condensed",
+  display: "swap",
+});
+
+// Small caps / UI labels — Nitti PX Bold (Semibold weight)
+const nittiPx = localFont({
+  src: [
+    {
+      path: "../public/fonts/NittiPX-Bold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+  ],
+  variable: "--font-nitti-px",
   display: "swap",
 });
 
@@ -112,6 +110,22 @@ export const metadata: Metadata = {
   title: "Mayank Kinger",
   description:
     "Product designer and high agency builder with a founder's mindset who ships experiences with speed, taste, and judgement.",
+  icons: {
+    icon: [
+      {
+        url: "/icons/favicon-light.png",
+        type: "image/png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icons/favicon-dark.png",
+        type: "image/png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
@@ -122,7 +136,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${greedNarrow.variable} ${geist.variable} ${geistMono.variable} ${walsheim.variable} ${walsheimCondensed.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
+      className={`${greedNarrow.variable} ${walsheim.variable} ${walsheimCondensed.variable} ${nittiPx.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
     >
       <body>
         <PageTransition>{children}</PageTransition>

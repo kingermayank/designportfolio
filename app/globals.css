@@ -1,6 +1,6 @@
 :root {
   /* Koto style system */
-  --color-canvas: #161616;
+  --color-canvas: #0e0e0e;
   --color-surface: #242424;
   --color-border: #303030;
   --color-faint: #595959;
@@ -31,10 +31,11 @@
 
   /* Type roles
      Display (Greed Narrow): 400 Regular at large sizes, 600 SemiBold for page titles
-     Body (Geist): 400 Regular copy, 500 Medium labels/active, 600 SemiBold headings */
+     Body (GT Walsheim): 400 Regular copy, 500 Medium
+     Labels (Nitti PX Semibold): small caps — Overview, Company, Role, etc. */
   --font-display: var(--font-greed-narrow), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-geist), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-nitti-px), ui-sans-serif, system-ui, sans-serif;
   --text-display-lg: 44px;
   --text-display: 36px;
   --text-display-sm: 30px;
@@ -64,6 +65,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  height: 100dvh;
 }
 
 body {
@@ -73,10 +75,12 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
+  overflow-x: clip;
 }
 
 .stage {
   height: 100vh;
+  height: 100dvh;
   padding: 0;
 }
 
@@ -108,13 +112,13 @@ body {
 .rows {
   display: flex;
   flex-direction: column;
-  gap: var(--space-media);
+  gap: 8px;
   align-items: stretch;
 }
 
 .row {
   display: flex;
-  gap: var(--space-media);
+  gap: 8px;
   justify-content: flex-start;
 }
 
@@ -393,9 +397,10 @@ body {
   --ch-space-1: 4px;
   --ch-space-2: 8px;
   --ch-space-5: 24px;
-  --ch-text-eyebrow: 11px;
+  --ch-text-eyebrow: 14px;
+  --ch-line-label: 20px;
   --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
-  --ch-tracking-label: 0.09em;
+  --ch-tracking-label: 0.08em;
   --ch-muted: #d4d4d4;
   --ch-faint: #c8c8c8;
   display: grid;
@@ -403,7 +408,7 @@ body {
   align-items: start;
   gap: clamp(2rem, 5vw, 4rem);
   width: calc(100% - (var(--cs-editorial-inset) * 2));
-  margin: clamp(3.5rem, 8vw, 8rem) auto;
+  margin: calc(clamp(3.5rem, 8vw, 8rem) + 20px) auto clamp(3.5rem, 8vw, 8rem);
   font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -413,12 +418,16 @@ body {
 
 .csEditorialOverview > span {
   display: block;
-  margin-bottom: var(--space-2);
+  margin: 0 0 var(--space-2);
+  padding: 0;
   color: #c8c8c8;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-family: var(--font-label);
+  font-size: var(--ch-text-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--ch-tracking-label);
+  line-height: var(--ch-line-label);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .csEditorialOverview p {
@@ -647,57 +656,6 @@ body {
   border-radius: 8px;
 }
 
-/* Glass stroke: 8px frosted ring with an 8px gap before the video edge. */
-.csMediaGlass {
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-  max-height: 100%;
-  padding: 8px;
-  border: 8px solid rgba(255, 255, 255, 0.34);
-  border-radius: 24px;
-  background: transparent;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.csMediaGlass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(
-    155deg,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0.08) 45%,
-    rgba(255, 255, 255, 0.22) 100%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  padding: 8px;
-}
-
-.csMediaGlass .csFill,
-.csMediaGlass .csFillContain {
-  position: relative;
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 8px;
-}
-
 .csFillContain {
   object-fit: contain;
   object-position: center;
@@ -816,7 +774,7 @@ body {
 }
 
 .csHighlightLabel {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -869,11 +827,47 @@ body {
   flex-shrink: 0;
 }
 
-/* Sentence-length display (About) stays Regular — SemiBold is for short titles */
+/* About left-rail greeting — Cesare, matching the live about hero */
 .aboutGreeting {
+  font-family: var(--font-cesare), "Times New Roman", serif;
   font-weight: 400;
-  font-size: 34px;
-  line-height: 1.15;
+  font-size: 64px;
+  line-height: 64px;
+  letter-spacing: 0;
+  padding-bottom: 0.08em;
+}
+
+.aboutHeading {
+  font-size: 20px;
+}
+
+.aboutPronunciation {
+  display: inline-block;
+  margin-top: var(--space-3);
+  font-family: var(--font-cesare), "Times New Roman", serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 150ms ease;
+}
+
+.aboutPronunciation:hover {
+  color: var(--text);
+}
+
+button.csNavItem {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0 0 0 var(--space-media);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
 }
 
 .csDetailSub {
@@ -1110,9 +1104,10 @@ body {
   margin-top: var(--space-media);
 }
 
-/* Case media hover — same push-up reveal as Work option 1 cards */
+/* Case media hover — clip bottom strip for caption; media stays full-frame (no scale) */
 .csMediaHover {
   overflow: visible;
+  container-type: size;
 }
 
 .csMediaHoverWrap {
@@ -1130,6 +1125,31 @@ body {
 .csMediaHover:hover .csMediaHoverWrap,
 .csMediaHover:focus-visible .csMediaHoverWrap {
   bottom: 24px;
+}
+
+/* Size cover fills to the outer .csMedia frame so shrinking the wrap only crops */
+.csMediaHoverWrap > .csFill {
+  inset: auto;
+  top: 0;
+  left: 0;
+  width: 100cqw;
+  height: 100cqh;
+}
+
+/* Contained + padded stages: keep mat pads, but lock height to the unhovered
+   frame so hover only crops — never rescales the video inside the mat. */
+.csMediaHoverWrap > .csMediaStage {
+  top: var(--cs-media-pad-top, 0px);
+  right: var(--cs-media-pad-right, 0px);
+  bottom: var(--cs-media-pad-bottom, 0px);
+  left: var(--cs-media-pad-left, 0px);
+  transition: bottom 167ms linear;
+}
+
+.csMediaHover:hover .csMediaHoverWrap > .csMediaStage,
+.csMediaHover:focus-visible .csMediaHoverWrap > .csMediaStage {
+  /* Wrap lost 24px; pull bottom inset back by 24px so stage height stays put */
+  bottom: calc(var(--cs-media-pad-bottom, 0px) - 24px);
 }
 
 .csMediaHoverCaption {
@@ -1237,35 +1257,6 @@ body {
   pointer-events: none;
   transition: opacity 150ms ease;
   white-space: nowrap;
-}
-
-.csList::-webkit-scrollbar,
-.csDetail::-webkit-scrollbar {
-  width: 8px;
-}
-
-.csList::-webkit-scrollbar-thumb,
-.csDetail::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-/* Subtle overlay-style scrollbar */
-.scroller::-webkit-scrollbar {
-  width: 8px;
-}
-
-.scroller::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.scroller::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 /* ---------- About ---------- */
@@ -1391,27 +1382,97 @@ body {
 .aboutPtoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-media);
+  gap: 8px;
   align-items: start;
 }
 
 .aboutPtoItem {
+  position: relative;
   margin: 0;
+  width: 100%;
+  container-type: size;
 }
 
-.aboutPtoItem img {
-  display: block;
+.aboutPtoInner {
+  position: relative;
   width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: var(--radius-md);
+  height: 100%;
+  overflow: visible;
+}
+
+/* Same hover clip as Work 1 covers — media lifts to reveal caption strip */
+.aboutPtoMediaWrap {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-radius: 6px;
   background: var(--color-surface);
+  transition: bottom 167ms linear;
+}
+
+.aboutPtoItemCaptioned:hover .aboutPtoMediaWrap,
+.aboutPtoItemCaptioned:focus-within .aboutPtoMediaWrap {
+  bottom: 24px;
+}
+
+.aboutPtoMedia {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100cqw;
+  height: 100cqh;
+  object-fit: cover;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 .aboutPtoCaption {
-  display: block;
-  margin-top: var(--space-3);
-  color: var(--faint);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity 167ms linear;
+  transition-delay: 0ms;
+  pointer-events: none;
+}
+
+.aboutPtoItemCaptioned:hover .aboutPtoCaption,
+.aboutPtoItemCaptioned:focus-within .aboutPtoCaption {
+  opacity: 1;
+  transition-delay: 167ms;
+}
+
+@media (hover: none) {
+  .aboutPtoItemCaptioned .aboutPtoMediaWrap {
+    bottom: 24px;
+  }
+
+  .aboutPtoItemCaptioned .aboutPtoCaption {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aboutPtoMediaWrap,
+  .aboutPtoCaption {
+    transition: none;
+  }
 }
 
 .aboutOutro {
@@ -1823,7 +1884,7 @@ body {
   text-wrap: pretty;
 }
 
-/* Design Engineering — 3-column expandable component grid */
+/* Design Engineering — 3-column component grid + detail modal */
 .engGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1836,29 +1897,26 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  margin: 0;
   padding: var(--space-3);
+  border: 0;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  overflow: hidden;
-  transition: background-color 200ms ease;
-}
-
-.engCardOpen {
-  grid-column: span 2;
-}
-
-.engCardHit {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
   color: inherit;
   text-align: left;
   cursor: pointer;
   font: inherit;
+  overflow: hidden;
+  transition: background-color 200ms ease;
+}
+
+.engCard:hover {
+  background: #2a2a2a;
+}
+
+.engCard:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
 }
 
 .engCardMedia {
@@ -1870,10 +1928,6 @@ body {
   background: #202020;
 }
 
-.engCardOpen .engCardMedia {
-  aspect-ratio: 16 / 9;
-}
-
 .engCardMedia img,
 .engCardMedia video {
   position: absolute;
@@ -1883,6 +1937,16 @@ body {
   object-fit: cover;
   pointer-events: none;
   border-radius: inherit;
+}
+
+.engCardPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-muted);
 }
 
 .engCardBar {
@@ -1902,64 +1966,390 @@ body {
 }
 
 .engCardKind {
-  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
   font-size: 11px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
 }
 
-.engCardChevron {
-  width: 18px;
-  text-align: center;
-  font-size: 16px;
-  line-height: 1;
-  color: var(--muted);
-}
-
-.engCardPanel {
+/* Detail modal — DESIGN.md tokens, flat surfaces, no shadows */
+.engModalRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
   display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 280ms cubic-bezier(0.23, 1, 0.32, 1);
+  place-items: center;
+  padding: var(--space-5);
 }
 
-.engCardPanelInner {
-  overflow: hidden;
-  min-height: 0;
-}
-
-.engCardPanel.open {
-  grid-template-rows: 1fr;
-}
-
-.engCardBody {
+.engModalScrim {
+  position: absolute;
+  inset: 0;
   margin: 0;
-  padding: 0 2px 4px;
-  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--body-text);
-  text-wrap: pretty;
-}
-
-.engCardCase {
-  display: inline-flex;
-  align-self: flex-start;
-  margin: 8px 2px 2px;
   padding: 0;
   border: 0;
-  background: transparent;
-  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
-  font-size: 13px;
-  color: var(--text);
+  background: rgba(0, 0, 0, 0.72);
   cursor: pointer;
-  opacity: 0.7;
+}
+
+.engModal {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(840px, 100%);
+  max-height: min(880px, calc(100vh - 48px));
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-canvas);
+  color: var(--color-body);
+  animation: engModalIn 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes engModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.engModalHead {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.engModalHeadText {
+  flex: 1;
+  min-width: 0;
+}
+
+.engModalKind {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.engModalTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-display-sm);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.engModalClose {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 167ms linear, border-color 167ms linear;
+}
+
+.engModalClose:hover {
+  color: var(--color-text);
+  border-color: var(--color-muted);
+}
+
+.engModalClose:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.engModalBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  overflow: auto;
+}
+
+.engModalStage {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  height: min(340px, 42vh);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.engModalStageTall {
+  height: min(480px, 56vh);
+}
+
+.engModalStageWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.engModalSiteChrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-bottom: 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--color-surface);
+}
+
+.engModalStageChromatched {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.engModalSiteChromeLabel {
+  font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.engModalSiteChromeLink {
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  color: var(--color-text);
   text-decoration: none;
+  opacity: 0.75;
   transition: opacity 167ms linear;
 }
 
-.engCardCase:hover {
+.engModalSiteChromeLink:hover {
   opacity: 1;
+}
+
+.engModalStageLink {
+  cursor: pointer;
+}
+
+.engModalFrame,
+.engModalMedia,
+.engModalSiteHit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.engModalMedia {
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.engModalMediaEmpty {
+  position: absolute;
+  inset: 0;
+}
+
+.engModalSiteHit {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.engModalSiteCue {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-canvas);
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  color: var(--color-text);
+}
+
+.engModalLead {
+  margin: 0;
+  max-width: 62ch;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-body);
+  text-wrap: pretty;
+}
+
+.engModalSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.engModalLabel {
+  margin: 0;
+  font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.engModalStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.engModalStack li {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  color: var(--color-muted);
+}
+
+.engModalNote {
+  margin: 0;
+  max-width: 62ch;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-body);
+  text-wrap: pretty;
+}
+
+.engModalCodeSection {
+  min-width: 0;
+}
+
+.engModalCodeHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.engModalCopy {
+  margin: 0;
+  padding: 4px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 167ms linear;
+}
+
+.engModalCopy:hover {
+  border-color: var(--color-muted);
+}
+
+.engModalCopy:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.engModalCode {
+  margin: 0;
+  max-height: 220px;
+  overflow: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-muted);
+  white-space: pre;
+}
+
+.engModalCta {
+  align-self: flex-start;
+  margin-top: var(--space-1);
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color 167ms linear;
+}
+
+.engModalCta:hover {
+  border-color: var(--color-muted);
+}
+
+/* Labs — iframeable playgrounds */
+.labRoot {
+  min-height: 100%;
+  background: var(--color-canvas);
+}
+
+.labWarpSearch {
+  display: grid;
+  place-items: start center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 48px 24px 80px;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, #ffffff 0%, #f4f4f4 55%, #ebebeb 100%);
+  color: #222222;
+  box-sizing: border-box;
+}
+
+.labWarpSearchInner {
+  width: min(900px, 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(420px, 70vh);
+  padding-top: 48px;
+}
+
+.labWarpSearch .sfs-root {
+  font-family: inherit;
+}
+
+@media (max-width: 720px) {
+  .labWarpSearch {
+    padding: 28px 16px 64px;
+  }
+
+  .labWarpSearchInner {
+    padding-top: 8px;
+    gap: 14px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1967,24 +2357,22 @@ body {
   .workLensDot,
   .workListRow,
   .workListArrow,
-  .engCard,
-  .engCardPanel,
-  .engCardCase {
+  .engCard {
     transition: none;
   }
 
   .workListArrow {
     transform: none;
   }
+
+  .engModal {
+    animation: none;
+  }
 }
 
 @media (max-width: 1100px) {
   .engGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .engCardOpen {
-    grid-column: span 2;
   }
 }
 
@@ -2003,8 +2391,18 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .engCardOpen {
-    grid-column: span 1;
+  .engModalRoot {
+    padding: var(--space-3);
+    align-items: stretch;
+  }
+
+  .engModal {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+  }
+
+  .engModalTitle {
+    font-size: 28px;
   }
 }
 
@@ -2022,7 +2420,7 @@ body {
 .workBrand {
   margin: 0;
   font-family: var(--font-cesare), "Times New Roman", serif;
-  font-size: 64px;
+  font-size: clamp(2.125rem, 7.5vw, 4rem);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -2082,38 +2480,12 @@ body {
   border-color: #ffffff;
 }
 
-/* Work 1 — fit CTA (kingermayank.com sidebar) */
+/* Work 1 — About / Copy Email above socials */
 .workFit {
-  margin-top: 32px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
   max-width: 28em;
-}
-
-.workFitCopy {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.workFitTitle {
-  margin: 0;
-  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.workFitBody {
-  margin: 0;
-  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #cccccc;
-  text-wrap: pretty;
 }
 
 .workFitActions {
@@ -2127,6 +2499,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   height: 36px;
   padding: 0 16px;
   border-radius: var(--radius-pill);
@@ -2139,6 +2512,31 @@ body {
   cursor: pointer;
   transition: opacity 167ms linear, background-color 167ms linear,
     border-color 167ms linear, color 167ms linear;
+}
+
+.workFitBtnLabel {
+  display: inline-grid;
+  align-items: center;
+  justify-items: center;
+  overflow: hidden;
+}
+
+.workFitBtnLabel > span {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.workFitBtnIconSlot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.workFitBtnIcon {
+  display: block;
 }
 
 .workFitBtnGhost {
@@ -2164,6 +2562,18 @@ body {
 .workFitBtn:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Hiring letter note overlay */
@@ -2207,7 +2617,7 @@ body {
 
 .letterBody p {
   margin: 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
@@ -2237,7 +2647,7 @@ body {
   border-radius: var(--radius-pill);
   background: #121413;
   color: #ffffff;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
   font-size: 15px;
   font-weight: 500;
   line-height: 1;
@@ -2256,7 +2666,7 @@ body {
 
 .letterHint {
   margin: 36px 0 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
   font-size: 13px;
   font-weight: 400;
   line-height: 1.4;
@@ -2399,9 +2809,14 @@ body {
   background: transparent;
   text-align: left;
   text-decoration: none;
+  container-type: size;
 }
 
-/* Fixed aspect frame; media shrinks on hover to reveal caption below (koto) */
+.workCardStatic {
+  cursor: default;
+}
+
+/* Fixed aspect frame; hover clips bottom strip for caption — media does not scale */
 .workCardInner {
   position: relative;
   width: 100%;
@@ -2428,9 +2843,10 @@ body {
 
 .workCardMedia {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
+  width: 100cqw;
+  height: 100cqh;
   object-fit: cover;
   pointer-events: none;
   border-radius: inherit;
@@ -2438,7 +2854,10 @@ body {
 
 .workCardPlaceholder {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100cqw;
+  height: 100cqh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2587,6 +3006,7 @@ body {
   .workRoot {
     flex-direction: column;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .workPanel {
@@ -2598,11 +3018,16 @@ body {
     padding: var(--space-5) var(--space-4) var(--space-3);
   }
 
+  .workUniform .workPanel {
+    padding-top: var(--space-5);
+  }
+
   .workTitle {
     font-size: 36px;
   }
 
-  .workFeatured {
+  .workFeatured,
+  .workHoverInfo {
     display: none;
   }
 
@@ -2611,9 +3036,111 @@ body {
     padding: 8px 14px 110px;
   }
 
+  /* Full-width panel still fits a 2-up masonry on tablet / large phones */
   .workGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
+  }
+
+  .workSocial {
+    width: 44px;
+    height: 44px;
+  }
+
+  .workFit {
+    max-width: none;
+  }
+
+  .csMediaSplit,
+  .csMediaSplitNatural {
+    grid-template-columns: 1fr;
+  }
+
+  .csMediaSplitRight {
+    display: contents;
+  }
+
+  .csNextLabel,
+  .csNextText {
+    position: static;
+    display: block;
+    margin: 0;
+  }
+
+  .csNextText {
+    opacity: 1;
+    margin-top: var(--space-2);
+  }
+
+  .csFooter {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+@media (max-width: 560px) {
+  .workGrid,
+  .workGridFlat {
+    grid-template-columns: 1fr;
+  }
+
+  .workLenses {
+    gap: 14px 18px;
+    padding: 8px 0 16px;
+  }
+
+  .workLens {
+    font-size: 14px;
+    min-height: 44px;
+  }
+
+  .workFitActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .workFitBtn {
+    width: 100%;
+    height: 44px;
+  }
+
+  .workCardName,
+  .workCardTagline {
+    font-size: 14px;
+  }
+
+  .workListRow {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .workMain {
+    padding: 4px 12px 120px;
+  }
+
+  .csBrand {
+    font-size: 30px;
+  }
+
+  .csDetailTitle {
+    font-size: 26px;
+  }
+}
+
+/* Touch / no-hover: keep project captions readable without hover */
+@media (hover: none) {
+  .workCard .workCardMediaWrap {
+    bottom: 24px;
+  }
+
+  .workCard .workCardCaption {
+    opacity: 1;
+  }
+
+  .csMediaHover:hover .csMediaHoverCaption,
+  .csMediaHover .csMediaHoverCaption {
+    opacity: 1;
   }
 }
 
@@ -2623,6 +3150,7 @@ body {
   .workCardCaption,
   .workCardMediaWrap,
   .csMediaHoverWrap,
+  .csMediaHoverWrap > .csMediaStage,
   .csMediaHoverCaption {
     transition: none;
   }
@@ -2666,9 +3194,11 @@ body {
   justify-content: space-between;
   gap: var(--space-4);
   color: var(--color-text);
-  font-size: var(--text-caption);
-  font-weight: 500;
+  font-family: var(--font-label);
+  font-size: 14px;
+  font-weight: 600;
   letter-spacing: 0.08em;
+  line-height: 20px;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -2695,8 +3225,8 @@ body {
 
 /* ================================================================== *
  * Case hero — reusable hero template
- * Full-bleed media + gradient scrim, with a content card pulled up
- * over the lower edge of the image. See components/case-hero/.
+ * Full-bleed media + optional scrim, with company + title centered
+ * over the cover. See components/case-hero/.
  * ================================================================== */
 
 .chHero {
@@ -2719,28 +3249,23 @@ body {
   /* — Typography — */
   --ch-font-display: var(--font-cesare), "Times New Roman", serif;
   --ch-font-body: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
-  --ch-text-eyebrow: 11px;
-  --ch-text-title: clamp(2.5rem, 5.2vw, 4rem);
+  --ch-text-eyebrow: 14px;
+  --ch-line-label: 20px;
+  --ch-text-title: clamp(calc(2.5rem + 8px), calc(5.2vw + 8px), calc(4rem + 8px));
   --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
-  --ch-tracking-label: 0.09em;
+  --ch-tracking-label: 0.08em;
 
   /* — Layout — */
   --ch-gutter: clamp(1rem, 5vw, 5rem);
   --ch-max-width: 71.25rem;
   --ch-measure: 34rem;
-  /* The cover is never cropped: the frame takes the art's own ratio and
-     flows to whatever height that is. No viewport height, no cap. */
   --ch-hero-ratio: 16 / 9;
-  /* How far the content group rides up into the bottom of the cover… */
-  --ch-overlap: clamp(14rem, 38vh, 26rem);
-  /* …and how far it is then nudged back down. */
-  --ch-content-offset: 40px;
 
   /* — Neutral foreground (default) — */
-  --ch-surface: #161616;
+  --ch-surface: #0e0e0e;
   --ch-text: #ffffff;
   /* Secondary ramp: light gray on dark art — clearly readable, still
-     subordinate to the title. Contrast on #161616: muted ~11:1, faint ~6:1. */
+     subordinate to the title. Contrast on #0e0e0e: muted ~11:1, faint ~6:1. */
   --ch-muted: #d4d4d4;
   --ch-faint: #a0a0a0;
   --ch-border: rgba(255, 255, 255, 0.14);
@@ -2751,7 +3276,13 @@ body {
   --ch-on-accent: #111111;
 
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
   width: 100%;
+  min-height: 100svh;
   font-family: var(--ch-font-body);
 }
 
@@ -2778,16 +3309,17 @@ body {
 
 /* ---------- HeroImage ---------- */
 
-/* Full-bleed cover. The art is laid in at its own width — edge to edge — and
-   takes whatever height that gives it. No absolute fill, no `cover` zoom: the
-   image is simply fitted and anchored to the top. */
+/* Full-bleed cover fills the first viewport behind the title block. */
 .chMedia {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
+  height: 100%;
   margin: 0;
   overflow: hidden;
   background: var(--ch-shade, var(--color-surface, #242424));
+  z-index: 0;
 }
 
 /* Ratio unknown — let the file alone decide the height. */
@@ -2797,27 +3329,38 @@ body {
 
 /* Study without hero art — keep a band for the content to sit on, not a void. */
 .chMediaEmpty {
-  aspect-ratio: auto;
+  position: relative;
+  inset: auto;
   height: clamp(9rem, 26vh, 16rem);
+  min-height: 0;
 }
 
-/* …and with no cover to ride up into, the content sits just under that band. */
 .chHero:has(.chMediaEmpty) {
-  --ch-overlap: 1.5rem;
-  --ch-content-offset: 0px;
+  min-height: 0;
+  justify-content: flex-start;
+  padding-bottom: var(--ch-space-5);
 }
 
 .chMediaRounded {
   border-radius: var(--ch-radius-md);
 }
 
+/* Flat black overlay for title legibility — opacity via --ch-scrim-opacity. */
+.chMediaScrim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: #000;
+  opacity: var(--ch-scrim-opacity, 0.8);
+}
+
 .chMediaFill {
   display: block;
   width: 100%;
-  height: auto;
-  /* Reserves the box before the file lands, so nothing shifts on load. */
-  aspect-ratio: var(--ch-hero-ratio);
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   object-position: top center;
   border: 0;
 }
@@ -2863,15 +3406,16 @@ body {
   outline-offset: 2px;
 }
 
-/* ---------- ContentCard — unboxed, overlapping the image ---------- */
+/* ---------- ContentCard — unboxed, centered over the cover ---------- */
 
 .chCard {
   position: relative;
   z-index: 1;
   width: min(100% - (var(--ch-gutter) * 2), var(--ch-max-width));
   margin-inline: auto;
-  margin-top: calc(var(--ch-content-offset) - var(--ch-overlap));
+  margin-top: 0;
   color: var(--ch-text);
+  text-align: center;
 }
 
 /* Transform + opacity only, so the entrance can never shift layout. */
@@ -2884,7 +3428,7 @@ body {
 @keyframes chCardIn {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -2897,28 +3441,44 @@ body {
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: clamp(var(--ch-space-6), 5vw, var(--ch-space-8));
   align-items: start;
+  text-align: left;
 }
 
 .chLead {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.chCardGrid .chLead {
+  align-items: flex-start;
+  text-align: left;
 }
 
 .chEyebrow {
   margin: 0 0 var(--ch-space-4);
   color: #c8c8c8;
+  font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--ch-tracking-label);
+  line-height: var(--ch-line-label);
   text-transform: uppercase;
+  text-align: center;
 }
 
 .chTitleWrap {
-  max-width: var(--ch-measure);
+  max-width: none;
+  width: 100%;
+  text-align: center;
 }
 
 .chTitleWrap .riseMask,
 .chTitleWrap .riseInner {
   width: 100%;
+  text-align: center;
 }
 
 /* Rise uses overflow:hidden — give descenders / trailing periods room. */
@@ -2935,8 +3495,9 @@ body {
   font-family: var(--ch-font-display);
   font-size: var(--ch-text-title);
   font-weight: 400;
-  line-height: 1;
+  line-height: calc(1em + 8px);
   letter-spacing: 0;
+  text-align: center;
   text-wrap: balance;
   padding-bottom: 0.06em;
 }
@@ -3051,10 +3612,11 @@ body {
 
 .chMetaLabel {
   color: #c8c8c8;
+  font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--ch-tracking-label);
-  line-height: 1.6;
+  line-height: var(--ch-line-label);
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -3090,32 +3652,23 @@ body {
   width: 100%;
   margin: 0;
   color: #c8c8c8;
+  font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--ch-tracking-label);
-  line-height: 1.6;
+  line-height: var(--ch-line-label);
   text-transform: uppercase;
   text-align: left;
 }
 
 .chMetaTagsList {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 0 var(--ch-space-2);
   margin: 0;
   padding: 0;
-  list-style: none;
   color: #ffffff;
   font-size: calc(var(--ch-text-body) + 1px);
   line-height: 1.55;
   text-align: left;
-}
-
-.chMetaTagsList li + li::before {
-  content: "•";
-  margin-right: var(--ch-space-2);
-  color: var(--ch-faint);
+  text-wrap: pretty;
 }
 
 /* ---------- Responsive ---------- */
@@ -3127,12 +3680,7 @@ body {
   }
 
   .chHero {
-    /* Narrow screens keep only a shallow overlap: the cover is a full
-       viewport tall, so a deep one would strand the whole content group on
-       top of the art with nothing but the art carrying contrast. */
-    --ch-overlap: clamp(6rem, 16vh, 10rem);
-    --ch-content-offset: 64px;
-    --ch-text-title: clamp(2.25rem, 7vw, 3.25rem);
+    --ch-text-title: clamp(calc(2.25rem + 8px), calc(7vw + 8px), calc(3.25rem + 8px));
   }
 
   .chCardGrid {
@@ -3148,8 +3696,6 @@ body {
 
 @media (max-width: 560px) {
   .chHero {
-    --ch-overlap: clamp(4rem, 12vh, 7rem);
-    --ch-content-offset: 40px;
     --ch-gutter: 1rem;
   }
 
@@ -3229,6 +3775,6 @@ body {
 }
 
 .chDemo code {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-walsheim), ui-sans-serif, system-ui, sans-serif;
   font-size: 0.9em;
 }

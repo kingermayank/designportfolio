@@ -17,7 +17,6 @@ const META = [
   { label: "Company", value: "Warpbnb" },
   { label: "Role", value: "Product Designer" },
   { label: "Focus", value: "Full-Stack AI Build" },
-  { label: "Time", value: "2018 – 2019" },
 ];
 
 const TAGS = {
@@ -35,7 +34,6 @@ const TAGS = {
 };
 
 const SAMPLE = {
-  eyebrow: "Airbnb",
   title: "Reimagining Airbnb for time travel across eras.",
   description:
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
@@ -87,7 +85,7 @@ export default function CaseHeroTemplatePage() {
         {/* The same primitives, assembled directly rather than via CaseHero. */}
         <div className="chHero">
           <HeroImage src="/warpbnb/warp2.png" ratio={16 / 9} shade="#2b2b2b" alt="" />
-          <ContentCard overlap="2rem">
+          <ContentCard>
             <p className="chEyebrow">Side project</p>
             <h2 className="chTitle">Zero to shipped in two weeks.</h2>
             <p className="chDesc">

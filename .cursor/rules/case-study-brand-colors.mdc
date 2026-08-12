@@ -1,0 +1,21 @@
+---
+description: Brand accent colors for portfolio case-study projects (Ikon, WarpBnB, PathAI, BigBasket, Walkity)
+alwaysApply: true
+---
+
+# Case study brand colors
+
+Canonical accent palette for each case-study project. Prefer these when styling CTAs, highlight labels, hero accents, or any brand-colored UI for that study.
+
+Source of truth in code: `lib/brandColors.ts`  
+Sampled from the owner's palette screenshot (top → bottom order).
+
+| Project | Slug(s) | Hex |
+| --- | --- | --- |
+| Ikon Technologies | `toolbox` | `#03BB7D` |
+| WarpBnB | `warpbnb` | `#FF0459` |
+| PathAI | `pathai` | `#D18BFF` |
+| BigBasket | `bigbasket` | `#6DE96C` |
+| Walkity | `walkity` | `#00DFA8` |
+
+When the user says "brand color", "accent", or "palette color" for one of these projects, use the hex above — do not invent a different shade.

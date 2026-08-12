@@ -35,7 +35,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     title: "Hundreds of drifted styles → one Melon system",
     meta: "BigBasket · Design Systems · 2021",
     body: "Audited hundreds of drifted colors, text styles, and elevations, then built Melon — foundations, components, and patterns shared across India's largest grocery app.",
-    thumb: "/bigbasket/thumbs/cover.jpg",
+    thumb: "/bigbasket/thumbnail.png?v=2",
     shade: "#242424",
   },
   {
@@ -58,7 +58,6 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   },
   {
     id: "ikon-ops",
-    slug: "ikon-pm",
     title: "Fragmented dealership tools → one operating model",
     meta: "Ikon Technologies · Product Management · 2024",
     body: "Untangled fragmented dealership tools into a clearer operating model — aligning design, product, and engineering around one system.",
@@ -89,7 +88,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     title: "One shared language across grocery UX",
     meta: "BigBasket · Melon · 2021",
     body: "A documented design system that streamlined UX process and gave designers and engineers a common language for cohesive experiences.",
-    thumb: "/bigbasket/thumbs/cover.jpg",
+    thumb: "/bigbasket/thumbnail.png?v=2",
     shade: "#242424",
   },
   {
@@ -103,21 +102,60 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   },
 ];
 
+export type EngKind = "Component" | "Surface" | "Website";
+
 export type EngComponent = {
   id: string;
   title: string;
-  kind: "Component" | "Surface" | "Website";
+  kind: EngKind;
   body: string;
-  src: string;
+  src?: string;
   video?: boolean;
   thumb?: string;
   shade: string;
-  /** Optional case study to open from the expanded state. */
-  slug?: string;
+  /** Live site — websites use this as the primary outbound action. */
+  href?: string;
+  /** Same-origin (or absolute) URL loaded in the modal iframe playground. */
+  embedUrl?: string;
+  /** Tech stack shown under the stage. */
+  stack?: string[];
+  /** Short note on how it was built. */
+  note?: string;
+  /** Exportable source snippet — copy to clipboard in the modal. */
+  code?: string;
+  /** Fetches full source for copy when `code` is omitted (e.g. large standalone files). */
+  codeUrl?: string;
+  /** Taller iframe stage for components with dropdowns / popovers. */
+  embedTall?: boolean;
 };
 
-/** Design Engineering — expandable component / surface / site cards. */
+/** Design Engineering — component / surface / site cards. Click opens a detail modal. */
 export const ENG_COMPONENTS: EngComponent[] = [
+  {
+    id: "warpbnb-search",
+    title: "Warpbnb search",
+    kind: "Component",
+    body: "Theme, era, and guests — play with the Warpbnb search field live.",
+    shade: "#FFE4EE",
+    thumb: "/warpbnb/thumbs/search-field.png",
+    src: "/warpbnb/thumbs/search-field.png",
+    embedUrl: "/labs/search",
+    embedTall: true,
+    stack: ["React", "Inline tokens", "No deps"],
+  },
+  {
+    id: "walkity-site",
+    title: "Walkity",
+    kind: "Website",
+    body: "Brand strategy and landing page from scratch — accessibility at the center, shipped as a live marketing site.",
+    shade: "#1a1a1a",
+    thumb: "/walkity/thumbs/site-desktop.jpg",
+    src: "/walkity/thumbs/site-desktop.jpg",
+    href: "https://walkity.vercel.app/",
+    embedUrl: "https://walkity.vercel.app/",
+    embedTall: true,
+    stack: ["Next.js", "Vercel", "Brand system"],
+  },
   {
     id: "ds",
     title: "Design system",
@@ -127,7 +165,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/design-system.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "Design tokens", "LLM tooling"],
+    note: "Surface preview for now — a playable embed can slot in via embedUrl when the lab is ready.",
   },
   {
     id: "ai-chat",
@@ -138,7 +177,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/ai-chat.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "Framer Motion"],
+    note: "Product surface captured from Toolbox. Interactive embed lands when the chat lab ships.",
   },
   {
     id: "inventory",
@@ -149,7 +189,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/inventory.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "React"],
+    note: "Ops surface preview — built end-to-end in Toolbox, shown here as motion capture until a live embed exists.",
   },
   {
     id: "config",
@@ -160,7 +201,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/configurations.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "Framer Motion"],
+    note: "Dense settings UI designed for scan speed. Embed optional later for deeper exploration.",
   },
   {
     id: "pairing",
@@ -171,7 +213,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/device-pairing.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "React", "IoT states"],
+    note: "State machine UI for pairing — preview via capture; a lab embed can replace the stage when ready.",
   },
   {
     id: "dashboard",
@@ -182,7 +225,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/dashboard.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "React"],
+    note: "Dashboard as shipped in Toolbox. Review mode until an interactive slice is extracted.",
   },
   {
     id: "invoices",
@@ -193,7 +237,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/invoices.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "Framer Motion"],
+    note: "Billing surface preview from production motion captures.",
   },
   {
     id: "gateways",
@@ -204,7 +249,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/toolbox/thumbs/gateways.jpg",
     shade: "#282828",
-    slug: "toolbox",
+    stack: ["Next.js", "React", "IoT"],
+    note: "Hardware management component — capture for now, live lab later.",
   },
   {
     id: "warpbnb-site",
@@ -215,6 +261,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     thumb: "/warpbnb/thumbs/warp11.jpg",
     shade: "#2b2b2b",
-    slug: "warpbnb",
+    href: "https://www.warpbnb.com/",
+    stack: ["Next.js", "Framer Motion", "Full-stack"],
+    note: "Solo end-to-end build. Open the live site from the modal — no embed, just the real destination.",
   },
 ];

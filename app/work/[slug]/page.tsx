@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import WorkCasePage from "@/components/WorkCasePage";
-import { CASE_STUDIES } from "@/lib/caseStudies";
+import { LINKABLE_CASE_STUDIES, isCaseLinkable } from "@/lib/caseStudies";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return CASE_STUDIES.map((study) => ({ slug: study.slug }));
+  return LINKABLE_CASE_STUDIES.map((study) => ({ slug: study.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const study = CASE_STUDIES.find((s) => s.slug === slug);
+  const study = LINKABLE_CASE_STUDIES.find((s) => s.slug === slug);
   if (!study) return { title: "Not found" };
 
   return {
@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function WorkSlugPage({ params }: Props) {
   const { slug } = await params;
-  const study = CASE_STUDIES.find((s) => s.slug === slug);
-  if (!study) notFound();
+  const study = LINKABLE_CASE_STUDIES.find((s) => s.slug === slug);
+  if (!study || !isCaseLinkable(study)) notFound();
 
   return (
     <main className="stage">
