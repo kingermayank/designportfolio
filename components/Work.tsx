@@ -10,7 +10,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ABOUT_INTRO } from "@/lib/about";
 import AboutContent from "@/components/AboutContent";
 import EngCardPreview from "@/components/EngCardPreview";
@@ -29,10 +29,27 @@ import {
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
 
-// Breathing room above a section once it's been scrolled to, so its first row
-// doesn't sit flush against the top edge. Mirrored by .workSection's
-// scroll-margin-top for plain hash jumps.
-const SECTION_SCROLL_PAD = 8;
+/* Page-stack handoff between work lenses — same cover ease as PageTransition.
+   Each lens is a full viewport “page”; scrolling past its edge slides the next
+   page up over it (and peels back on scroll up), so you never see two sections
+   as one continuous landing page. */
+const PAGE_DUR = 0.55;
+const PAGE_EASE = [0.55, 0, 0.15, 1] as const;
+/** Rest at the edge this long before overscroll can start a page flip. */
+const EDGE_ARM_MS = 480;
+/** Deliberate pull past a tall page’s end (e.g. Visual Craft masonry). */
+const OVERSCROLL_TALL_PX = 280;
+/** Pull past a short page that already fits the viewport. */
+const OVERSCROLL_SHORT_PX = 240;
+/** When peeling back to a page left at its bottom, land above the hair-trigger. */
+const EDGE_RESTORE_PAD = 160;
+/** Show the handoff cue once within this distance of the bottom. */
+const CUE_SHOW_PX = 88;
+/** Hide the cue only after scrolling this far back up (hysteresis → no flicker). */
+const CUE_HIDE_PX = 200;
+/** How far the real next page peeks up — about half a cue-tall strip. */
+const NEXT_PEEK_PX = 112;
+const PAGE_COUNT = WORK_LENSES.length;
 
 const SOCIAL_ICONS: Record<string, ReactNode> = {
   LinkedIn: (
@@ -371,8 +388,21 @@ export default function Work() {
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
   const [activeSection, setActiveSection] = useState(0);
   const [engActive, setEngActive] = useState<EngComponent | null>(null);
+  const [navOpen, setNavOpen] = useState(false);
+  const [edgeCueOn, setEdgeCueOn] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const navMenuRef = useRef<HTMLDivElement | null>(null);
   const sectionRefs = useRef(new Map<number, HTMLElement>());
+  const scrollPosRef = useRef(new Map<number, number>());
+  const pageBusyRef = useRef(false);
+  const settleUntilRef = useRef(0);
+  const overscrollRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const touchPullRef = useRef(0);
+  /** performance.now() when the active page first hit a flip edge; 0 = not at edge. */
+  const edgeSinceRef = useRef(0);
+  const activeSectionRef = useRef(activeSection);
+  activeSectionRef.current = activeSection;
   // The panel's hover rail belongs to the project grid — it only reads while
   // Visual Craft is the section in view.
   const showingProjects = activeSection === 0;
@@ -402,31 +432,273 @@ export default function Work() {
     setLastHoverIdx(idx);
   };
 
-  // Same center-line rule the case-study rail uses (see CaseStudies'
-  // onDetailScroll): the active section is the last one whose top has crossed
-  // the middle of the scroller, so the final section still wins at the bottom.
-  const onScroll = useCallback(() => {
-    const sc = rootRef.current;
-    if (!sc) return;
-    const center = sc.scrollTop + sc.clientHeight / 2;
-    let idx = 0;
-    sectionRefs.current.forEach((el, i) => {
-      if (el.offsetTop <= center) idx = Math.max(idx, i);
-    });
-    setActiveSection(idx);
-  }, []);
+  const goToSection = useCallback(
+    (i: number, smooth: boolean) => {
+      if (i < 0 || i >= PAGE_COUNT) return false;
+      const from = activeSectionRef.current;
+      if (i === from) {
+        sectionRefs.current.get(i)?.focus({ preventScroll: true });
+        return true;
+      }
+      if (pageBusyRef.current) return false;
 
-  const goToSection = useCallback((i: number, smooth: boolean) => {
-    const sc = rootRef.current;
-    const el = sectionRefs.current.get(i);
-    if (!sc || !el) return;
-    sc.scrollTo({
-      top: Math.max(0, el.offsetTop - SECTION_SCROLL_PAD),
-      behavior: smooth ? "smooth" : "auto",
-    });
-    // Keyboard and screen-reader focus lands where the eye lands.
-    el.focus({ preventScroll: true });
-  }, []);
+      const cur = sectionRefs.current.get(from);
+      if (cur) scrollPosRef.current.set(from, cur.scrollTop);
+
+      const animate = smooth && !reduce;
+      if (animate) {
+        pageBusyRef.current = true;
+        window.setTimeout(() => {
+          pageBusyRef.current = false;
+        }, PAGE_DUR * 1000 + 40);
+      }
+
+      setActiveSection(i);
+      overscrollRef.current = 0;
+      touchPullRef.current = 0;
+      edgeSinceRef.current = 0;
+      setEdgeCueOn(false);
+      // Ignore residual wheel/touch momentum so one flick can't chain pages.
+      settleUntilRef.current =
+        performance.now() + (animate ? PAGE_DUR * 1000 + 220 : 180);
+
+      // Forward = fresh page at top; back = restore where you left off
+      // (nudged up if you left at the bottom, so you aren't on the flip edge).
+      const forward = i > from;
+      requestAnimationFrame(() => {
+        const el = sectionRefs.current.get(i);
+        if (!el) return;
+        if (forward) {
+          el.scrollTop = 0;
+        } else {
+          const saved = scrollPosRef.current.get(i) ?? 0;
+          const max = Math.max(0, el.scrollHeight - el.clientHeight);
+          const pad = saved >= max - 24 ? EDGE_RESTORE_PAD : 0;
+          el.scrollTop = Math.max(0, saved - pad);
+        }
+        el.focus({ preventScroll: true });
+      });
+      return true;
+    },
+    [reduce],
+  );
+
+  const selectSection = useCallback(
+    (i: number, anchor: string) => {
+      if (!goToSection(i, !reduce)) return;
+      window.history.replaceState(null, "", `#${anchor}`);
+      setNavOpen(false);
+    },
+    [goToSection, reduce],
+  );
+
+  // Wheel/touch anywhere on the work shell (incl. the left rail) drives the
+  // active page — scroll its content, and at the edges flip the page stack.
+  // Flips require a dwell at the edge, then a deliberate extra pull, so natural
+  // scrolling through Visual Craft doesn't accidentally jump sections.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const page = () => sectionRefs.current.get(activeSectionRef.current);
+
+    const atTop = (el: HTMLElement) => el.scrollTop <= 0;
+    const atBottom = (el: HTMLElement) =>
+      el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+    const edgeThreshold = (el: HTMLElement) =>
+      el.scrollHeight <= el.clientHeight + 1
+        ? OVERSCROLL_SHORT_PX
+        : OVERSCROLL_TALL_PX;
+
+    const edgeArmed = () =>
+      edgeSinceRef.current > 0 &&
+      performance.now() - edgeSinceRef.current >= EDGE_ARM_MS;
+
+    const markEdge = (onEdge: boolean) => {
+      if (!onEdge) {
+        edgeSinceRef.current = 0;
+        overscrollRef.current = 0;
+        touchPullRef.current = 0;
+        return;
+      }
+      if (!edgeSinceRef.current) edgeSinceRef.current = performance.now();
+    };
+
+    const updateCue = (el: HTMLElement) => {
+      const canNext = activeSectionRef.current < PAGE_COUNT - 1;
+      if (!canNext) {
+        setEdgeCueOn(false);
+        return;
+      }
+      const room = el.scrollHeight - el.clientHeight;
+      if (room <= 0) {
+        setEdgeCueOn(true);
+        return;
+      }
+      const fromBottom = room - el.scrollTop;
+      // Hysteresis: once shown, stay until you've clearly scrolled back up.
+      setEdgeCueOn((was) =>
+        was ? fromBottom <= CUE_HIDE_PX : fromBottom <= CUE_SHOW_PX,
+      );
+    };
+
+    const flip = (dir: 1 | -1) => {
+      const from = activeSectionRef.current;
+      const next = from + dir;
+      if (next < 0 || next >= PAGE_COUNT) return;
+      const lens = WORK_LENSES[next];
+      selectSection(next, lens.anchor);
+    };
+
+    const blockedTarget = (t: EventTarget | null) => {
+      const node = t as Node | null;
+      if (!node || !root.contains(node)) return true;
+      // Eng detail modal / drawers handle their own scroll.
+      return Boolean(
+        (node as Element).closest?.(".engModal, .workNavDrawer"),
+      );
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (reduce || pageBusyRef.current || e.ctrlKey) return;
+      if (performance.now() < settleUntilRef.current) return;
+      if (blockedTarget(e.target)) return;
+
+      const el = page();
+      if (!el) return;
+
+      const fromPage = el.contains(e.target as Node);
+      const down = e.deltaY > 0;
+      const up = e.deltaY < 0;
+      const canNext = activeSectionRef.current < PAGE_COUNT - 1;
+      const canPrev = activeSectionRef.current > 0;
+      const need = edgeThreshold(el);
+
+      if (down && atBottom(el) && canNext) {
+        markEdge(true);
+        // Dwell first — don't kill the wheel or it feels stuck/jittery at the edge.
+        if (!edgeArmed()) return;
+        e.preventDefault();
+        overscrollRef.current += e.deltaY;
+        if (overscrollRef.current >= need) flip(1);
+        return;
+      }
+      if (up && atTop(el) && canPrev) {
+        markEdge(true);
+        if (!edgeArmed()) return;
+        e.preventDefault();
+        overscrollRef.current += -e.deltaY;
+        if (overscrollRef.current >= need) flip(-1);
+        return;
+      }
+
+      markEdge(false);
+
+      // Left rail (and anything outside the active page): proxy scroll into it.
+      if (!fromPage && e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollTop += e.deltaY;
+        updateCue(el);
+      }
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (blockedTarget(e.target)) return;
+      touchStartYRef.current = e.touches[0]?.clientY ?? 0;
+      touchPullRef.current = 0;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (reduce || pageBusyRef.current) return;
+      if (performance.now() < settleUntilRef.current) return;
+      if (blockedTarget(e.target)) return;
+
+      const el = page();
+      if (!el) return;
+
+      const y = e.touches[0]?.clientY ?? touchStartYRef.current;
+      const dy = touchStartYRef.current - y; // finger up → positive (scroll down)
+      touchStartYRef.current = y;
+      if (dy === 0) return;
+
+      const fromPage = el.contains(e.target as Node);
+      const canNext = activeSectionRef.current < PAGE_COUNT - 1;
+      const canPrev = activeSectionRef.current > 0;
+      const need = edgeThreshold(el);
+
+      if (dy > 0 && atBottom(el) && canNext) {
+        markEdge(true);
+        if (!edgeArmed()) return;
+        touchPullRef.current += dy;
+        if (touchPullRef.current >= need) flip(1);
+        return;
+      }
+      if (dy < 0 && atTop(el) && canPrev) {
+        markEdge(true);
+        if (!edgeArmed()) return;
+        touchPullRef.current += -dy;
+        if (touchPullRef.current >= need) flip(-1);
+        return;
+      }
+
+      markEdge(false);
+
+      // Touch on the left rail — drag the active page.
+      if (!fromPage) {
+        el.scrollTop += dy;
+        updateCue(el);
+      }
+    };
+
+    const onPageScroll = () => {
+      const el = page();
+      if (!el) return;
+      const canNext = activeSectionRef.current < PAGE_COUNT - 1;
+      const canPrev = activeSectionRef.current > 0;
+      const onFlipEdge =
+        (atBottom(el) && canNext) || (atTop(el) && canPrev);
+      markEdge(onFlipEdge);
+      updateCue(el);
+    };
+
+    root.addEventListener("wheel", onWheel, { passive: false });
+    root.addEventListener("touchstart", onTouchStart, { passive: true });
+    root.addEventListener("touchmove", onTouchMove, { passive: true });
+
+    const el = page();
+    el?.addEventListener("scroll", onPageScroll, { passive: true });
+    if (el) onPageScroll();
+
+    return () => {
+      root.removeEventListener("wheel", onWheel);
+      root.removeEventListener("touchstart", onTouchStart);
+      root.removeEventListener("touchmove", onTouchMove);
+      el?.removeEventListener("scroll", onPageScroll);
+    };
+  }, [reduce, selectSection, activeSection]);
+
+  // Close the mobile section menu on Escape / outside tap / desktop resize.
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setNavOpen(false);
+    };
+    const onPointer = (e: PointerEvent) => {
+      const root = navMenuRef.current;
+      if (root && !root.contains(e.target as Node)) setNavOpen(false);
+    };
+    const onResize = () => {
+      if (window.matchMedia("(min-width: 901px)").matches) setNavOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    window.addEventListener("resize", onResize);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [navOpen]);
 
   // Deep link — /#systems-thinking opens on that section.
   useEffect(() => {
@@ -439,11 +711,17 @@ export default function Work() {
     return () => window.clearTimeout(t);
   }, [goToSection]);
 
-  // All three sections are mounted now, so keep the off-screen loops paused —
-  // same gate GridCanvas uses for its tiles.
+  // Pause loops that aren't on the active page; within the page, gate by
+  // visibility against that page's own scroller.
   useEffect(() => {
-    const sc = rootRef.current;
+    const sc = sectionRefs.current.get(activeSection);
     if (!sc) return;
+
+    sectionRefs.current.forEach((section, i) => {
+      if (i === activeSection) return;
+      section.querySelectorAll<HTMLVideoElement>("video").forEach((v) => v.pause());
+    });
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -456,7 +734,7 @@ export default function Work() {
     );
     sc.querySelectorAll<HTMLVideoElement>("video").forEach((v) => io.observe(v));
     return () => io.disconnect();
-  }, [isNarrow]);
+  }, [activeSection, isNarrow]);
 
   const sectionBody = (id: WorkLensId) => {
     if (id === "visual") {
@@ -508,8 +786,12 @@ export default function Work() {
     );
   };
 
+  const pageTransition = reduce
+    ? { duration: 0 }
+    : { duration: PAGE_DUR, ease: PAGE_EASE };
+
   return (
-    <div ref={rootRef} className="workRoot workUniform" onScroll={onScroll}>
+    <div ref={rootRef} className="workRoot workUniform">
       <aside className="workPanel">
         <div className="workPanelTop">
           <h1 className="workBrand">
@@ -551,9 +833,7 @@ export default function Work() {
                   aria-current={active ? "true" : undefined}
                   onClick={(e) => {
                     e.preventDefault();
-                    goToSection(i, !reduce);
-                    // Keep the hash shareable without a second native jump.
-                    window.history.replaceState(null, "", `#${l.anchor}`);
+                    selectSection(i, l.anchor);
                   }}
                 >
                   {l.label}
@@ -602,28 +882,122 @@ export default function Work() {
       </aside>
 
       <div
+        ref={navMenuRef}
+        className={"workNavMenu" + (navOpen ? " open" : "")}
+      >
+        <button
+          type="button"
+          className="workNavToggle"
+          aria-expanded={navOpen}
+          aria-controls="work-nav-drawer"
+          aria-label={navOpen ? "Close sections menu" : "Open sections menu"}
+          onClick={() => setNavOpen((prev) => !prev)}
+        >
+          <span className="workNavToggleBars" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
+        <nav
+          id="work-nav-drawer"
+          className="workNavDrawer"
+          aria-label="Work sections"
+          hidden={!navOpen}
+        >
+          {WORK_LENSES.map((l, i) => {
+            const active = i === activeSection;
+            return (
+              <a
+                key={l.id}
+                href={`#${l.anchor}`}
+                className={"workNavDrawerLink" + (active ? " on" : "")}
+                aria-current={active ? "true" : undefined}
+                onClick={(e) => {
+                  e.preventDefault();
+                  selectSection(i, l.anchor);
+                }}
+              >
+                {l.label}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div
         className="workMain"
         onMouseLeave={() => {
           if (showingProjects) setHoverCard(null);
         }}
       >
-        {WORK_LENSES.map((l, i) => (
-          <section
-            key={l.id}
-            id={l.anchor}
-            className="workSection"
-            tabIndex={-1}
-            // No visible heading — the panel rail is the label on screen, so
-            // the section carries its name for assistive tech instead.
-            aria-label={l.label}
-            ref={(el) => {
-              if (el) sectionRefs.current.set(i, el);
-              else sectionRefs.current.delete(i);
-            }}
+        {WORK_LENSES.map((l, i) => {
+          const on = i === activeSection;
+          const peek = edgeCueOn && i === activeSection + 1;
+          const y =
+            i <= activeSection
+              ? "0%"
+              : peek
+                ? `calc(100% - ${NEXT_PEEK_PX}px)`
+                : "100%";
+          return (
+            <motion.section
+              key={l.id}
+              id={l.anchor}
+              className={
+                "workSection" + (on ? " on" : "") + (peek ? " peek" : "")
+              }
+              tabIndex={-1}
+              // No visible heading — the panel rail is the label on screen, so
+              // the section carries its name for assistive tech instead.
+              aria-label={l.label}
+              aria-hidden={on ? undefined : true}
+              inert={on ? undefined : true}
+              initial={false}
+              animate={{ y }}
+              transition={
+                i === activeSection + 1
+                  ? reduce
+                    ? { duration: 0 }
+                    : { duration: 0.32, ease: PAGE_EASE }
+                  : pageTransition
+              }
+              style={{ zIndex: i + 1 }}
+              ref={(el) => {
+                if (el) sectionRefs.current.set(i, el);
+                else sectionRefs.current.delete(i);
+              }}
+            >
+              {sectionBody(l.id)}
+              {l.nextCue ? (
+                <div className="workPageCuePad" aria-hidden="true" />
+              ) : null}
+            </motion.section>
+          );
+        })}
+
+        {WORK_LENSES[activeSection]?.nextCue ? (
+          <div
+            className={"workPageCue" + (edgeCueOn ? " show" : "")}
+            aria-hidden="true"
           >
-            {sectionBody(l.id)}
-          </section>
-        ))}
+            <p className="workPageCueLabel">
+              {WORK_LENSES[activeSection].nextCue}
+            </p>
+            <span className="workPageCueChevron">
+              <svg viewBox="0 0 16 16" width="14" height="14">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.5 6.25 8 10.75l4.5-4.5"
+                />
+              </svg>
+            </span>
+          </div>
+        ) : null}
       </div>
 
       {engActive ? (

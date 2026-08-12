@@ -1,7 +1,7 @@
 /**
- * Work content lenses — each category is one section of the work column.
+ * Work content lenses — each category is one full “page” in the work stack.
  * Visual Craft keeps the project grid; the rest use curated lists / DE cards.
- * The three stack in this order and the panel rail scroll-spies between them.
+ * Pages cover each other on edge-scroll; the panel rail jumps between them.
  */
 
 export type WorkLensId = "visual" | "systems" | "engineering" | "about";
@@ -11,12 +11,35 @@ export type WorkLens = {
   label: string;
   /** Section DOM id — also the deep-link hash (/#visual-craft). */
   anchor: string;
+  /**
+   * Personality line shown at the bottom of this page before the next one
+   * slides up. Omitted on the last lens (About Me).
+   */
+  nextCue?: string;
 };
 
 export const WORK_LENSES: WorkLens[] = [
-  { id: "visual", label: "Visual Craft", anchor: "visual-craft" },
-  { id: "systems", label: "Systems Thinking", anchor: "systems-thinking" },
-  { id: "engineering", label: "Design Engineering", anchor: "design-engineering" },
+  {
+    id: "visual",
+    label: "Visual Craft",
+    anchor: "visual-craft",
+    nextCue:
+      "Impressed by my Visual Craft? See how I think through complex problems.",
+  },
+  {
+    id: "systems",
+    label: "Systems Thinking",
+    anchor: "systems-thinking",
+    nextCue:
+      "Okay, I can design, solve complex problems with uncompromising craft, but see how I can ship solutions and be AI-native.",
+  },
+  {
+    id: "engineering",
+    label: "Design Engineering",
+    anchor: "design-engineering",
+    nextCue:
+      "Okay, great designer. Here's who I am: what I stand by besides the work, and what I enjoy doing.",
+  },
   { id: "about", label: "About Me", anchor: "about-me" },
 ];
 
