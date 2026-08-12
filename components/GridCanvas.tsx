@@ -31,12 +31,9 @@ const IDLE: Target = { x: 0, y: 0, scale: 1, opacity: 1, blur: 0, radius: 6, del
 
 type Mode = "work" | "grid";
 
-// Views live side by side in one space, left to right.
+// Views live side by side in one space, left to right. The bottom-right
+// toggle reads off = work, on = grid.
 const ORDER: Mode[] = ["work", "grid"];
-const LABEL: Record<Mode, string> = {
-  work: "Option 1",
-  grid: "Option 2",
-};
 
 // Spatial shift between modes: the incoming view enters from whichever side it
 // sits on relative to the one you left. Durations follow page-transition
@@ -425,25 +422,6 @@ export default function GridCanvas() {
       </AnimatePresence>
 
       <div className="bottomBar">
-        <div className="segmented">
-          {ORDER.map((m) => (
-            <button
-              key={m}
-              className={mode === m ? "active" : ""}
-              type="button"
-              onClick={() => switchMode(m)}
-            >
-              {mode === m && (
-                <motion.span
-                  layoutId="segThumb"
-                  className="segThumb"
-                  transition={{ type: "spring", stiffness: 520, damping: 42 }}
-                />
-              )}
-              <span className="segLabel">{LABEL[m]}</span>
-            </button>
-          ))}
-        </div>
         <AnimatePresence>
           {mode === "grid" && (
             <motion.div
@@ -476,6 +454,18 @@ export default function GridCanvas() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Bare switch — no label, no icon. Off is the work view, on is the grid. */}
+      <button
+        type="button"
+        role="switch"
+        aria-checked={mode === "grid"}
+        aria-label="Grid view"
+        className={"modeToggle" + (mode === "grid" ? " on" : "")}
+        onClick={() => switchMode(mode === "grid" ? "work" : "grid")}
+      >
+        <span className="modeToggleKnob" />
+      </button>
     </div>
   );
 }

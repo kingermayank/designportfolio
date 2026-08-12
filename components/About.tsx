@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ABOUT_INTRO, ABOUT_PTO, ABOUT_SECTIONS, TESTIMONIALS } from "@/lib/about";
+import { ABOUT_INTRO, ABOUT_SECTIONS } from "@/lib/about";
+import AboutContent from "@/components/AboutContent";
 import Rise from "@/components/Rise";
 
 type AboutProps = {
@@ -109,114 +110,12 @@ export default function About({ onClose }: AboutProps) {
 
           <div className="csContent">
             <div className={"csFade" + (contentIn ? " in" : "")}>
-              <p className="aboutLede">{ABOUT_INTRO.summary}</p>
-
-              <figure className="aboutHero">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={ABOUT_INTRO.hero.src}
-                  alt={ABOUT_INTRO.hero.alt}
-                  style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
-                />
-              </figure>
-
-              {ABOUT_SECTIONS.map((sec, i) => (
-                <section
-                  key={sec.nav}
-                  ref={(el) => {
-                    if (el) sectionRefs.current.set(i, el);
-                    else sectionRefs.current.delete(i);
-                  }}
-                  className="csSection"
-                >
-                  <h3 className="csHeading aboutHeading">{sec.heading}</h3>
-                  {sec.body.map((p, k) => (
-                    <p key={k} className="csBody">
-                      {p}
-                    </p>
-                  ))}
-                  {sec.principles && (
-                    <div className="aboutPrinciples">
-                      {sec.principles.map((pr) => (
-                        <div key={pr.title} className="aboutPrinciple">
-                          <div className="aboutPrincipleTitle">{pr.title}</div>
-                          <p className="aboutPrincipleText">{pr.text}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </section>
-              ))}
-
-              <section
-                ref={(el) => {
-                  if (el) sectionRefs.current.set(ABOUT_SECTIONS.length, el);
-                  else sectionRefs.current.delete(ABOUT_SECTIONS.length);
+              <AboutContent
+                registerSection={(i, el) => {
+                  if (el) sectionRefs.current.set(i, el);
+                  else sectionRefs.current.delete(i);
                 }}
-                className="csSection"
-              >
-                <h3 className="csHeading aboutHeading">In the words of those I&rsquo;ve worked closely with.</h3>
-                <div className="aboutQuotes">
-                  {TESTIMONIALS.map((t) => (
-                    <figure key={t.name} className="aboutQuote">
-                      <blockquote>{t.quote}</blockquote>
-                      <figcaption>
-                        {t.avatar ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img className="aboutQuoteAvatar" src={t.avatar} alt="" />
-                        ) : null}
-                        <span className="aboutQuoteMeta">
-                          <span className="aboutQuoteName">{t.name}</span>
-                          <span className="aboutQuoteRole mono">{t.role}</span>
-                        </span>
-                      </figcaption>
-                    </figure>
-                  ))}
-                </div>
-              </section>
-
-              <section
-                ref={(el) => {
-                  if (el) sectionRefs.current.set(ABOUT_SECTIONS.length + 1, el);
-                  else sectionRefs.current.delete(ABOUT_SECTIONS.length + 1);
-                }}
-                className="csSection"
-              >
-                <h3 className="csHeading aboutHeading">How I recharge when I&rsquo;m on PTO.</h3>
-                <div className="aboutPtoGrid">
-                  {ABOUT_PTO.map((photo) => {
-                    const caption =
-                      photo.alt && !photo.alt.startsWith("Travel")
-                        ? photo.alt
-                        : null;
-                    return (
-                      <figure
-                        key={photo.src}
-                        className={
-                          "aboutPtoItem" + (caption ? " aboutPtoItemCaptioned" : "")
-                        }
-                        style={{ aspectRatio: photo.ar }}
-                      >
-                        <div className="aboutPtoInner">
-                          <div className="aboutPtoMediaWrap">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              className="aboutPtoMedia"
-                              src={photo.src}
-                              alt={photo.alt}
-                            />
-                          </div>
-                          {caption ? (
-                            <figcaption className="aboutPtoCaption">
-                              {caption}
-                            </figcaption>
-                          ) : null}
-                        </div>
-                      </figure>
-                    );
-                  })}
-                </div>
-              </section>
+              />
             </div>
           </div>
         </div>

@@ -2,14 +2,17 @@
 
 import Link from "next/link";
 import {
+  useCallback,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { useReducedMotion } from "framer-motion";
 import { ABOUT_INTRO } from "@/lib/about";
-import { WORK_FIT_CTA } from "@/lib/letter";
-import CopyEmailButton from "@/components/CopyEmailButton";
+import AboutContent from "@/components/AboutContent";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
 import { usePageTransition } from "@/components/PageTransition";
@@ -25,6 +28,11 @@ import {
 
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
+
+// Breathing room above a section once it's been scrolled to, so its first row
+// doesn't sit flush against the top edge. Mirrored by .workSection's
+// scroll-margin-top for plain hash jumps.
+const SECTION_SCROLL_PAD = 8;
 
 const SOCIAL_ICONS: Record<string, ReactNode> = {
   LinkedIn: (
@@ -59,11 +67,11 @@ const SOCIAL_ICONS: Record<string, ReactNode> = {
       />
     </svg>
   ),
-  Email: (
+  Substack: (
     <svg viewBox="0 0 24 24" aria-hidden>
       <path
         fill="currentColor"
-        d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2v.51l-8 5.33-8-5.33V6h16zM4 18V8.74l7.4 4.93a1 1 0 0 0 1.2 0L20 8.74V18H4z"
+        d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.45 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"
       />
     </svg>
   ),
@@ -136,7 +144,11 @@ type Card = {
   externalUrl?: string;
 };
 
-const PROJECTS: Card[] = CASE_STUDIES.map((s, i) => {
+// Visual Craft shows project work only — studies flagged `inWorkGrid: false`
+// (the Ikon PM systems artifacts) live under Systems Thinking instead.
+const PROJECTS: Card[] = CASE_STUDIES.filter(
+  (s) => s.inWorkGrid !== false,
+).map((s, i) => {
   const cover = s.workCover;
   const coverVideo = isVideoSrc(cover);
   // A workCover is a purpose-built card asset (thumbnail.png / .mp4) — use it
@@ -263,8 +275,13 @@ function WorkCard({
   );
 }
 
+// Rows read "Company · Discipline" — the trailing year is dropped, since the
+// case study itself carries the date.
+const META_YEAR = /\s*·\s*\d{4}\s*$/;
+
 function WorkListRow({ item }: { item: WorkListItem }) {
   const { open } = usePageTransition();
+  const meta = item.meta.replace(META_YEAR, "");
   const body = (
     <>
       <span className="workListThumb" style={{ background: item.shade }}>
@@ -274,25 +291,23 @@ function WorkListRow({ item }: { item: WorkListItem }) {
         ) : null}
       </span>
       <span className="workListCopy">
-        <span className="workListTitle">
-          {item.title}
-          {item.slug ? (
-            <span className="workListArrow" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M3.5 10.5 10.5 3.5M5.5 3.5h5v5"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          ) : null}
-        </span>
-        <span className="workListMeta">{item.meta}</span>
+        <span className="workListTitle">{item.title}</span>
+        <span className="workListMeta">{meta}</span>
         <span className="workListBody">{item.body}</span>
       </span>
+      {item.slug ? (
+        <span className="workListArrow" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M3.5 10.5 10.5 3.5M5.5 3.5h5v5"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      ) : null}
     </>
   );
 
@@ -310,7 +325,7 @@ function WorkListRow({ item }: { item: WorkListItem }) {
       className="workListRow"
       onNavigate={(e) => {
         e.preventDefault();
-        open(`/work/${item.slug}`, { title: item.title, subtitle: item.meta });
+        open(`/work/${item.slug}`, { title: item.title, subtitle: meta });
       }}
     >
       {body}
@@ -351,11 +366,16 @@ function EngCard({
 export default function Work() {
   const { open } = usePageTransition();
   const isNarrow = useIsNarrow();
+  const reduce = useReducedMotion();
   const [hoverIdx, setHoverIdx] = useState(-1);
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
-  const [lens, setLens] = useState<WorkLensId>("visual");
+  const [activeSection, setActiveSection] = useState(0);
   const [engActive, setEngActive] = useState<EngComponent | null>(null);
-  const showingProjects = lens === "visual";
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const sectionRefs = useRef(new Map<number, HTMLElement>());
+  // The panel's hover rail belongs to the project grid — it only reads while
+  // Visual Craft is the section in view.
+  const showingProjects = activeSection === 0;
 
   const cards = PROJECTS;
 
@@ -382,8 +402,114 @@ export default function Work() {
     setLastHoverIdx(idx);
   };
 
+  // Same center-line rule the case-study rail uses (see CaseStudies'
+  // onDetailScroll): the active section is the last one whose top has crossed
+  // the middle of the scroller, so the final section still wins at the bottom.
+  const onScroll = useCallback(() => {
+    const sc = rootRef.current;
+    if (!sc) return;
+    const center = sc.scrollTop + sc.clientHeight / 2;
+    let idx = 0;
+    sectionRefs.current.forEach((el, i) => {
+      if (el.offsetTop <= center) idx = Math.max(idx, i);
+    });
+    setActiveSection(idx);
+  }, []);
+
+  const goToSection = useCallback((i: number, smooth: boolean) => {
+    const sc = rootRef.current;
+    const el = sectionRefs.current.get(i);
+    if (!sc || !el) return;
+    sc.scrollTo({
+      top: Math.max(0, el.offsetTop - SECTION_SCROLL_PAD),
+      behavior: smooth ? "smooth" : "auto",
+    });
+    // Keyboard and screen-reader focus lands where the eye lands.
+    el.focus({ preventScroll: true });
+  }, []);
+
+  // Deep link — /#systems-thinking opens on that section.
+  useEffect(() => {
+    const anchor = window.location.hash.slice(1);
+    if (!anchor) return;
+    const i = WORK_LENSES.findIndex((l) => l.anchor === anchor);
+    if (i <= 0) return;
+    // A frame late, so the masonry columns have laid out and offsetTop is real.
+    const t = window.setTimeout(() => goToSection(i, false), 0);
+    return () => window.clearTimeout(t);
+  }, [goToSection]);
+
+  // All three sections are mounted now, so keep the off-screen loops paused —
+  // same gate GridCanvas uses for its tiles.
+  useEffect(() => {
+    const sc = rootRef.current;
+    if (!sc) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) void v.play().catch(() => {});
+          else v.pause();
+        }
+      },
+      { root: sc, rootMargin: "300px 0px" },
+    );
+    sc.querySelectorAll<HTMLVideoElement>("video").forEach((v) => io.observe(v));
+    return () => io.disconnect();
+  }, [isNarrow]);
+
+  const sectionBody = (id: WorkLensId) => {
+    if (id === "visual") {
+      return isNarrow ? (
+        <div className="workGrid workGridFlat">
+          {cards.map((card) => (
+            <WorkCard key={card.slug} card={card} onHover={setHoverCard} />
+          ))}
+        </div>
+      ) : (
+        <div className="workGrid">
+          {columns.map((col, ci) => (
+            <div className="workCol" key={ci}>
+              {col.map((card) => (
+                <WorkCard key={card.slug} card={card} onHover={setHoverCard} />
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    if (id === "systems") {
+      return (
+        <div className="workList">
+          {SYSTEMS_LIST.map((item) => (
+            <WorkListRow key={item.id} item={item} />
+          ))}
+        </div>
+      );
+    }
+    if (id === "engineering") {
+      return (
+        <div className="engGrid">
+          {ENG_COMPONENTS.map((item) => (
+            <EngCard
+              key={item.id}
+              item={item}
+              onOpen={() => setEngActive(item)}
+            />
+          ))}
+        </div>
+      );
+    }
+    // About Me — the same right-column content the /about route renders.
+    return (
+      <div className="workAbout">
+        <AboutContent />
+      </div>
+    );
+  };
+
   return (
-    <div className="workRoot workUniform">
+    <div ref={rootRef} className="workRoot workUniform" onScroll={onScroll}>
       <aside className="workPanel">
         <div className="workPanelTop">
           <h1 className="workBrand">
@@ -394,25 +520,6 @@ export default function Work() {
             founder&apos;s mindset who ships experiences with speed, taste,
             and judgement.
           </p>
-
-          <div className="workFit">
-            <div className="workFitActions">
-              <Link
-                href="/about"
-                className="workFitBtn workFitBtnSolid"
-                onNavigate={(e) => {
-                  e.preventDefault();
-                  open("/about", { title: "About Me" });
-                }}
-              >
-                {WORK_FIT_CTA.aboutLabel}
-              </Link>
-              <CopyEmailButton
-                email={WORK_FIT_CTA.email}
-                label={WORK_FIT_CTA.copyEmailLabel}
-              />
-            </div>
-          </div>
 
           <div className="workSocials">
             {ABOUT_INTRO.links.map((link) => (
@@ -432,6 +539,28 @@ export default function Work() {
               </a>
             ))}
           </div>
+
+          <nav className="workLenses" aria-label="Work sections">
+            {WORK_LENSES.map((l, i) => {
+              const active = i === activeSection;
+              return (
+                <a
+                  key={l.id}
+                  href={`#${l.anchor}`}
+                  className={"workLens" + (active ? " on" : "")}
+                  aria-current={active ? "true" : undefined}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goToSection(i, !reduce);
+                    // Keep the hash shareable without a second native jump.
+                    window.history.replaceState(null, "", `#${l.anchor}`);
+                  }}
+                >
+                  {l.label}
+                </a>
+              );
+            })}
+          </nav>
         </div>
 
         {showingProjects && (
@@ -478,70 +607,23 @@ export default function Work() {
           if (showingProjects) setHoverCard(null);
         }}
       >
-        <nav className="workLenses" aria-label="Work categories">
-          {WORK_LENSES.map((l) => {
-            const active = lens === l.id;
-            return (
-              <button
-                key={l.id}
-                type="button"
-                className={"workLens" + (active ? " on" : "")}
-                onClick={() => {
-                  setLens(l.id);
-                  setEngActive(null);
-                  setHoverIdx(-1);
-                }}
-              >
-                {l.label}
-                <span className={"workLensDot" + (active ? " show" : "")} aria-hidden />
-              </button>
-            );
-          })}
-        </nav>
-
-        {showingProjects ? (
-          isNarrow ? (
-            <div className="workGrid workGridFlat" key="visual-flat">
-              {cards.map((card) => (
-                <WorkCard
-                  key={card.slug}
-                  card={card}
-                  onHover={setHoverCard}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="workGrid" key="visual-masonry">
-              {columns.map((col, ci) => (
-                <div className="workCol" key={ci}>
-                  {col.map((card) => (
-                    <WorkCard
-                      key={card.slug}
-                      card={card}
-                      onHover={setHoverCard}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          )
-        ) : lens === "systems" ? (
-          <div className="workList" key="systems">
-            {SYSTEMS_LIST.map((item) => (
-              <WorkListRow key={item.id} item={item} />
-            ))}
-          </div>
-        ) : (
-          <div className="engGrid" key="engineering">
-            {ENG_COMPONENTS.map((item) => (
-              <EngCard
-                key={item.id}
-                item={item}
-                onOpen={() => setEngActive(item)}
-              />
-            ))}
-          </div>
-        )}
+        {WORK_LENSES.map((l, i) => (
+          <section
+            key={l.id}
+            id={l.anchor}
+            className="workSection"
+            tabIndex={-1}
+            // No visible heading — the panel rail is the label on screen, so
+            // the section carries its name for assistive tech instead.
+            aria-label={l.label}
+            ref={(el) => {
+              if (el) sectionRefs.current.set(i, el);
+              else sectionRefs.current.delete(i);
+            }}
+          >
+            {sectionBody(l.id)}
+          </section>
+        ))}
       </div>
 
       {engActive ? (

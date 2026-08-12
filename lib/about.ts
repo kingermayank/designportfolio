@@ -37,8 +37,12 @@ export const ABOUT_INTRO = {
       label: "Resume",
       href: "https://drive.google.com/file/d/1ARMGtXzDuXnK0jrYjc3dxizeUVrlPWTF/view?usp=sharing",
     },
-    { label: "Email", href: "mailto:kingermayank@gmail.com" },
+    {
+      label: "Substack",
+      href: "https://nextgendesigner.substack.com/",
+    },
   ],
+  email: "kingermayank@gmail.com",
   /** Same Drive file as the Resume social — used by the Option 1 fit CTA. */
   resumeHref:
     "https://drive.google.com/file/d/1ARMGtXzDuXnK0jrYjc3dxizeUVrlPWTF/view?usp=sharing",
@@ -115,28 +119,28 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "From the beginning Mayank always impressed me with his drive to improve not only himself but the people, teams, products, and processes around them. He has a strong will to fight for the ideas he believes in but is open minded enough to accept other viewpoints and alternate solutions. There are few I've worked with that have as much dedication to the craft as Mayank has. He will benefit any team he joins.",
     name: "Jordan Detota",
-    role: "Director of Product Design, Ikon Technologies",
+    role: "Director of Product Design at Ikon Technologies",
     avatar: "/about/avatar-jordan.png",
   },
   {
     quote:
       "Mayank was an intern that I had the pleasure of working with while he was at PathAI. He showed a tremendous eagerness to learn as he learned all the different hats one needs to wear when designing a product. He was able to lead user research sessions, pushed designs iteratively, and ended up delivering production ready files to engineering. The amount of growth he showed was impressive and he'll be a great designer for whichever team is lucky to have him next.",
     name: "Sandy Zhu",
-    role: "Staff Product Designer, PathAI",
+    role: "Staff Product Designer at PathAI",
     avatar: "/about/avatar-sandy.jpeg",
   },
   {
     quote:
       "Mayank was a great addition to our design team at bb. His eagerness to learn and passion for visual design was evident in the quality of the work he produced. He built a design system with the help of team members by quickly adapting and understanding of our design standards and bringing fresh ideas to the table. I have no doubt that Mayank will continue to excel in his career and I highly recommend him for any design opportunities in the future.",
     name: "Abhiteja Vulapu",
-    role: "Head of Design, BigBasket",
+    role: "Head of Design at BigBasket",
     avatar: "/about/avatar-abhiteja.png",
   },
   {
     quote:
       "Mayank is a very talented and dedicated designer who brings storytelling and visual communication to the fore. His ability to clearly articulate his thoughts and think rationally, made it a joy to work and have meaningful conversations with him. He is a quick learner and has an inquisitive mind that helped him learn and unlearn various concepts here at bigbasket - especially on the design system project.",
     name: "Raghav Vasudevan",
-    role: "Senior Product Designer, BigBasket",
+    role: "Senior Product Designer at BigBasket",
     avatar: "/about/avatar-raghav.jpeg",
   },
 ];
@@ -149,17 +153,17 @@ export const ABOUT_PTO: AboutPhoto[] = [
   },
   {
     src: "/about/pto-2.jpg",
-    alt: "Travel photo",
+    alt: "My silhouette",
     ar: 1024 / 768,
   },
   {
     src: "/about/pto-3.jpg",
-    alt: "Travel photo",
+    alt: "Exploring the cenotes in Tulum",
     ar: 1696 / 2560,
   },
   {
     src: "/about/pto-4.png",
-    alt: "Travel photo",
+    alt: "Graduated with a smile",
     ar: 1905 / 2267,
   },
   {
@@ -169,7 +173,7 @@ export const ABOUT_PTO: AboutPhoto[] = [
   },
   {
     src: "/about/pto-6.jpeg",
-    alt: "Travel photo",
+    alt: "Trying to get one good picture at the end of the trip.",
     ar: 2006 / 2560,
   },
 ];

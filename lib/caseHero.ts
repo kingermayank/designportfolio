@@ -13,6 +13,8 @@ type HeroMeta = {
   tags?: MetadataTags;
   /** Substring of the detail title painted in the brand accent. */
   titleAccent?: string;
+  /** Overrides the default "View Website" CTA label. */
+  ctaLabel?: string;
 };
 
 const split = (value: string): string[] =>
@@ -27,7 +29,6 @@ const HERO_META: Record<string, HeroMeta> = {
     items: [
       { label: "Company", value: "Ikon Technologies" },
       { label: "Role", value: "Lead Product Designer, Design Engineer" },
-      { label: "Focus", value: "Design Engineering" },
     ],
     tags: {
       label: "Industry",
@@ -40,7 +41,6 @@ const HERO_META: Record<string, HeroMeta> = {
     items: [
       { label: "Company", value: "Warpbnb" },
       { label: "Role", value: "Everything: design, code, content, motion, film" },
-      { label: "Focus", value: "Full-Stack AI Build" },
     ],
     tags: {
       label: "Tools",
@@ -54,7 +54,6 @@ const HERO_META: Record<string, HeroMeta> = {
     titleAccent: "speed and confidence.",
     items: [
       { label: "Company", value: "PathAI" },
-      { label: "Focus", value: "Product Design" },
       { label: "Team", value: "Me, Sandy Zhu, Riley Hunter, Jamie Harisiades, 5× SWE" },
     ],
     tags: {
@@ -69,7 +68,6 @@ const HERO_META: Record<string, HeroMeta> = {
     titleAccent: "brand strategy and landing page",
     items: [
       { label: "Company", value: "Walkity" },
-      { label: "Focus", value: "Accessibility-centered brand and web experience" },
     ],
     tags: {
       label: "Role",
@@ -78,15 +76,73 @@ const HERO_META: Record<string, HeroMeta> = {
   },
 
   bigbasket: {
-    titleAccent: "design system",
+    titleAccent: "Design System for India's largest grocery delivery app",
     items: [
       { label: "Company", value: "BigBasket" },
-      { label: "Focus", value: "Design Systems" },
     ],
     tags: {
       label: "Focus area",
       values: split(
         "Design System Foundations, Components, Documentation, Cross-Platform Patterns",
+      ),
+    },
+  },
+
+  /* Ikon Technologies — Product Lead. Same company and role across all four;
+     only the focus-area tags change. */
+  "ikon-analytics": {
+    titleAccent: "HEART-driven framework",
+    items: [
+      { label: "Company", value: "Ikon Technologies" },
+      { label: "Role", value: "Product Lead" },
+    ],
+    tags: {
+      label: "Focus area",
+      values: split(
+        "HEART Framework, Success Metrics, Event Instrumentation, Heap, Smartlook, Google Analytics",
+      ),
+    },
+  },
+
+  "ikon-service-blueprint": {
+    titleAccent: "single source of truth",
+    ctaLabel: "View Process Map",
+    items: [
+      { label: "Company", value: "Ikon Technologies" },
+      { label: "Role", value: "Product Lead" },
+    ],
+    tags: {
+      label: "Focus area",
+      values: split(
+        "Cross-Functional Discovery, Device Lifecycle Mapping, Business Rules, HubSpot, NetSuite, Zoho",
+      ),
+    },
+  },
+
+  "ikon-data-dictionary": {
+    titleAccent: "unified data dictionary",
+    items: [
+      { label: "Company", value: "Ikon Technologies" },
+      { label: "Role", value: "Product Lead" },
+    ],
+    tags: {
+      label: "Focus area",
+      values: split(
+        "Stakeholder Interviews, Data Cataloguing, Flow Mapping, Vendor Consolidation, BI Partnership",
+      ),
+    },
+  },
+
+  "ikon-agentic-outreach": {
+    titleAccent: "agentic outreach",
+    items: [
+      { label: "Company", value: "Ikon Technologies" },
+      { label: "Role", value: "Product Lead" },
+    ],
+    tags: {
+      label: "Focus area",
+      values: split(
+        "Agentic Workflows, Stella AI, Service Scheduling, Vendor Partnership, Pilot Measurement",
       ),
     },
   },
@@ -118,7 +174,6 @@ export function caseHeroProps(study: CaseStudy): CaseHeroProps {
     ([
       { label: "Company", value: credit(study, "Company") ?? study.title },
       { label: "Role", value: credit(study, "Role") ?? credit(study, "My Contribution") },
-      { label: "Focus", value: credit(study, "Focus") ?? study.category },
     ].filter((item): item is MetadataItem => Boolean(item.value)));
 
   const hero = study.hero;
@@ -139,7 +194,7 @@ export function caseHeroProps(study: CaseStudy): CaseHeroProps {
       alt: "",
     },
     ctaHref: study.websiteUrl,
-    ctaLabel: "View website",
+    ctaLabel: meta.ctaLabel ?? "View Website",
     meta: items,
     metaTags: meta.tags,
     accent: brandColor(study.slug) ?? study.accent,

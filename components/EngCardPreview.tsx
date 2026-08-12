@@ -5,8 +5,19 @@ import type { EngComponent } from "@/lib/workLenses";
 /** Card covers for Design Engineering entries — static capture or looping video. */
 export default function EngCardPreview({ item }: { item: EngComponent }) {
   const hasMedia = Boolean(item.video ? item.src : item.thumb || item.src);
+  const frame = item.frame ?? "cover";
+  const mediaClass =
+    "engCardMedia" +
+    (frame === "site" ? " engCardMediaSite" : "") +
+    (frame === "center" ? " engCardMediaCenter" : "");
+
   return (
-    <span className="engCardMedia" style={{ background: item.shade }}>
+    <span
+      className={mediaClass}
+      style={{
+        background: item.matte ?? item.shade,
+      }}
+    >
       {item.video && item.src ? (
         <video
           src={item.src}
@@ -22,7 +33,7 @@ export default function EngCardPreview({ item }: { item: EngComponent }) {
         <img src={item.thumb || item.src} alt="" />
       ) : (
         <span className="engCardPlaceholder">
-          {item.kind === "Website" ? "↗" : item.embedUrl ? "▸" : "◇"}
+          {item.kind === "Website" || item.href ? "↗" : item.embedUrl ? "▸" : "◇"}
         </span>
       )}
     </span>

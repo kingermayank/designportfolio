@@ -1,19 +1,23 @@
 /**
- * Work content lenses — each category switches the right-rail view.
+ * Work content lenses — each category is one section of the work column.
  * Visual Craft keeps the project grid; the rest use curated lists / DE cards.
+ * The three stack in this order and the panel rail scroll-spies between them.
  */
 
-export type WorkLensId = "visual" | "systems" | "engineering";
+export type WorkLensId = "visual" | "systems" | "engineering" | "about";
 
 export type WorkLens = {
   id: WorkLensId;
   label: string;
+  /** Section DOM id — also the deep-link hash (/#visual-craft). */
+  anchor: string;
 };
 
 export const WORK_LENSES: WorkLens[] = [
-  { id: "visual", label: "Visual Craft" },
-  { id: "systems", label: "Systems Thinking" },
-  { id: "engineering", label: "Design Engineering" },
+  { id: "visual", label: "Visual Craft", anchor: "visual-craft" },
+  { id: "systems", label: "Systems Thinking", anchor: "systems-thinking" },
+  { id: "engineering", label: "Design Engineering", anchor: "design-engineering" },
+  { id: "about", label: "About Me", anchor: "about-me" },
 ];
 
 export type WorkListItem = {
@@ -27,82 +31,55 @@ export type WorkListItem = {
   shade: string;
 };
 
-/** Systems Thinking — systems work + outcomes in one list. */
+/** Systems Thinking — the Ikon Technologies product-lead studies. */
 export const SYSTEMS_LIST: WorkListItem[] = [
   {
-    id: "melon",
-    slug: "bigbasket",
-    title: "Hundreds of drifted styles → one Melon system",
-    meta: "BigBasket · Design Systems · 2021",
-    body: "Audited hundreds of drifted colors, text styles, and elevations, then built Melon — foundations, components, and patterns shared across India's largest grocery app.",
-    thumb: "/bigbasket/thumbnail.png?v=2",
-    shade: "#242424",
+    id: "ikon-analytics",
+    slug: "ikon-analytics",
+    title: "A shared HEART framework replacing four conflicting scorecards",
+    meta: "Ikon Technologies · Product Analytics · 2024",
+    body: "Sales, ops, leadership, and product each tracked different metrics. Mapped every web and mobile workflow to HEART goals and instrumented them, giving Toolbox one shared definition of success.",
+    thumb: "/ikon/thumbs/analytics.jpg",
+    shade: "#A9B2BB",
   },
   {
-    id: "toolbox-system",
-    slug: "toolbox",
-    title: "One LLM-ready system behind every dealer workflow",
-    meta: "Ikon Technologies · Design Engineering · 2025",
-    body: "An LLM-aware design system exposing tokens and components to the model — the shared layer behind inventory, keys, service, and dealer workflows.",
-    thumb: "/toolbox/thumbs/cover2.jpg",
-    shade: "#282828",
+    id: "ikon-blueprint",
+    slug: "ikon-service-blueprint",
+    title: "One operational source of truth across disconnected ops",
+    meta: "Ikon Technologies · Service Blueprint · 2024",
+    body: "Mapped the device lifecycle end to end across accounting, operations, warehouse, and dealership — the blueprint NetSuite consultants used to start the warehouse management system project.",
+    thumb: "/ikon/thumbs/blueprint.jpg",
+    shade: "#A9B2BB",
   },
   {
-    id: "region-comments",
-    slug: "pathai",
-    title: "Second opinions on the slide — not in email",
-    meta: "PathAI · Product Design · 2022",
-    body: "A contextual system for second opinions on digital slides — replacing screenshots and email with a workflow pathologists actually use.",
-    thumb: "/pathai/thumbs/path1.jpg",
-    shade: "#282828",
+    id: "ikon-data-dictionary",
+    slug: "ikon-data-dictionary",
+    title: "One data dictionary, ~$6K/month of redundant spend cut",
+    meta: "Ikon Technologies · Data Dictionary · 2024",
+    body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams — ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
+    thumb: "/ikon/thumbs/dictionary.jpg",
+    shade: "#FFFFFF",
   },
   {
-    id: "ikon-ops",
-    title: "Fragmented dealership tools → one operating model",
-    meta: "Ikon Technologies · Product Management · 2024",
-    body: "Untangled fragmented dealership tools into a clearer operating model — aligning design, product, and engineering around one system.",
-    thumb: "/logos/ikon.png",
-    shade: "#262626",
-  },
-  {
-    id: "dealerships",
-    slug: "toolbox",
-    title: "134 new dealerships before launch",
-    meta: "Ikon Technologies · Toolbox · 2025",
-    body: "Pre-launch drove a 33% surge in dealership signups and secured 134 new dealerships before public release, with Toolbox showcased at NADA 2025.",
-    thumb: "/toolbox/thumbs/cover2.jpg",
-    shade: "#282828",
-  },
-  {
-    id: "pathology-speed",
-    slug: "pathai",
-    title: "~45% faster second opinions",
-    meta: "PathAI · Region Comments · 2022",
-    body: "Shipped in Q4 2022 and cut second-opinion turnaround by ~45%, with adoption expanding into QA, tumor boards, teaching, and research.",
-    thumb: "/pathai/thumbs/path1.jpg",
-    shade: "#282828",
-  },
-  {
-    id: "melon-impact",
-    slug: "bigbasket",
-    title: "One shared language across grocery UX",
-    meta: "BigBasket · Melon · 2021",
-    body: "A documented design system that streamlined UX process and gave designers and engineers a common language for cohesive experiences.",
-    thumb: "/bigbasket/thumbnail.png?v=2",
-    shade: "#242424",
-  },
-  {
-    id: "warpbnb-ship",
-    slug: "warpbnb",
-    title: "Zero to shipped in two weeks",
-    meta: "Warpbnb · Full-Stack AI Build · 2025",
-    body: "Solo end-to-end build — design, code, imagery, content, and a commercial — proving AI can expand velocity when taste still leads.",
-    thumb: "/warpbnb/thumbs/warp11.jpg",
-    shade: "#2b2b2b",
+    id: "ikon-agentic",
+    slug: "ikon-agentic-outreach",
+    title: "Service appointments booked by an agent, not an operator",
+    meta: "Ikon Technologies · AI/ML Integration · 2025",
+    body: "Automated dealership service outreach end to end with Stella AI — identifying customers, running the call, checking live availability, and booking autonomously, with humans on exceptions only.",
+    thumb: "/ikon/thumbs/agentic.jpg",
+    shade: "#FFFFFF",
   },
 ];
 
-export type EngKind = "Component" | "Surface" | "Website";
+export type EngKind =
+  | "Component"
+  | "Surface"
+  | "Website"
+  | "npm package"
+  | "Marketing Landing Page"
+  | "B2B SaaS tool";
+
+
 
 export type EngComponent = {
   id: string;
@@ -127,26 +104,49 @@ export type EngComponent = {
   codeUrl?: string;
   /** Taller iframe stage for components with dropdowns / popovers. */
   embedTall?: boolean;
+  /**
+   * Card cover framing:
+   * - `cover` default fill
+   * - `center` contain + centered (Warpbnb search)
+   * - `site` 0.8× sheet flush to bottom with L/T/R matte
+   */
+  frame?: "cover" | "center" | "site";
+  /** Matte behind a `site` / `center` frame (left, top, right). */
+  matte?: string;
 };
 
 /** Design Engineering — component / surface / site cards. Click opens a detail modal. */
 export const ENG_COMPONENTS: EngComponent[] = [
   {
+    id: "ds",
+    title: "Shift Design System",
+    kind: "npm package",
+    body: "Tokens, components, and patterns wired for both humans and LLM-aware workflows.",
+    src: "/toolbox/grid/shift-design-system.mp4",
+    video: true,
+    thumb: "/toolbox/thumbs/shift-design-system.jpg?v=2",
+    shade: "#282828",
+    stack: ["Next.js", "Design tokens", "LLM tooling"],
+    note: "Surface preview from the Toolbox case study — Shift Design System 2.0.",
+  },
+  {
     id: "warpbnb-search",
-    title: "Warpbnb search",
+    title: "Search Bar",
     kind: "Component",
     body: "Theme, era, and guests — play with the Warpbnb search field live.",
     shade: "#FFE4EE",
-    thumb: "/warpbnb/thumbs/search-field.png",
-    src: "/warpbnb/thumbs/search-field.png",
+    thumb: "/warpbnb/search_de.png",
+    src: "/warpbnb/search_de.png",
     embedUrl: "/labs/search",
     embedTall: true,
+    frame: "cover",
+    matte: "#FFE4EE",
     stack: ["React", "Inline tokens", "No deps"],
   },
   {
     id: "walkity-site",
-    title: "Walkity",
-    kind: "Website",
+    title: "walkity.com",
+    kind: "Marketing Landing Page",
     body: "Brand strategy and landing page from scratch — accessibility at the center, shipped as a live marketing site.",
     shade: "#1a1a1a",
     thumb: "/walkity/thumbs/site-desktop.jpg",
@@ -154,115 +154,38 @@ export const ENG_COMPONENTS: EngComponent[] = [
     href: "https://walkity.vercel.app/",
     embedUrl: "https://walkity.vercel.app/",
     embedTall: true,
+    frame: "site",
+    matte: "#D6E8F7",
     stack: ["Next.js", "Vercel", "Brand system"],
   },
   {
-    id: "ds",
-    title: "Design system",
-    kind: "Component",
-    body: "Tokens, components, and patterns wired for both humans and LLM-aware workflows.",
-    src: "/toolbox/grid/design-system.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/design-system.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "Design tokens", "LLM tooling"],
-    note: "Surface preview for now — a playable embed can slot in via embedUrl when the lab is ready.",
-  },
-  {
-    id: "ai-chat",
-    title: "AI chat",
-    kind: "Surface",
-    body: "Conversational interface for dealer ops — context-aware and production-shaped.",
-    src: "/toolbox/grid/ai-chat.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/ai-chat.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "Framer Motion"],
-    note: "Product surface captured from Toolbox. Interactive embed lands when the chat lab ships.",
-  },
-  {
-    id: "inventory",
-    title: "Inventory",
-    kind: "Surface",
-    body: "Dealership inventory flows rebuilt as a coherent operating surface.",
-    src: "/toolbox/grid/inventory.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/inventory.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "React"],
-    note: "Ops surface preview — built end-to-end in Toolbox, shown here as motion capture until a live embed exists.",
-  },
-  {
-    id: "config",
-    title: "Configurations",
-    kind: "Surface",
-    body: "Complex dealer configuration made scannable and shippable.",
-    src: "/toolbox/grid/configurations.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/configurations.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "Framer Motion"],
-    note: "Dense settings UI designed for scan speed. Embed optional later for deeper exploration.",
-  },
-  {
-    id: "pairing",
-    title: "Device pairing",
-    kind: "Component",
-    body: "Hardware ↔ software pairing with clear states and recovery paths.",
-    src: "/toolbox/grid/device-pairing.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/device-pairing.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "React", "IoT states"],
-    note: "State machine UI for pairing — preview via capture; a lab embed can replace the stage when ready.",
-  },
-  {
-    id: "dashboard",
-    title: "Dashboard",
-    kind: "Surface",
-    body: "Ops overview for dealers — signal over noise, built in product.",
-    src: "/toolbox/grid/dashboard.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/dashboard.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "React"],
-    note: "Dashboard as shipped in Toolbox. Review mode until an interactive slice is extracted.",
-  },
-  {
-    id: "invoices",
-    title: "Invoices",
-    kind: "Surface",
-    body: "Billing and invoice flows designed and engineered as one surface.",
-    src: "/toolbox/grid/invoices.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/invoices.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "Framer Motion"],
-    note: "Billing surface preview from production motion captures.",
-  },
-  {
-    id: "gateways",
-    title: "Gateways",
-    kind: "Component",
-    body: "Gateway management UI for IoT hardware at dealership scale.",
-    src: "/toolbox/grid/gateways.mp4",
-    video: true,
-    thumb: "/toolbox/thumbs/gateways.jpg",
-    shade: "#282828",
-    stack: ["Next.js", "React", "IoT"],
-    note: "Hardware management component — capture for now, live lab later.",
-  },
-  {
     id: "warpbnb-site",
-    title: "Warpbnb.com",
+    title: "warpbnb.com",
     kind: "Website",
     body: "Full-stack fictional product site — design, code, motion, and commercial.",
-    src: "/warpbnb/grid/warp11.mp4",
-    video: true,
-    thumb: "/warpbnb/thumbs/warp11.jpg",
     shade: "#2b2b2b",
+    thumb: "/warpbnb/thumbs/site-desktop.jpg?v=2",
+    src: "/warpbnb/thumbs/site-desktop.jpg?v=2",
     href: "https://www.warpbnb.com/",
+    embedUrl: "https://www.warpbnb.com/",
+    embedTall: true,
+    frame: "site",
+    matte: "#FFE4EE",
     stack: ["Next.js", "Framer Motion", "Full-stack"],
-    note: "Solo end-to-end build. Open the live site from the modal — no embed, just the real destination.",
+  },
+  {
+    id: "agave-site",
+    title: "Agave Landing Page",
+    kind: "B2B SaaS tool",
+    body: "Password-gated design assessment landing — one connected view of financial operations.",
+    shade: "#1a2e1c",
+    thumb: "/agave/thumbs/site-desktop.jpg",
+    src: "/agave/thumbs/site-desktop.jpg",
+    href: "https://agave-kappa.vercel.app/",
+    embedUrl: "https://agave-kappa.vercel.app/",
+    embedTall: true,
+    frame: "site",
+    matte: "#D8F0DC",
+    stack: ["Next.js", "Vercel"],
   },
 ];

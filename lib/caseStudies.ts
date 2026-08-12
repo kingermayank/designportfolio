@@ -84,6 +84,8 @@ export type CaseStudy = {
   mediaBlocks?: MediaBlock[];
   /** Left-rail Motivation / Approach / Outcome (or Problem / Solution / Impact). */
   highlights?: CaseHighlight[];
+  /** Closing impact line rendered under the media stack on editorial studies. */
+  impact?: string;
   /** Live product link shown as a CTA on the detail left rail. */
   websiteUrl?: string;
   /** Brand accent for highlight labels (and website CTA). */
@@ -95,6 +97,12 @@ export type CaseStudy = {
   linkable?: boolean;
   /** Opens from the Work grid in a new tab instead of a case-study route. */
   externalUrl?: string;
+  /**
+   * When false, the study is kept out of the Visual Craft project grid but
+   * still gets a case-study page. For work that belongs to another lens —
+   * the Ikon PM studies live under Systems Thinking. Defaults to true.
+   */
+  inWorkGrid?: boolean;
 };
 
 const G = "#262626";
@@ -217,6 +225,8 @@ const toolbox: CaseStudy = {
       ),
     },
   ],
+  impact:
+    "Toolbox pre-launch drove a 33% surge in dealership customers.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
     { label: "Industry", value: "Automotive, IoT Hardware" },
@@ -625,6 +635,7 @@ const walkity: CaseStudy = {
     shade: "#222222",
     src: "/walkity/cover.png",
     ar: 16 / 9,
+    scrim: 0.3,
   },
   // Numbered stack: 4 / 4-2 are the paired squares, side by side.
   mediaBlocks: [
@@ -696,8 +707,10 @@ const bbFigma = (src: string): CaseMedia => ({
 const bigbasket: CaseStudy = {
   slug: "bigbasket",
   title: "BigBasket",
-  detailTitle: "A design system for India's largest grocery app.",
-  tagline: "A design system for India's largest grocery app.",
+  detailTitle:
+    "Creating a Design System for India's largest grocery delivery app",
+  tagline:
+    "Creating a Design System for India's largest grocery delivery app",
   description:
     "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
   year: 2021,
@@ -729,15 +742,14 @@ const bigbasket: CaseStudy = {
   // Order follows the reference stack after cover.
   mediaBlocks: [
     { type: "full", media: bb("/bigbasket/chaos.png", 3840 / 2160) },
-    { type: "full", media: bb("/bigbasket/Audit.png", 1840 / 536) },
     { type: "full", media: bb("/bigbasket/foundations_layout2.png", 1786 / 1286) },
     { type: "full", media: bb("/bigbasket/button.png", 1920 / 857) },
     { type: "full", media: bbFigma("/bigbasket/components.mp4") },
     { type: "full", media: bb("/bigbasket/ios-vs-android.png", 1920 / 857) },
     { type: "full", media: bb("/bigbasket/melon3.png", 3200 / 1118) },
-    { type: "full", media: bb("/bigbasket/spider.mp4", 2880 / 1800, true) },
+    { type: "full", media: bbFigma("/bigbasket/spider.mp4") },
     { type: "full", media: bb("/bigbasket/Artboard.png", 2688 / 1680) },
-    { type: "full", media: bbFigma("/bigbasket/guidelines.mp4") },
+    { type: "full", media: bb("/bigbasket/guidelines.mp4", 16 / 9, true) },
   ],
   credits: [
     {
@@ -752,6 +764,266 @@ const bigbasket: CaseStudy = {
       nav: "Overview",
       body: [
         "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
+      ],
+      media: [],
+    },
+  ],
+};
+
+/* ------------------------------------------------------------------ *
+ * Ikon Technologies — Product Management
+ *
+ * Four systems-thinking studies from the same Product Lead stint: the work
+ * that sat behind Toolbox rather than inside it. Systems Thinking only —
+ * `inWorkGrid: false` keeps the artifacts out of the Visual Craft grid.
+ * ------------------------------------------------------------------ */
+
+/** Screenshot artifacts that ship with their own gray mat baked in. */
+const ik = (src: string, ar: number, caption: string): CaseMedia => ({
+  shade: "#A9B2BB",
+  src,
+  ar,
+  caption,
+});
+
+/** Diagrams exported on white — contained and padded into a light mat. */
+const ikDiagram = (src: string, ar: number, caption: string): CaseMedia => ({
+  shade: "#FFFFFF",
+  src,
+  ar,
+  caption,
+  fit: "contain",
+  pad: { top: 48, bottom: 48, left: 48, right: 48 },
+});
+
+/** Shared across all four — same company, same role, same stint. */
+const IKON_PM_CREDITS = [
+  { label: "Company", value: "Ikon Technologies" },
+  { label: "Role", value: "Product Lead" },
+  { label: "Industry", value: "Automotive Retail, IoT" },
+];
+
+const ikonAnalytics: CaseStudy = {
+  slug: "ikon-analytics",
+  title: "Product Analytics",
+  detailTitle:
+    "Defining product success with a HEART-driven framework and aligning teams on measurable outcomes.",
+  tagline: "A shared definition of product health for Toolbox.",
+  description:
+    "Established the HEART model as Toolbox's product health north star, mapping every major web and mobile workflow into instrumented, measurable touchpoints.",
+  year: 2024,
+  category: "Product Management",
+  shade: "#A9B2BB",
+  mediaOnly: true,
+  inWorkGrid: false,
+  accent: "#03BB7D",
+  highlights: [
+    {
+      label: "Context",
+      body: "Before launch there was no unified agreement on what success meant. Sales, ops, leadership, and product each pushed conflicting metrics, so no one shared a view of what to track once Toolbox was live.",
+    },
+    {
+      label: "Approach",
+      body: "Partnered with a Senior PM to establish the HEART model as the product health north star, mapped every major web and mobile workflow into measurable touchpoints, then worked with engineering to instrument events in Heap, Smartlook, and Google Analytics for both behavior and context.",
+    },
+    {
+      label: "Outcome",
+      body: "One agreed-upon measurement approach and a consistent, shared foundation for product analytics across teams — the basis for how Toolbox would grow, scale, and evaluate success.",
+    },
+  ],
+  hero: {
+    shade: "#A9B2BB",
+    src: "/ikon/analytics.png",
+    ar: 2048 / 1152,
+    // Light artwork under white hero type — needs the full scrim to read.
+    scrim: true,
+  },
+  mediaBlocks: [
+    {
+      type: "full",
+      media: ik(
+        "/ikon/analytics.png",
+        2048 / 1152,
+        "Success metrics sheet — every major flow mapped to HEART goals, behavioral signals, target metrics, and the tool tracking each one.",
+      ),
+    },
+  ],
+  credits: IKON_PM_CREDITS,
+  sections: [
+    {
+      nav: "Overview",
+      body: [
+        "Established the HEART model as Toolbox's product health north star, mapping every major web and mobile workflow into instrumented, measurable touchpoints.",
+      ],
+      media: [],
+    },
+  ],
+};
+
+const ikonBlueprint: CaseStudy = {
+  slug: "ikon-service-blueprint",
+  title: "Service Blueprint",
+  detailTitle:
+    "Driving operational impact by establishing the single source of truth behind Ikon's internal tools ecosystem.",
+  tagline: "The end-to-end device lifecycle, mapped once and shared.",
+  description:
+    "Mapped Ikon's device lifecycle from manufacturing through warehouse, dealership, and activation — the operational source of truth that kicked off the warehouse management system project.",
+  year: 2024,
+  category: "Product Management",
+  shade: "#A9B2BB",
+  mediaOnly: true,
+  inWorkGrid: false,
+  accent: "#03BB7D",
+  websiteUrl:
+    "https://www.figma.com/board/iSfdIrs1RwJ4GN4vVyFvbR/End-to-end-device-lifecycle-process-map.?node-id=1-3022&t=QI2kD9R2T5OjLTd8-1",
+  highlights: [
+    {
+      label: "Context",
+      body: "Internal operations across warehouse, accounting, field ops, and hardware ran on disconnected tools, tribal knowledge, and manual workflows — impossible to scale, and impossible to find the bottlenecks in.",
+    },
+    {
+      label: "Approach",
+      body: "Led cross-functional discovery with field operations to map the device lifecycle end to end, from manufacturing through warehouse, dealership, and activation. Partnered with another PM to define business rules, the workflow systems map, and data flow across HubSpot → NetSuite → Zoho.",
+    },
+    {
+      label: "Outcome",
+      body: "A single operational source of truth that NetSuite consultants used to initiate the warehouse management system project — saving discovery time, preventing rework, and letting leadership update SOPs against real workflows instead of assumptions.",
+    },
+  ],
+  hero: {
+    shade: "#A9B2BB",
+    src: "/ikon/blueprint.jpeg",
+    ar: 16 / 9,
+    scrim: true,
+  },
+  mediaBlocks: [
+    {
+      type: "full",
+      media: ik(
+        "/ikon/blueprint.jpeg",
+        16 / 9,
+        "End-to-end device lifecycle across accounting, operations, warehouse, and dealership lanes — pain points and system gaps called out inline.",
+      ),
+    },
+  ],
+  credits: IKON_PM_CREDITS,
+  sections: [
+    {
+      nav: "Overview",
+      body: [
+        "Mapped Ikon's device lifecycle from manufacturing through warehouse, dealership, and activation — the operational source of truth that kicked off the warehouse management system project.",
+      ],
+      media: [],
+    },
+  ],
+};
+
+const ikonDataDictionary: CaseStudy = {
+  slug: "ikon-data-dictionary",
+  title: "Data Dictionary",
+  detailTitle:
+    "Creating a unified data dictionary to power future product expansion and eliminate cross-team ambiguity.",
+  tagline: "One catalogue for every internal and external data source.",
+  description:
+    "Catalogued internal, first-party, and third-party data into one dictionary with definitions aligned across teams — surfacing redundant vendor spend worth roughly $6,000 a month.",
+  year: 2024,
+  category: "Product Management",
+  shade: "#FFFFFF",
+  mediaOnly: true,
+  inWorkGrid: false,
+  accent: "#03BB7D",
+  highlights: [
+    {
+      label: "Context",
+      body: "The team wanted to expand into customer intelligence, vehicle context, and Smart Marketing — but had no clarity on what data already existed, which integrations fed it, how each department defined it, or what was contractually available and actually usable.",
+    },
+    {
+      label: "Approach",
+      body: "Partnered with data and BI analysts to interview departments on sources, dependencies, pain points, and usage, then built a unified data dictionary and flow map cataloguing internal, first-party, and third-party data with definitions aligned across teams.",
+    },
+    {
+      label: "Outcome",
+      body: "Eliminated data ambiguity and gave teams a shared understanding of what the platform could actually do. Surfaced redundant vendor payments that cut roughly $6,000 from monthly spend, and grounded roadmap decisions in real financials. The proactivity led to leading the AI/ML agentic outreach initiative.",
+    },
+  ],
+  hero: {
+    shade: "#FFFFFF",
+    src: "/ikon/dictionary.png",
+    ar: 2442 / 1253,
+    scrim: true,
+  },
+  mediaBlocks: [
+    {
+      type: "full",
+      media: ikDiagram(
+        "/ikon/dictionary.png",
+        2442 / 1253,
+        "Data dictionary catalogue — external sources and DMS integrations on one side, internal systems on the other.",
+      ),
+    },
+  ],
+  credits: IKON_PM_CREDITS,
+  sections: [
+    {
+      nav: "Overview",
+      body: [
+        "Catalogued internal, first-party, and third-party data into one dictionary with definitions aligned across teams — surfacing redundant vendor spend worth roughly $6,000 a month.",
+      ],
+      media: [],
+    },
+  ],
+};
+
+const ikonAgentic: CaseStudy = {
+  slug: "ikon-agentic-outreach",
+  title: "AI/ML Integration",
+  detailTitle:
+    "Optimized service appointment scheduling with agentic outreach and increased booking efficiency.",
+  tagline: "Agentic outreach that books service appointments on its own.",
+  description:
+    "Automated dealership service outreach end to end with Stella AI — identifying customers, running the conversation, checking live availability, and booking autonomously.",
+  year: 2025,
+  category: "Product Management",
+  shade: "#FFFFFF",
+  mediaOnly: true,
+  inWorkGrid: false,
+  accent: "#03BB7D",
+  highlights: [
+    {
+      label: "Problem",
+      body: "Dealerships re-engage customers for routine maintenance one call at a time. Without real-time scheduling visibility, agents burn time on back-and-forth that often ends without a booking.",
+    },
+    {
+      label: "Approach",
+      body: "Worked with Stella AI, a third-party conversational partner, to automate the flow end to end: identify who to contact, run the conversation, check live scheduling availability from dealer systems, and book the appointment autonomously — with human agents handling only the exceptions that need escalation.",
+    },
+    {
+      label: "Impact",
+      body: "Early pilots booked multiple service appointments autonomously in the first week, pointing toward reduced manual workload, shorter time-to-book, and better long-term conversion efficiency.",
+    },
+  ],
+  hero: {
+    shade: "#FFFFFF",
+    src: "/ikon/agentic.png",
+    ar: 16 / 9,
+    scrim: true,
+  },
+  mediaBlocks: [
+    {
+      type: "full",
+      media: ikDiagram(
+        "/ikon/agentic.png",
+        1598 / 899,
+        "Agentic outreach for service scheduling using Stella AI — natural language handles booking and store info, rules-based transfer routes the rest.",
+      ),
+    },
+  ],
+  credits: IKON_PM_CREDITS,
+  sections: [
+    {
+      nav: "Overview",
+      body: [
+        "Automated dealership service outreach end to end with Stella AI — identifying customers, running the conversation, checking live availability, and booking autonomously.",
       ],
       media: [],
     },
@@ -782,6 +1054,10 @@ export const CASE_STUDIES: CaseStudy[] = [
   warpbnb,
   bigbasket,
   rolipoli,
+  ikonAnalytics,
+  ikonBlueprint,
+  ikonDataDictionary,
+  ikonAgentic,
 ];
 
 export function isCaseLinkable(study: CaseStudy): boolean {

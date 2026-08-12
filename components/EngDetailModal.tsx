@@ -41,7 +41,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
   const [mounted, setMounted] = useState(false);
-  const isWebsite = item.kind === "Website";
+  const isWebsite = Boolean(item.href);
   const hasEmbed = Boolean(item.embedUrl);
   const embedIsExternal = Boolean(item.embedUrl?.startsWith("http"));
   const visitHref = item.href;
@@ -185,29 +185,43 @@ export default function EngDetailModal({ item, onClose }: Props) {
             </div>
           </div>
 
-          {item.body ? <p className="engModalLead">{item.body}</p> : null}
+          <div className="engModalMeta">
+            <div className="engModalMetaCopy">
+              {item.body ? <p className="engModalLead">{item.body}</p> : null}
 
-          {item.stack && item.stack.length > 0 ? (
-            <section className="engModalSection">
-              <h3 className="engModalLabel">Stack</h3>
-              <ul className="engModalStack">
-                {item.stack.map((tech) => (
-                  <li key={tech}>{tech}</li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
+              {item.stack && item.stack.length > 0 ? (
+                <section className="engModalSection">
+                  <h3 className="engModalLabel">Stack</h3>
+                  <ul className="engModalStack">
+                    {item.stack.map((tech) => (
+                      <li key={tech}>{tech}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+            </div>
 
-          {visitHref ? (
-            <a
-              className="engModalCta"
-              href={visitHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Visit {visitLabel} ↗
-            </a>
-          ) : null}
+            {visitHref ? (
+              <a
+                className="engModalCta"
+                href={visitHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit {visitLabel}
+                <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>,

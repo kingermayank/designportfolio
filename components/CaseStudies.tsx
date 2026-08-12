@@ -488,6 +488,38 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
         ["--ch-on-accent"]: onAccent(overviewAccent) ?? "#ffffff",
       }
     : undefined;
+  // Systems Thinking (Ikon PM) studies keep highlight labels in Overview gray —
+  // brand green is reserved for the CTA, not Context / Approach / Outcome.
+  const brandHighlightLabels = study.inWorkGrid !== false;
+  // Those studies also run Context / Approach / Outcome under the artifact,
+  // so the image leads and the write-up follows.
+  const highlightsAfterMedia = study.inWorkGrid === false;
+
+  const highlightsSection = study.highlights?.length ? (
+    <section
+      className={
+        "csEditorialHighlights csFade" +
+        (highlightsAfterMedia ? " csEditorialHighlightsBelow" : "") +
+        (contentIn ? " in" : "")
+      }
+    >
+      {study.highlights.map((h) => (
+        <div key={h.label} className="csEditorialHighlight">
+          <span
+            className="csEditorialHighlightLabel"
+            style={
+              brandHighlightLabels && overviewAccent
+                ? { color: overviewAccent }
+                : undefined
+            }
+          >
+            {h.label}
+          </span>
+          <p>{h.body}</p>
+        </div>
+      ))}
+    </section>
+  ) : null;
 
   return (
     <div
@@ -604,7 +636,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     {overviewCtaHref ? (
                       <div className="csEditorialCta" style={overviewCtaStyle}>
                         <PrimaryButton href={overviewCtaHref}>
-                          {overviewCtaLabel ?? "View website"}
+                          {overviewCtaLabel ?? "View Website"}
                         </PrimaryButton>
                       </div>
                     ) : null}
@@ -614,12 +646,27 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   ) : null}
                 </section>
 
+                {highlightsAfterMedia ? null : highlightsSection}
+
                 <div className={"csFade" + (contentIn ? " in" : "")}>
                   <EditorialMediaFlow
                     blocks={study.mediaBlocks}
                     fallback={study.sections.flatMap((sec) => sec.media)}
                   />
                 </div>
+
+                {highlightsAfterMedia ? highlightsSection : null}
+
+                {study.impact ? (
+                  <section
+                    className={
+                      "csEditorialImpact csFade" + (contentIn ? " in" : "")
+                    }
+                  >
+                    <span>Impact</span>
+                    <p>{study.impact}</p>
+                  </section>
+                ) : null}
               </div>
             ) : <>
             <div className="csPanel csDetailPanel" style={{ height: rootH }}>
@@ -716,7 +763,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                           : undefined
                       }
                     >
-                      View website
+                      View Website
                       <svg
                         width="12"
                         height="12"

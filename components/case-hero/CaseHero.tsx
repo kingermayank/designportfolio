@@ -102,7 +102,7 @@ export default function CaseHero({
   description,
   media,
   ctaHref,
-  ctaLabel = "View website",
+  ctaLabel = "View Website",
   meta,
   metaTags,
   accent,
