@@ -1,68 +1,21 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Caveat } from "next/font/google";
+import { Caveat, Geist, Geist_Mono } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
 import "./globals.css";
 
-// Display: Greed Narrow — Regular for large display, SemiBold for mid titles.
-const greedNarrow = localFont({
-  src: [
-    {
-      path: "../public/fonts/GreedNarrow-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/GreedNarrow-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/GreedNarrow-SemiBold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-  ],
-  variable: "--font-greed-narrow",
+// The whole site runs on three faces: Geist (everything), Geist Mono (small
+// labels — dates, badges, button text), and Cesare (the Work 1 wordmark).
+// Caveat is the one exception, scoped to the hiring letter's handwriting.
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
   display: "swap",
 });
 
-// Body / UI — GT Walsheim Regular + Medium (trial)
-const walsheim = localFont({
-  src: [
-    {
-      path: "../public/fonts/GT-Walsheim-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/GT-Walsheim-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-  ],
-  variable: "--font-walsheim",
-  display: "swap",
-});
-
-const walsheimCondensed = localFont({
-  src: "../public/fonts/GT-Walsheim-Condensed-Regular.woff2",
-  weight: "400",
-  style: "normal",
-  variable: "--font-walsheim-condensed",
-  display: "swap",
-});
-
-// Small caps / UI labels — Nitti PX Bold (Semibold weight)
-const nittiPx = localFont({
-  src: [
-    {
-      path: "../public/fonts/NittiPX-Bold.ttf",
-      weight: "600",
-      style: "normal",
-    },
-  ],
-  variable: "--font-nitti-px",
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -136,7 +89,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${greedNarrow.variable} ${walsheim.variable} ${walsheimCondensed.variable} ${nittiPx.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
     >
       <body>
         <PageTransition>{children}</PageTransition>

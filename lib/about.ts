@@ -23,7 +23,7 @@ export const ABOUT_INTRO = {
   pronunciation: "{pronounced my-yunk}",
   pronunciationHref: "https://www.youtube.com/watch?v=yisa-f1HAH4",
   summary:
-    "I am a pi-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
+    "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   hero: {
     src: "/about/hero.jpg",
     alt: "Mayank Kinger",

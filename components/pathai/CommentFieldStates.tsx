@@ -89,7 +89,7 @@ const STRIP_SCALE = 0.8;
 const STRIP_SCALE_ACTIVE = 1.14;
 const STRIP_GAP = 40;
 const STRIP_BOTTOM = 76;
-const STRIP_LABEL_SIZE = 26;
+const STRIP_LABEL_SIZE = 27;
 const STRIP_LABEL_ACTIVE = "#2C3548";
 const STRIP_LABEL_INACTIVE = "#5E6A87";
 /** Soft mute — same family as inactive cards; ~½ prior strong contrast. */
@@ -101,7 +101,7 @@ const PROGRESS_LINE = "rgba(20, 107, 194, 0.52)";
 const PROGRESS_LINE_W = 1.5;
 
 const STATE_NAMES = ["Default", "Focused", "Typing", "Completed"] as const;
-const FONT_LABEL = "var(--font-label), var(--font-nitti-px), sans-serif";
+const FONT_LABEL = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
 
 const FONT = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
 const BLUE = "#146bc2";

@@ -20,7 +20,7 @@ const STAGE_H = Math.round((STAGE_W * 9) / 16); // 1466
 const SLIDE_BG = "/pathai/region-edge-cases/slide-bg.png";
 
 const FONT = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
-const FONT_LABEL = "var(--font-label), var(--font-nitti-px), sans-serif";
+const FONT_LABEL = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
 const BACKGROUND = "#dce0e9";
 const RADIUS = 14.074;
 
@@ -49,7 +49,7 @@ const STRIP_TRANSITION =
   "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), filter 300ms ease, opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)";
 const STRIP_INACTIVE_OPACITY = 0.75;
 const STRIP_INACTIVE_GRAYSCALE = 0.42;
-const STRIP_LABEL_SIZE = 24;
+const STRIP_LABEL_SIZE = 25;
 const STRIP_LABEL_ACTIVE = "#2C3548";
 const STRIP_LABEL_INACTIVE = "#5E6A87";
 

@@ -625,11 +625,18 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     {...heroOnly}
                     accent={overviewAccent}
                     className="csCaseHero"
-                    back={{ label: "All projects", onClick: startClose }}
+                    back={{ label: "Back", onClick: startClose }}
                   />
                 </div>
 
-                <section className={"csEditorialIntro csFade" + (contentIn ? " in" : "")}>
+                <section
+                  className={"csEditorialIntro csFade" + (contentIn ? " in" : "")}
+                  style={
+                    overviewAccent
+                      ? ({ ["--ch-accent"]: overviewAccent } as CSSProperties)
+                      : undefined
+                  }
+                >
                   <div className="csEditorialOverview">
                     <span>Overview</span>
                     <p>{overview}</p>
@@ -662,6 +669,11 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     className={
                       "csEditorialImpact csFade" + (contentIn ? " in" : "")
                     }
+                    style={
+                      overviewAccent
+                        ? ({ ["--ch-accent"]: overviewAccent } as CSSProperties)
+                        : undefined
+                    }
                   >
                     <span>Impact</span>
                     <p>{study.impact}</p>
@@ -674,8 +686,9 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 className={"csBack csFade" + (contentIn ? " in" : "")}
                 onClick={startClose}
                 type="button"
+                aria-label="Back"
               >
-                <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
                   <path
                     d="M10 3.5 5.5 8l4.5 4.5"
                     fill="none"
@@ -685,7 +698,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     strokeLinejoin="round"
                   />
                 </svg>
-                Back
+                <span className="backLabel">Back</span>
               </button>
               <div className="csDetailHead">
                 <Rise show={contentIn} delay={0}>

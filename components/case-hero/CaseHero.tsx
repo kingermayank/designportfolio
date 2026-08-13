@@ -64,7 +64,7 @@ const TONE_CLASS: Record<CaseHeroTone, string> = {
 };
 
 const Chevron = () => (
-  <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true">
+  <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
     <path
       d="M10 3.5 5.5 8l4.5 4.5"
       fill="none"
@@ -74,6 +74,13 @@ const Chevron = () => (
       strokeLinejoin="round"
     />
   </svg>
+);
+
+const BackGlyph = () => (
+  <>
+    <Chevron />
+    <span className="backLabel">Back</span>
+  </>
 );
 
 /** Wrap the first case-insensitive match of `accent` in `.chTitleAccent`. */
@@ -126,17 +133,17 @@ export default function CaseHero({
     <section className={"chHero" + TONE_CLASS[tone] + (className ? ` ${className}` : "")} style={style}>
       {back ? (
         back.href ? (
-          <a className="chBack" href={back.href} aria-label={back.label}>
-            <Chevron />
+          <a className="chBack" href={back.href} aria-label="Back">
+            <BackGlyph />
           </a>
         ) : (
           <button
             className="chBack"
             type="button"
             onClick={back.onClick}
-            aria-label={back.label}
+            aria-label="Back"
           >
-            <Chevron />
+            <BackGlyph />
           </button>
         )
       ) : null}

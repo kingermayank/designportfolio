@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { ABOUT_INTRO, ABOUT_PTO, ABOUT_SECTIONS, TESTIMONIALS } from "@/lib/about";
-import CopyEmailButton from "@/components/CopyEmailButton";
+import CurrentlyStatus from "@/components/CurrentlyStatus";
 
 type AboutContentProps = {
   /**
@@ -24,10 +25,83 @@ function AboutHeading({ title }: { title: string }) {
   );
 }
 
+/** Koto careers–style accordion: numbered rows, chromatic hierarchy, border hover. */
+function PhilosophyAccordion({
+  principles,
+}: {
+  principles: { title: string; text: string }[];
+}) {
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  return (
+    <ul className="aboutPrinciples">
+      {principles.map((pr, i) => {
+        const index = String(i + 1).padStart(2, "0");
+        const isOpen = openId === pr.title;
+        const panelId = `philosophy-panel-${index}`;
+        const buttonId = `philosophy-trigger-${index}`;
+
+        return (
+          <li
+            key={pr.title}
+            className={`aboutPrinciple${isOpen ? " is-open" : ""}`}
+          >
+            <button
+              id={buttonId}
+              type="button"
+              className="aboutPrincipleSummary"
+              aria-expanded={isOpen}
+              aria-controls={panelId}
+              onClick={() => setOpenId(isOpen ? null : pr.title)}
+            >
+              <span className="aboutPrincipleIndex">{index}</span>
+              <span className="aboutPrincipleTitle">{pr.title}</span>
+              <span className="aboutPrincipleIcon" aria-hidden="true">
+                <span className="aboutPrincipleIconHit">
+                  <span className="aboutPrincipleIconBg" />
+                  <svg
+                    className="aboutPrincipleIconSvg"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                  >
+                    <path
+                      className="aboutPrincipleIconV"
+                      d="M5 8.41455L5 1.58472"
+                      stroke="currentColor"
+                      strokeLinecap="square"
+                    />
+                    <path
+                      d="M1.58496 5L8.41479 5"
+                      stroke="currentColor"
+                      strokeLinecap="square"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </button>
+            <div
+              id={panelId}
+              role="region"
+              aria-labelledby={buttonId}
+              className="aboutPrinciplePanel"
+              aria-hidden={!isOpen}
+            >
+              <div className="aboutPrinciplePanelInner">
+                <p className="aboutPrincipleText">{pr.text}</p>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 /**
- * The right-hand column of the About page — lede, hero, story sections,
- * testimonials, PTO. Shared by the standalone /about route and the About Me
- * section in the Work column, so both read from one source.
+ * About page body — lede, story sections, testimonials, PTO.
+ * No cover media; the page opens on the lede like editorial case studies.
  */
 export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
@@ -35,26 +109,17 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
 
   return (
     <div className="aboutFlow">
-      <figure className="aboutHero">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={ABOUT_INTRO.hero.src}
-          alt={ABOUT_INTRO.hero.alt}
-          style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
-        />
-      </figure>
-
-      {/* Lede reads after the portrait, not before it. */}
-      <div className="aboutLedeRow">
+      <div className="aboutLedeSection">
         <p className="aboutLede">{ABOUT_INTRO.summary}</p>
-        <div className="aboutLedeAction">
-          <CopyEmailButton
-            email={ABOUT_INTRO.email}
-            label="Reach Out"
-            copiedLabel="Email copied"
-            className="aboutCopyEmail"
+        <CurrentlyStatus />
+        <figure className="aboutLedePortrait">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={ABOUT_INTRO.hero.src}
+            alt={ABOUT_INTRO.hero.alt}
+            style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
           />
-        </div>
+        </figure>
       </div>
 
       {ABOUT_SECTIONS.map((sec, i) => (
@@ -66,46 +131,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             </p>
           ))}
           {sec.principles && (
-            <div className="aboutPrinciples">
-              {sec.principles.map((pr) => (
-                <details key={pr.title} className="aboutPrinciple">
-                  <summary className="aboutPrincipleSummary">
-                    <span className="aboutPrincipleTitle">{pr.title}</span>
-                    <span className="aboutPrincipleIcon" aria-hidden="true">
-                      <svg
-                        className="aboutPrincipleIconPlus"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M8 3v10M3 8h10"
-                          stroke="currentColor"
-                          strokeWidth="1.6"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      <svg
-                        className="aboutPrincipleIconMinus"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M3 8h10"
-                          stroke="currentColor"
-                          strokeWidth="1.6"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-                  <p className="aboutPrincipleText">{pr.text}</p>
-                </details>
-              ))}
-            </div>
+            <PhilosophyAccordion principles={sec.principles} />
           )}
         </section>
       ))}

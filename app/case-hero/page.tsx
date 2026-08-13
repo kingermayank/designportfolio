@@ -45,7 +45,7 @@ const SAMPLE = {
   ctaHref: "https://www.warpbnb.com/",
   meta: META,
   metaTags: TAGS,
-  back: { label: "All projects", href: "/" },
+  back: { label: "Back", href: "/" },
 };
 
 export default function CaseHeroTemplatePage() {

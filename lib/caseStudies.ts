@@ -161,8 +161,8 @@ const toolbox: CaseStudy = {
       body: "Pre-launch drove a 33% surge in dealership signups and secured 134 new dealerships before public release, with Toolbox showcased at NADA 2025.",
     },
   ],
-  // Work card keeps the desk-monitor cover; case hero uses the live-site Agent video.
-  workCover: "/toolbox/new/cover.mp4",
+  // Work card thumbnail video; case hero keeps the live-site hero reel.
+  workCover: "/toolbox/thumbnail.mp4",
   hero: {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
@@ -718,7 +718,7 @@ const bigbasket: CaseStudy = {
   shade: "#242424",
   mediaOnly: true,
   accent: "#6DE96C", // BigBasket brand green
-  workCover: "/bigbasket/thumbnail.png?v=2",
+  workCover: "/bigbasket/thumbs/work-cover.jpg",
   highlights: [
     {
       label: "Problem",

@@ -39,7 +39,7 @@ for text legibility.
 | `--ch-space-1` … `--ch-space-8` | 4 → 64px | Internal rhythm (4px base) |
 | `--ch-radius-sm` / `-md` / `-lg` / `-pill` | 4 / 10 / 16 / 999px | Button, media frame, back control |
 | `--ch-font-display` | Cesare | Title |
-| `--ch-font-body` | GT Walsheim | Everything else |
+| `--ch-font-body` | Geist | Everything else |
 | `--ch-text-eyebrow` | 11px | Eyebrow + metadata labels |
 | `--ch-text-title` | `clamp(2rem, 4.4vw, 3.4rem)` | Title |
 | `--ch-text-body` | `clamp(0.95rem, 1.1vw, 1.05rem)` | Description, metadata values |

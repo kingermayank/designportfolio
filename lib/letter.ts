@@ -14,7 +14,9 @@ export const HIRING_LETTER = {
 };
 
 export const WORK_FIT_CTA = {
+  title: "Interested in working together?",
+  body: "Learn a little more about me, or just skip ahead and say hello.",
   aboutLabel: "About Me",
-  copyEmailLabel: "Copy Email",
+  contactLabel: "Get In Touch",
   email: "kingermayank@gmail.com",
 };

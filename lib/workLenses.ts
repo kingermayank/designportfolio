@@ -1,46 +1,22 @@
 /**
- * Work content lenses — each category is one full “page” in the work stack.
- * Visual Craft keeps the project grid; the rest use curated lists / DE cards.
- * Pages cover each other on edge-scroll; the panel rail jumps between them.
+ * Work content lenses — each category switches the right-column view.
+ * Visual Craft keeps the project grid; Systems and Design Engineering use
+ * curated lists / DE cards. About lives on its own `/about` page.
  */
 
-export type WorkLensId = "visual" | "systems" | "engineering" | "about";
+export type WorkLensId = "visual" | "systems" | "engineering";
 
 export type WorkLens = {
   id: WorkLensId;
   label: string;
-  /** Section DOM id — also the deep-link hash (/#visual-craft). */
+  /** Deep-link hash (/#visual-craft). */
   anchor: string;
-  /**
-   * Personality line shown at the bottom of this page before the next one
-   * slides up. Omitted on the last lens (About Me).
-   */
-  nextCue?: string;
 };
 
 export const WORK_LENSES: WorkLens[] = [
-  {
-    id: "visual",
-    label: "Visual Craft",
-    anchor: "visual-craft",
-    nextCue:
-      "Impressed by my Visual Craft? See how I think through complex problems.",
-  },
-  {
-    id: "systems",
-    label: "Systems Thinking",
-    anchor: "systems-thinking",
-    nextCue:
-      "Okay, I can design, solve complex problems with uncompromising craft, but see how I can ship solutions and be AI-native.",
-  },
-  {
-    id: "engineering",
-    label: "Design Engineering",
-    anchor: "design-engineering",
-    nextCue:
-      "Okay, great designer. Here's who I am: what I stand by besides the work, and what I enjoy doing.",
-  },
-  { id: "about", label: "About Me", anchor: "about-me" },
+  { id: "visual", label: "Visual Craft", anchor: "visual-craft" },
+  { id: "systems", label: "Systems Thinking", anchor: "systems-thinking" },
+  { id: "engineering", label: "Design Engineering", anchor: "design-engineering" },
 ];
 
 export type WorkListItem = {
@@ -52,6 +28,9 @@ export type WorkListItem = {
   body: string;
   thumb?: string;
   shade: string;
+  /** Category chip on the Systems Thinking card (e.g. "Product Analytics"). */
+  badge?: string;
+  year?: number;
 };
 
 /** Systems Thinking — the Ikon Technologies product-lead studies. */
@@ -64,33 +43,41 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     body: "Sales, ops, leadership, and product each tracked different metrics. Mapped every web and mobile workflow to HEART goals and instrumented them, giving Toolbox one shared definition of success.",
     thumb: "/ikon/thumbs/analytics.jpg",
     shade: "#A9B2BB",
+    badge: "Product Analytics",
+    year: 2024,
   },
   {
     id: "ikon-blueprint",
     slug: "ikon-service-blueprint",
     title: "One operational source of truth across disconnected ops",
     meta: "Ikon Technologies · Service Blueprint · 2024",
-    body: "Mapped the device lifecycle end to end across accounting, operations, warehouse, and dealership — the blueprint NetSuite consultants used to start the warehouse management system project.",
+    body: "Mapped the device lifecycle end to end across accounting, operations, warehouse, and dealership, providing the blueprint NetSuite consultants used to start the warehouse management system project.",
     thumb: "/ikon/thumbs/blueprint.jpg",
     shade: "#A9B2BB",
+    badge: "Service Blueprint",
+    year: 2024,
   },
   {
     id: "ikon-data-dictionary",
     slug: "ikon-data-dictionary",
     title: "One data dictionary, ~$6K/month of redundant spend cut",
     meta: "Ikon Technologies · Data Dictionary · 2024",
-    body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams — ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
+    body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams, ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
     thumb: "/ikon/thumbs/dictionary.jpg",
     shade: "#FFFFFF",
+    badge: "Data Dictionary",
+    year: 2024,
   },
   {
     id: "ikon-agentic",
     slug: "ikon-agentic-outreach",
     title: "Service appointments booked by an agent, not an operator",
     meta: "Ikon Technologies · AI/ML Integration · 2025",
-    body: "Automated dealership service outreach end to end with Stella AI — identifying customers, running the call, checking live availability, and booking autonomously, with humans on exceptions only.",
+    body: "Automated dealership service outreach end to end with Stella AI, identifying customers, running the call, checking live availability, and booking autonomously, with humans on exceptions only.",
     thumb: "/ikon/thumbs/agentic.jpg",
     shade: "#FFFFFF",
+    badge: "AI/ML Integration",
+    year: 2025,
   },
 ];
 
@@ -209,6 +196,36 @@ export const ENG_COMPONENTS: EngComponent[] = [
     embedTall: true,
     frame: "site",
     matte: "#D8F0DC",
+    stack: ["Next.js", "Vercel"],
+  },
+  {
+    id: "f1-sim",
+    title: "APEX F1 Sim",
+    kind: "Website",
+    body: "Shanghai 2026 race simulation — watch the Chinese Grand Prix unfold, then ask why every decision happened.",
+    shade: "#141414",
+    thumb: "/f1-sim/thumbs/site-desktop.jpg",
+    src: "/f1-sim/thumbs/site-desktop.jpg",
+    href: "https://f1-sim-nine.vercel.app/",
+    embedUrl: "https://f1-sim-nine.vercel.app/",
+    embedTall: true,
+    frame: "site",
+    matte: "#EAF5C8",
+    stack: ["Next.js", "Vercel", "Simulation"],
+  },
+  {
+    id: "retell-benchmark",
+    title: "Retell Model Benchmark",
+    kind: "Website",
+    body: "Compare leading AI models across response quality, speed, and cost — built for voice-agent tradeoffs.",
+    shade: "#0E1626",
+    thumb: "/retell/thumbs/site-desktop.jpg",
+    src: "/retell/thumbs/site-desktop.jpg",
+    href: "https://retell-design.vercel.app/",
+    embedUrl: "https://retell-design.vercel.app/",
+    embedTall: true,
+    frame: "site",
+    matte: "#E4ECF8",
     stack: ["Next.js", "Vercel"],
   },
 ];
