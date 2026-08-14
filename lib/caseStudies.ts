@@ -141,7 +141,7 @@ const toolbox: CaseStudy = {
     "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion.",
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
-    "I led everything design-related for Toolbox as we onboarded dealerships from legacy to the new NextGen platform — 450 dealerships onboarded, and 40 directions across 450 relationships migrated from legacy. Showcasing the product at NADA 2026 drove 132 more dealership signups.",
+    "I led everything design-related for Toolbox as we onboarded dealerships from legacy to the new NextGen platform: 450 dealerships onboarded, and 40 directions across 450 relationships migrated from legacy. Showcasing the product at NADA 2026 drove 132 more dealership signups.",
   year: 2025,
   category: "Design Engineering",
   shade: "#282828",
@@ -229,7 +229,7 @@ const toolbox: CaseStudy = {
     "Toolbox pre-launch drove a 33% surge in dealership customers.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
-    { label: "Industry", value: "Automotive, IoT Hardware" },
+    { label: "Industry", value: "Automotive, IoT Hardware, RevOps" },
     { label: "Role", value: "Lead Product Designer, Design Engineer" },
   ],
   sections: [
@@ -491,7 +491,7 @@ const pathai: CaseStudy = {
     ar: 16 / 9,
     scrim: 0.4,
   },
-  workCover: "/pathai/thumbnail.png",
+  workCover: "/pathai/thumbs/work-cover.jpg",
   // Numbered stack: files are laid out by number, `n-1`/`n-2` sit side by side.
   // 4/5/6 are the interactive Region Comments pieces, not image files.
   mediaBlocks: [
@@ -664,7 +664,8 @@ const walkity: CaseStudy = {
     },
   ],
   credits: [
-    { label: "Role", value: "Brand strategy, visual identity, landing page design" },
+    { label: "Client", value: "VisIoT Technologies Pvt. Ltd." },
+    { label: "Role", value: "Head of Design" },
     { label: "Focus", value: "Accessibility-centered brand and web experience" },
     { label: "Year", value: "2023" },
   ],
@@ -828,7 +829,7 @@ const ikonAnalytics: CaseStudy = {
     },
     {
       label: "Outcome",
-      body: "One agreed-upon measurement approach and a consistent, shared foundation for product analytics across teams — the basis for how Toolbox would grow, scale, and evaluate success.",
+      body: "One agreed-upon measurement approach and a consistent, shared foundation for product analytics across teams, the basis for how Toolbox would grow, scale, and evaluate success.",
     },
   ],
   hero: {
@@ -844,7 +845,7 @@ const ikonAnalytics: CaseStudy = {
       media: ik(
         "/ikon/analytics.png",
         2048 / 1152,
-        "Success metrics sheet — every major flow mapped to HEART goals, behavioral signals, target metrics, and the tool tracking each one.",
+        "Success metrics sheet: every major flow mapped to HEART goals, behavioral signals, target metrics, and the tool tracking each one.",
       ),
     },
   ],
@@ -869,7 +870,7 @@ const ikonBlueprint: CaseStudy = {
     "Driving operational impact by establishing the single source of truth behind Ikon's internal tools ecosystem.",
   tagline: "The end-to-end device lifecycle, mapped once and shared.",
   description:
-    "Mapped Ikon's device lifecycle from manufacturing through warehouse, dealership, and activation — the operational source of truth that kicked off the warehouse management system project.",
+    "Mapped Ikon's device lifecycle from manufacturing through warehouse, dealership, and activation. This became the operational source of truth that kicked off the warehouse management system project.",
   year: 2024,
   category: "Product Management",
   shade: "#A9B2BB",
@@ -881,7 +882,7 @@ const ikonBlueprint: CaseStudy = {
   highlights: [
     {
       label: "Context",
-      body: "Internal operations across warehouse, accounting, field ops, and hardware ran on disconnected tools, tribal knowledge, and manual workflows — impossible to scale, and impossible to find the bottlenecks in.",
+      body: "Internal operations across warehouse, accounting, field ops, and hardware ran on disconnected tools, tribal knowledge, and manual workflows. They were impossible to scale, and impossible to find the bottlenecks in.",
     },
     {
       label: "Approach",
@@ -889,7 +890,7 @@ const ikonBlueprint: CaseStudy = {
     },
     {
       label: "Outcome",
-      body: "A single operational source of truth that NetSuite consultants used to initiate the warehouse management system project — saving discovery time, preventing rework, and letting leadership update SOPs against real workflows instead of assumptions.",
+      body: "A single operational source of truth that NetSuite consultants used to initiate the warehouse management system project, saving discovery time, preventing rework, and letting leadership update SOPs against real workflows instead of assumptions.",
     },
   ],
   hero: {
@@ -904,7 +905,7 @@ const ikonBlueprint: CaseStudy = {
       media: ik(
         "/ikon/blueprint.jpeg",
         16 / 9,
-        "End-to-end device lifecycle across accounting, operations, warehouse, and dealership lanes — pain points and system gaps called out inline.",
+        "End-to-end device lifecycle across accounting, operations, warehouse, and dealership lanes, with pain points and system gaps called out inline.",
       ),
     },
   ],
@@ -915,7 +916,7 @@ const ikonBlueprint: CaseStudy = {
     {
       nav: "Overview",
       body: [
-        "Mapped Ikon's device lifecycle from manufacturing through warehouse, dealership, and activation — the operational source of truth that kicked off the warehouse management system project.",
+        "Mapped Ikon's device lifecycle from manufacturing through warehouse, dealership, and activation. This became the operational source of truth that kicked off the warehouse management system project.",
       ],
       media: [],
     },
@@ -929,7 +930,7 @@ const ikonDataDictionary: CaseStudy = {
     "Creating a unified data dictionary to power future product expansion and eliminate cross-team ambiguity.",
   tagline: "One catalogue for every internal and external data source.",
   description:
-    "Catalogued internal, first-party, and third-party data into one dictionary with definitions aligned across teams — surfacing redundant vendor spend worth roughly $6,000 a month.",
+    "Catalogued internal, first-party, and third-party data into one dictionary with definitions aligned across teams, surfacing redundant vendor spend worth roughly $6,000 a month.",
   year: 2024,
   category: "Product Management",
   shade: "#FFFFFF",
@@ -939,7 +940,7 @@ const ikonDataDictionary: CaseStudy = {
   highlights: [
     {
       label: "Context",
-      body: "The team wanted to expand into customer intelligence, vehicle context, and Smart Marketing — but had no clarity on what data already existed, which integrations fed it, how each department defined it, or what was contractually available and actually usable.",
+      body: "The team wanted to expand into customer intelligence, vehicle context, and Smart Marketing, but had no clarity on what data already existed, which integrations fed it, how each department defined it, or what was contractually available and actually usable.",
     },
     {
       label: "Approach",
@@ -962,7 +963,7 @@ const ikonDataDictionary: CaseStudy = {
       media: ikDiagram(
         "/ikon/dictionary.png",
         2442 / 1253,
-        "Data dictionary catalogue — external sources and DMS integrations on one side, internal systems on the other.",
+        "Data dictionary catalogue: external sources and DMS integrations on one side, internal systems on the other.",
       ),
     },
   ],
@@ -973,7 +974,7 @@ const ikonDataDictionary: CaseStudy = {
     {
       nav: "Overview",
       body: [
-        "Catalogued internal, first-party, and third-party data into one dictionary with definitions aligned across teams — surfacing redundant vendor spend worth roughly $6,000 a month.",
+        "Catalogued internal, first-party, and third-party data into one dictionary with definitions aligned across teams, surfacing redundant vendor spend worth roughly $6,000 a month.",
       ],
       media: [],
     },
@@ -987,7 +988,7 @@ const ikonAgentic: CaseStudy = {
     "Optimized service appointment scheduling with agentic outreach and increased booking efficiency.",
   tagline: "Agentic outreach that books service appointments on its own.",
   description:
-    "Automated dealership service outreach end to end with Stella AI — identifying customers, running the conversation, checking live availability, and booking autonomously.",
+    "Automated dealership service outreach end to end with Stella AI, identifying customers, running the conversation, checking live availability, and booking autonomously.",
   year: 2025,
   category: "Product Management",
   shade: "#FFFFFF",
@@ -1001,7 +1002,7 @@ const ikonAgentic: CaseStudy = {
     },
     {
       label: "Approach",
-      body: "Worked with Stella AI, a third-party conversational partner, to automate the flow end to end: identify who to contact, run the conversation, check live scheduling availability from dealer systems, and book the appointment autonomously — with human agents handling only the exceptions that need escalation.",
+      body: "Worked with Stella AI, a third-party conversational partner, to automate the flow end to end: identify who to contact, run the conversation, check live scheduling availability from dealer systems, and book the appointment autonomously, with human agents handling only the exceptions that need escalation.",
     },
     {
       label: "Impact",
@@ -1020,7 +1021,7 @@ const ikonAgentic: CaseStudy = {
       media: ikDiagram(
         "/ikon/agentic.png",
         1598 / 899,
-        "Agentic outreach for service scheduling using Stella AI — natural language handles booking and store info, rules-based transfer routes the rest.",
+        "Agentic outreach for service scheduling using Stella AI. Natural language handles booking and store info; rules-based transfer routes the rest.",
       ),
     },
   ],
@@ -1031,7 +1032,7 @@ const ikonAgentic: CaseStudy = {
     {
       nav: "Overview",
       body: [
-        "Automated dealership service outreach end to end with Stella AI — identifying customers, running the conversation, checking live availability, and booking autonomously.",
+        "Automated dealership service outreach end to end with Stella AI, identifying customers, running the conversation, checking live availability, and booking autonomously.",
       ],
       media: [],
     },

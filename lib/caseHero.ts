@@ -32,7 +32,7 @@ const HERO_META: Record<string, HeroMeta> = {
     ],
     tags: {
       label: "Industry",
-      values: split("Automotive, IoT Hardware"),
+      values: split("Automotive, IoT Hardware, RevOps"),
     },
   },
 
@@ -67,11 +67,12 @@ const HERO_META: Record<string, HeroMeta> = {
   walkity: {
     titleAccent: "brand strategy and landing page",
     items: [
-      { label: "Company", value: "Walkity" },
+      { label: "Client", value: "VisIoT Technologies Pvt. Ltd." },
+      { label: "Role", value: "Head of Design" },
     ],
     tags: {
-      label: "Role",
-      values: split("Brand Strategy, Visual Identity, Landing Page Design"),
+      label: "Focus area",
+      values: split("Brand Strategy, Visual Identity, Web Design"),
     },
   },
 

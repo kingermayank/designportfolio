@@ -20,7 +20,7 @@ export type AboutPhoto = {
 
 export const ABOUT_INTRO = {
   greeting: "Hey there, I'm Mayank.",
-  pronunciation: "{pronounced my-yunk}",
+  pronunciation: "[pronounced my-yunk]",
   pronunciationHref: "https://www.youtube.com/watch?v=yisa-f1HAH4",
   summary:
     "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
@@ -80,7 +80,7 @@ export const ABOUT_SECTIONS: AboutSection[] = [
       },
       {
         title: "Stay hungry. Stay foolish.",
-        text: "I never shy away from being vulnerable, admitting mistakes and asking questions. I don't believe in pretending to be perfect—no one is.",
+        text: "I never shy away from being vulnerable, admitting mistakes and asking questions. I don't believe in pretending to be perfect. No one is.",
       },
       {
         title: "Bruce Lee's 'Be Water' approach.",
@@ -100,11 +100,11 @@ export const ABOUT_SECTIONS: AboutSection[] = [
       },
       {
         title: "Design without borders.",
-        text: "I don't like to remain constrained by my job title. I bring my T-shaped skills and founder mentality to every project, understanding what it means to take full ownership. If something needs to be done, I'll step up—whether it's writing PRD's, troubleshooting with developers, or creating training materials, whatever helps the team succeed.",
+        text: "I don't like to remain constrained by my job title. I bring my T-shaped skills and founder mentality to every project, understanding what it means to take full ownership. If something needs to be done, I'll step up, whether it's writing PRD's, troubleshooting with developers, or creating training materials, whatever helps the team succeed.",
       },
       {
         title: "Ambiguity fuels creativity.",
-        text: "I believe that ambiguity is where the magic happens. The unknown doesn't intimidate me—it energizes and excites me. I embrace challenges, push through the initial overwhelm, and find clarity on the other side. I thrive when things are unclear—it's the challenge of finding a path forward that makes the process exciting and rewarding.",
+        text: "I believe that ambiguity is where the magic happens. The unknown doesn't intimidate me. It energizes and excites me. I embrace challenges, push through the initial overwhelm, and find clarity on the other side. I thrive when things are unclear. It's the challenge of finding a path forward that makes the process exciting and rewarding.",
       },
       {
         title: "Commitment to giving back.",

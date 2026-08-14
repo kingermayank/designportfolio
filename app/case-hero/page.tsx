@@ -8,7 +8,7 @@ import {
 } from "@/components/case-hero";
 
 export const metadata: Metadata = {
-  title: "Case hero — template",
+  title: "Case hero template",
   robots: { index: false, follow: false },
 };
 
@@ -56,7 +56,7 @@ export default function CaseHeroTemplatePage() {
         <p>
           One continuous hero: the image is the background layer, the content
           group sits unboxed over its lower edge, and a back chevron pins to the
-          top-left of the image. No scrim is drawn — legibility comes from the
+          top-left of the image. No scrim is drawn. Legibility comes from the
           art itself. Composed from <code>HeroImage</code>,{" "}
           <code>ContentCard</code>, <code>MetadataList</code> and{" "}
           <code>PrimaryButton</code>.
@@ -69,7 +69,7 @@ export default function CaseHeroTemplatePage() {
       </section>
 
       <section className="chDemoBlock">
-        <h2 className="chDemoLabel">Accent CTA — tone: dark</h2>
+        <h2 className="chDemoLabel">Accent CTA, tone: dark</h2>
         <CaseHero {...SAMPLE} tone="dark" accent="#ff0257" />
       </section>
 
@@ -80,7 +80,7 @@ export default function CaseHeroTemplatePage() {
 
       <section className="chDemoBlock">
         <h2 className="chDemoLabel">
-          Composed by hand — explicit ratio instead of a full-height cover
+          Composed by hand: explicit ratio instead of a full-height cover
         </h2>
         {/* The same primitives, assembled directly rather than via CaseHero. */}
         <div className="chHero">
@@ -89,8 +89,8 @@ export default function CaseHeroTemplatePage() {
             <p className="chEyebrow">Side project</p>
             <h2 className="chTitle">Zero to shipped in two weeks.</h2>
             <p className="chDesc">
-              Drop the <code>aside</code> prop and the content runs full width —
-              the same tokens, spacing and entrance.
+              Drop the <code>aside</code> prop and the content runs full width,
+              with the same tokens, spacing and entrance.
             </p>
             <div className="chActions">
               <PrimaryButton variant="ghost" href="#" icon={null}>

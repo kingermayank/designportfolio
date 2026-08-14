@@ -21,7 +21,7 @@
   --space-8: 64px;
   --space-section: 90px;
   --space-media: 16px;
-  --space-bar: 120px;
+  --space-bar: 40px;
 
   /* Koto /latest overlay tokens — sampled from koto.com at 1440w.
      Glass fills are white at 5/10/16%; motion is 500ms for the panel and
@@ -422,22 +422,23 @@ body {
   --ch-space-1: 4px;
   --ch-space-2: 8px;
   --ch-space-5: 24px;
-  --ch-text-eyebrow: 15px;
+  --ch-text-eyebrow: 13px;
   --ch-line-label: 20px;
   --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
   --ch-tracking-label: var(--tracking-label);
   --ch-muted: #d4d4d4;
   --ch-faint: #c8c8c8;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
   align-items: start;
-  gap: clamp(2rem, 5vw, 4rem);
+  gap: 48px;
   width: calc(100% - (var(--cs-editorial-inset) * 2));
   margin: calc(clamp(3.5rem, 8vw, 8rem) + 20px) auto clamp(3.5rem, 8vw, 8rem);
   font-family: var(--font-body);
 }
 
 .csEditorialOverview {
+  min-width: 0;
   font-family: var(--font-body);
 }
 
@@ -456,15 +457,13 @@ body {
 }
 
 .csEditorialOverview p {
-  max-width: calc(31ch + 36px);
   margin: 0;
   color: var(--text);
   font-family: var(--font-body);
   font-size: 24px;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 30px;
   letter-spacing: -0.03em;
-  text-wrap: balance;
 }
 
 /* Context / Approach / Outcome — the written spine of the case study, sitting
@@ -496,7 +495,7 @@ body {
   padding: 0;
   color: var(--ch-accent, #c8c8c8);
   font-family: var(--font-label);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 20px;
@@ -506,7 +505,7 @@ body {
 
 .csEditorialImpact > p {
   margin: 0;
-  max-width: 28ch;
+  max-width: 60%;
   color: var(--text);
   font-family: var(--font-body);
   font-size: 35px;
@@ -1966,7 +1965,7 @@ button.csNavItem {
    scrim alone carries the depth change. No parallax push. */
 
 .workPanel {
-  width: 28%;
+  width: 27%;
   flex-shrink: 0;
   position: sticky;
   top: 0;
@@ -2164,7 +2163,7 @@ button.csNavItem {
   flex: 1;
   min-width: 0;
   overflow: visible;
-  padding: 16px 8px 120px 8px;
+  padding: 16px 8px var(--space-bar) 8px;
 }
 
 .workLensPane {
@@ -2248,7 +2247,7 @@ button.csNavItem {
 .workLens {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -2271,8 +2270,8 @@ button.csNavItem {
 }
 
 .workLensDot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 999px;
   background: var(--text);
   opacity: 0;
@@ -2417,39 +2416,67 @@ button.csNavItem {
   grid-template-columns: 1fr 1fr;
   /* Koto: md:gap-x-4 with a 24px row rhythm. */
   gap: 24px 16px;
-  padding: 0 0 40px;
+  padding: 0;
   align-items: start;
 }
 
 .sysCard {
-  display: flex;
-  flex-direction: column;
-  /* mb-3 under the media, then gap-y-3 through the copy stack. */
-  gap: 12px;
+  --sys-card-radius: var(--radius-lg);
+  box-sizing: border-box;
+  display: block;
   width: 100%;
   margin: 0;
-  padding: 0;
+  /* 8px is always reserved; the inset wrapper bleeds it at rest. */
+  padding: 8px;
+  overflow: visible;
   border: 0;
+  border-radius: var(--sys-card-radius);
   background: transparent;
   color: inherit;
   text-align: left;
   cursor: pointer;
   font: inherit;
+  transition: background-color 150ms ease-out;
 }
 
+.sysCardInset {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: -8px;
+  padding: 0;
+  border-radius: 0;
+  transition: margin 150ms ease-out;
+}
+
+.sysCard:hover,
 .sysCard:focus-visible {
-  outline: 1px solid var(--color-border);
-  outline-offset: 4px;
+  background: #1a1a1a;
+  outline: none;
 }
 
+.sysCard:hover .sysCardInset,
+.sysCard:focus-visible .sysCardInset {
+  margin: 0;
+}
+
+/* Radius lives only here — overflow clips the image, never animated. */
 .sysCardMedia {
   position: relative;
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: var(--radius-lg);
   overflow: hidden;
+  border-radius: var(--sys-card-radius);
   background: var(--sys-off-black);
+  transition: none;
+}
+
+.sysCardMediaInner {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 0;
 }
 
 .sysCardMedia img {
@@ -2458,15 +2485,16 @@ button.csNavItem {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 0;
 }
 
 .sysCardCopy {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
-  /* Koto's pr-3 keeps the ragged edge off the column gutter. */
-  padding-right: 12px;
+  padding: 0;
+  border-radius: 0;
 }
 
 .sysCardTitle {
@@ -2477,6 +2505,29 @@ button.csNavItem {
   letter-spacing: 0;
   color: var(--text);
   text-wrap: pretty;
+}
+
+.sysCardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  list-style: none;
+}
+
+.sysCardTags li {
+  padding: 7.5px 12px 6.5px;
+  border-radius: 4px;
+  background: #2b2b2b;
+  font-family: var(--font-label), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #fafafa;
 }
 
 .sysCardBody {
@@ -2726,8 +2777,8 @@ button.csNavItem {
   margin: 0;
   font-family: var(--font-body);
   font-size: clamp(28px, 3.4vw + 12px, 36px);
-  font-weight: 500;
-  line-height: 1.15;
+  font-weight: 400;
+  line-height: 40px;
   letter-spacing: -0.02em;
   color: var(--text);
   text-wrap: pretty;
@@ -2750,7 +2801,7 @@ button.csNavItem {
   border-radius: 4px;
   background: #2b2b2b;
   font-family: var(--font-label), ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 1.2;
@@ -2765,7 +2816,6 @@ button.csNavItem {
   gap: 14px;
   margin: 0;
   padding: 18px 20px;
-  /* Matches the figure frame above it. */
   border-radius: var(--radius-lg);
   background: #1a1a1a;
 }
@@ -2792,7 +2842,7 @@ button.csNavItem {
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 20px;
   letter-spacing: -0.01em;
   color: var(--muted);
   text-wrap: pretty;
@@ -2803,41 +2853,32 @@ button.csNavItem {
   color: var(--text);
 }
 
-.sysOverlayLede {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0;
-  color: var(--muted);
-  text-wrap: pretty;
-}
-
 .sysOverlayFigure {
   position: relative;
   margin: 0;
   width: 100%;
 }
 
-.sysOverlayFigureMedia {
-  position: relative;
-  width: 100%;
+.sysOverlayFigure.has-impact {
+  overflow: hidden;
   border-radius: var(--radius-lg);
 }
 
-/* Crop layer — shrinks from the bottom on hover to uncover the caption. */
-.sysOverlayFigureCrop {
-  position: absolute;
-  inset: 0;
+.sysOverlayFigureMedia {
+  position: relative;
+  width: 100%;
   overflow: hidden;
-  border-radius: inherit;
-  transition: bottom 167ms linear;
+  border-radius: var(--radius-lg);
 }
 
-.sysOverlayFigure:hover .sysOverlayFigureCrop,
-.sysOverlayFigure:focus-within .sysOverlayFigureCrop {
-  bottom: var(--sys-cap-h, 24px);
+.sysOverlayFigure.has-impact .sysOverlayFigureMedia {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.sysOverlayFigure.has-impact .sysOverlayImpact {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .sysOverlayFigureNav {
@@ -2891,34 +2932,6 @@ button.csNavItem {
   box-sizing: border-box;
 }
 
-/* Sits in the strip the crop layer uncovers — never visible at rest, and it
-   takes no space of its own, exactly like the Visual Craft media captions. */
-.sysOverlayCaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding-top: 12px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 167ms linear;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0;
-  color: var(--muted);
-  text-align: center;
-  text-wrap: pretty;
-}
-
-.sysOverlayFigure:hover .sysOverlayCaption,
-.sysOverlayFigure:focus-within .sysOverlayCaption {
-  opacity: 1;
-  transition-delay: 167ms;
-}
-
 .sysOverlayHighlights {
   display: flex;
   flex-direction: column;
@@ -2934,7 +2947,7 @@ button.csNavItem {
 .sysOverlaySectionLabel {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   line-height: 1;
   letter-spacing: var(--tracking-label);
@@ -2981,6 +2994,15 @@ button.csNavItem {
   .sysOverlayClose,
   .sysCardBadge {
     transition: none !important;
+  }
+
+  .sysCardInset {
+    transition: none;
+  }
+
+  .sysCard:hover .sysCardInset,
+  .sysCard:focus-visible .sysCardInset {
+    margin: -8px;
   }
 }
 
@@ -3108,7 +3130,7 @@ button.csNavItem {
 
 .engCardKind {
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 1;
@@ -3181,7 +3203,7 @@ button.csNavItem {
 .engModalKind {
   margin: 0 0 var(--space-1);
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: calc(var(--text-caption) + 1px);
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 1.5;
@@ -3267,8 +3289,6 @@ button.csNavItem {
 .engModalSiteChrome {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
   padding: 8px 10px;
   border: 1px solid var(--color-border);
   border-bottom: 0;
@@ -3282,24 +3302,11 @@ button.csNavItem {
 
 .engModalSiteChromeLabel {
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: calc(var(--text-caption) + 1px);
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-faint);
-}
-
-.engModalSiteChromeLink {
-  font-family: var(--font-body);
-  font-size: var(--text-ui);
-  color: var(--color-text);
-  text-decoration: none;
-  opacity: 0.75;
-  transition: opacity 167ms linear;
-}
-
-.engModalSiteChromeLink:hover {
-  opacity: 1;
 }
 
 .engModalStageLink {
@@ -3393,7 +3400,7 @@ button.csNavItem {
 .engModalLabel {
   margin: 0;
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: calc(var(--text-caption) + 1px);
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 1.5;
@@ -3424,7 +3431,7 @@ button.csNavItem {
   border-radius: 4px;
   background: #2b2b2b;
   font-family: var(--font-label), ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 1.2;
@@ -3886,7 +3893,7 @@ button.csNavItem {
   padding: 0 16px;
   border-radius: 4px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
@@ -3894,38 +3901,43 @@ button.csNavItem {
   text-decoration: none;
   box-sizing: border-box;
   cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
   transition: filter 167ms linear, border-color 167ms linear,
     background-color 167ms linear, color 167ms linear;
 }
 
-.workFitBtnLabel {
-  display: inline-grid;
-  place-items: center;
-  overflow: hidden;
-  line-height: 1;
+/* Interior copy-button — stacked labels lock width; icons share one cell. */
+.intCopyBtn {
+  position: relative;
+  font-weight: 500;
 }
 
-.workFitBtnLabel > span {
-  grid-area: 1 / 1;
-  white-space: nowrap;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-}
-
-.workFitBtnIconSlot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.intCopyIcon {
+  display: grid;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
-  width: 12px;
-  height: 12px;
 }
 
-.workFitBtnIcon {
-  display: block;
-  width: 12px;
-  height: 12px;
+.intCopyIcon svg {
+  grid-column: 1;
+  grid-row: 1;
+  width: 14px;
+  height: 14px;
+}
+
+.intCopyLabel {
+  display: grid;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.intCopyLabel > span {
+  grid-column: 1;
+  grid-row: 1;
+  white-space: nowrap;
+  font-weight: 500;
 }
 
 /* Hairline stroke — alpha white rather than a flat grey, so it stays a
@@ -3944,6 +3956,7 @@ button.csNavItem {
   background: #ffffff;
   border: 1px solid #ffffff;
   color: #121413;
+  font-weight: 500;
 }
 
 /* brightness() can't lift #fff — the solid button dims on hover instead.
@@ -4435,7 +4448,7 @@ button.csNavItem {
 
   .workMain {
     overflow: visible;
-    padding: 8px 14px 110px;
+    padding: 8px 14px var(--space-bar);
   }
 
   /* Full-width panel still fits a 2-up masonry on tablet / large phones */
@@ -4521,7 +4534,7 @@ button.csNavItem {
   }
 
   .workSection {
-    padding: 4px 12px 120px;
+    padding: 4px 12px var(--space-bar);
   }
 
   .csBrand {
@@ -4547,14 +4560,6 @@ button.csNavItem {
   .csMediaHover .csMediaHoverCaption {
     opacity: 1;
   }
-
-  .sysOverlayCaption {
-    opacity: 1;
-  }
-
-  .sysOverlayFigureCrop {
-    bottom: var(--sys-cap-h, 24px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4564,9 +4569,7 @@ button.csNavItem {
   .workCardMediaWrap,
   .csMediaHoverWrap,
   .csMediaHoverWrap > .csMediaStage,
-  .csMediaHoverCaption,
-  .sysOverlayCaption,
-  .sysOverlayFigureCrop {
+  .csMediaHoverCaption {
     transition: none;
   }
 }
@@ -4807,53 +4810,40 @@ button.csNavItem {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
   box-sizing: border-box;
-  height: 38px;
-  min-width: 38px;
-  padding: 0 12px;
-  border: 1.5px solid color-mix(in srgb, #fff 10%, transparent);
-  border-radius: var(--ch-radius-pill);
-  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  width: 44px;
+  height: 44px;
+  padding: 16px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--sys-glass-weak);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: var(--ch-back-color, #ffffff);
-  backdrop-filter: blur(18px) saturate(1.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
   cursor: pointer;
-  font-family: var(--font-body);
-  transition:
-    opacity 167ms linear,
-    transform 167ms ease-out,
-    background-color 167ms linear,
-    border-color 167ms linear,
-    padding 220ms ease;
   opacity: 1;
   text-decoration: none;
+  transition: background-color var(--sys-hover-ms) linear;
 }
 
 .chBack svg {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
 }
 
-.chBack:hover,
-.chBack:focus-visible {
-  background: color-mix(in srgb, var(--color-surface) 82%, #fff 4%);
-  border-color: color-mix(in srgb, #fff 14%, transparent);
-  transform: translateX(-2px);
+.chBack:hover {
+  background: var(--sys-glass);
 }
 
-.chBack:hover .backLabel,
-.chBack:focus-visible .backLabel {
-  max-width: 3em;
-  opacity: 1;
-  margin-left: 5px;
+.chBack:active {
+  background: var(--sys-glass-weak);
+  transition-duration: var(--sys-press-ms);
 }
 
 .chBack:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 1px solid var(--color-border);
   outline-offset: 2px;
 }
 
@@ -4946,7 +4936,7 @@ button.csNavItem {
   font-family: var(--ch-font-display);
   font-size: var(--ch-text-title);
   font-weight: 400;
-  line-height: calc(1em + 8px);
+  line-height: calc(1em + 6px);
   letter-spacing: 0;
   text-align: center;
   text-wrap: balance;

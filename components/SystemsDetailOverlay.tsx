@@ -32,14 +32,40 @@ function galleryMedia(slug?: string): CaseMedia[] {
   return study?.hero ? [study.hero] : [];
 }
 
+function ImpactLine({ impact }: { impact: string }) {
+  return (
+    <>
+      <span className="sysOverlayImpactIcon" aria-hidden>
+        <svg viewBox="0 0 16 16">
+          <path
+            d="M3 11.5 6.5 8l2.5 2.5L13 5.5M13 5.5H9.5M13 5.5V9"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <span className="sysOverlayImpactText">
+        {boldRuns(impact).map((run, i) =>
+          run.bold ? (
+            <strong key={i}>{run.text}</strong>
+          ) : (
+            <span key={i}>{run.text}</span>
+          ),
+        )}
+      </span>
+    </>
+  );
+}
+
 export default function SystemsDetailOverlay({ item, onClose }: Props) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [shotIdx, setShotIdx] = useState(0);
-  const captionRef = useRef<HTMLElement>(null);
-  const [capH, setCapH] = useState(0);
   const closingRef = useRef(false);
 
   const study = item.slug
@@ -48,7 +74,6 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
   // Same headline the card shows — the study's own detailTitle is worded for
   // the full case-study page and would read as a different project here.
   const headline = item.title;
-  const lede = study?.description ?? item.body;
   const highlights = study?.highlights ?? [];
   const impact = study?.impact;
   const tags = Array.from(
@@ -101,18 +126,6 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- close latch is intentional
   }, [mounted]);
-
-  // The reveal strip is exactly as tall as the caption, which wraps to two
-  // lines at some widths — so it's measured rather than assumed.
-  useEffect(() => {
-    const el = captionRef.current;
-    if (!el) return;
-    const measure = () => setCapH(el.offsetHeight);
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [mounted, figureCaption]);
 
   const onDialogKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key !== "Tab") return;
@@ -192,29 +205,23 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
               </ul>
             ) : null}
 
-            {lede ? <p className="sysOverlayLede">{lede}</p> : null}
-
             {figureSrc ? (
               <figure
                 className={
                   "sysOverlayFigure" +
-                  (figure?.fit === "contain" ? " is-contain" : "")
+                  (figure?.fit === "contain" ? " is-contain" : "") +
+                  (impact ? " has-impact" : "")
                 }
-                style={{ ["--sys-cap-h"]: `${capH}px` } as CSSProperties}
               >
-                {/* Fixed frame: the media crops upward on hover to reveal the
-                    caption strip beneath it, so the figure never changes size. */}
                 <div
                   className="sysOverlayFigureMedia"
-                  style={{ aspectRatio: String(figureAr) }}
+                  style={{
+                    aspectRatio: String(figureAr),
+                    background: figureShade,
+                  }}
                 >
-                  <div
-                    className="sysOverlayFigureCrop"
-                    style={{ background: figureShade }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={figureSrc} alt="" />
-                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={figureSrc} alt={figureCaption ?? ""} />
 
                   {hasGallery ? (
                     <>
@@ -255,37 +262,15 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
                     </>
                   ) : null}
                 </div>
-                {figureCaption ? (
-                  <figcaption ref={captionRef} className="sysOverlayCaption">
-                    {figureCaption}
+                {impact ? (
+                  <figcaption className="sysOverlayImpact">
+                    <ImpactLine impact={impact} />
                   </figcaption>
                 ) : null}
               </figure>
-            ) : null}
-
-            {impact ? (
+            ) : impact ? (
               <p className="sysOverlayImpact">
-                <span className="sysOverlayImpactIcon" aria-hidden>
-                  <svg viewBox="0 0 16 16">
-                    <path
-                      d="M3 11.5 6.5 8l2.5 2.5L13 5.5M13 5.5H9.5M13 5.5V9"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <span className="sysOverlayImpactText">
-                  {boldRuns(impact).map((run, i) =>
-                    run.bold ? (
-                      <strong key={i}>{run.text}</strong>
-                    ) : (
-                      <span key={i}>{run.text}</span>
-                    ),
-                  )}
-                </span>
+                <ImpactLine impact={impact} />
               </p>
             ) : null}
 

@@ -63,24 +63,17 @@ const TONE_CLASS: Record<CaseHeroTone, string> = {
   dark: " chToneDark",
 };
 
-const Chevron = () => (
-  <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+const BackGlyph = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
     <path
-      d="M10 3.5 5.5 8l4.5 4.5"
+      d="M8.25 1.5 2.75 6l5.5 4.5"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
   </svg>
-);
-
-const BackGlyph = () => (
-  <>
-    <Chevron />
-    <span className="backLabel">Back</span>
-  </>
 );
 
 /** Wrap the first case-insensitive match of `accent` in `.chTitleAccent`. */

@@ -123,10 +123,17 @@ type Card = {
   media?: string;
   video?: boolean;
   thumb?: string;
+  thumbSrcSet?: string;
   logo?: string;
   aspect: Aspect;
   linkable: boolean;
   externalUrl?: string;
+};
+
+/** Responsive stills for work covers that ship 1x + 2x files. */
+const THUMB_SRCSET: Partial<Record<string, string>> = {
+  pathai:
+    "/pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
 };
 
 // Visual Craft shows project work only — studies flagged `inWorkGrid: false`
@@ -156,6 +163,7 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
     media: coverVideo ? cover : still ? thumb : s.hero?.src,
     video: coverVideo ? true : still ? false : s.hero?.video,
     thumb,
+    thumbSrcSet: THUMB_SRCSET[s.slug],
     logo: LOGO_BY_SLUG[s.slug],
     aspect: ASPECT_BY_SLUG[s.slug] ?? ASPECTS[i % ASPECTS.length],
     linkable: s.linkable !== false,
@@ -194,7 +202,14 @@ function WorkCard({
           <img
             className="workCardMedia"
             src={card.thumb || card.media}
+            srcSet={card.thumbSrcSet}
+            sizes={
+              card.thumbSrcSet
+                ? "(max-width: 560px) 100vw, (max-width: 900px) 50vw, 36vw"
+                : undefined
+            }
             alt=""
+            decoding="async"
           />
         ) : (
           <span className="workCardPlaceholder">{card.title}</span>
@@ -270,6 +285,13 @@ function SystemsCard({
   item: WorkListItem;
   onOpen: () => void;
 }) {
+  const study = item.slug
+    ? CASE_STUDIES.find((s) => s.slug === item.slug)
+    : undefined;
+  const tags = Array.from(
+    new Set([item.badge, study?.category].filter(Boolean) as string[]),
+  );
+
   return (
     <button
       type="button"
@@ -277,15 +299,25 @@ function SystemsCard({
       onClick={onOpen}
       aria-haspopup="dialog"
     >
-      <span className="sysCardMedia" style={{ background: item.shade }}>
-        {item.thumb ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.thumb} alt="" />
-        ) : null}
-      </span>
-      <span className="sysCardCopy">
-        <span className="sysCardTitle">{item.title}</span>
-        <span className="sysCardBody">{item.body}</span>
+      <span className="sysCardInset">
+        <span className="sysCardMedia">
+          <span className="sysCardMediaInner" style={{ background: item.shade }}>
+            {item.thumb ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={item.thumb} alt="" />
+            ) : null}
+          </span>
+        </span>
+        <span className="sysCardCopy">
+          <span className="sysCardTitle">{item.title}</span>
+          {tags.length > 0 ? (
+            <ul className="sysCardTags">
+              {tags.map((tag) => (
+                <li key={tag}>{tag}</li>
+              ))}
+            </ul>
+          ) : null}
+        </span>
       </span>
     </button>
   );
@@ -336,6 +368,8 @@ export default function Work() {
   const { open } = usePageTransition();
   // The panel's hover rail belongs to the project grid — only while Visual Craft.
   const showingProjects = lens === "visual";
+  const lensRef = useRef(lens);
+  lensRef.current = lens;
 
   const cards = PROJECTS;
 
@@ -349,10 +383,12 @@ export default function Work() {
   }, [cards]);
 
   const activeIdx = hoverIdx >= 0 ? hoverIdx : lastHoverIdx;
-  const hoverOn = hoverIdx >= 0;
+  const hoverOn = showingProjects && hoverIdx >= 0;
 
   const setHoverCard = (card: Card | null) => {
-    if (!card) {
+    // AnimatePresence keeps Visual Craft cards mounted during the lens exit.
+    // A mouseenter/focus on those exiting cards must not re-hide the socials.
+    if (lensRef.current !== "visual" || !card) {
       setHoverIdx(-1);
       return;
     }
@@ -427,7 +463,10 @@ export default function Work() {
           <SystemsCard
             key={item.id}
             item={item}
-            onOpen={() => setSystemsActive(item)}
+            onOpen={() => {
+              setHoverIdx(-1);
+              setSystemsActive(item);
+            }}
           />
         ))}
       </div>
@@ -546,12 +585,7 @@ export default function Work() {
         )}
       </aside>
 
-      <div
-        className="workMain"
-        onMouseLeave={() => {
-          if (showingProjects) setHoverCard(null);
-        }}
-      >
+      <div className="workMain" onMouseLeave={() => setHoverCard(null)}>
         <nav className="workLenses" aria-label="Work categories">
           {WORK_LENSES.map((l) => {
             const active = lens === l.id;
@@ -598,7 +632,10 @@ export default function Work() {
       {systemsActive ? (
         <SystemsDetailOverlay
           item={systemsActive}
-          onClose={() => setSystemsActive(null)}
+          onClose={() => {
+            setHoverIdx(-1);
+            setSystemsActive(null);
+          }}
         />
       ) : null}
     </div>

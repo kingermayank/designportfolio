@@ -166,7 +166,7 @@ export const SCENARIOS: ScenarioDef[] = [
         hoverRegionId: "nested-outer",
         pointer: { x: 555, y: 320, kind: "arrow" },
         caption:
-          "A larger region may cover a smaller one. Hovering the nested area still activates the outer region — the inner region is selected from its card in the slides panel.",
+          "A larger region may cover a smaller one. Hovering the nested area still activates the outer region. The inner region is selected from its card in the slides panel.",
       },
       {
         at: 5.2,
@@ -174,7 +174,7 @@ export const SCENARIOS: ScenarioDef[] = [
         hoverRegionId: "nested-outer",
         pointer: { x: 555, y: 320, kind: "arrow" },
         caption:
-          "A larger region may cover a smaller one. Hovering the nested area still activates the outer region — the inner region is selected from its card in the slides panel.",
+          "A larger region may cover a smaller one. Hovering the nested area still activates the outer region. The inner region is selected from its card in the slides panel.",
       },
     ],
   },
@@ -267,7 +267,7 @@ export const SCENARIOS: ScenarioDef[] = [
         at: 1.35,
         visibleRegionIds: ["existing"],
         pointer: { x: 505, y: 205, kind: "crosshair" },
-        caption: "Pointer-down to start a new region — top-left origin.",
+        caption: "Pointer-down to start a new region, from the top-left origin.",
       },
       {
         at: 1.55,
@@ -275,7 +275,7 @@ export const SCENARIOS: ScenarioDef[] = [
         drawingRegionId: "drawn",
         pointer: { x: 505, y: 205, kind: "crosshair" },
         caption:
-          "While dragging across another region, existing hover states stay off — the draw cursor remains intact.",
+          "While dragging across another region, existing hover states stay off, so the draw cursor remains intact.",
       },
       {
         at: 2.45,
@@ -324,7 +324,7 @@ export const SCENARIOS: ScenarioDef[] = [
         hoverRegionId: "drawn",
         pointer: { x: 585, y: 295, kind: "arrow" },
         caption:
-          "Pointer over the overlap highlights the newer region — it owns the top z-index, visually and interactively.",
+          "Pointer over the overlap highlights the newer region. It owns the top z-index, visually and interactively.",
       },
       {
         at: 3.2,
@@ -332,7 +332,7 @@ export const SCENARIOS: ScenarioDef[] = [
         hoverRegionId: "drawn",
         pointer: { x: 585, y: 295, kind: "arrow" },
         caption:
-          "Pointer over the overlap highlights the newer region — it owns the top z-index, visually and interactively.",
+          "Pointer over the overlap highlights the newer region. It owns the top z-index, visually and interactively.",
       },
       {
         at: 5.0,
@@ -340,7 +340,7 @@ export const SCENARIOS: ScenarioDef[] = [
         hoverRegionId: "drawn",
         pointer: { x: 585, y: 295, kind: "arrow" },
         caption:
-          "Pointer over the overlap highlights the newer region — it owns the top z-index, visually and interactively.",
+          "Pointer over the overlap highlights the newer region. It owns the top z-index, visually and interactively.",
       },
     ],
   },

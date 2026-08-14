@@ -654,8 +654,6 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   ) : null}
                 </section>
 
-                {highlightsAfterMedia ? null : highlightsSection}
-
                 <div className={"csFade" + (contentIn ? " in" : "")}>
                   <EditorialMediaFlow
                     blocks={study.mediaBlocks}

@@ -160,14 +160,6 @@ export default function EngDetailModal({ item, onClose }: Props) {
             {hasEmbed && isWebsite && visitHref ? (
               <div className="engModalSiteChrome">
                 <span className="engModalSiteChromeLabel">Live preview</span>
-                <a
-                  className="engModalSiteChromeLink"
-                  href={visitHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Open site ↗
-                </a>
               </div>
             ) : null}
 
@@ -247,6 +239,16 @@ export default function EngDetailModal({ item, onClose }: Props) {
                 aria-label={`View ${visitLabel} website`}
               >
                 View website
+                <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </a>
             ) : null}
           </div>
