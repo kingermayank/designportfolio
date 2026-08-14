@@ -48,15 +48,109 @@ export const ABOUT_INTRO = {
     "https://drive.google.com/file/d/1ARMGtXzDuXnK0jrYjc3dxizeUVrlPWTF/view?usp=sharing",
 };
 
-export const ABOUT_SECTIONS: AboutSection[] = [
+export const ABOUT_ORIGIN = {
+  heading:
+    "Shaped by 7+ years of designing, building, learning, and experimenting",
+  body: [
+    "I've always been passionate about creating and technology, so pursuing a degree in Computer Science during my undergraduate studies felt like a natural choice. However, I quickly realized that I was more interested in understanding the underlying principles and rationale behind the code I was writing. This led me to explore the world of design and creative fields like visual design, AR/VR, game design, and filmmaking, while working with student organizations and early-stage startups. Through these experiences, I developed a deep appreciation for the creative problem-solving involved in design.",
+    "This background has shaped me into a designer who values scalability and embraces a systems-thinking approach, enabling me to thrive in ambiguous environments while collaborating with cross-functional teams.",
+  ],
+};
+
+/** Square covers from `public/podcast`. */
+export const ABOUT_PODCASTS: { id: string; src?: string; label: string }[] = [
   {
-    nav: "Origin",
-    heading: "Where it all began.",
-    body: [
-      "I've always been passionate about creating and technology, so pursuing a degree in Computer Science during my undergraduate studies felt like a natural choice. However, I quickly realized that I was more interested in understanding the underlying principles and rationale behind the code I was writing. This led me to explore the world of design and creative fields like visual design, AR/VR, game design, and filmmaking, while working with student organizations and early-stage startups. Through these experiences, I developed a deep appreciation for the creative problem-solving involved in design.",
-      "This background has shaped me into a designer who values scalability and embraces a systems-thinking approach, enabling me to thrive in ambiguous environments while collaborating with cross-functional teams.",
-    ],
+    id: "lennys-podcast",
+    src: "/podcast/3a35cda2-e0cd-4d94-87f0-cce699c3a853_2048x2048.png",
+    label: "Lenny's Podcast",
   },
+  {
+    id: "the-general",
+    src: "/podcast/images.png",
+    label: "The General Podcast",
+  },
+  {
+    id: "first-of-kind",
+    src: "/podcast/ab6765630000ba8ab87bf9320ea274bbd5958bbd.jpeg",
+    label: "First of Kind",
+  },
+  {
+    id: "double-diamond",
+    src: "/podcast/af07669d-2871-4382-9739-120f22f176cd_2304x2304.png",
+    label: "Double Diamond",
+  },
+  {
+    id: "dive-club",
+    src: "/podcast/channels4_profile.jpg",
+    label: "Dive Club",
+  },
+  {
+    id: "state-of-play",
+    src: "/podcast/de3857cb8ebb9754b4e43d21b48254a6.jpg",
+    label: "State of Play",
+  },
+  {
+    id: "greg-isenberg",
+    src: "/podcast/ab67656300005f1f114e4d61a3ac146c8f4c1081.jpeg",
+    label: "Greg Isenberg",
+  },
+  {
+    id: "a16z-show",
+    src: "/podcast/a16z-Show-Podcast.jpg",
+    label: "A16Z Show",
+  },
+];
+
+export const ABOUT_CAREER: {
+  company: string;
+  title: string;
+  year: string;
+  logo?: string;
+  href: string;
+}[] = [
+  {
+    company: "Ikon Technologies",
+    title: "Lead Product Designer",
+    year: "2023-PRESENT",
+    logo: "/logos/ikon.png",
+    href: "https://www.linkedin.com/company/ikontechnologies",
+  },
+  {
+    company: "PathAI",
+    title: "Product Designer",
+    year: "2022",
+    logo: "/logos/pathai.png",
+    href: "https://www.linkedin.com/company/pathai",
+  },
+  {
+    company: "UMS",
+    title: "Visual Designer",
+    year: "2021-2022",
+    href: "https://www.linkedin.com/company/university-musical-society",
+  },
+  {
+    company: "BigBasket",
+    title: "Product Designer",
+    year: "2021",
+    logo: "/logos/bigbasket.png",
+    href: "https://www.linkedin.com/company/bigbasket-com",
+  },
+  {
+    company: "Walkity",
+    title: "Head of Design",
+    year: "2019",
+    logo: "/logos/walkity.png",
+    href: "https://www.linkedin.com/company/walkity",
+  },
+  {
+    company: "SureLocal",
+    title: "Founding Designer",
+    year: "2019",
+    href: "https://www.linkedin.com/company/surelocal",
+  },
+];
+
+export const ABOUT_SECTIONS: AboutSection[] = [
   {
     nav: "AI",
     heading: "How my work is evolving with AI.",

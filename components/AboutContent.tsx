@@ -1,8 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ABOUT_INTRO, ABOUT_PTO, ABOUT_SECTIONS, TESTIMONIALS } from "@/lib/about";
+import {
+  ABOUT_CAREER,
+  ABOUT_INTRO,
+  ABOUT_ORIGIN,
+  ABOUT_PTO,
+  ABOUT_SECTIONS,
+  TESTIMONIALS,
+} from "@/lib/about";
+import { HIRING_LETTER } from "@/lib/letter";
+import AboutPodcastTicker from "@/components/AboutPodcastTicker";
 import CurrentlyStatus from "@/components/CurrentlyStatus";
+import HiringLetterOverlay from "@/components/HiringLetterOverlay";
 
 type AboutContentProps = {
   /**
@@ -100,17 +110,17 @@ function PhilosophyAccordion({
 }
 
 /**
- * About page body — lede, story sections, testimonials, PTO.
- * No cover media; the page opens on the lede like editorial case studies.
+ * About page body — currently line, hero, info cards, then story sections.
  */
 export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
     registerSection?.(i, el);
+  const [letterOpen, setLetterOpen] = useState(false);
+  const [originOpen, setOriginOpen] = useState(false);
 
   return (
     <div className="aboutFlow">
       <div className="aboutLedeSection">
-        <p className="aboutLede">{ABOUT_INTRO.summary}</p>
         <CurrentlyStatus />
         <figure className="aboutLedePortrait">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -121,6 +131,107 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           />
         </figure>
       </div>
+
+      <div className="aboutSplit">
+        <div className="aboutSplitCol">
+          <section className="aboutCard">
+            <p className="aboutCardLede">{ABOUT_INTRO.summary}</p>
+          </section>
+
+          <section className="aboutCard aboutCardPods">
+            <h2 className="aboutCardTitle">Podcasts I&apos;m listening to</h2>
+            <AboutPodcastTicker />
+          </section>
+
+          <button
+            type="button"
+            className={
+              "aboutCard aboutCardOrigin" + (originOpen ? " is-open" : "")
+            }
+            aria-expanded={originOpen}
+            onClick={() => setOriginOpen((open) => !open)}
+          >
+            <span className="aboutCardTitle">{ABOUT_ORIGIN.heading}</span>
+            <div className="aboutCardOriginBody">
+              {ABOUT_ORIGIN.body.map((p) => (
+                <p key={p.slice(0, 32)} className="aboutCardBody">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </button>
+        </div>
+
+        <div className="aboutSplitCol">
+          <section className="aboutCard">
+            <ul className="aboutCareer">
+              {ABOUT_CAREER.map((job) => (
+                <li key={job.company}>
+                  <a
+                    className="aboutCareerRow"
+                    href={job.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${job.company}, ${job.title}, ${job.year} (opens LinkedIn)`}
+                  >
+                    <span className="aboutCareerMark">
+                      {job.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={job.logo} alt="" />
+                      ) : (
+                        <span className="aboutCareerFill" aria-hidden />
+                      )}
+                    </span>
+                    <span className="aboutCareerName">{job.company}</span>
+                    <span className="aboutCareerMeta">
+                      <span className="aboutCareerCopy">
+                        <span className="aboutCareerRole">{job.title}</span>
+                        <span className="aboutCareerYear">{job.year}</span>
+                      </span>
+                      <svg
+                        className="aboutCareerArrow"
+                        viewBox="0 0 12 12"
+                        aria-hidden
+                      >
+                        <path
+                          d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.25"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <button
+            type="button"
+            className="aboutCard aboutCardLetter"
+            onClick={() => setLetterOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={letterOpen}
+          >
+            <span className="aboutCardTitle">
+              Letter to my future hiring manager
+            </span>
+            <div className="aboutLetterPreview" aria-hidden>
+              <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>
+              {HIRING_LETTER.body.map((p) => (
+                <p key={p.slice(0, 24)}>{p}</p>
+              ))}
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {letterOpen ? (
+        <HiringLetterOverlay onClose={() => setLetterOpen(false)} />
+      ) : null}
 
       {ABOUT_SECTIONS.map((sec, i) => (
         <section key={sec.nav} ref={ref(i)} className="csSection aboutSection">

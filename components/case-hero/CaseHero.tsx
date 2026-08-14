@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import CaseBack, { type CaseHeroBack } from "./CaseBack";
 import ContentCard from "./ContentCard";
 import HeroImage, { type HeroImageProps } from "./HeroImage";
 import HeroTitle from "./HeroTitle";
@@ -6,13 +7,7 @@ import MetadataList, { type MetadataItem, type MetadataTags } from "./MetadataLi
 import PrimaryButton from "./PrimaryButton";
 
 export type CaseHeroTone = "neutral" | "light" | "dark";
-
-export type CaseHeroBack = {
-  /** Accessible name for the chevron — it has no visible label. */
-  label: string;
-  href?: string;
-  onClick?: () => void;
-};
+export type { CaseHeroBack };
 
 export type CaseHeroProps = {
   /** Small uppercase label above the title. */
@@ -63,19 +58,6 @@ const TONE_CLASS: Record<CaseHeroTone, string> = {
   dark: " chToneDark",
 };
 
-const BackGlyph = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-    <path
-      d="M8.25 1.5 2.75 6l5.5 4.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 /** Wrap the first case-insensitive match of `accent` in `.chTitleAccent`. */
 function titleWithAccent(title: string, accent?: string) {
   if (!accent) return title;
@@ -124,22 +106,7 @@ export default function CaseHero({
 
   return (
     <section className={"chHero" + TONE_CLASS[tone] + (className ? ` ${className}` : "")} style={style}>
-      {back ? (
-        back.href ? (
-          <a className="chBack" href={back.href} aria-label="Back">
-            <BackGlyph />
-          </a>
-        ) : (
-          <button
-            className="chBack"
-            type="button"
-            onClick={back.onClick}
-            aria-label="Back"
-          >
-            <BackGlyph />
-          </button>
-        )
-      ) : null}
+      {back ? <CaseBack {...back} /> : null}
 
       <HeroImage {...media} />
 

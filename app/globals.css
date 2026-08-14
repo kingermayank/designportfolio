@@ -55,6 +55,8 @@
     monospace;
   --font-mono: var(--font-azeret-mono), ui-monospace, SFMono-Regular, Menlo,
     monospace;
+  --font-letter: var(--font-palmer-print), var(--font-palmer-script),
+    "Segoe Print", "Comic Sans MS", cursive;
   --tracking-label: 0.02em;
   --text-display-lg: 44px;
   --text-display: 36px;
@@ -1420,40 +1422,6 @@ button.csNavItem {
   box-sizing: border-box;
 }
 
-.aboutPageBack {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  box-sizing: border-box;
-  height: 38px;
-  min-width: 38px;
-  margin: 0 0 var(--space-5);
-  padding: 0 12px;
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--text);
-  cursor: pointer;
-  font: 400 11px/1 var(--font-body);
-  transition:
-    border-color 167ms linear,
-    color 167ms linear,
-    padding 200ms ease;
-}
-
-.aboutPageBack:hover,
-.aboutPageBack:focus-visible {
-  border-color: var(--color-muted);
-}
-
-.aboutPageBack:hover .backLabel,
-.aboutPageBack:focus-visible .backLabel {
-  max-width: 3em;
-  opacity: 1;
-  margin-left: 5px;
-}
-
 .aboutPageHeader {
   /* Title → lede: 16px (Framer about) */
   margin: 0 0 var(--space-4);
@@ -1491,8 +1459,8 @@ button.csNavItem {
 }
 
 .aboutLedePortrait {
-  /* Lede / Currently → hero: 24px (Framer about) */
-  margin: 24px 0 0;
+  /* Currently → hero: 24px; hero → info cards: 8px (same as Visual Craft). */
+  margin: 24px 0 8px;
   width: 100%;
 }
 
@@ -1501,8 +1469,515 @@ button.csNavItem {
   width: 100%;
   height: auto;
   object-fit: cover;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
+}
+
+.aboutSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: start;
+  width: 100%;
+}
+
+.aboutSplitCol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.aboutCard {
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button.aboutCard {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+button.aboutCard:hover:not(.aboutCardOrigin):not(.aboutCardLetter) {
+  background: color-mix(in srgb, var(--color-surface) 88%, #fff 4%);
+}
+
+button.aboutCard:focus-visible {
+  outline: 1px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.aboutCardLede {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.aboutCardTitle {
+  display: block;
+  margin: 0 0 16px;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.aboutCardBody {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--body-text);
+  text-wrap: pretty;
+}
+
+.aboutCardBody:last-child {
+  margin-bottom: 0;
+}
+
+@property --about-origin-mask {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 38%;
+}
+
+.aboutCardOrigin {
+  align-items: stretch;
+  padding-bottom: 0;
+}
+
+.aboutCardOrigin.is-open {
+  padding-bottom: 24px;
+}
+
+.aboutCardOrigin .aboutCardTitle,
+.aboutCardOrigin .aboutCardBody {
+  transition: color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutCardOriginBody {
+  --about-origin-mask: 38%;
+  position: relative;
+  max-height: 7.2em;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 var(--about-origin-mask),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 var(--about-origin-mask),
+    transparent 100%
+  );
+  transition:
+    max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    --about-origin-mask 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutCardOrigin:hover:not(.is-open) .aboutCardTitle,
+.aboutCardOrigin:focus-visible:not(.is-open) .aboutCardTitle {
+  color: color-mix(in srgb, var(--text) 92%, #fff 8%);
+}
+
+.aboutCardOrigin:hover:not(.is-open) .aboutCardBody,
+.aboutCardOrigin:focus-visible:not(.is-open) .aboutCardBody {
+  color: color-mix(in srgb, var(--body-text) 72%, var(--text) 28%);
+}
+
+.aboutCardOrigin:hover:not(.is-open) .aboutCardOriginBody,
+.aboutCardOrigin:focus-visible:not(.is-open) .aboutCardOriginBody {
+  --about-origin-mask: 50%;
+}
+
+.aboutCardOrigin.is-open .aboutCardOriginBody {
+  --about-origin-mask: 100%;
+  max-height: 80rem;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.aboutCareer {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.aboutCareer > li + li {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 167ms linear;
+}
+
+.aboutCareer > li:hover,
+.aboutCareer > li:has(:focus-visible),
+.aboutCareer > li:hover + li,
+.aboutCareer > li:has(:focus-visible) + li {
+  border-top-color: transparent;
+}
+
+.aboutCareerRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+  margin: 0 -8px;
+  padding: 10px 8px;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+  transition: background-color 167ms linear;
+}
+
+.aboutCareerRow:hover,
+.aboutCareerRow:focus-visible {
+  background: #2b2b2b;
+}
+
+.aboutCareerRow:focus-visible {
+  outline: 1px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.aboutCareerMark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.aboutCareerMark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aboutCareerFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #2b2b2b;
+}
+
+.aboutCareerName {
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.aboutCareerMeta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 0;
+}
+
+.aboutCareerCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+  transition: transform 167ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutCareerRole {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.aboutCareerYear {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--color-faint);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.aboutCareerArrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  display: block;
+  color: var(--muted);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(4px, -50%);
+  transition:
+    opacity 167ms linear,
+    transform 167ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 167ms linear;
+}
+
+.aboutCareerRow:hover .aboutCareerCopy,
+.aboutCareerRow:focus-visible .aboutCareerCopy {
+  transform: translateX(-18px);
+}
+
+.aboutCareerRow:hover .aboutCareerArrow,
+.aboutCareerRow:focus-visible .aboutCareerArrow {
+  opacity: 1;
+  transform: translate(0, -50%);
+  color: var(--text);
+}
+
+.aboutCardPods {
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.aboutCardPods .aboutCardTitle {
+  margin-bottom: 16px;
+}
+
+.aboutPodTicker {
+  margin: 0;
+}
+
+.aboutPodViewport {
+  overflow: hidden;
+  width: 100%;
+  padding: 12px 0 26px;
+  display: flex;
+  align-items: center;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    #000 12%,
+    #000 88%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    #000 12%,
+    #000 88%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.aboutPodTrack {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: max-content;
+  will-change: transform;
+}
+
+.aboutPodItem {
+  --about-pod-size: calc((100cqi - 32px) / 3.15);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--about-pod-size);
+  height: var(--about-pod-size);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.aboutPodArt {
+  display: block;
+  width: 100%;
+  height: var(--about-pod-size);
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #2b2b2b;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 1px 1px rgba(0, 0, 0, 0.28),
+    0 10px 22px rgba(0, 0, 0, 0.42);
+  transform: translateY(0);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutPodItem:hover .aboutPodArt {
+  transform: translateY(-6px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 4px 8px rgba(0, 0, 0, 0.28),
+    0 18px 32px rgba(0, 0, 0, 0.5);
+}
+
+.aboutPodArt img,
+.aboutPodFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #2b2b2b;
+}
+
+.aboutPodName {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  top: calc(100% + 4px);
+  width: max-content;
+  max-width: none;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: visible;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition:
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.aboutPodItem:hover .aboutPodName {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.aboutCardLetter {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.aboutCardLetter .aboutCardTitle {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.aboutCardLetter::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 92px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-surface) 0%, transparent) 0%,
+    var(--color-surface) 100%
+  );
+  transition: height 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutCardLetter:hover::after,
+.aboutCardLetter:focus-visible::after {
+  height: 56px;
+}
+
+.aboutLetterPreview {
+  position: relative;
+  margin: 4px 18px -12px;
+  padding: 20px 18px 48px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(180deg, #f0efeb 0%, #d4d3c7 100%);
+  color: #121413;
+  max-height: 228px;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.92);
+  transform-origin: center bottom;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutCardLetter:hover .aboutLetterPreview,
+.aboutCardLetter:focus-visible .aboutLetterPreview {
+  transform: translateY(-4px) scale(0.92);
+}
+
+.aboutLetterGreeting {
+  margin: 0 0 10px;
+  font-family: var(--font-letter);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 0.95;
+  color: #050505;
+}
+
+.aboutLetterPreview p {
+  margin: 0 0 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #121413;
+}
+
+.aboutLetterPreview p.aboutLetterGreeting {
+  margin: 0 0 10px;
+  font-family: var(--font-letter);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 0.95;
+  color: #050505;
+}
+
+.aboutLetterPreview p:last-child {
+  margin-bottom: 0;
+}
+
+.letterNote:focus {
+  outline: none;
+}
+
+.letterNote:focus-visible {
+  outline: 2px solid #121413;
+  outline-offset: 3px;
 }
 
 .aboutLede {
@@ -1571,7 +2046,7 @@ button.csNavItem {
 /* Koto careers benefits accordion — chromatic hierarchy, border hover, +/− */
 .aboutPrinciple {
   margin: 0;
-  padding: 0 0 4px;
+  padding: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0;
   background: transparent;
@@ -1585,11 +2060,11 @@ button.csNavItem {
 
 .aboutPrincipleSummary {
   display: grid;
-  grid-template-columns: minmax(2.75rem, 11%) 1fr auto;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 26px;
   align-items: center;
   column-gap: 8px;
   width: 100%;
-  padding: 8px 0 12px;
+  padding: 12px 0;
   margin: 0;
   border: 0;
   background: transparent;
@@ -1715,26 +2190,19 @@ button.csNavItem {
 
 .aboutPrinciplePanelInner {
   display: grid;
-  grid-template-columns: minmax(2.75rem, 11%) 1fr;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 26px;
   column-gap: 8px;
   overflow: hidden;
   min-height: 0;
-  padding-right: 8px;
 }
 
 .aboutPrincipleText {
   grid-column: 2;
-  padding: 16px 0;
+  padding: 0 0 12px;
   margin: 0;
   max-width: none;
   color: var(--color-muted);
   text-wrap: pretty;
-}
-
-@media (min-width: 768px) {
-  .aboutPrinciplePanelInner {
-    padding-right: 48px;
-  }
 }
 
 .aboutQuotes {
@@ -1921,6 +2389,13 @@ button.csNavItem {
   background: var(--color-surface);
 }
 
+@media (max-width: 1100px) {
+  .aboutPageContent {
+    /* Clear the fixed back control when the column sits under it. */
+    padding-top: calc(var(--ch-space-5, 24px) + 44px + var(--space-4));
+  }
+}
+
 @media (max-width: 900px) {
   .aboutPageContent {
     padding-left: 1.25rem;
@@ -1928,7 +2403,8 @@ button.csNavItem {
   }
 
   .aboutQuotes,
-  .aboutPtoGrid {
+  .aboutPtoGrid,
+  .aboutSplit {
     grid-template-columns: 1fr;
   }
 }
@@ -1943,10 +2419,9 @@ button.csNavItem {
     white-space: normal;
   }
 
-  .aboutPageBack {
-    margin-bottom: var(--space-4);
+  .aboutPageContent {
+    padding-top: calc(var(--ch-space-3, 12px) + 44px + var(--space-4));
   }
-
 }
 
 /* ---------- Work (koto.com/work) ---------- */
@@ -3712,8 +4187,8 @@ button.csNavItem {
 }
 
 .aboutCurrently {
-  /* Match intro lede size; sits under lede, above hero */
-  margin: 16px 0 0;
+  /* Sits under the page title, above the hero */
+  margin: 0;
   font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
@@ -3861,8 +4336,35 @@ button.csNavItem {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .workTickerTrack {
+  .workTickerTrack,
+  .aboutPodTrack {
     transform: none !important;
+  }
+
+  .aboutPodArt,
+  .aboutPodName {
+    transition: none;
+  }
+
+  .aboutPodItem:hover .aboutPodArt {
+    transform: none;
+  }
+
+  .aboutPodItem:hover .aboutPodName {
+    transform: translate(-50%, 0);
+  }
+
+  .aboutCareerArrow,
+  .aboutCareerCopy {
+    transition: none;
+  }
+
+  .aboutCardOriginBody,
+  .aboutCardOrigin .aboutCardTitle,
+  .aboutCardOrigin .aboutCardBody,
+  .aboutLetterPreview,
+  .aboutCardLetter::after {
+    transition: none;
   }
 }
 
@@ -3911,6 +4413,7 @@ button.csNavItem {
 .intCopyBtn {
   position: relative;
   font-weight: 500;
+  text-decoration: none;
 }
 
 .intCopyIcon {
@@ -3998,8 +4501,10 @@ button.csNavItem {
 
 .letterNote {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: min(646px, 100%);
-  padding: 40px 40px 28px;
+  padding: 40px 40px 4px;
   border-radius: 12px;
   background: linear-gradient(180deg, #f0efeb 0%, #d4d3c7 100%);
   box-shadow: 2px 4px 4px rgba(171, 171, 171, 0.25);
@@ -4034,75 +4539,60 @@ button.csNavItem {
 
 .letterSignoff {
   margin: 16px 0 0;
-  font-family: var(--font-letter), "Segoe Print", "Comic Sans MS", cursive;
-  font-size: 22px;
+  font-family: var(--font-letter);
+  font-size: 36px;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: calc(0.9em - 4px);
   color: #050505;
 }
 
-.letterCta {
-  position: absolute;
-  right: 40px;
-  bottom: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 34px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: var(--radius-pill);
+.letterCopyBtn {
+  align-self: flex-end;
+  margin-top: 24px;
   background: #121413;
+  border: 1px solid #121413;
   color: #ffffff;
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1;
-  cursor: pointer;
-  transition: opacity 167ms linear;
+  text-decoration: none;
 }
 
-.letterCta:hover {
-  opacity: 0.88;
+.letterCopyBtn:hover {
+  background: #2a2a2a;
+  border-color: #2a2a2a;
+  filter: none;
 }
 
-.letterCta:focus-visible {
+.letterCopyBtn:focus-visible {
   outline: 2px solid #121413;
   outline-offset: 2px;
 }
 
 .letterHint {
-  margin: 36px 0 0;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 400;
+  margin: 20px 0 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
   line-height: 1.4;
-  color: color-mix(in srgb, #121413 45%, transparent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  color: color-mix(in srgb, #121413 42%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .workFitBtn,
-  .letterCta {
+  .workFitBtn {
     transition: none;
   }
 }
 
 @media (max-width: 720px) {
   .letterNote {
-    padding: 28px 22px 22px;
+    padding: 28px 22px 4px;
   }
 
-  .letterGreeting {
+  .letterGreeting,
+  .letterSignoff {
     font-size: 28px;
-  }
-
-  .letterCta {
-    position: static;
-    margin-top: 20px;
-  }
-
-  .letterHint {
-    margin-top: 16px;
   }
 }
 
@@ -4190,10 +4680,10 @@ button.csNavItem {
 }
 
 .workHoverYear {
-  font-family: var(--font-body);
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   color: var(--faint);
   margin-top: 2px;
 }
@@ -4804,8 +5294,8 @@ button.csNavItem {
 
 .chBack {
   position: fixed;
-  top: var(--ch-space-5);
-  left: var(--ch-space-5);
+  top: var(--ch-space-5, 24px);
+  left: var(--ch-space-5, 24px);
   z-index: 50;
   display: inline-flex;
   align-items: center;
@@ -5167,8 +5657,8 @@ button.csNavItem {
   }
 
   .chBack {
-    top: var(--ch-space-3);
-    left: var(--ch-space-3);
+    top: var(--ch-space-3, 12px);
+    left: var(--ch-space-3, 12px);
   }
 
   .chActions {

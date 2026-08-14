@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Azeret_Mono, Caveat } from "next/font/google";
+import { Azeret_Mono } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
 import "./globals.css";
 
 // The whole site runs on three faces: Azeret (everything), Azeret Mono (small
 // labels — dates, badges, button text), and Cesare (the Work 1 wordmark).
-// Caveat is the one exception, scoped to the hiring letter's handwriting.
+// Palmer Lake is scoped to the hiring letter greeting and signoff.
 // Azeret is a trial licence — only Regular and Medium ship, so 600 maps onto
 // Medium rather than synthesizing a bold.
 const azeret = localFont({
@@ -33,6 +33,7 @@ const azeret = localFont({
 
 const azeretMono = Azeret_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
   variable: "--font-azeret-mono",
   display: "swap",
 });
@@ -46,11 +47,20 @@ const cesare = localFont({
   display: "swap",
 });
 
-// Hiring letter greeting / signature (handwritten note aesthetic)
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-letter",
+// Hiring letter greeting / signoff — Palmer Lake Print (caps) + Script (lc)
+const palmerLakePrint = localFont({
+  src: "../public/fonts/PalmerLakePrint-Regular.woff2",
+  weight: "400",
+  style: "normal",
+  variable: "--font-palmer-print",
+  display: "swap",
+});
+
+const palmerLakeScript = localFont({
+  src: "../public/fonts/PalmerLakeScript-Regular.woff2",
+  weight: "400",
+  style: "normal",
+  variable: "--font-palmer-script",
   display: "swap",
 });
 
@@ -107,7 +117,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${azeret.variable} ${azeretMono.variable} ${cesare.variable} ${caveat.variable} ${gothamNarrow.variable}`}
+      className={`${azeret.variable} ${azeretMono.variable} ${cesare.variable} ${palmerLakePrint.variable} ${palmerLakeScript.variable} ${gothamNarrow.variable}`}
     >
       <body>
         <PageTransition>{children}</PageTransition>

@@ -8,7 +8,7 @@ export const HIRING_LETTER = {
   ],
   signoff: "Talk soon,",
   signature: "Mayank",
-  cta: "Start the conversation →",
+  cta: "Get in touch",
   email: "kingermayank@gmail.com",
   dismissHint: "[Tap outside to dismiss]",
 };

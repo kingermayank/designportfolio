@@ -1,5 +1,7 @@
 export { default as CaseHero, onAccent } from "./CaseHero";
-export type { CaseHeroBack, CaseHeroProps, CaseHeroTone } from "./CaseHero";
+export type { CaseHeroProps, CaseHeroTone } from "./CaseHero";
+export { default as CaseBack } from "./CaseBack";
+export type { CaseHeroBack } from "./CaseBack";
 
 export { default as ContentCard } from "./ContentCard";
 export type { ContentCardProps } from "./ContentCard";
