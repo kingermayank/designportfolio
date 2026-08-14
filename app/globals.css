@@ -1522,13 +1522,18 @@ button.aboutCard:focus-visible {
   text-wrap: pretty;
 }
 
-/* Work philosophy — full-width card under the split, not a 50/50 column. */
-.aboutCardPhilosophy {
+.aboutSplitMid {
   margin-top: 8px;
 }
 
+.aboutCardPhilosophy {
+  min-width: 0;
+}
+
 .aboutCardTestimonials {
-  margin-top: 8px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .aboutCardPhilosophy .aboutCardTitle {
@@ -1947,6 +1952,10 @@ button.aboutCard:focus-visible {
   margin-bottom: 0;
 }
 
+.letterNote:hover {
+  transform: rotate(-0.5deg);
+}
+
 .letterNote:focus {
   outline: none;
 }
@@ -2195,6 +2204,10 @@ button.aboutCard:focus-visible {
    compact avatar beside the name block below. */
 .aboutTm {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* The rule above the quote is the autoplay progress track. */
@@ -2285,14 +2298,20 @@ button.aboutCard:focus-visible {
    switching never resizes the card. */
 .aboutTmViewport {
   display: grid;
+  grid-template-rows: 1fr;
+  flex: 1 1 auto;
+  min-height: 0;
   margin-top: 32px;
 }
 
 .aboutTmItem {
   grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
   margin: 0;
-  /* Narrow measure keeps the quote readable rather than full-bleed. */
-  max-width: 62ch;
+  max-width: none;
   opacity: 0;
   transform: translateX(var(--tm-x, 0));
   pointer-events: none;
@@ -2328,7 +2347,8 @@ button.aboutCard:focus-visible {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: auto;
+  padding-top: 20px;
 }
 
 /* Fixed square, cover-fit — never stretched or oddly cropped. */
@@ -2338,7 +2358,7 @@ button.aboutCard:focus-visible {
   width: 44px;
   height: 44px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 50%;
   background: var(--color-border);
 }
 
@@ -2395,6 +2415,11 @@ button.aboutCard:focus-visible {
   /* Autoplay is disabled, so the track carries no fill. */
   .aboutTmProgressFill {
     display: none;
+  }
+
+  /* Letter keeps its tilt but does not animate into it. */
+  .letterNote {
+    transition: none;
   }
 }
 
@@ -4642,6 +4667,21 @@ button.aboutCard:focus-visible {
   padding: 24px;
   background: color-mix(in srgb, #000 45%, transparent);
   cursor: pointer;
+  animation: letterScrimIn 260ms linear both;
+  transition: opacity 380ms linear;
+}
+
+.letterScrim.is-static {
+  animation: none;
+}
+
+@keyframes letterScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .letterNote {
@@ -4651,6 +4691,11 @@ button.aboutCard:focus-visible {
   width: min(646px, 100%);
   padding: 40px 40px 4px;
   border-radius: 12px;
+  /* Rests on a slight tilt and straightens toward the cursor. The open/close
+     flight sets an inline transform, then hands control back here. */
+  transform: rotate(-2deg);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
   background: linear-gradient(180deg, #f0efeb 0%, #d4d3c7 100%);
   box-shadow: 2px 4px 4px rgba(171, 171, 171, 0.25);
   color: #121413;

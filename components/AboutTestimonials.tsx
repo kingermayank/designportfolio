@@ -17,8 +17,8 @@ const AUTOPLAY_MS = 7000;
  *
  * The rule above the quote doubles as the progress track: a white fill sweeps
  * left to right over AUTOPLAY_MS, then the next testimonial takes over and the
- * fill resets. The fill is written straight to the DOM inside the rAF loop, so
- * the animation runs at frame rate without re-rendering React 60 times a second.
+ * fill resets. Arrow clicks jump to the previous or next quote and restart the
+ * same left-to-right timer — autoplay always advances forward.
  *
  * Every item stays mounted in one grid cell — only the active one is visible —
  * so the card is always as tall as the longest quote and switching never
@@ -36,8 +36,6 @@ export default function AboutTestimonials({
   const rootRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const elapsedRef = useRef(0);
-  const hoverRef = useRef(false);
-  const focusRef = useRef(false);
 
   const paintFill = (value: number) => {
     if (fillRef.current) {
@@ -62,35 +60,6 @@ export default function AboutTestimonials({
 
   const step = (dir: number) => goTo((index + dir + total) % total);
 
-  // Native listeners rather than React's synthesized enter/leave: those are
-  // derived from pointerover/out and miss a pointer that is already inside.
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
-    const on = () => {
-      hoverRef.current = true;
-    };
-    const off = () => {
-      hoverRef.current = false;
-    };
-    const focusOn = () => {
-      focusRef.current = true;
-    };
-    const focusOff = () => {
-      focusRef.current = false;
-    };
-    el.addEventListener("pointerenter", on);
-    el.addEventListener("pointerleave", off);
-    el.addEventListener("focusin", focusOn);
-    el.addEventListener("focusout", focusOff);
-    return () => {
-      el.removeEventListener("pointerenter", on);
-      el.removeEventListener("pointerleave", off);
-      el.removeEventListener("focusin", focusOn);
-      el.removeEventListener("focusout", focusOff);
-    };
-  }, []);
-
   useEffect(() => {
     if (reduced || total < 2) return;
     let frame = 0;
@@ -99,13 +68,10 @@ export default function AboutTestimonials({
     const tick = (now: number) => {
       const delta = now - last;
       last = now;
-      // Hover / focus holds the progress where it is rather than resetting it.
-      if (!hoverRef.current && !focusRef.current) {
-        elapsedRef.current += delta;
-        if (elapsedRef.current >= AUTOPLAY_MS) {
-          elapsedRef.current = 0;
-          setIndex((i) => (i + 1) % total);
-        }
+      elapsedRef.current += delta;
+      if (elapsedRef.current >= AUTOPLAY_MS) {
+        elapsedRef.current = 0;
+        setIndex((i) => (i + 1) % total);
       }
       paintFill(Math.min(elapsedRef.current / AUTOPLAY_MS, 1));
       frame = requestAnimationFrame(tick);

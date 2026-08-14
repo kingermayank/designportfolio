@@ -107,6 +107,8 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
     registerSection?.(i, el);
   const [letterOpen, setLetterOpen] = useState(false);
+  // Where the letter should fly out of / back into.
+  const [letterOrigin, setLetterOrigin] = useState<DOMRect | null>(null);
 
   return (
     <div className="aboutFlow">
@@ -204,7 +206,10 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           <button
             type="button"
             className="aboutCard aboutCardLetter"
-            onClick={() => setLetterOpen(true)}
+            onClick={(e) => {
+              setLetterOrigin(e.currentTarget.getBoundingClientRect());
+              setLetterOpen(true);
+            }}
             aria-haspopup="dialog"
             aria-expanded={letterOpen}
           >
@@ -221,21 +226,25 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
         </div>
       </div>
 
-      {/* Full width, below both columns — the philosophy needs the whole
-          measure rather than half of a split. */}
-      <section className="aboutCard aboutCardPhilosophy">
-        <h2 className="aboutCardTitle">{ABOUT_PHILOSOPHY.title}</h2>
-        <p className="aboutCardBody">{ABOUT_PHILOSOPHY.lede}</p>
-        <PhilosophyAccordion principles={ABOUT_PHILOSOPHY.principles} />
-      </section>
+      {/* Philosophy left, testimonials right — same 8px gutter as the cards above. */}
+      <div className="aboutSplit aboutSplitMid">
+        <section className="aboutCard aboutCardPhilosophy">
+          <h2 className="aboutCardTitle">{ABOUT_PHILOSOPHY.title}</h2>
+          <p className="aboutCardBody">{ABOUT_PHILOSOPHY.lede}</p>
+          <PhilosophyAccordion principles={ABOUT_PHILOSOPHY.principles} />
+        </section>
+
+        <div ref={ref(0)} className="aboutCard aboutCardTestimonials">
+          <AboutTestimonials testimonials={TESTIMONIALS} />
+        </div>
+      </div>
 
       {letterOpen ? (
-        <HiringLetterOverlay onClose={() => setLetterOpen(false)} />
+        <HiringLetterOverlay
+          origin={letterOrigin}
+          onClose={() => setLetterOpen(false)}
+        />
       ) : null}
-
-      <div ref={ref(0)} className="aboutCard aboutCardTestimonials">
-        <AboutTestimonials testimonials={TESTIMONIALS} />
-      </div>
 
       <div ref={ref(1)} className="aboutPtoGrid">
           {[0, 1].map((col) => (
