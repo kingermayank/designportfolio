@@ -13,6 +13,7 @@ import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import CommentCardAnatomy from "@/components/pathai/CommentCardAnatomy";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
 import Rise from "@/components/Rise";
+import SiteFooter from "@/components/SiteFooter";
 
 // /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg — every asset has one, so a
 // video shows its first frame immediately instead of flashing its backdrop.
@@ -686,6 +687,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     </p>
                   </section>
                 ) : null}
+
+                <SiteFooter />
               </div>
             ) : <>
             <div className="csPanel csDetailPanel" style={{ height: rootH }}>

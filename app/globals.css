@@ -189,6 +189,29 @@ body {
   padding: 0 var(--space-4);
 }
 
+.siteFooter {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px max(28px, env(safe-area-inset-bottom));
+}
+
+.siteFooterCopy {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  text-align: center;
+}
+
 /* Work / grid switch — bottom right, no label and no icon. */
 .modeToggle {
   position: absolute;
@@ -973,28 +996,6 @@ body {
   color: var(--color-accent-orange);
 }
 
-.aboutPronunciation {
-  display: inline;
-  margin-left: 0.4em;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  font-style: italic;
-  letter-spacing: inherit;
-  line-height: inherit;
-  text-decoration: none;
-  text-transform: none;
-  color: var(--muted);
-  vertical-align: baseline;
-  white-space: nowrap;
-  transition: opacity 150ms ease;
-}
-
-.aboutPronunciation:hover {
-  opacity: 0.72;
-  color: var(--muted);
-}
-
 button.csNavItem {
   display: block;
   width: 100%;
@@ -1411,8 +1412,9 @@ button.csNavItem {
 }
 
 .aboutPageContent {
+  /* Same column as editorial case studies (Visual Craft). */
   --about-gutter: clamp(1rem, 5vw, 5rem);
-  --about-content-width: 900px;
+  --about-content-width: 71.25rem;
   --about-inset: max(
     var(--about-gutter),
     calc((100% - var(--about-content-width)) / 2)
@@ -1428,11 +1430,11 @@ button.csNavItem {
 }
 
 .aboutPageTitle {
-  margin: 0;
+  margin: 8px 0 0;
   font-family: var(--font-cesare), "Times New Roman", serif;
   font-weight: 400;
-  font-size: 48px;
-  line-height: 48px;
+  font-size: 64px;
+  line-height: 64px;
   letter-spacing: -0.01em;
   color: var(--text);
 }
@@ -1440,15 +1442,6 @@ button.csNavItem {
 .aboutFlow {
   width: 100%;
   max-width: none;
-}
-
-/* Section rhythm: ~48px between blocks (Framer about) */
-.aboutFlow .aboutSection {
-  margin: 48px 0;
-}
-
-.aboutFlow .aboutSection:first-of-type {
-  margin-top: 48px;
 }
 
 .aboutLedeSection {
@@ -1477,7 +1470,7 @@ button.csNavItem {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  align-items: start;
+  align-items: stretch;
   width: 100%;
 }
 
@@ -1486,6 +1479,7 @@ button.csNavItem {
   flex-direction: column;
   gap: 8px;
   min-width: 0;
+  min-height: 0;
 }
 
 .aboutCard {
@@ -1520,7 +1514,7 @@ button.aboutCard:focus-visible {
 .aboutCardLede {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 400;
   line-height: 1.3;
   letter-spacing: -0.02em;
@@ -1528,12 +1522,33 @@ button.aboutCard:focus-visible {
   text-wrap: pretty;
 }
 
+/* Work philosophy — full-width card under the split, not a 50/50 column. */
+.aboutCardPhilosophy {
+  margin-top: 8px;
+}
+
+.aboutCardTestimonials {
+  margin-top: 8px;
+}
+
+.aboutCardPhilosophy .aboutCardTitle {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  margin-bottom: 8px;
+}
+
+/* The accordion already draws its own rules; it needs no extra top gap here. */
+.aboutCardPhilosophy .aboutPrinciples {
+  margin-top: 28px;
+}
+
 .aboutCardTitle {
   display: block;
   margin: 0 0 16px;
   font-family: var(--font-body);
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 400;
   line-height: 1.3;
   letter-spacing: -0.02em;
   color: var(--text);
@@ -1554,66 +1569,15 @@ button.aboutCard:focus-visible {
   margin-bottom: 0;
 }
 
-@property --about-origin-mask {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 38%;
-}
-
 .aboutCardOrigin {
   align-items: stretch;
-  padding-bottom: 0;
-}
-
-.aboutCardOrigin.is-open {
-  padding-bottom: 24px;
-}
-
-.aboutCardOrigin .aboutCardTitle,
-.aboutCardOrigin .aboutCardBody {
-  transition: color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .aboutCardOriginBody {
-  --about-origin-mask: 38%;
-  position: relative;
-  max-height: 7.2em;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 var(--about-origin-mask),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 var(--about-origin-mask),
-    transparent 100%
-  );
-  transition:
-    max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    --about-origin-mask 220ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.aboutCardOrigin:hover:not(.is-open) .aboutCardTitle,
-.aboutCardOrigin:focus-visible:not(.is-open) .aboutCardTitle {
-  color: color-mix(in srgb, var(--text) 92%, #fff 8%);
-}
-
-.aboutCardOrigin:hover:not(.is-open) .aboutCardBody,
-.aboutCardOrigin:focus-visible:not(.is-open) .aboutCardBody {
-  color: color-mix(in srgb, var(--body-text) 72%, var(--text) 28%);
-}
-
-.aboutCardOrigin:hover:not(.is-open) .aboutCardOriginBody,
-.aboutCardOrigin:focus-visible:not(.is-open) .aboutCardOriginBody {
-  --about-origin-mask: 50%;
-}
-
-.aboutCardOrigin.is-open .aboutCardOriginBody {
-  --about-origin-mask: 100%;
-  max-height: 80rem;
-  -webkit-mask-image: none;
-  mask-image: none;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .aboutCareer {
@@ -1675,6 +1639,15 @@ button.aboutCard:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.aboutCareerMark.is-contain {
+  background: #fff;
+}
+
+.aboutCareerMark.is-contain img {
+  object-fit: contain;
+  object-position: center;
 }
 
 .aboutCareerFill {
@@ -1889,6 +1862,8 @@ button.aboutCard:focus-visible {
 .aboutCardLetter {
   position: relative;
   overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
   padding-bottom: 0;
 }
 
@@ -1923,12 +1898,13 @@ button.aboutCard:focus-visible {
 
 .aboutLetterPreview {
   position: relative;
+  flex: 1 1 auto;
   margin: 4px 18px -12px;
   padding: 20px 18px 48px;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   background: linear-gradient(180deg, #f0efeb 0%, #d4d3c7 100%);
   color: #121413;
-  max-height: 228px;
+  min-height: 228px;
   overflow: hidden;
   transform: translateY(20px) scale(0.92);
   transform-origin: center bottom;
@@ -2040,7 +2016,6 @@ button.aboutCard:focus-visible {
   list-style: none;
   margin: var(--space-5) 0 0;
   padding: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Koto careers benefits accordion — chromatic hierarchy, border hover, +/− */
@@ -2055,7 +2030,11 @@ button.aboutCard:focus-visible {
 
 .aboutPrinciple:hover,
 .aboutPrinciple.is-open {
-  border-top-color: rgba(255, 255, 255, 0.5);
+  border-top-color: var(--color-accent-orange);
+}
+
+.aboutPrinciple.is-open {
+  cursor: pointer;
 }
 
 .aboutPrincipleSummary {
@@ -2073,6 +2052,11 @@ button.aboutCard:focus-visible {
   text-align: left;
   cursor: pointer;
   user-select: none;
+  transition: padding-bottom 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aboutPrinciple.is-open .aboutPrincipleSummary {
+  padding-bottom: 4px;
 }
 
 .aboutPrincipleSummary:focus-visible {
@@ -2093,8 +2077,7 @@ button.aboutCard:focus-visible {
 
 @media (min-width: 640px) {
   .aboutPrincipleIndex,
-  .aboutPrincipleTitle,
-  .aboutPrincipleText {
+  .aboutPrincipleTitle {
     font-size: 16px;
   }
 }
@@ -2181,6 +2164,8 @@ button.aboutCard:focus-visible {
 .aboutPrinciplePanel {
   display: grid;
   grid-template-rows: 0fr;
+  align-content: start;
+  overflow: hidden;
   transition: grid-template-rows 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2191,6 +2176,7 @@ button.aboutCard:focus-visible {
 .aboutPrinciplePanelInner {
   display: grid;
   grid-template-columns: 2.75rem minmax(0, 1fr) 26px;
+  align-content: start;
   column-gap: 8px;
   overflow: hidden;
   min-height: 0;
@@ -2205,71 +2191,220 @@ button.aboutCard:focus-visible {
   text-wrap: pretty;
 }
 
-.aboutQuotes {
+/* Testimonials — one at a time. Counter and prev/next sit in the rule above;
+   compact avatar beside the name block below. */
+.aboutTm {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+}
+
+/* The rule above the quote is the autoplay progress track. */
+.aboutTmProgress {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.aboutTmProgressFill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.aboutTmBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--space-4);
+  padding-top: 16px;
 }
 
-.aboutQuote {
+.aboutTmCounter,
+.aboutTmName,
+.aboutTmRole {
   margin: 0;
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  padding: var(--space-5) var(--space-4) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
-.aboutQuote blockquote {
-  margin: 0 0 var(--space-4);
-  font-size: 15px;
+.aboutTmCounterNow {
+  color: var(--text);
+}
+
+.aboutTmCounterTotal {
+  color: var(--muted);
+}
+
+.aboutTmNav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.aboutTmArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 167ms linear, background-color 167ms linear;
+}
+
+.aboutTmArrow svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.aboutTmArrow:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.aboutTmArrow:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* Single cell: every item stacks here, so the height is the tallest quote and
+   switching never resizes the card. */
+.aboutTmViewport {
+  display: grid;
+  margin-top: 32px;
+}
+
+.aboutTmItem {
+  grid-area: 1 / 1;
+  margin: 0;
+  /* Narrow measure keeps the quote readable rather than full-bleed. */
+  max-width: 62ch;
+  opacity: 0;
+  transform: translateX(var(--tm-x, 0));
+  pointer-events: none;
+  transition: opacity 240ms linear, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aboutTmItem.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.aboutTmMark {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.aboutTmQuote {
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 20px;
   font-weight: 400;
-  line-height: 23px;
-  color: var(--body-text);
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  color: var(--text);
   text-wrap: pretty;
 }
 
-.aboutQuote figcaption {
+.aboutTmAttr {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 12px;
+  margin-top: 20px;
 }
 
-.aboutQuoteAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
+/* Fixed square, cover-fit — never stretched or oddly cropped. */
+.aboutTmAvatar {
+  flex: none;
+  display: block;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 6px;
   background: var(--color-border);
 }
 
-.aboutQuoteMeta {
+.aboutTmAvatar img,
+.aboutTmAvatarFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aboutTmMeta {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
 }
 
-.aboutQuoteName {
-  font-size: 13px;
-  font-weight: 500;
+.aboutTmName {
   color: var(--text);
 }
 
-.aboutQuoteRole {
-  font-family: var(--font-label);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--faint);
+.aboutTmRole {
+  color: var(--muted);
 }
+
+@media (max-width: 900px) {
+  .aboutTmViewport {
+    margin-top: 24px;
+  }
+
+  .aboutTmItem {
+    max-width: none;
+  }
+
+  /* Avatar stacks above the name block, same gap and padding rules. */
+  .aboutTmAttr {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .aboutTmQuote {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aboutTmItem {
+    transform: none;
+    transition: opacity 167ms linear;
+  }
+
+  /* Autoplay is disabled, so the track carries no fill. */
+  .aboutTmProgressFill {
+    display: none;
+  }
+}
+
 
 .aboutPtoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   align-items: start;
+  margin-top: 8px;
 }
 
 .aboutPtoCol {
@@ -2402,23 +2537,28 @@ button.aboutCard:focus-visible {
     padding-right: 1.25rem;
   }
 
-  .aboutQuotes,
   .aboutPtoGrid,
   .aboutSplit {
     grid-template-columns: 1fr;
   }
+
+  .aboutCardOrigin,
+  .aboutCardLetter {
+    flex: none;
+  }
+
+  .aboutCardOriginBody {
+    flex: none;
+  }
+
+  .aboutLetterPreview {
+    flex: none;
+    max-height: 228px;
+    min-height: 0;
+  }
 }
 
 @media (max-width: 560px) {
-  .aboutPageTitle {
-    font-size: 36px;
-    line-height: 40px;
-  }
-
-  .aboutPronunciation {
-    white-space: normal;
-  }
-
   .aboutPageContent {
     padding-top: calc(var(--ch-space-3, 12px) + 44px + var(--space-4));
   }
@@ -2430,6 +2570,7 @@ button.aboutCard:focus-visible {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   background: var(--window);
   overflow-y: auto;
@@ -2889,8 +3030,8 @@ button.aboutCard:focus-visible {
 .sysGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* Koto: md:gap-x-4 with a 24px row rhythm. */
-  gap: 24px 16px;
+  /* Uniform gutter — same value horizontally and vertically. */
+  gap: 24px;
   padding: 0;
   align-items: start;
 }
@@ -2918,10 +3059,15 @@ button.aboutCard:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* Constant — the bleed never animates, so the card's height is fixed and
+     the grid below it never shifts. The hover inset is done with a transform,
+     which scales the media, title, and chips together without reflowing them
+     (a width change would re-wrap the title and shrink the 16/9 media). */
   margin: -8px;
   padding: 0;
   border-radius: 0;
-  transition: margin 150ms ease-out;
+  transform-origin: center;
+  transition: transform 150ms ease-out;
 }
 
 .sysCard:hover,
@@ -2932,7 +3078,9 @@ button.aboutCard:focus-visible {
 
 .sysCard:hover .sysCardInset,
 .sysCard:focus-visible .sysCardInset {
-  margin: 0;
+  /* X and Y are measured per card so the revealed gutter is equal on all four
+     sides; the fallbacks apply before the observer runs. */
+  transform: scale(var(--sys-sx, 0.95), var(--sys-sy, 0.95));
 }
 
 /* Radius lives only here — overflow clips the image, never animated. */
@@ -3444,7 +3592,7 @@ button.aboutCard:focus-visible {
 @media (max-width: 900px) {
   .sysGrid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 24px;
   }
 
   .sysOverlayClose {
@@ -3477,7 +3625,7 @@ button.aboutCard:focus-visible {
 
   .sysCard:hover .sysCardInset,
   .sysCard:focus-visible .sysCardInset {
-    margin: -8px;
+    transform: none;
   }
 }
 
@@ -3690,7 +3838,7 @@ button.aboutCard:focus-visible {
   margin: 0;
   font-family: var(--font-body);
   font-size: 36px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--color-text);
@@ -4359,9 +4507,6 @@ button.aboutCard:focus-visible {
     transition: none;
   }
 
-  .aboutCardOriginBody,
-  .aboutCardOrigin .aboutCardTitle,
-  .aboutCardOrigin .aboutCardBody,
   .aboutLetterPreview,
   .aboutCardLetter::after {
     transition: none;

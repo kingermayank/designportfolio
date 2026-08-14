@@ -12,6 +12,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
+import SiteFooter from "@/components/SiteFooter";
 import SystemsDetailOverlay from "@/components/SystemsDetailOverlay";
 import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
@@ -36,6 +37,9 @@ const LENS_INDEX: Record<WorkLensId, number> = {
 };
 
 const LENS_EASE = [0.22, 1, 0.36, 1] as const;
+
+/** Even gutter revealed on Systems card hover, in px on every side. */
+const SYS_HOVER_INSET = 12;
 
 // Lens panes travel along the nav: moving right in the list slides the new pane
 // in from the right while the old one leaves to the left, and vice versa.
@@ -110,6 +114,7 @@ const LOGO_BY_SLUG: Record<string, string> = {
   pathai: "/logos/pathai.png?v=2",
   bigbasket: "/logos/bigbasket.png?v=2",
   walkity: "/logos/walkity.png?v=2",
+  rolipoli: "/logos/rolipoli.png",
 };
 
 type Card = {
@@ -291,9 +296,29 @@ function SystemsCard({
   const tags = Array.from(
     new Set([item.badge, study?.category].filter(Boolean) as string[]),
   );
+  const cardRef = useRef<HTMLButtonElement>(null);
+
+  // A single scale factor removes a percentage of each dimension, so a card
+  // that's wider than it is tall insets more on the sides than top/bottom.
+  // Deriving X and Y from the card's own size keeps all four gutters equal.
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const measure = () => {
+      const { width, height } = el.getBoundingClientRect();
+      if (!width || !height) return;
+      el.style.setProperty("--sys-sx", String(1 - (SYS_HOVER_INSET * 2) / width));
+      el.style.setProperty("--sys-sy", String(1 - (SYS_HOVER_INSET * 2) / height));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <button
+      ref={cardRef}
       type="button"
       className="sysCard"
       onClick={onOpen}
@@ -625,6 +650,8 @@ export default function Work() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      <SiteFooter />
 
       {engActive ? (
         <EngDetailModal item={engActive} onClose={() => setEngActive(null)} />

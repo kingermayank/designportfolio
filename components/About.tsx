@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ABOUT_INTRO } from "@/lib/about";
 import AboutContent from "@/components/AboutContent";
 import CaseBack from "@/components/case-hero/CaseBack";
 import Rise from "@/components/Rise";
+import SiteFooter from "@/components/SiteFooter";
 
 type AboutProps = {
   onClose?: () => void;
@@ -35,14 +35,6 @@ export default function About({ onClose }: AboutProps) {
               <h1 className="aboutPageTitle">
                 Hey there, I&apos;m Mayank
                 <span className="workBrandDot">.</span>
-                <a
-                  className="aboutPronunciation"
-                  href={ABOUT_INTRO.pronunciationHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {ABOUT_INTRO.pronunciation}
-                </a>
               </h1>
             </Rise>
           </header>
@@ -51,6 +43,8 @@ export default function About({ onClose }: AboutProps) {
             <AboutContent />
           </div>
         </div>
+
+        <SiteFooter />
       </div>
     </div>
   );

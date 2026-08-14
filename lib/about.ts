@@ -1,10 +1,3 @@
-export type AboutSection = {
-  nav: string;
-  heading: string;
-  body: string[];
-  principles?: { title: string; text: string }[];
-};
-
 export type Testimonial = {
   quote: string;
   name: string;
@@ -49,8 +42,7 @@ export const ABOUT_INTRO = {
 };
 
 export const ABOUT_ORIGIN = {
-  heading:
-    "Shaped by 7+ years of designing, building, learning, and experimenting",
+  heading: "How it all started.",
   body: [
     "I've always been passionate about creating and technology, so pursuing a degree in Computer Science during my undergraduate studies felt like a natural choice. However, I quickly realized that I was more interested in understanding the underlying principles and rationale behind the code I was writing. This led me to explore the world of design and creative fields like visual design, AR/VR, game design, and filmmaking, while working with student organizations and early-stage startups. Through these experiences, I developed a deep appreciation for the creative problem-solving involved in design.",
     "This background has shaped me into a designer who values scalability and embraces a systems-thinking approach, enabling me to thrive in ambiguous environments while collaborating with cross-functional teams.",
@@ -106,6 +98,7 @@ export const ABOUT_CAREER: {
   title: string;
   year: string;
   logo?: string;
+  logoFit?: "contain";
   href: string;
 }[] = [
   {
@@ -126,6 +119,8 @@ export const ABOUT_CAREER: {
     company: "UMS",
     title: "Visual Designer",
     year: "2021-2022",
+    logo: "/logos/ums.jpeg",
+    logoFit: "contain",
     href: "https://www.linkedin.com/company/university-musical-society",
   },
   {
@@ -146,28 +141,16 @@ export const ABOUT_CAREER: {
     company: "SureLocal",
     title: "Founding Designer",
     year: "2019",
+    logo: "/logos/surelocal.png",
     href: "https://www.linkedin.com/company/surelocal",
   },
 ];
 
-export const ABOUT_SECTIONS: AboutSection[] = [
-  {
-    nav: "AI",
-    heading: "How my work is evolving with AI.",
-    body: [
-      "My goal this year is to transition from an AI-enabled designer to a design engineer, someone who not only ships what he designs, but also debug sloppy code and fully own the front-end.",
-      "I primarily iterate using code-based workflows using tools like Cursor and Claude Code, turning ideas directly into working prototypes. At work, I'm building an LLM-aware design system that exposes tokens and components directly to the model, enabling context-aware, agentic development. This extends into a \"vibe coding\" starter kit that allows product teams to rapidly experiment and spin up production-quality proofs of concept.",
-      "I've built a solid foundation in React and TypeScript, and I'm going deeper into motion with GSAP and Framer Motion. At the same time, I'm intentionally pushing my visual craft, brand design, and creative direction. AI can get you to a 7/10 experience by default, but the real leverage now is in taking that to a 15/10. I've been experimenting with Rive and Figma Weave to go beyond static design into rich, expressive, and interactive visual experiences.",
-      "It's intense and sometimes exhausting, but it's unlocking a level of velocity and creative expression I couldn't reach before and I'm all in.",
-    ],
-  },
-  {
-    nav: "Philosophy",
-    heading: "My work philosophy.",
-    body: [
-      "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. I feel that designers owe a certain amount of responsibility not just towards their work but also towards society and its people.",
-    ],
-    principles: [
+/** Work philosophy — its own full-width card, not a story section. */
+export const ABOUT_PHILOSOPHY = {
+  title: "My work philosophy",
+  lede: "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. I feel that designers owe a certain amount of responsibility not just towards their work but also towards society and its people.",
+  principles: [
       {
         title: "Beauty is in the details.",
         text: "I believe that great design is in the nuances, and I put in the extra effort to make sure every interaction feels just right. Over the years, I've developed a keen sense of taste that guides me in creating designs that are both refined and impactful.",
@@ -204,9 +187,8 @@ export const ABOUT_SECTIONS: AboutSection[] = [
         title: "Commitment to giving back.",
         text: "I'm passionate about helping others grow. I've been fortunate to receive help from countless people I could never fully repay, and I'm committed to giving back and supporting others to the best of my ability.",
       },
-    ],
-  },
-];
+  ],
+};
 
 export const TESTIMONIALS: Testimonial[] = [
   {

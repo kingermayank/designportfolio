@@ -5,12 +5,13 @@ import {
   ABOUT_CAREER,
   ABOUT_INTRO,
   ABOUT_ORIGIN,
+  ABOUT_PHILOSOPHY,
   ABOUT_PTO,
-  ABOUT_SECTIONS,
   TESTIMONIALS,
 } from "@/lib/about";
 import { HIRING_LETTER } from "@/lib/letter";
 import AboutPodcastTicker from "@/components/AboutPodcastTicker";
+import AboutTestimonials from "@/components/AboutTestimonials";
 import CurrentlyStatus from "@/components/CurrentlyStatus";
 import HiringLetterOverlay from "@/components/HiringLetterOverlay";
 
@@ -21,19 +22,6 @@ type AboutContentProps = {
    */
   registerSection?: (index: number, el: HTMLElement | null) => void;
 };
-
-function AboutHeading({ title }: { title: string }) {
-  const trimmed = title.trim();
-  const base = trimmed.endsWith(".") ? trimmed.slice(0, -1) : trimmed;
-  return (
-    <h3 className="csHeading aboutHeading">
-      {base}
-      <span className="aboutHeadingDot" aria-hidden="true">
-        .
-      </span>
-    </h3>
-  );
-}
 
 /** Koto careers–style accordion: numbered rows, chromatic hierarchy, border hover. */
 function PhilosophyAccordion({
@@ -55,6 +43,9 @@ function PhilosophyAccordion({
           <li
             key={pr.title}
             className={`aboutPrinciple${isOpen ? " is-open" : ""}`}
+            onClick={() => {
+              if (isOpen) setOpenId(null);
+            }}
           >
             <button
               id={buttonId}
@@ -116,7 +107,6 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
     registerSection?.(i, el);
   const [letterOpen, setLetterOpen] = useState(false);
-  const [originOpen, setOriginOpen] = useState(false);
 
   return (
     <div className="aboutFlow">
@@ -143,15 +133,8 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             <AboutPodcastTicker />
           </section>
 
-          <button
-            type="button"
-            className={
-              "aboutCard aboutCardOrigin" + (originOpen ? " is-open" : "")
-            }
-            aria-expanded={originOpen}
-            onClick={() => setOriginOpen((open) => !open)}
-          >
-            <span className="aboutCardTitle">{ABOUT_ORIGIN.heading}</span>
+          <section className="aboutCard aboutCardOrigin">
+            <h2 className="aboutCardTitle">{ABOUT_ORIGIN.heading}</h2>
             <div className="aboutCardOriginBody">
               {ABOUT_ORIGIN.body.map((p) => (
                 <p key={p.slice(0, 32)} className="aboutCardBody">
@@ -159,11 +142,15 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
                 </p>
               ))}
             </div>
-          </button>
+          </section>
         </div>
 
         <div className="aboutSplitCol">
           <section className="aboutCard">
+            <h2 className="aboutCardTitle">
+              Shaped by 7+ years of designing, building, learning, and
+              experimenting.
+            </h2>
             <ul className="aboutCareer">
               {ABOUT_CAREER.map((job) => (
                 <li key={job.company}>
@@ -174,7 +161,12 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
                     rel="noopener noreferrer"
                     aria-label={`${job.company}, ${job.title}, ${job.year} (opens LinkedIn)`}
                   >
-                    <span className="aboutCareerMark">
+                    <span
+                      className={
+                        "aboutCareerMark" +
+                        (job.logoFit === "contain" ? " is-contain" : "")
+                      }
+                    >
                       {job.logo ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={job.logo} alt="" />
@@ -229,54 +221,23 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
         </div>
       </div>
 
+      {/* Full width, below both columns — the philosophy needs the whole
+          measure rather than half of a split. */}
+      <section className="aboutCard aboutCardPhilosophy">
+        <h2 className="aboutCardTitle">{ABOUT_PHILOSOPHY.title}</h2>
+        <p className="aboutCardBody">{ABOUT_PHILOSOPHY.lede}</p>
+        <PhilosophyAccordion principles={ABOUT_PHILOSOPHY.principles} />
+      </section>
+
       {letterOpen ? (
         <HiringLetterOverlay onClose={() => setLetterOpen(false)} />
       ) : null}
 
-      {ABOUT_SECTIONS.map((sec, i) => (
-        <section key={sec.nav} ref={ref(i)} className="csSection aboutSection">
-          <AboutHeading title={sec.heading} />
-          {sec.body.map((p, k) => (
-            <p key={k} className="csBody">
-              {p}
-            </p>
-          ))}
-          {sec.principles && (
-            <PhilosophyAccordion principles={sec.principles} />
-          )}
-        </section>
-      ))}
+      <div ref={ref(0)} className="aboutCard aboutCardTestimonials">
+        <AboutTestimonials testimonials={TESTIMONIALS} />
+      </div>
 
-      <section
-        ref={ref(ABOUT_SECTIONS.length)}
-        className="csSection aboutSection"
-      >
-        <AboutHeading title="In the words of those I've closely worked with." />
-        <div className="aboutQuotes">
-          {TESTIMONIALS.map((t) => (
-            <figure key={t.name} className="aboutQuote">
-              <blockquote>{t.quote}</blockquote>
-              <figcaption>
-                {t.avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="aboutQuoteAvatar" src={t.avatar} alt="" />
-                ) : null}
-                <span className="aboutQuoteMeta">
-                  <span className="aboutQuoteName">{t.name}</span>
-                  <span className="aboutQuoteRole">{t.role}</span>
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      <section
-        ref={ref(ABOUT_SECTIONS.length + 1)}
-        className="csSection aboutSection"
-      >
-        <AboutHeading title="How I recharge when I'm on PTO." />
-        <div className="aboutPtoGrid">
+      <div ref={ref(1)} className="aboutPtoGrid">
           {[0, 1].map((col) => (
             <div className="aboutPtoCol" key={col}>
               {ABOUT_PTO.filter((_, i) => i % 2 === col).map((photo) => {
@@ -313,8 +274,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
               })}
             </div>
           ))}
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
