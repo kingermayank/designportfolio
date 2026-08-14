@@ -28,8 +28,8 @@ export type WorkListItem = {
   body: string;
   thumb?: string;
   shade: string;
-  /** Category chip on the Systems Thinking card (e.g. "Product Analytics"). */
-  badge?: string;
+  /** Category chips on the Systems Thinking card. */
+  badges?: string[];
   year?: number;
 };
 
@@ -43,7 +43,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     body: "Sales, ops, leadership, and product each tracked different metrics. Mapped every web and mobile workflow to HEART goals and instrumented them, giving Toolbox one shared definition of success.",
     thumb: "/ikon/thumbs/analytics.jpg",
     shade: "#A9B2BB",
-    badge: "Product Analytics",
+    badges: ["Product Analytics", "Growth Strategy"],
     year: 2024,
   },
   {
@@ -54,7 +54,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     body: "Mapped the device lifecycle end to end across accounting, operations, warehouse, and dealership, providing the blueprint NetSuite consultants used to start the warehouse management system project.",
     thumb: "/ikon/thumbs/blueprint.jpg",
     shade: "#A9B2BB",
-    badge: "Service Blueprint",
+    badges: ["Service Design", "Systems Mapping", "Process Transformation"],
     year: 2024,
   },
   {
@@ -65,7 +65,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams, ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
     thumb: "/ikon/thumbs/dictionary.jpg",
     shade: "#FFFFFF",
-    badge: "Data Dictionary",
+    badges: ["Data Strategy", "Product Enablement", "Business Analysis"],
     year: 2024,
   },
   {
@@ -76,7 +76,11 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     body: "Automated dealership service outreach end to end with Stella AI, identifying customers, running the call, checking live availability, and booking autonomously, with humans on exceptions only.",
     thumb: "/ikon/thumbs/agentic.jpg",
     shade: "#FFFFFF",
-    badge: "AI/ML Integration",
+    badges: [
+      "Strategic Partnerships",
+      "Executive Alignment",
+      "Conversational AI",
+    ],
     year: 2025,
   },
 ];

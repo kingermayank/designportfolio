@@ -76,9 +76,7 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
   const headline = item.title;
   const highlights = study?.highlights ?? [];
   const impact = study?.impact;
-  const tags = Array.from(
-    new Set([item.badge, study?.category].filter(Boolean) as string[]),
-  );
+  const tags = item.badges ?? [];
   const shots = galleryMedia(item.slug);
   const figure = shots[shotIdx] ?? shots[0];
   const figureSrc = figure?.src ?? item.thumb;

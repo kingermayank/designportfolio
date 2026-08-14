@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { TILES, packRows } from "@/lib/tiles";
+import ModeToggle from "@/components/ModeToggle";
 import Work from "@/components/Work";
 
 type Target = {
@@ -32,8 +34,7 @@ const IDLE: Target = { x: 0, y: 0, scale: 1, opacity: 1, blur: 0, radius: 6, del
 type Mode = "work" | "grid";
 
 // Views live side by side in one space, left to right. The bottom-right
-// toggle reads off = work, on = grid.
-const ORDER: Mode[] = ["work", "grid"];
+// toggle lives on About (off) and here in grid (on).
 
 // Spatial shift between modes: the incoming view enters from whichever side it
 // sits on relative to the one you left. Durations follow page-transition
@@ -68,15 +69,19 @@ const GAP = 8;
 const DRIFT_PX_PER_SEC = 33; // 1.5× prior pace — still readable, more alive
 const COPY_STRIDE = 100000; // uid namespace per duplicated copy
 
-export default function GridCanvas() {
+export default function GridCanvas({
+  initialMode = "work",
+}: {
+  initialMode?: Mode;
+}) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const rowsRef = useRef<HTMLDivElement | null>(null);
   const tileEls = useRef(new Map<number, HTMLDivElement>());
   const distances = useRef(new Map<number, number>());
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [mode, setMode] = useState<Mode>("work");
-  const [dir, setDir] = useState(1);
+  const router = useRouter();
+  const mode = initialMode;
   const [zoom, setZoom] = useState(1);
   const [containerW, setContainerW] = useState(1200);
   const [focused, setFocused] = useState<number | null>(null);
@@ -295,22 +300,7 @@ export default function GridCanvas() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const switchMode = useCallback(
-    (m: Mode) => {
-      if (m === mode) return;
-      if (idleTimer.current) clearTimeout(idleTimer.current);
-      setFocused(null);
-      setLastFocused(null);
-      setTargets(null);
-      setDir(ORDER.indexOf(m) - ORDER.indexOf(mode));
-      setMode(m);
-    },
-    [mode],
-  );
-
-  const focusedTile =
-    focused === null ? null : TILES.find((t) => t.id === focused % COPY_STRIDE) ?? null;
-  const anim = viewAnim(dir, !!reduce);
+  const anim = viewAnim(1, !!reduce);
 
   return (
     <div className="canvasWrap">
@@ -455,17 +445,9 @@ export default function GridCanvas() {
         </AnimatePresence>
       </div>
 
-      {/* Bare switch — no label, no icon. Off is the work view, on is the grid. */}
-      <button
-        type="button"
-        role="switch"
-        aria-checked={mode === "grid"}
-        aria-label="Grid view"
-        className={"modeToggle" + (mode === "grid" ? " on" : "")}
-        onClick={() => switchMode(mode === "grid" ? "work" : "grid")}
-      >
-        <span className="modeToggleKnob" />
-      </button>
+      {mode === "grid" ? (
+        <ModeToggle on onToggle={() => router.push("/about")} />
+      ) : null}
     </div>
   );
 }

@@ -13,6 +13,7 @@ import CopyEmailButton from "@/components/CopyEmailButton";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
 import SiteFooter from "@/components/SiteFooter";
+import SocialMenu from "@/components/SocialMenu";
 import SystemsDetailOverlay from "@/components/SystemsDetailOverlay";
 import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
@@ -94,7 +95,7 @@ function isVideoSrc(src?: string): boolean {
 }
 
 function subscribeNarrow(onChange: () => void) {
-  const mql = window.matchMedia("(max-width: 560px)");
+  const mql = window.matchMedia("(max-width: 900px)");
   mql.addEventListener("change", onChange);
   return () => mql.removeEventListener("change", onChange);
 }
@@ -102,7 +103,7 @@ function subscribeNarrow(onChange: () => void) {
 function useIsNarrow() {
   return useSyncExternalStore(
     subscribeNarrow,
-    () => window.matchMedia("(max-width: 560px)").matches,
+    () => window.matchMedia("(max-width: 900px)").matches,
     () => false,
   );
 }
@@ -190,7 +191,10 @@ function WorkCard({
 
   const inner = (
     <div className="workCardInner">
-      <div className="workCardMediaWrap" style={{ background: card.shade }}>
+      <div
+        className="workCardMediaWrap"
+        style={{ background: card.shade, aspectRatio: card.aspect }}
+      >
         {gridSrc ? (
           <video
             className="workCardMedia"
@@ -210,7 +214,7 @@ function WorkCard({
             srcSet={card.thumbSrcSet}
             sizes={
               card.thumbSrcSet
-                ? "(max-width: 560px) 100vw, (max-width: 900px) 50vw, 36vw"
+                ? "(max-width: 720px) 100vw, (max-width: 900px) 50vw, 36vw"
                 : undefined
             }
             alt=""
@@ -290,12 +294,7 @@ function SystemsCard({
   item: WorkListItem;
   onOpen: () => void;
 }) {
-  const study = item.slug
-    ? CASE_STUDIES.find((s) => s.slug === item.slug)
-    : undefined;
-  const tags = Array.from(
-    new Set([item.badge, study?.category].filter(Boolean) as string[]),
-  );
+  const tags = item.badges ?? [];
   const cardRef = useRef<HTMLButtonElement>(null);
 
   // A single scale factor removes a percentage of each dimension, so a card
@@ -468,7 +467,7 @@ export default function Work() {
       isNarrow ? (
         <div className="workGrid workGridFlat">
           {cards.map((card) => (
-            <WorkCard key={card.slug} card={card} onHover={setHoverCard} />
+            <WorkCard key={card.slug} card={card} />
           ))}
         </div>
       ) : (
@@ -511,9 +510,12 @@ export default function Work() {
     <div ref={rootRef} className="workRoot workUniform">
       <aside className={"workPanel" + (hoverOn ? " is-project-hover" : "")}>
         <div className="workPanelTop">
-          <h1 className="workBrand">
-            Mayank Kinger<span className="workBrandDot">.</span>
-          </h1>
+          <div className="workBrandRow">
+            <h1 className="workBrand">
+              Mayank Kinger<span className="workBrandDot">.</span>
+            </h1>
+            <SocialMenu />
+          </div>
           <p className="workSubtitle">
             I&apos;m a <strong>product designer</strong>{" "}
             and high agency builder with a founder&apos;s mindset who ships

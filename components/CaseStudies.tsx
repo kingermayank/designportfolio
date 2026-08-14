@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   LINKABLE_CASE_STUDIES,
+  isVisualCraft,
   type CaseMedia,
   type MediaBlock,
 } from "@/lib/caseStudies";
@@ -12,6 +13,7 @@ import { CaseHero, MetadataList, PrimaryButton, onAccent } from "@/components/ca
 import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import CommentCardAnatomy from "@/components/pathai/CommentCardAnatomy";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
+import MoreProjects from "@/components/MoreProjects";
 import Rise from "@/components/Rise";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -686,6 +688,12 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                       )}
                     </p>
                   </section>
+                ) : null}
+
+                {isVisualCraft(study) ? (
+                  <div className={"csFade" + (contentIn ? " in" : "")}>
+                    <MoreProjects currentSlug={study.slug} />
+                  </div>
                 ) : null}
 
                 <SiteFooter />

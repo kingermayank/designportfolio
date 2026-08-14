@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -41,18 +42,35 @@ function StageMedia({ item }: { item: EngComponent }) {
 /** One logical viewport for every embed — sites and playgrounds alike. */
 const FRAME_W = 1440;
 const FRAME_H = 900;
+const OPEN_MS = 260;
+const CLOSE_MS = 100;
 
 export default function EngDetailModal({ item, onClose }: Props) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const closingRef = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [frameScale, setFrameScale] = useState(1);
   const [mounted, setMounted] = useState(false);
+  const [closing, setClosing] = useState(false);
   const isWebsite = Boolean(item.href);
   const hasEmbed = Boolean(item.embedUrl);
   const embedIsExternal = Boolean(item.embedUrl?.startsWith("http"));
   const visitHref = item.href;
   const visitLabel = item.title.replace(/\.com$/i, "");
+
+  const requestClose = useCallback(() => {
+    if (closingRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      onCloseRef.current();
+      return;
+    }
+    closingRef.current = true;
+    setClosing(true);
+    window.setTimeout(() => onCloseRef.current(), CLOSE_MS);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -66,7 +84,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        onClose();
+        requestClose();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -74,7 +92,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
       window.removeEventListener("keydown", onKey);
       prev?.focus?.();
     };
-  }, [onClose, mounted]);
+  }, [mounted, requestClose]);
 
   // The stage is whatever height the fixed shell leaves over, so the embed's
   // scale is measured rather than declared.
@@ -115,12 +133,21 @@ export default function EngDetailModal({ item, onClose }: Props) {
   if (!mounted) return null;
 
   return createPortal(
-    <div className="engModalRoot" role="presentation">
+    <div
+      className={"engModalRoot" + (closing ? " is-closing" : "")}
+      role="presentation"
+      style={
+        {
+          "--eng-open-ms": `${OPEN_MS}ms`,
+          "--eng-close-ms": `${CLOSE_MS}ms`,
+        } as CSSProperties
+      }
+    >
       <button
         type="button"
         className="engModalScrim"
         aria-label="Close dialog"
-        onClick={onClose}
+        onClick={requestClose}
       />
       <div
         className="engModal"
@@ -140,7 +167,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
             ref={closeRef}
             type="button"
             className="engModalClose"
-            onClick={onClose}
+            onClick={requestClose}
             aria-label="Close"
           >
             <svg viewBox="0 0 20 20" aria-hidden>

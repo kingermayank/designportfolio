@@ -1073,5 +1073,12 @@ export function isCaseLinkable(study: CaseStudy): boolean {
   return study.linkable !== false;
 }
 
+/** Visual Craft grid — Systems Thinking artifacts set `inWorkGrid: false`. */
+export function isVisualCraft(study: Pick<CaseStudy, "inWorkGrid">): boolean {
+  return study.inWorkGrid !== false;
+}
+
+export const VISUAL_CRAFT_STUDIES = CASE_STUDIES.filter(isVisualCraft);
+
 /** Case studies that open a detail page (excludes Work-grid-only teasers). */
 export const LINKABLE_CASE_STUDIES = CASE_STUDIES.filter(isCaseLinkable);
