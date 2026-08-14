@@ -7,6 +7,7 @@ import {
   type MediaBlock,
 } from "@/lib/caseStudies";
 import { caseHeroProps } from "@/lib/caseHero";
+import { boldRuns } from "@/lib/richText";
 import { CaseHero, MetadataList, PrimaryButton, onAccent } from "@/components/case-hero";
 import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import CommentCardAnatomy from "@/components/pathai/CommentCardAnatomy";
@@ -676,7 +677,15 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     }
                   >
                     <span>Impact</span>
-                    <p>{study.impact}</p>
+                    <p>
+                      {boldRuns(study.impact).map((run, i) =>
+                        run.bold ? (
+                          <strong key={i}>{run.text}</strong>
+                        ) : (
+                          <span key={i}>{run.text}</span>
+                        ),
+                      )}
+                    </p>
                   </section>
                 ) : null}
               </div>

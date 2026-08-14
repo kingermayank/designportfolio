@@ -7,13 +7,11 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-  type ReactNode,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
-import LogoTicker from "@/components/LogoTicker";
 import SystemsDetailOverlay from "@/components/SystemsDetailOverlay";
 import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
@@ -39,18 +37,20 @@ const LENS_INDEX: Record<WorkLensId, number> = {
 
 const LENS_EASE = [0.22, 1, 0.36, 1] as const;
 
+// Lens panes travel along the nav: moving right in the list slides the new pane
+// in from the right while the old one leaves to the left, and vice versa.
 const lensPaneVariants = {
   enter: (dir: number) => ({
     opacity: 0,
-    y: dir >= 0 ? 28 : -28,
+    x: dir >= 0 ? 28 : -28,
   }),
   center: {
     opacity: 1,
-    y: 0,
+    x: 0,
   },
   exit: (dir: number) => ({
     opacity: 0,
-    y: dir >= 0 ? -20 : 20,
+    x: dir >= 0 ? -20 : 20,
   }),
 };
 
@@ -58,49 +58,6 @@ const lensPaneReduced = {
   enter: { opacity: 0 },
   center: { opacity: 1 },
   exit: { opacity: 0 },
-};
-
-const SOCIAL_ICONS: Record<string, ReactNode> = {
-  LinkedIn: (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.73V1.73C24 .77 23.21 0 22.23 0z"
-      />
-    </svg>
-  ),
-  "X (Twitter)": (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.21-6.81-5.96 6.81H1.69l7.73-8.84L1.25 2.25h6.81l4.71 6.23 5.47-6.23zm-1.16 17.52h1.83L7.01 4.06H5.05l12.03 15.71z"
-      />
-    </svg>
-  ),
-  GitHub: (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.28-.01-1.02-.02-2.01-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.29 0 .32.21.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-      />
-    </svg>
-  ),
-  Resume: (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L18.5 9H15zM8 13h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h5v1.5H8V10z"
-      />
-    </svg>
-  ),
-  Substack: (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.45 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"
-      />
-    </svg>
-  ),
 };
 
 type Aspect = "4 / 5" | "5 / 3" | "4 / 3";
@@ -494,35 +451,12 @@ export default function Work() {
             Mayank Kinger<span className="workBrandDot">.</span>
           </h1>
           <p className="workSubtitle">
-            I&apos;m a product designer and high agency builder with a
-            founder&apos;s mindset who ships experiences with speed, taste,
-            and judgement.
+            I&apos;m a <strong>product designer</strong>{" "}
+            and high agency builder with a founder&apos;s mindset who ships
+            experiences with speed, taste, and judgement.
           </p>
 
-          <div className="workSocials">
-            {ABOUT_INTRO.links.map((link) => (
-              <a
-                key={link.label}
-                className="workSocial"
-                href={link.href}
-                target={link.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel={
-                  link.href.startsWith("mailto:")
-                    ? undefined
-                    : "noopener noreferrer"
-                }
-                aria-label={link.label}
-              >
-                {SOCIAL_ICONS[link.label]}
-              </a>
-            ))}
-          </div>
-
           <div className="workFit">
-            <div className="workFitCopy">
-              <p className="workFitTitle">{WORK_FIT_CTA.title}</p>
-              <p className="workFitBody">{WORK_FIT_CTA.body}</p>
-            </div>
             <div className="workFitActions">
               <button
                 type="button"
@@ -545,7 +479,33 @@ export default function Work() {
             </div>
           </div>
 
-          <LogoTicker />
+          <div className="workSocials">
+            {ABOUT_INTRO.links.map((link) => (
+              <a
+                key={link.label}
+                className="workSocial"
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+                <svg
+                  className="workSocialArrow"
+                  viewBox="0 0 12 12"
+                  aria-hidden
+                >
+                  <path
+                    d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
 
         {showingProjects && (

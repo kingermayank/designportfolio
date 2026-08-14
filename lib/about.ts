@@ -30,16 +30,16 @@ export const ABOUT_INTRO = {
     ar: 1984 / 1134,
   } satisfies AboutPhoto,
   links: [
+    { label: "X/Twitter", href: "https://x.com/kingermayank" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/kingermayank/" },
-    { label: "X (Twitter)", href: "https://x.com/kingermayank" },
-    { label: "GitHub", href: "https://github.com/kingermayank" },
-    {
-      label: "Resume",
-      href: "https://drive.google.com/file/d/1ARMGtXzDuXnK0jrYjc3dxizeUVrlPWTF/view?usp=sharing",
-    },
     {
       label: "Substack",
       href: "https://nextgendesigner.substack.com/",
+    },
+    { label: "Github", href: "https://github.com/kingermayank" },
+    {
+      label: "Resume",
+      href: "https://drive.google.com/file/d/1ARMGtXzDuXnK0jrYjc3dxizeUVrlPWTF/view?usp=sharing",
     },
   ],
   email: "kingermayank@gmail.com",

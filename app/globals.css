@@ -43,16 +43,17 @@
   --radius-lg: 6px;
   --radius-pill: 999px;
 
-  /* Type roles — the site runs on Geist and Geist Mono only.
-     Display / Body (Geist): a variable face, so any weight 100–900 is real.
-     Labels (Geist Mono): small caps — dates, badges, button text, Overview,
+  /* Type roles — the site runs on Azeret and Azeret Mono only.
+     Display / Body (Azeret): trial licence, Regular + Medium only. 400 and 500
+     are real; 600 is mapped onto Medium. Don't reach past 600.
+     Labels (Azeret Mono): small caps — dates, badges, button text, Overview,
      Company, Role. `--font-label` and `--font-mono` are the same stack; the
      two names are kept so the label role stays legible at call sites. */
-  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-label: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+  --font-display: var(--font-azeret), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-azeret), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-azeret-mono), ui-monospace, SFMono-Regular, Menlo,
     monospace;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+  --font-mono: var(--font-azeret-mono), ui-monospace, SFMono-Regular, Menlo,
     monospace;
   --tracking-label: 0.02em;
   --text-display-lg: 44px;
@@ -406,7 +407,7 @@ body {
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  font: 400 13px/1 var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font: 400 13px/1 var(--font-body);
   transition: border-color 167ms linear, color 167ms linear;
 }
 
@@ -433,11 +434,11 @@ body {
   gap: clamp(2rem, 5vw, 4rem);
   width: calc(100% - (var(--cs-editorial-inset) * 2));
   margin: calc(clamp(3.5rem, 8vw, 8rem) + 20px) auto clamp(3.5rem, 8vw, 8rem);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .csEditorialOverview {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .csEditorialOverview > span {
@@ -458,7 +459,7 @@ body {
   max-width: calc(31ch + 36px);
   margin: 0;
   color: var(--text);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 24px;
   font-weight: 400;
   line-height: 1.15;
@@ -475,7 +476,7 @@ body {
   gap: clamp(2rem, 4vw, 3.5rem);
   width: calc(100% - (var(--cs-editorial-inset) * 2));
   margin: 0 auto clamp(3.5rem, 8vw, 8rem);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* Systems Thinking — write-up sits under the artifact, with room above. */
@@ -486,7 +487,7 @@ body {
 .csEditorialImpact {
   width: calc(100% - (var(--cs-editorial-inset) * 2));
   margin: clamp(3.5rem, 8vw, 8rem) auto;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .csEditorialImpact > span {
@@ -507,7 +508,7 @@ body {
   margin: 0;
   max-width: 28ch;
   color: var(--text);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 35px;
   font-weight: 400;
   line-height: 40px;
@@ -541,7 +542,7 @@ body {
   --ch-space-2: 6px;
   --ch-space-5: 14px;
   --ch-radius-sm: 2px;
-  --ch-font-body: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --ch-font-body: var(--font-body);
   --ch-accent: var(--text);
   --ch-on-accent: #111111;
   --ch-text: #ffffff;
@@ -691,7 +692,7 @@ body {
   font-size: 10px;
   letter-spacing: 0.08em;
   color: var(--faint);
-  margin-top: var(--space-1);
+  margin-top: 2px;
 }
 
 .csTiles {
@@ -769,7 +770,7 @@ body {
   width: 25%; /* 3 of 12 — same as Work 1 left rail */
   padding-top: var(--space-8);
   padding-right: var(--space-5);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .csDetailPanel:has(.csBack) {
@@ -814,7 +815,7 @@ body {
   background: var(--color-surface);
   color: var(--text);
   cursor: pointer;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0;
@@ -853,7 +854,7 @@ body {
 }
 
 .csDetailTitle {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: var(--text-display);
   font-weight: 400;
   line-height: 1.1;
@@ -883,7 +884,7 @@ body {
 }
 
 .csHighlightLabel {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -893,7 +894,7 @@ body {
 
 .csHighlightBody {
   margin: 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
@@ -913,7 +914,7 @@ body {
   background: #ff0257;
   color: #fff;
   cursor: pointer;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0;
@@ -1006,7 +1007,7 @@ button.csNavItem {
 
 .csDetailSub {
   margin-top: var(--space-3);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.45;
@@ -1029,13 +1030,13 @@ button.csNavItem {
 }
 
 .csDetailYear {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   color: var(--muted);
   margin-top: var(--space-4);
 }
 
 .csDetailYear.mono {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .csNav {
@@ -1047,7 +1048,7 @@ button.csNavItem {
 
 .csNavItem {
   position: relative;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 400;
   color: var(--faint);
@@ -1300,7 +1301,7 @@ button.csNavItem {
   transition: opacity 167ms linear;
   transition-delay: 0ms;
   pointer-events: none;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 400;
   color: var(--muted);
@@ -1435,7 +1436,7 @@ button.csNavItem {
   background: transparent;
   color: var(--text);
   cursor: pointer;
-  font: 400 11px/1 var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font: 400 11px/1 var(--font-body);
   transition:
     border-color 167ms linear,
     color 167ms linear,
@@ -1509,7 +1510,7 @@ button.csNavItem {
   width: 100%;
   max-width: none;
   margin: 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
   line-height: 1.25;
@@ -1865,7 +1866,7 @@ button.csNavItem {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
@@ -1947,11 +1948,6 @@ button.csNavItem {
     margin-bottom: var(--space-4);
   }
 
-  .sysOverlayHeadline,
-  .engModalTitle {
-    font-size: 36px;
-    line-height: 40px;
-  }
 }
 
 /* ---------- Work (koto.com/work) ---------- */
@@ -2257,7 +2253,7 @@ button.csNavItem {
   padding: 0;
   border: 0;
   background: transparent;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
@@ -2387,7 +2383,7 @@ button.csNavItem {
 }
 
 .workListTitle {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 400;
   line-height: 1.25;
@@ -2404,7 +2400,7 @@ button.csNavItem {
 }
 
 .workListBody {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
@@ -2548,10 +2544,7 @@ button.csNavItem {
    centred against the lowercase text they line up with. */
 .sysCardBadge,
 .sysCardYear,
-.sysOverlayDate,
-.sysOverlayCtaLabel,
-.sysOverlaySectionLabel,
-.sysOverlayCredit dt {
+.sysOverlaySectionLabel {
   position: relative;
   top: 1px;
 }
@@ -2708,115 +2701,13 @@ button.csNavItem {
   }
 }
 
-.sysOverlayHead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 16px 16px;
-  background: var(--sys-off-black);
+@media (min-width: 901px) {
 }
 
 @media (min-width: 901px) {
-  .sysOverlayHead {
-    padding: 24px 28px 16px;
-  }
-}
-
-.sysOverlayIdentity {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.sysOverlayMark {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-@media (min-width: 901px) {
-  .sysOverlayMark {
-    width: 56px;
-    height: 56px;
-  }
-}
-
-.sysOverlayMark img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.sysOverlayIdentityText {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.sysOverlayShortTitle {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: 0;
-  color: var(--text);
-}
-
-.sysOverlayDate {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0;
-  color: var(--muted);
 }
 
 /* Same glass button as the close control, sized by its label. */
-.sysOverlayCta {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  flex-shrink: 0;
-  padding: 16px;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: var(--sys-glass-weak);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: var(--text);
-  text-decoration: none;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  transition: background-color var(--sys-hover-ms) linear;
-}
-
-.sysOverlayCta:hover {
-  background: var(--sys-glass);
-}
-
-.sysOverlayCta:active {
-  background: var(--sys-glass-weak);
-  transition-duration: var(--sys-press-ms);
-}
-
-.sysOverlayCta:focus-visible {
-  outline: 1px solid var(--color-border);
-  outline-offset: 2px;
-}
-
 .sysOverlayBody {
   display: flex;
   flex-direction: column;
@@ -2830,51 +2721,167 @@ button.csNavItem {
   }
 }
 
-/* Condensed and light — Koto sets its article headline in the condensed cut
-   at 32px/1.15 with no negative tracking. */
+/* Sans headline — same voice as the Design Engineering modal title. */
 .sysOverlayHeadline {
   margin: 0;
-  font-family: var(--font-cesare), "Times New Roman", serif;
-  font-size: 48px;
-  font-weight: 400;
-  line-height: 48px;
-  letter-spacing: 0;
+  font-family: var(--font-body);
+  font-size: clamp(28px, 3.4vw + 12px, 36px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--text);
   text-wrap: pretty;
+}
+
+/* Kind chips under the headline — same chip language as the eng modal. */
+.sysOverlayTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  /* Chips hug the title at half the 24px gap they keep from the lede below. */
+  margin: -12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sysOverlayTags li {
+  /* Same caps nudge as the eng modal chips. */
+  padding: 7.5px 12px 6.5px;
+  border-radius: 4px;
+  background: #2b2b2b;
+  font-family: var(--font-label), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #fafafa;
+}
+
+/* Impact strip — green mark plus one outcome line. */
+.sysOverlayImpact {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 18px 20px;
+  /* Matches the figure frame above it. */
+  border-radius: var(--radius-lg);
+  background: #1a1a1a;
+}
+
+.sysOverlayImpactIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #03bb7d;
+  color: #0d1a14;
+}
+
+.sysOverlayImpactIcon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.sysOverlayImpactText {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.sysOverlayImpactText strong {
+  font-weight: 500;
+  color: var(--text);
 }
 
 .sysOverlayLede {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 1.25;
+  line-height: 24px;
   letter-spacing: 0;
   color: var(--muted);
   text-wrap: pretty;
 }
 
-@media (min-width: 641px) {
-  .sysOverlayLede {
-    font-size: 16px;
-  }
-}
-
 .sysOverlayFigure {
+  position: relative;
   margin: 0;
   width: 100%;
 }
 
 .sysOverlayFigureMedia {
+  position: relative;
   width: 100%;
   border-radius: var(--radius-lg);
+}
+
+/* Crop layer — shrinks from the bottom on hover to uncover the caption. */
+.sysOverlayFigureCrop {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  border-radius: inherit;
+  transition: bottom 167ms linear;
+}
+
+.sysOverlayFigure:hover .sysOverlayFigureCrop,
+.sysOverlayFigure:focus-within .sysOverlayFigureCrop {
+  bottom: var(--sys-cap-h, 24px);
+}
+
+.sysOverlayFigureNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: rgba(20, 20, 20, 0.55);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 167ms linear;
+}
+
+.sysOverlayFigureNav svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.sysOverlayFigureNav:hover {
+  background: rgba(20, 20, 20, 0.78);
+}
+
+.sysOverlayFigureNav.is-prev {
+  left: 12px;
+}
+
+.sysOverlayFigureNav.is-next {
+  right: 12px;
 }
 
 .sysOverlayFigure img {
   display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -2884,9 +2891,19 @@ button.csNavItem {
   box-sizing: border-box;
 }
 
+/* Sits in the strip the crop layer uncovers — never visible at rest, and it
+   takes no space of its own, exactly like the Visual Craft media captions. */
 .sysOverlayCaption {
-  margin: 12px 0 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding-top: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 167ms linear;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.2;
@@ -2894,6 +2911,12 @@ button.csNavItem {
   color: var(--muted);
   text-align: center;
   text-wrap: pretty;
+}
+
+.sysOverlayFigure:hover .sysOverlayCaption,
+.sysOverlayFigure:focus-within .sysOverlayCaption {
+  opacity: 1;
+  transition-delay: 167ms;
 }
 
 .sysOverlayHighlights {
@@ -2911,10 +2934,10 @@ button.csNavItem {
 .sysOverlaySectionLabel {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -2924,39 +2947,10 @@ button.csNavItem {
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: 0;
-  color: var(--muted);
-  text-wrap: pretty;
-}
-
-.sysOverlayCredits {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 0;
-  padding-top: 24px;
-  border-top: 1px solid var(--sys-hairline);
-}
-
-.sysOverlayCredit dt {
-  margin: 0 0 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.sysOverlayCredit dd {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.25;
+  line-height: 24px;
+  letter-spacing: -0.01em;
   color: var(--text);
+  text-wrap: pretty;
 }
 
 @media (max-width: 900px) {
@@ -2979,16 +2973,12 @@ button.csNavItem {
     gap: 8px;
   }
 
-  .sysOverlayCredits {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sysOverlayScrim,
   .sysOverlayStage,
   .sysOverlayClose,
-  .sysOverlayCta,
   .sysCardBadge {
     transition: none !important;
   }
@@ -3109,7 +3099,7 @@ button.csNavItem {
 .engCardName {
   flex: 1;
   min-width: 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
   line-height: 1;
@@ -3151,13 +3141,15 @@ button.csNavItem {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  /* 840 + 150px each side */
-  width: min(1140px, 100%);
-  max-height: min(880px, calc(100vh - 48px));
+  /* 740 + 150px each side */
+  width: min(1040px, 100%);
+  /* Fixed shell: every item gets the same footprint, and the body never
+     scrolls — the stage absorbs the leftover space instead. */
+  height: min(860px, calc(100vh - 48px));
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-canvas);
+  background: #121212;
   color: var(--color-body);
   animation: engModalIn 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
@@ -3177,7 +3169,8 @@ button.csNavItem {
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
-  padding: var(--space-5) var(--space-5) var(--space-4);
+  /* No bottom padding — the body's own top padding sets the gap to the stage. */
+  padding: var(--space-5) var(--space-5) 0;
 }
 
 .engModalHeadText {
@@ -3198,33 +3191,39 @@ button.csNavItem {
 
 .engModalTitle {
   margin: 0;
-  font-family: var(--font-cesare), "Times New Roman", serif;
-  font-size: 48px;
-  font-weight: 400;
-  line-height: 48px;
-  letter-spacing: 0;
+  font-family: var(--font-body);
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--color-text);
 }
 
 .engModalClose {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
+  border: 0;
+  background: transparent;
   color: var(--color-muted);
-  font-size: 12px;
   line-height: 1;
   cursor: pointer;
-  transition: color 167ms linear, border-color 167ms linear;
+  transition: color 167ms linear;
+}
+
+.engModalClose svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 .engModalClose:hover {
   color: var(--color-text);
-  border-color: var(--color-muted);
 }
 
 .engModalClose:focus-visible {
@@ -3237,27 +3236,32 @@ button.csNavItem {
   flex-direction: column;
   gap: var(--space-5);
   padding: var(--space-5);
-  overflow: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .engModalStage {
   position: relative;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   width: 100%;
-  height: min(420px, 48vh);
+  min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
 
-.engModalStageTall {
-  height: min(560px, 62vh);
-}
-
 .engModalStageWrap {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   min-width: 0;
+  min-height: 0;
+}
+
+.engModalMeta,
+.engModalSiteChrome {
+  flex: 0 0 auto;
 }
 
 .engModalSiteChrome {
@@ -3302,7 +3306,6 @@ button.csNavItem {
   cursor: pointer;
 }
 
-.engModalFrame,
 .engModalMedia,
 .engModalSiteHit {
   position: absolute;
@@ -3312,8 +3315,21 @@ button.csNavItem {
   border: 0;
 }
 
+/* Every embed renders at one logical desktop viewport, then scales to fit —
+   so a site, a playground, and a video all read at the same proportions. */
+.engModalFrame {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--eng-frame-w, 1440px);
+  height: var(--eng-frame-h, 900px);
+  border: 0;
+  transform-origin: top center;
+  transform: translateX(-50%) scale(var(--eng-frame-scale, 1));
+}
+
 .engModalMedia {
-  object-fit: cover;
+  object-fit: contain;
   pointer-events: none;
 }
 
@@ -3359,10 +3375,10 @@ button.csNavItem {
 .engModalLead {
   margin: 0;
   max-width: 46ch;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 20px;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 26px;
   letter-spacing: -0.01em;
   color: var(--text);
   text-wrap: pretty;
@@ -3385,23 +3401,36 @@ button.csNavItem {
   color: var(--muted);
 }
 
+/* Stack chips ride the top-right corner of the stage, over the media. */
 .engModalStack {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  justify-content: flex-end;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
+  pointer-events: none;
 }
 
 .engModalStack li {
-  padding: 6px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  font-size: 13px;
-  color: var(--text);
+  /* Caps have no descenders, so the glyph band sits ~0.4px above the box
+     centre; the half-pixel split lands it on the device grid at 2x. */
+  padding: 5.5px 9px 4.5px;
+  border-radius: 4px;
+  background: #2b2b2b;
+  font-family: var(--font-label), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #fafafa;
+  white-space: nowrap;
 }
 
 .engModalNote {
@@ -3471,12 +3500,12 @@ button.csNavItem {
   gap: 8px;
   min-height: 44px;
   margin: 0;
-  padding: 0 20px;
+  padding: 0 28px;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: 4px;
   background: #ffffff;
   color: #121413;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 500;
   line-height: 1;
@@ -3590,12 +3619,21 @@ button.csNavItem {
 
   .engModal {
     width: 100%;
-    max-height: calc(100vh - 24px);
+    height: calc(100vh - 24px);
+  }
+
+  /* Phones can't fit stage + copy at a usable size — let this one scroll. */
+  .engModalBody {
+    overflow: auto;
+  }
+
+  .engModalStage {
+    flex: 0 0 auto;
+    height: 46vh;
   }
 
   .engModalTitle {
-    font-size: 48px;
-    line-height: 48px;
+    font-size: 30px;
   }
 
   .engModalMeta {
@@ -3610,7 +3648,7 @@ button.csNavItem {
   }
 }
 
-/* Work 1 type: display and body are both Geist now, so this only needs to set
+/* Work 1 type: display and body are both Azeret now, so this only needs to set
    the family — the roles it used to override are identical at :root. */
 .workUniform {
   font-family: var(--font-body);
@@ -3649,6 +3687,11 @@ button.csNavItem {
   line-height: 1.5;
 }
 
+.workSubtitle strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 /* “Currently …” status loop */
 .workCurrently,
 .aboutCurrently {
@@ -3664,7 +3707,7 @@ button.csNavItem {
 .aboutCurrently {
   /* Match intro lede size; sits under lede, above hero */
   margin: 16px 0 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
   line-height: 1.25;
@@ -3688,42 +3731,44 @@ button.csNavItem {
   white-space: pre-wrap;
 }
 
-/* Match kingermayank.com social rings (38px here; site uses 40) */
+/* Vertical text list of socials, pinned to the bottom of the panel */
 .workSocials {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 22px;
-}
-
-.workSocial {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  border: 1.5px solid #404040;
-  color: #ffffff;
-  background: transparent;
-  flex-shrink: 0;
-  outline: none;
-  transition: none;
-}
-
-.workSocial svg {
-  width: 14px;
-  height: 14px;
-  display: block;
-  opacity: 0.5;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-2);
+  opacity: 1;
   transition: opacity 167ms linear;
 }
 
-.workSocial:hover svg,
-.workSocial:focus-visible svg {
-  opacity: 1;
+.workSocial {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  outline: none;
+  transition: color 167ms linear;
+}
+
+.workSocialArrow {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.workSocial:hover,
+.workSocial:focus-visible {
+  color: #ffffff;
 }
 
 /* Logo ticker — matched to kingermayank.framer.website (speed 50, hover 0.5, fade 12.5%). */
@@ -3737,7 +3782,8 @@ button.csNavItem {
   transform: translateY(8px);
 }
 
-.workPanel.is-project-hover .workTicker {
+.workPanel.is-project-hover .workTicker,
+.workPanel.is-project-hover .workSocials {
   opacity: 0;
   pointer-events: none;
 }
@@ -3813,49 +3859,14 @@ button.csNavItem {
   }
 }
 
-.workSocial:focus-visible {
-  border-color: #ffffff;
-}
-
-/* Work sidebar — fit CTA under socials */
+/* Work sidebar — CTA buttons under the intro */
 .workFit {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 16px 20px;
-  margin-top: 24px;
-  padding: 20px 0;
-  border-top: 1px solid #404040;
-  border-bottom: 1px solid #404040;
+  margin-top: 20px;
   max-width: none;
-}
-
-.workFitCopy {
-  flex: 1 1 12rem;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.workFitTitle {
-  margin: 0;
-  color: var(--text);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-}
-
-.workFitBody {
-  margin: 0;
-  color: var(--muted);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.45;
 }
 
 .workFitActions {
@@ -3873,8 +3884,8 @@ button.csNavItem {
   gap: 6px;
   height: 36px;
   padding: 0 16px;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  border-radius: 4px;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0;
@@ -3920,13 +3931,12 @@ button.csNavItem {
 /* Hairline stroke — alpha white rather than a flat grey, so it stays a
    hairline against whatever sits behind it. */
 .workFitBtnGhost {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #353535;
+  border: 1px solid transparent;
   color: #fafafa;
 }
 
 .workFitBtnGhost:hover {
-  border-color: rgba(255, 255, 255, 0.32);
   filter: brightness(1.12);
 }
 
@@ -3936,8 +3946,11 @@ button.csNavItem {
   color: #121413;
 }
 
+/* brightness() can't lift #fff — the solid button dims on hover instead.
+   #e0e0e0 matches what the eng-modal CTA's 0.88 opacity resolves to. */
 .workFitBtnSolid:hover {
-  filter: brightness(1.12);
+  background: #e0e0e0;
+  border-color: #e0e0e0;
 }
 
 .workFitBtn:focus-visible {
@@ -3998,7 +4011,7 @@ button.csNavItem {
 
 .letterBody p {
   margin: 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
@@ -4028,7 +4041,7 @@ button.csNavItem {
   border-radius: var(--radius-pill);
   background: #121413;
   color: #ffffff;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 500;
   line-height: 1;
@@ -4047,7 +4060,7 @@ button.csNavItem {
 
 .letterHint {
   margin: 36px 0 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 400;
   line-height: 1.4;
@@ -4124,8 +4137,8 @@ button.csNavItem {
 
 .workHoverDesc {
   margin: 0;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  font-size: 15px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
   color: var(--body-text);
@@ -4156,20 +4169,20 @@ button.csNavItem {
 }
 
 .workHoverName {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  font-size: 15px;
+  font-family: var(--font-body);
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
   color: var(--text);
 }
 
 .workHoverYear {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.08em;
   color: var(--faint);
-  margin-top: var(--space-1);
+  margin-top: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4278,7 +4291,7 @@ button.csNavItem {
 
 .workCardName {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--text);
   white-space: nowrap;
@@ -4287,7 +4300,7 @@ button.csNavItem {
 
 .workCardTagline {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--muted);
   text-align: right;
@@ -4431,9 +4444,8 @@ button.csNavItem {
     gap: 8px;
   }
 
-  .workSocial {
-    width: 46px;
-    height: 46px;
+  .workSocials {
+    gap: 16px;
   }
 
   .workFit {
@@ -4535,6 +4547,14 @@ button.csNavItem {
   .csMediaHover .csMediaHoverCaption {
     opacity: 1;
   }
+
+  .sysOverlayCaption {
+    opacity: 1;
+  }
+
+  .sysOverlayFigureCrop {
+    bottom: var(--sys-cap-h, 24px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4544,7 +4564,9 @@ button.csNavItem {
   .workCardMediaWrap,
   .csMediaHoverWrap,
   .csMediaHoverWrap > .csMediaStage,
-  .csMediaHoverCaption {
+  .csMediaHoverCaption,
+  .sysOverlayCaption,
+  .sysOverlayFigureCrop {
     transition: none;
   }
 }
@@ -4641,7 +4663,7 @@ button.csNavItem {
 
   /* — Typography — */
   --ch-font-display: var(--font-cesare), "Times New Roman", serif;
-  --ch-font-body: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --ch-font-body: var(--font-body);
   --ch-text-eyebrow: 15px;
   --ch-line-label: 20px;
   --ch-text-title: clamp(calc(2.5rem + 8px), calc(5.2vw + 8px), calc(4rem + 8px));
@@ -4798,7 +4820,7 @@ button.csNavItem {
   -webkit-backdrop-filter: blur(18px) saturate(1.35);
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
   cursor: pointer;
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   transition:
     opacity 167ms linear,
     transform 167ms ease-out,
@@ -4963,7 +4985,7 @@ button.csNavItem {
   border-radius: 2px;
   background: var(--ch-accent);
   color: var(--ch-on-accent);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0;
@@ -5181,7 +5203,7 @@ button.csNavItem {
 .chDemoHead {
   width: min(100% - 2rem, 71.25rem);
   margin: 0 auto var(--space-8);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
 }
 
 .chDemoHead h1 {
@@ -5208,7 +5230,7 @@ button.csNavItem {
   width: min(100% - 2rem, 71.25rem);
   margin: 0 auto var(--space-5);
   color: var(--faint);
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.09em;
@@ -5230,6 +5252,6 @@ button.csNavItem {
 }
 
 .chDemo code {
-  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 0.9em;
 }

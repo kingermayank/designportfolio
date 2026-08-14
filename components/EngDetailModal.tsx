@@ -5,6 +5,7 @@ import {
   useId,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
@@ -37,9 +38,15 @@ function StageMedia({ item }: { item: EngComponent }) {
   return <div className="engModalMediaEmpty" style={{ background: item.shade }} />;
 }
 
+/** One logical viewport for every embed — sites and playgrounds alike. */
+const FRAME_W = 1440;
+const FRAME_H = 900;
+
 export default function EngDetailModal({ item, onClose }: Props) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [frameScale, setFrameScale] = useState(1);
   const [mounted, setMounted] = useState(false);
   const isWebsite = Boolean(item.href);
   const hasEmbed = Boolean(item.embedUrl);
@@ -68,6 +75,24 @@ export default function EngDetailModal({ item, onClose }: Props) {
       prev?.focus?.();
     };
   }, [onClose, mounted]);
+
+  // The stage is whatever height the fixed shell leaves over, so the embed's
+  // scale is measured rather than declared.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el || !hasEmbed) return;
+    const measure = () => {
+      const { clientWidth: w, clientHeight: h } = el;
+      if (!w || !h) return;
+      // Fill the stage width and anchor to the top of the page — letterboxing
+      // to fit the height leaves the preview unreadably small on narrow panes.
+      setFrameScale(Math.max(w / FRAME_W, h / FRAME_H));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [hasEmbed, mounted]);
 
   const onDialogKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key !== "Tab") return;
@@ -118,7 +143,15 @@ export default function EngDetailModal({ item, onClose }: Props) {
             onClick={onClose}
             aria-label="Close"
           >
-            ✕
+            <svg viewBox="0 0 20 20" aria-hidden>
+              <path
+                d="M4.5 4.5 15.5 15.5M15.5 4.5 4.5 15.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
           </button>
         </header>
 
@@ -139,9 +172,9 @@ export default function EngDetailModal({ item, onClose }: Props) {
             ) : null}
 
             <div
+              ref={stageRef}
               className={
                 "engModalStage" +
-                (item.embedTall ? " engModalStageTall" : "") +
                 (!hasEmbed && isWebsite && visitHref
                   ? " engModalStageLink"
                   : "") +
@@ -149,7 +182,14 @@ export default function EngDetailModal({ item, onClose }: Props) {
                   ? " engModalStageChromatched"
                   : "")
               }
-              style={{ background: hasEmbed ? "#111111" : item.shade }}
+              style={
+                {
+                  background: hasEmbed ? "#111111" : item.shade,
+                  "--eng-frame-w": `${FRAME_W}px`,
+                  "--eng-frame-h": `${FRAME_H}px`,
+                  "--eng-frame-scale": frameScale,
+                } as CSSProperties
+              }
             >
               {hasEmbed ? (
                 <iframe
@@ -182,23 +222,20 @@ export default function EngDetailModal({ item, onClose }: Props) {
               ) : (
                 <StageMedia item={item} />
               )}
+
+              {item.stack && item.stack.length > 0 ? (
+                <ul className="engModalStack" aria-label="Stack">
+                  {item.stack.map((tech) => (
+                    <li key={tech}>{tech}</li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
           </div>
 
           <div className="engModalMeta">
             <div className="engModalMetaCopy">
               {item.body ? <p className="engModalLead">{item.body}</p> : null}
-
-              {item.stack && item.stack.length > 0 ? (
-                <section className="engModalSection">
-                  <h3 className="engModalLabel">Stack</h3>
-                  <ul className="engModalStack">
-                    {item.stack.map((tech) => (
-                      <li key={tech}>{tech}</li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
             </div>
 
             {visitHref ? (
@@ -207,18 +244,9 @@ export default function EngDetailModal({ item, onClose }: Props) {
                 href={visitHref}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`View ${visitLabel} website`}
               >
-                Visit {visitLabel}
-                <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
-                  <path
-                    d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                View website
               </a>
             ) : null}
           </div>

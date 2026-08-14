@@ -848,6 +848,8 @@ const ikonAnalytics: CaseStudy = {
       ),
     },
   ],
+  impact:
+    "This replaced **four conflicting scorecards** with one shared definition of product health.",
   credits: IKON_PM_CREDITS,
   sections: [
     {
@@ -906,6 +908,8 @@ const ikonBlueprint: CaseStudy = {
       ),
     },
   ],
+  impact:
+    "This became the blueprint **NetSuite consultants used to start** the warehouse management system project.",
   credits: IKON_PM_CREDITS,
   sections: [
     {
@@ -962,6 +966,8 @@ const ikonDataDictionary: CaseStudy = {
       ),
     },
   ],
+  impact:
+    "This surfaced duplicate vendor payments worth roughly **$6,000 a month**.",
   credits: IKON_PM_CREDITS,
   sections: [
     {
@@ -1018,6 +1024,8 @@ const ikonAgentic: CaseStudy = {
       ),
     },
   ],
+  impact:
+    "This moved service outreach to **fully autonomous booking**, with humans on exceptions only.",
   credits: IKON_PM_CREDITS,
   sections: [
     {

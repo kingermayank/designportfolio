@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { CASE_STUDIES, type CaseMedia } from "@/lib/caseStudies";
+import { boldRuns } from "@/lib/richText";
 import type { WorkListItem } from "@/lib/workLenses";
 
 type Props = {
@@ -22,11 +23,13 @@ type Props = {
 const OPEN_MS = 500;
 const EASE = "cubic-bezier(0.15, 0, 0.3, 1)";
 
-function firstFullMedia(slug?: string): CaseMedia | undefined {
-  if (!slug) return undefined;
+function galleryMedia(slug?: string): CaseMedia[] {
+  if (!slug) return [];
   const study = CASE_STUDIES.find((s) => s.slug === slug);
-  const block = study?.mediaBlocks?.find((b) => b.type === "full");
-  return block && block.type === "full" ? block.media : study?.hero;
+  const blocks = study?.mediaBlocks ?? [];
+  const shots = blocks.flatMap((b) => (b.type === "full" ? [b.media] : []));
+  if (shots.length > 0) return shots;
+  return study?.hero ? [study.hero] : [];
 }
 
 export default function SystemsDetailOverlay({ item, onClose }: Props) {
@@ -34,23 +37,32 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
+  const [shotIdx, setShotIdx] = useState(0);
+  const captionRef = useRef<HTMLElement>(null);
+  const [capH, setCapH] = useState(0);
   const closingRef = useRef(false);
 
   const study = item.slug
     ? CASE_STUDIES.find((s) => s.slug === item.slug)
     : undefined;
-  const headline = study?.detailTitle ?? item.title;
+  // Same headline the card shows — the study's own detailTitle is worded for
+  // the full case-study page and would read as a different project here.
+  const headline = item.title;
   const lede = study?.description ?? item.body;
-  const year = study?.year;
-  const shortTitle = study?.title ?? item.title;
-  const ctaHref = study?.websiteUrl;
   const highlights = study?.highlights ?? [];
-  const credits = study?.credits ?? [];
-  const figure = firstFullMedia(item.slug);
+  const impact = study?.impact;
+  const tags = Array.from(
+    new Set([item.badge, study?.category].filter(Boolean) as string[]),
+  );
+  const shots = galleryMedia(item.slug);
+  const figure = shots[shotIdx] ?? shots[0];
   const figureSrc = figure?.src ?? item.thumb;
   const figureShade = figure?.shade ?? item.shade;
   const figureAr = figure?.ar ?? 16 / 9;
   const figureCaption = figure?.caption;
+  const hasGallery = shots.length > 1;
+  const stepShot = (dir: number) =>
+    setShotIdx((i) => (i + dir + shots.length) % shots.length);
 
   const requestClose = () => {
     if (closingRef.current) return;
@@ -89,6 +101,18 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- close latch is intentional
   }, [mounted]);
+
+  // The reveal strip is exactly as tall as the caption, which wraps to two
+  // lines at some widths — so it's measured rather than assumed.
+  useEffect(() => {
+    const el = captionRef.current;
+    if (!el) return;
+    const measure = () => setCapH(el.offsetHeight);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [mounted, figureCaption]);
 
   const onDialogKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key !== "Tab") return;
@@ -155,49 +179,19 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
 
         <div className="sysOverlaySheet">
           <div className="sysOverlayHandle" aria-hidden />
-          <header className="sysOverlayHead">
-            <div className="sysOverlayIdentity">
-              <div
-                className="sysOverlayMark"
-                style={{ background: item.shade }}
-              >
-                {item.thumb ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.thumb} alt="" />
-                ) : null}
-              </div>
-              <div className="sysOverlayIdentityText">
-                <div className="sysOverlayShortTitle">{shortTitle}</div>
-                {year ? <div className="sysOverlayDate">{year}</div> : null}
-              </div>
-            </div>
-
-            {ctaHref ? (
-              <a
-                className="sysOverlayCta"
-                href={ctaHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="sysOverlayCtaLabel">Open board</span>
-                <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true">
-                  <path
-                    d="M3 9 9 3M4.5 3H9v4.5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            ) : null}
-          </header>
-
           <div className="sysOverlayBody">
             <h2 id={titleId} className="sysOverlayHeadline">
               {headline}
             </h2>
+
+            {tags.length > 0 ? (
+              <ul className="sysOverlayTags">
+                {tags.map((tag) => (
+                  <li key={tag}>{tag}</li>
+                ))}
+              </ul>
+            ) : null}
+
             {lede ? <p className="sysOverlayLede">{lede}</p> : null}
 
             {figureSrc ? (
@@ -206,37 +200,93 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
                   "sysOverlayFigure" +
                   (figure?.fit === "contain" ? " is-contain" : "")
                 }
+                style={{ ["--sys-cap-h"]: `${capH}px` } as CSSProperties}
               >
-                {/* The shade and the rounded crop belong to the media box only —
-                    the caption sits below it, on the sheet. */}
+                {/* Fixed frame: the media crops upward on hover to reveal the
+                    caption strip beneath it, so the figure never changes size. */}
                 <div
                   className="sysOverlayFigureMedia"
-                  style={{ background: figureShade }}
+                  style={{ aspectRatio: String(figureAr) }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={figureSrc}
-                    alt=""
-                    style={{ aspectRatio: String(figureAr) }}
-                  />
+                  <div
+                    className="sysOverlayFigureCrop"
+                    style={{ background: figureShade }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={figureSrc} alt="" />
+                  </div>
+
+                  {hasGallery ? (
+                    <>
+                      <button
+                        type="button"
+                        className="sysOverlayFigureNav is-prev"
+                        onClick={() => stepShot(-1)}
+                        aria-label="Previous image"
+                      >
+                        <svg viewBox="0 0 16 16" aria-hidden>
+                          <path
+                            d="M10 2.5 4.5 8l5.5 5.5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="sysOverlayFigureNav is-next"
+                        onClick={() => stepShot(1)}
+                        aria-label="Next image"
+                      >
+                        <svg viewBox="0 0 16 16" aria-hidden>
+                          <path
+                            d="M6 2.5 11.5 8 6 13.5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </>
+                  ) : null}
                 </div>
                 {figureCaption ? (
-                  <figcaption className="sysOverlayCaption">
+                  <figcaption ref={captionRef} className="sysOverlayCaption">
                     {figureCaption}
                   </figcaption>
                 ) : null}
               </figure>
             ) : null}
 
-            {credits.length > 0 ? (
-              <dl className="sysOverlayCredits">
-                {credits.map((c) => (
-                  <div key={c.label} className="sysOverlayCredit">
-                    <dt>{c.label}</dt>
-                    <dd>{c.value}</dd>
-                  </div>
-                ))}
-              </dl>
+            {impact ? (
+              <p className="sysOverlayImpact">
+                <span className="sysOverlayImpactIcon" aria-hidden>
+                  <svg viewBox="0 0 16 16">
+                    <path
+                      d="M3 11.5 6.5 8l2.5 2.5L13 5.5M13 5.5H9.5M13 5.5V9"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className="sysOverlayImpactText">
+                  {boldRuns(impact).map((run, i) =>
+                    run.bold ? (
+                      <strong key={i}>{run.text}</strong>
+                    ) : (
+                      <span key={i}>{run.text}</span>
+                    ),
+                  )}
+                </span>
+              </p>
             ) : null}
 
             {highlights.length > 0 ? (

@@ -112,8 +112,6 @@ export type EngComponent = {
   code?: string;
   /** Fetches full source for copy when `code` is omitted (e.g. large standalone files). */
   codeUrl?: string;
-  /** Taller iframe stage for components with dropdowns / popovers. */
-  embedTall?: boolean;
   /**
    * Card cover framing:
    * - `cover` default fill
@@ -148,7 +146,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     thumb: "/warpbnb/search_de.png",
     src: "/warpbnb/search_de.png",
     embedUrl: "/labs/search",
-    embedTall: true,
     frame: "cover",
     matte: "#FFE4EE",
     stack: ["React", "Inline tokens", "No deps"],
@@ -163,7 +160,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/walkity/thumbs/site-desktop.jpg",
     href: "https://walkity.vercel.app/",
     embedUrl: "https://walkity.vercel.app/",
-    embedTall: true,
     frame: "site",
     matte: "#D6E8F7",
     stack: ["Next.js", "Vercel", "Brand system"],
@@ -178,7 +174,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/warpbnb/thumbs/site-desktop.jpg?v=2",
     href: "https://www.warpbnb.com/",
     embedUrl: "https://www.warpbnb.com/",
-    embedTall: true,
     frame: "site",
     matte: "#FFE4EE",
     stack: ["Next.js", "Framer Motion", "Full-stack"],
@@ -193,7 +188,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/agave/thumbs/site-desktop.jpg",
     href: "https://agave-kappa.vercel.app/",
     embedUrl: "https://agave-kappa.vercel.app/",
-    embedTall: true,
     frame: "site",
     matte: "#D8F0DC",
     stack: ["Next.js", "Vercel"],
@@ -208,7 +202,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/f1-sim/thumbs/site-desktop.jpg",
     href: "https://f1-sim-nine.vercel.app/",
     embedUrl: "https://f1-sim-nine.vercel.app/",
-    embedTall: true,
     frame: "site",
     matte: "#EAF5C8",
     stack: ["Next.js", "Vercel", "Simulation"],
@@ -223,7 +216,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/retell/thumbs/site-desktop.jpg",
     href: "https://retell-design.vercel.app/",
     embedUrl: "https://retell-design.vercel.app/",
-    embedTall: true,
     frame: "site",
     matte: "#E4ECF8",
     stack: ["Next.js", "Vercel"],
