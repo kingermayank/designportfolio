@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { usePageTransition } from "@/components/PageTransition";
 import {
   VISUAL_CRAFT_STUDIES,
@@ -12,6 +13,10 @@ const ASPECT = "3 / 2";
 const THUMB_SRCSET: Partial<Record<string, string>> = {
   pathai:
     "/pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
+  walkity:
+    "/walkity/thumbs/work-cover-1200.jpg?v=1 1200w, /walkity/thumbs/work-cover.jpg?v=1 2400w",
+  bigbasket:
+    "/bigbasket/thumbs/work-cover-1200.jpg?v=5 1200w, /bigbasket/thumbs/work-cover.jpg?v=5 2400w",
 };
 
 function thumbFor(src?: string): string | undefined {
@@ -74,11 +79,16 @@ function MoreProjectCard({ card }: { card: Card }) {
   const { open } = usePageTransition();
   const gridSrc = card.video ? card.media : undefined;
 
+  const cardStyle = {
+    aspectRatio: ASPECT,
+    ["--work-card-ar"]: ASPECT,
+  } as CSSProperties;
+
   const inner = (
     <div className="workCardInner">
       <div
         className="workCardMediaWrap"
-        style={{ background: card.shade, aspectRatio: ASPECT }}
+        style={{ background: card.shade }}
       >
         {gridSrc ? (
           <video
@@ -99,7 +109,7 @@ function MoreProjectCard({ card }: { card: Card }) {
             srcSet={card.thumbSrcSet}
             sizes={
               card.thumbSrcSet
-                ? "(max-width: 720px) 100vw, (max-width: 900px) 50vw, 33vw"
+                ? "(max-width: 720px) 100vw, 50vw"
                 : undefined
             }
             alt=""
@@ -122,7 +132,7 @@ function MoreProjectCard({ card }: { card: Card }) {
         href={card.externalUrl}
         className="workCard"
         data-slug={card.slug}
-        style={{ aspectRatio: ASPECT }}
+        style={cardStyle}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${card.title} (opens in a new tab)`}
@@ -137,7 +147,7 @@ function MoreProjectCard({ card }: { card: Card }) {
       <div
         className="workCard workCardStatic"
         data-slug={card.slug}
-        style={{ aspectRatio: ASPECT }}
+        style={cardStyle}
       >
         {inner}
       </div>
@@ -149,7 +159,7 @@ function MoreProjectCard({ card }: { card: Card }) {
       href={`/work/${card.slug}`}
       className="workCard"
       data-slug={card.slug}
-      style={{ aspectRatio: ASPECT }}
+      style={cardStyle}
       onNavigate={(e) => {
         e.preventDefault();
         open(`/work/${card.slug}`, {

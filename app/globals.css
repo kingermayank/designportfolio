@@ -547,29 +547,26 @@ body {
   text-wrap: balance;
 }
 
-/* Visual Craft case-study closer — remaining projects, 8px gutters. */
+/* Visual Craft case-study closer — same centered max-width as editorial media. */
 .moreProjects {
-  width: 100%;
+  width: calc(100% - (var(--cs-editorial-inset) * 2));
   box-sizing: border-box;
-  margin: clamp(3.5rem, 8vw, 8rem) 0 0;
-  padding: 0 8px;
+  margin: clamp(3.5rem, 8vw, 8rem) auto 0;
+  padding: 0 0 var(--space-5);
 }
 
 .moreProjectsTitle {
   margin: 0 0 var(--space-5);
-  padding-bottom: 0.08em;
-  font-family: var(--font-cesare), "Times New Roman", serif;
-  font-size: clamp(1.75rem, 4vw, 34px);
+  font-family: var(--font-body);
+  font-size: 24px;
   font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  line-height: 31px;
+  letter-spacing: -0.02em;
   color: var(--text);
   text-wrap: balance;
 }
 
 .moreProjectsDot {
-  font-family: var(--font-azeret), var(--font-display), ui-sans-serif, sans-serif;
-  font-weight: 500;
   color: var(--color-accent-orange);
 }
 
@@ -580,18 +577,18 @@ body {
   align-items: start;
 }
 
-/* Five leftovers: three on the first row, two equal on the second. */
+/* Five leftovers: two equal on the first row, three on the second. */
 @media (min-width: 901px) {
   .moreProjectsGrid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .moreProjectsGrid > * {
-    grid-column: span 2;
+    grid-column: span 3;
   }
 
-  .moreProjectsGrid > :nth-child(n + 4) {
-    grid-column: span 3;
+  .moreProjectsGrid > :nth-child(n + 3) {
+    grid-column: span 2;
   }
 
   /* Kill the Visual Craft masonry height overrides so these stay 3:2. */
@@ -1681,6 +1678,7 @@ button.aboutCard:focus-visible {
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
   outline: none;
   transition: background-color 167ms linear;
 }
@@ -2260,7 +2258,7 @@ button.aboutCard:focus-visible {
   padding: 0 0 12px;
   margin: 0;
   max-width: none;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--color-muted);
   text-wrap: pretty;
 }
@@ -2400,9 +2398,9 @@ button.aboutCard:focus-visible {
 .aboutTmQuote {
   margin: 8px 0 0;
   font-family: var(--font-body);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 400;
-  line-height: 26px;
+  line-height: 28px;
   letter-spacing: -0.01em;
   color: var(--text);
   text-wrap: pretty;
@@ -5144,8 +5142,8 @@ button.aboutCard:focus-visible {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100cqw;
+  height: 100cqh;
   object-fit: cover;
   pointer-events: none;
   border-radius: inherit;
@@ -5390,6 +5388,12 @@ button.aboutCard:focus-visible {
     right: auto;
     bottom: auto;
     width: 100%;
+    aspect-ratio: var(--work-card-ar, 4 / 3);
+  }
+
+  .workCardMedia {
+    width: 100%;
+    height: 100%;
   }
 
   .workCard:hover .workCardMediaWrap,

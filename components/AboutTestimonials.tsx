@@ -10,7 +10,7 @@ import {
 import type { Testimonial } from "@/lib/about";
 
 /** How long each testimonial holds before the carousel advances. */
-const AUTOPLAY_MS = 7000;
+const AUTOPLAY_MS = 9100;
 
 /**
  * One testimonial at a time, on a timer.

@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type CSSProperties,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import CopyEmailButton from "@/components/CopyEmailButton";
@@ -114,7 +115,7 @@ const LOGO_BY_SLUG: Record<string, string> = {
   warpbnb: "/logos/warpbnb.png?v=2",
   pathai: "/logos/pathai.png?v=2",
   bigbasket: "/logos/bigbasket.png?v=2",
-  walkity: "/logos/walkity.png?v=2",
+  walkity: "/logos/walkity.png?v=3",
   rolipoli: "/logos/rolipoli.png",
 };
 
@@ -140,6 +141,10 @@ type Card = {
 const THUMB_SRCSET: Partial<Record<string, string>> = {
   pathai:
     "/pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
+  walkity:
+    "/walkity/thumbs/work-cover-1200.jpg?v=1 1200w, /walkity/thumbs/work-cover.jpg?v=1 2400w",
+  bigbasket:
+    "/bigbasket/thumbs/work-cover-1200.jpg?v=5 1200w, /bigbasket/thumbs/work-cover.jpg?v=5 2400w",
 };
 
 // Visual Craft shows project work only — studies flagged `inWorkGrid: false`
@@ -189,11 +194,16 @@ function WorkCard({
   // ever applied to assets that already lived under /grid/ or /new/.
   const gridSrc = card.video ? card.media : undefined;
 
+  const cardStyle = {
+    aspectRatio: card.aspect,
+    ["--work-card-ar"]: card.aspect,
+  } as CSSProperties;
+
   const inner = (
     <div className="workCardInner">
       <div
         className="workCardMediaWrap"
-        style={{ background: card.shade, aspectRatio: card.aspect }}
+        style={{ background: card.shade }}
       >
         {gridSrc ? (
           <video
@@ -243,7 +253,7 @@ function WorkCard({
         href={card.externalUrl}
         className="workCard"
         data-slug={card.slug}
-        style={{ aspectRatio: card.aspect }}
+        style={cardStyle}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${card.title} (opens in a new tab)`}
@@ -259,7 +269,7 @@ function WorkCard({
       <div
         className="workCard workCardStatic"
         data-slug={card.slug}
-        style={{ aspectRatio: card.aspect }}
+        style={cardStyle}
         {...hoverProps}
       >
         {inner}
@@ -272,7 +282,7 @@ function WorkCard({
       href={`/work/${card.slug}`}
       className="workCard"
       data-slug={card.slug}
-      style={{ aspectRatio: card.aspect }}
+      style={cardStyle}
       onNavigate={(e) => {
         e.preventDefault();
         open(`/work/${card.slug}`, {

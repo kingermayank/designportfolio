@@ -119,9 +119,8 @@ export const ABOUT_CAREER: {
     company: "UMS",
     title: "Visual Designer",
     year: "2021-2022",
-    logo: "/logos/ums.jpeg",
-    logoFit: "contain",
-    href: "https://www.linkedin.com/company/university-musical-society",
+    logo: "/logos/ums.png?v=2",
+    href: "https://www.linkedin.com/company/ums-university-musical-society-/",
   },
   {
     company: "BigBasket",
@@ -134,21 +133,21 @@ export const ABOUT_CAREER: {
     company: "Walkity",
     title: "Head of Design",
     year: "2019",
-    logo: "/logos/walkity.png",
-    href: "https://www.linkedin.com/company/walkity",
+    logo: "/logos/walkity.png?v=3",
+    href: "https://www.linkedin.com/company/visiot-technologies/",
   },
   {
     company: "SureLocal",
     title: "Founding Designer",
     year: "2019",
-    logo: "/logos/surelocal.png",
+    logo: "/logos/surelocal.png?v=2",
     href: "https://www.linkedin.com/company/surelocal",
   },
 ];
 
 /** Work philosophy — its own full-width card, not a story section. */
 export const ABOUT_PHILOSOPHY = {
-  title: "My work philosophy",
+  title: "My work philosophy.",
   lede: "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. I feel that designers owe a certain amount of responsibility not just towards their work but also towards society and its people.",
   principles: [
       {
@@ -186,6 +185,10 @@ export const ABOUT_PHILOSOPHY = {
       {
         title: "Commitment to giving back.",
         text: "I'm passionate about helping others grow. I've been fortunate to receive help from countless people I could never fully repay, and I'm committed to giving back and supporting others to the best of my ability.",
+      },
+      {
+        title: "Leave room for play.",
+        text: "Not every interaction needs to be purely functional. Personality, surprise, and experimentation can make products feel human.",
       },
   ],
 };

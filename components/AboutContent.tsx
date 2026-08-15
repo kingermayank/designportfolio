@@ -131,7 +131,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           </section>
 
           <section className="aboutCard aboutCardPods">
-            <h2 className="aboutCardTitle">Podcasts I&apos;m listening to</h2>
+            <h2 className="aboutCardTitle">Podcasts I&apos;m listening to.</h2>
             <AboutPodcastTicker />
           </section>
 
@@ -214,7 +214,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             aria-expanded={letterOpen}
           >
             <span className="aboutCardTitle">
-              Letter to my future hiring manager
+              Letter to my future hiring manager.
             </span>
             <div className="aboutLetterPreview" aria-hidden>
               <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>

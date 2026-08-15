@@ -326,7 +326,7 @@ const warpbnb: CaseStudy = {
       type: "full",
       media: {
         shade: "#2b2b2b",
-        src: "https://www.youtube.com/watch?v=2JfVbt3C4Q8",
+        src: "https://www.youtube.com/watch?v=3JfVbt3C4Q8",
         youtube: true,
         ar: 16 / 9,
       },
@@ -630,7 +630,7 @@ const walkity: CaseStudy = {
     },
   ],
   // Cover hero + Work card: brand.png. Case stack continues with walk11 → walk13.
-  workCover: "/walkity/thumbnail.png",
+  workCover: "/walkity/thumbs/work-cover.jpg?v=1",
   hero: {
     shade: "#222222",
     src: "/walkity/cover.png",
@@ -719,7 +719,7 @@ const bigbasket: CaseStudy = {
   shade: "#242424",
   mediaOnly: true,
   accent: "#6DE96C", // BigBasket brand green
-  workCover: "/bigbasket/thumbs/work-cover.jpg",
+  workCover: "/bigbasket/thumbs/work-cover.jpg?v=5",
   highlights: [
     {
       label: "Problem",
@@ -834,8 +834,8 @@ const ikonAnalytics: CaseStudy = {
   ],
   hero: {
     shade: "#A9B2BB",
-    src: "/ikon/analytics.png",
-    ar: 2048 / 1152,
+    src: "/ikon/analytics.png?v=3",
+    ar: 16 / 9,
     // Light artwork under white hero type — needs the full scrim to read.
     scrim: true,
   },
@@ -843,8 +843,8 @@ const ikonAnalytics: CaseStudy = {
     {
       type: "full",
       media: ik(
-        "/ikon/analytics.png",
-        2048 / 1152,
+        "/ikon/analytics.png?v=3",
+        16 / 9,
         "Success metrics sheet: every major flow mapped to HEART goals, behavioral signals, target metrics, and the tool tracking each one.",
       ),
     },
@@ -895,7 +895,7 @@ const ikonBlueprint: CaseStudy = {
   ],
   hero: {
     shade: "#A9B2BB",
-    src: "/ikon/blueprint.jpeg",
+    src: "/ikon/blueprint.png?v=3",
     ar: 16 / 9,
     scrim: true,
   },
@@ -903,7 +903,7 @@ const ikonBlueprint: CaseStudy = {
     {
       type: "full",
       media: ik(
-        "/ikon/blueprint.jpeg",
+        "/ikon/blueprint.png?v=3",
         16 / 9,
         "End-to-end device lifecycle across accounting, operations, warehouse, and dealership lanes, with pain points and system gaps called out inline.",
       ),
@@ -953,17 +953,17 @@ const ikonDataDictionary: CaseStudy = {
   ],
   hero: {
     shade: "#FFFFFF",
-    src: "/ikon/dictionary.png",
-    ar: 2442 / 1253,
+    src: "/ikon/dictionary.png?v=3",
+    ar: 16 / 9,
     scrim: true,
   },
   mediaBlocks: [
     {
       type: "full",
       media: ikDiagram(
-        "/ikon/dictionary.png",
-        2442 / 1253,
-        "Data dictionary catalogue: external sources and DMS integrations on one side, internal systems on the other.",
+        "/ikon/dictionary.png?v=3",
+        16 / 9,
+        "DMS data map: modules on the left, buy and service journeys on the right with the entities each step captures.",
       ),
     },
   ],
@@ -1011,7 +1011,7 @@ const ikonAgentic: CaseStudy = {
   ],
   hero: {
     shade: "#FFFFFF",
-    src: "/ikon/agentic.png",
+    src: "/ikon/agentic.png?v=3",
     ar: 16 / 9,
     scrim: true,
   },
@@ -1019,8 +1019,8 @@ const ikonAgentic: CaseStudy = {
     {
       type: "full",
       media: ikDiagram(
-        "/ikon/agentic.png",
-        1598 / 899,
+        "/ikon/agentic.png?v=3",
+        16 / 9,
         "Agentic outreach for service scheduling using Stella AI. Natural language handles booking and store info; rules-based transfer routes the rest.",
       ),
     },
