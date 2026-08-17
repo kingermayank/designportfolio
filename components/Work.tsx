@@ -11,6 +11,7 @@ import {
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import CopyEmailButton from "@/components/CopyEmailButton";
+import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
 import SiteFooter from "@/components/SiteFooter";
@@ -148,7 +149,7 @@ const THUMB_SRCSET: Partial<Record<string, string>> = {
 };
 
 // Visual Craft shows project work only — studies flagged `inWorkGrid: false`
-// (the Ikon PM systems artifacts) live under Systems Thinking instead.
+// (the Ikon PM systems artifacts) live under Product Thinking instead.
 const PROJECTS: Card[] = CASE_STUDIES.filter(
   (s) => s.inWorkGrid !== false,
 ).map((s, i) => {
@@ -336,7 +337,9 @@ function SystemsCard({
       <span className="sysCardInset">
         <span className="sysCardMedia">
           <span className="sysCardMediaInner" style={{ background: item.shade }}>
-            {item.thumb ? (
+            {item.id === "ikon-data-dictionary" ? (
+              <DataDictionaryThumbnail />
+            ) : item.thumb ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={item.thumb} alt="" />
             ) : null}
@@ -444,7 +447,7 @@ export default function Work() {
     rootRef.current?.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
-  // Deep link — /#systems-thinking opens that lens.
+  // Deep link — /#product-thinking opens that lens.
   useEffect(() => {
     const anchor = window.location.hash.slice(1);
     if (!anchor) return;

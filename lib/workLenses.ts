@@ -1,6 +1,6 @@
 /**
  * Work content lenses — each category switches the right-column view.
- * Visual Craft keeps the project grid; Systems and Design Engineering use
+ * Visual Craft keeps the project grid; Product Thinking and Design Engineering use
  * curated lists / DE cards. About lives on its own `/about` page.
  */
 
@@ -15,7 +15,7 @@ export type WorkLens = {
 
 export const WORK_LENSES: WorkLens[] = [
   { id: "visual", label: "Visual Craft", anchor: "visual-craft" },
-  { id: "systems", label: "Systems Thinking", anchor: "systems-thinking" },
+  { id: "systems", label: "Product Thinking", anchor: "product-thinking" },
   { id: "engineering", label: "Design Engineering", anchor: "design-engineering" },
 ];
 
@@ -28,22 +28,22 @@ export type WorkListItem = {
   body: string;
   thumb?: string;
   shade: string;
-  /** Category chips on the Systems Thinking card. */
+  /** Category chips on the Product Thinking card. */
   badges?: string[];
   year?: number;
 };
 
-/** Systems Thinking — the Ikon Technologies product-lead studies. */
+/** Product Thinking — the Ikon Technologies product-lead studies. */
 export const SYSTEMS_LIST: WorkListItem[] = [
   {
-    id: "ikon-analytics",
-    slug: "ikon-analytics",
-    title: "A shared HEART framework replacing four conflicting scorecards",
-    meta: "Ikon Technologies · Product Analytics · 2024",
-    body: "Sales, ops, leadership, and product each tracked different metrics. Mapped every web and mobile workflow to HEART goals and instrumented them, giving Toolbox one shared definition of success.",
-    thumb: "/ikon/thumbs/analytics.jpg?v=3",
-    shade: "#A9B2BB",
-    badges: ["Product Analytics", "Growth Strategy"],
+    id: "ikon-data-dictionary",
+    slug: "ikon-data-dictionary",
+    title: "One data dictionary, ~$6K/month of redundant spend cut",
+    meta: "Ikon Technologies · Data Dictionary · 2024",
+    body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams, ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
+    thumb: "/ikon/thumbs/dictionary.jpg?v=3",
+    shade: "#FFFFFF",
+    badges: ["Data Strategy", "Product Enablement", "Business Analysis"],
     year: 2024,
   },
   {
@@ -58,14 +58,14 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     year: 2024,
   },
   {
-    id: "ikon-data-dictionary",
-    slug: "ikon-data-dictionary",
-    title: "One data dictionary, ~$6K/month of redundant spend cut",
-    meta: "Ikon Technologies · Data Dictionary · 2024",
-    body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams, ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
-    thumb: "/ikon/thumbs/dictionary.jpg?v=3",
-    shade: "#FFFFFF",
-    badges: ["Data Strategy", "Product Enablement", "Business Analysis"],
+    id: "ikon-analytics",
+    slug: "ikon-analytics",
+    title: "A shared HEART framework replacing four conflicting scorecards",
+    meta: "Ikon Technologies · Product Analytics · 2024",
+    body: "Sales, ops, leadership, and product each tracked different metrics. Mapped every web and mobile workflow to HEART goals and instrumented them, giving Toolbox one shared definition of success.",
+    thumb: "/ikon/thumbs/analytics.jpg?v=3",
+    shade: "#A9B2BB",
+    badges: ["Product Analytics", "Growth Strategy"],
     year: 2024,
   },
   {
@@ -74,12 +74,12 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     title: "Service appointments booked by an agent, not an operator",
     meta: "Ikon Technologies · AI/ML Integration · 2025",
     body: "Automated dealership service outreach end to end with Stella AI, identifying customers, running the call, checking live availability, and booking autonomously, with humans on exceptions only.",
-    thumb: "/ikon/thumbs/agentic.jpg?v=3",
+    thumb: "/systems%20thinking/stella.png?v=4",
     shade: "#FFFFFF",
     badges: [
       "Strategic Partnerships",
       "Executive Alignment",
-      "Conversational AI",
+      "Agentic Outreach",
     ],
     year: 2025,
   },

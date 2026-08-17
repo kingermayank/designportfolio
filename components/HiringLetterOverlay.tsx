@@ -12,8 +12,9 @@ type Props = {
 };
 
 const OPEN_MS = 620;
-const CLOSE_MS = 380;
+const CLOSE_MS = 260;
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+const CLOSE_EASE = "cubic-bezier(0.7, 0, 0.84, 0)";
 /** Resting tilt; the hover tilt lives in CSS so :hover can take over. */
 const REST_TILT = "rotate(-2deg)";
 
@@ -91,7 +92,7 @@ export default function HiringLetterOverlay({ onClose, origin }: Props) {
     note.style.transform = REST_TILT;
     void box.width;
 
-    note.style.transition = `transform ${CLOSE_MS}ms ease-in, opacity ${CLOSE_MS}ms linear`;
+    note.style.transition = `transform ${CLOSE_MS}ms ${CLOSE_EASE}, opacity ${CLOSE_MS}ms linear`;
     note.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(-8deg)`;
     note.style.opacity = "0";
     if (scrim) scrim.style.opacity = "0";

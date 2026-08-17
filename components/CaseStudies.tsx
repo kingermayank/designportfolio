@@ -51,10 +51,17 @@ function MediaFill({ media }: { media?: CaseMedia }) {
   }
 
   const contain = media.fit === "contain";
-  const fillClass = "csFill" + (contain ? " csFillContain" : "");
+  const stretch = media.fit === "fill";
+  const fillClass =
+    "csFill" +
+    (contain ? " csFillContain" : "") +
+    (stretch ? " csFillStretch" : "");
+  const frameStyle =
+    media.radius != null ? { borderRadius: `${media.radius}px` } : undefined;
   const asset = media.video ? (
     <video
       className={fillClass}
+      style={frameStyle}
       src={media.src}
       poster={posterFor(media.src)}
       autoPlay
@@ -69,7 +76,7 @@ function MediaFill({ media }: { media?: CaseMedia }) {
     />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={fillClass} src={media.src} alt="" />
+    <img className={fillClass} style={frameStyle} src={media.src} alt="" />
   );
 
   // Contained media sits in a padded stage so object-fit:contain can shrink
@@ -171,6 +178,18 @@ function MediaBlocks({
       <MediaTile key={i} media={block.media} bleed={block.bleed} />
     ) : block.type === "embed" ? (
       <MediaEmbed key={i} embed={block} />
+    ) : block.type === "row" ? (
+      <div
+        key={i}
+        className="csMediaRow"
+        style={{
+          gridTemplateColumns: `repeat(${block.columns ?? block.media.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {block.media.map((media, j) => (
+          <MediaTile key={j} media={media} />
+        ))}
+      </div>
     ) : (
       <div
         key={i}

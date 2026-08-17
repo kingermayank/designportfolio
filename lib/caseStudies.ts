@@ -5,10 +5,12 @@ export type CaseMedia = {
   /** Embed a YouTube player instead of a local image/video. */
   youtube?: boolean;
   ar?: number; // natural aspect ratio (width / height); defaults to 16/9
-  /** How the asset fills the frame. Default cover; contain letterboxes into `shade`. */
-  fit?: "cover" | "contain";
+  /** How the asset fills the frame. Default cover; contain letterboxes; fill stretches without cropping. */
+  fit?: "cover" | "contain" | "fill";
   /** Inset the asset inside the frame (px). Use with `fit: "contain"` to pad into `shade`. */
   pad?: { top?: number; bottom?: number; left?: number; right?: number };
+  /** Corner radius applied directly to the visible image/video frame. */
+  radius?: number;
   /** HTML video playbackRate (1 = normal). */
   playbackRate?: number;
   /**
@@ -48,6 +50,12 @@ export type MediaBlock =
       fillLeft?: boolean;
       /** Column flex fractions for left / right. Defaults to equal `[1, 1]`. */
       columns?: [number, number];
+    }
+  | {
+      /** One horizontal strip of equally sized media tiles. */
+      type: "row";
+      media: CaseMedia[];
+      columns?: number;
     }
   | {
       type: "embed";
@@ -688,21 +696,28 @@ const bb = (
   src: string,
   ar: number,
   video?: boolean,
+  caption?: string,
 ): CaseMedia => ({
   shade: "#242424",
   src,
   ar,
   video,
+  caption,
 });
 
-/** Figma screen recordings — 16:9 frame, light gray mat, video contained. */
-const bbFigma = (src: string): CaseMedia => ({
+/** Figma screen recordings — light gray mat with contained video. */
+const bbFigma = (
+  src: string,
+  ar = 16 / 9,
+  caption?: string,
+): CaseMedia => ({
   shade: "#F5F5F5",
   src,
   video: true,
-  ar: 16 / 9,
+  ar,
   fit: "contain",
   pad: { top: 48, bottom: 48, left: 48, right: 48 },
+  caption,
 });
 
 const bigbasket: CaseStudy = {
@@ -742,16 +757,160 @@ const bigbasket: CaseStudy = {
   },
   // Order follows the reference stack after cover.
   mediaBlocks: [
-    { type: "full", media: bb("/bigbasket/chaos.png", 3840 / 2160) },
-    { type: "full", media: bb("/bigbasket/foundations_layout2.png", 1786 / 1286) },
-    { type: "full", media: bb("/bigbasket/button.png", 1920 / 857) },
-    { type: "full", media: bbFigma("/bigbasket/components.mp4") },
-    { type: "full", media: bb("/bigbasket/ios-vs-android.png", 1920 / 857) },
-    { type: "full", media: bb("/bigbasket/melon3.png", 3200 / 1118) },
-    { type: "full", media: bbFigma("/bigbasket/spider.mp4") },
-    { type: "full", media: bb("/bigbasket/Artboard.png", 2688 / 1680) },
-    { type: "full", media: bb("/bigbasket/guidelines.mp4", 16 / 9, true) },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/chaos.png",
+        3840 / 2160,
+        false,
+        "The visual audit exposed duplicated patterns, inconsistent screens, and design debt across the app.",
+      ),
+    },
+    {
+      type: "row",
+      media: [
+        bb("/bigbasket/Big_1.png", 1, false, "Color tokens from real screens."),
+        bb("/bigbasket/Big_2.png", 1, false, "A consistent, reusable type scale."),
+        bb("/bigbasket/Big_3.png", 1, false, "Elevation rules for every surface."),
+        bb("/bigbasket/Big_4.png", 1, false, "Spacing tokens for scalable layouts."),
+      ],
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_14.png",
+        2223 / 1254,
+        false,
+        "A unified system-icon library gave every product surface one consistent visual language.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/button.png",
+        1920 / 857,
+        false,
+        "Button variations and interaction states.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        bb(
+          "/bigbasket/big_7.png",
+          4 / 3,
+          false,
+          "Semantic color tokens for ratings and status feedback.",
+        ),
+        bb(
+          "/bigbasket/big_8.png",
+          4 / 3,
+          false,
+          "One semantic palette across customer and assistant messages.",
+        ),
+      ],
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_10.png",
+        3840 / 2160,
+        false,
+        "A shared dialog pattern scaled across refunds, permissions, delivery errors, and account actions.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_13.png",
+        2816 / 1584,
+        false,
+        "Special-offer card variants adapted one shared structure across timed, exclusive, seasonal, and unlocked promotions.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/Big_5.png",
+        3778 / 2124,
+        false,
+        "Native iOS and Android behavior, unified through Melon's typography and iconography.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_9.png",
+        3200 / 1118,
+        false,
+        "A watermelon analogy made Atomic Design tangible: atoms became components, patterns, templates, and screens.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_3.mp4",
+        1862 / 1080,
+        true,
+        "The Melon story deck I presented 20+ times to explain the system and earn organization-wide buy-in.",
+      ),
+    },
+    {
+      type: "full",
+      media: bbFigma(
+        "/bigbasket/components.mp4",
+        16 / 9,
+        "The shared component library used to create high-fidelity designs.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        {
+          ...bb("/bigbasket/Artboard.png", 4 / 3),
+          shade: "#F5F5F5",
+          fit: "fill",
+          caption: "A repeatable template for component anatomy, usage, and behavior.",
+        },
+        {
+          ...bbFigma("/bigbasket/spider.mp4", 4 / 3),
+          radius: 4,
+          caption: "A clickable prototype connected every level of the system.",
+        },
+      ],
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/guidelines.mp4",
+        16 / 9,
+        true,
+        "Guidance lived beside the components, so standards stayed easy to find and use.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_11.png",
+        3020 / 3744,
+        false,
+        "End-to-end return, exchange, and cancellation flows tested the system against real customer journeys.",
+      ),
+    },
+    {
+      type: "full",
+      media: bb(
+        "/bigbasket/big_12.png",
+        3840 / 2160,
+        false,
+        "The same visual language carried into team onboarding and recruitment materials.",
+      ),
+    },
   ],
+  impact:
+    "Melon streamlined the UX process and gave design and engineering one shared language for shipping cohesive grocery experiences.",
   credits: [
     {
       label: "My Contribution",
@@ -1011,15 +1170,15 @@ const ikonAgentic: CaseStudy = {
   ],
   hero: {
     shade: "#FFFFFF",
-    src: "/ikon/agentic.png?v=3",
+    src: "/systems%20thinking/stella.png?v=4",
     ar: 16 / 9,
     scrim: true,
   },
   mediaBlocks: [
     {
       type: "full",
-      media: ikDiagram(
-        "/ikon/agentic.png?v=3",
+      media: ik(
+        "/systems%20thinking/stella.png?v=4",
         16 / 9,
         "Agentic outreach for service scheduling using Stella AI. Natural language handles booking and store info; rules-based transfer routes the rest.",
       ),
@@ -1048,7 +1207,7 @@ const rolipoli: CaseStudy = {
   year: 2024,
   category: "Product Design",
   shade: "#262626",
-  workCover: "/rolipoli/thumbnail.png",
+  workCover: "/rolipoli/thumbnail.mp4",
   linkable: false,
   externalUrl: "https://www.youtube.com/watch?v=u9v3gzVkyDk",
   sections: [

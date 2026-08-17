@@ -9,6 +9,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
 import { CASE_STUDIES, type CaseMedia } from "@/lib/caseStudies";
 import { boldRuns } from "@/lib/richText";
 import type { WorkListItem } from "@/lib/workLenses";
@@ -79,10 +80,13 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
   const tags = item.badges ?? [];
   const shots = galleryMedia(item.slug);
   const figure = shots[shotIdx] ?? shots[0];
-  const figureSrc = figure?.src ?? item.thumb;
-  const figureShade = figure?.shade ?? item.shade;
-  const figureAr = figure?.ar ?? 16 / 9;
+  // Match the Product Thinking card art in its detail view. Stella already
+  // followed this path; the other studies previously swapped to case media.
+  const figureSrc = item.thumb ?? figure?.src;
+  const figureShade = item.shade;
+  const figureAr = 16 / 9;
   const figureCaption = figure?.caption;
+  const isDataDictionary = item.id === "ikon-data-dictionary";
   const hasGallery = shots.length > 1;
   const stepShot = (dir: number) =>
     setShotIdx((i) => (i + dir + shots.length) % shots.length);
@@ -203,11 +207,10 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
               </ul>
             ) : null}
 
-            {figureSrc ? (
+            {figureSrc || isDataDictionary ? (
               <figure
                 className={
                   "sysOverlayFigure" +
-                  (figure?.fit === "contain" ? " is-contain" : "") +
                   (impact ? " has-impact" : "")
                 }
               >
@@ -218,8 +221,12 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
                     background: figureShade,
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={figureSrc} alt={figureCaption ?? ""} />
+                  {isDataDictionary ? (
+                    <DataDictionaryThumbnail />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={figureSrc} alt={figureCaption ?? ""} />
+                  )}
 
                   {hasGallery ? (
                     <>

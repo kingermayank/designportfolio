@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ABOUT_CAREER,
   ABOUT_INTRO,
@@ -9,7 +9,6 @@ import {
   ABOUT_PTO,
   TESTIMONIALS,
 } from "@/lib/about";
-import { HIRING_LETTER } from "@/lib/letter";
 import AboutPodcastTicker from "@/components/AboutPodcastTicker";
 import AboutTestimonials from "@/components/AboutTestimonials";
 import CurrentlyStatus from "@/components/CurrentlyStatus";
@@ -107,8 +106,43 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
     registerSection?.(i, el);
   const [letterOpen, setLetterOpen] = useState(false);
+  const [envelopeOpen, setEnvelopeOpen] = useState(false);
   // Where the letter should fly out of / back into.
   const [letterOrigin, setLetterOrigin] = useState<DOMRect | null>(null);
+  const envelopeLetterRef = useRef<HTMLDivElement>(null);
+  const letterTimerRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (letterTimerRef.current) window.clearTimeout(letterTimerRef.current);
+    },
+    [],
+  );
+
+  const openHiringLetter = () => {
+    if (envelopeOpen || letterOpen) return;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    setEnvelopeOpen(true);
+    letterTimerRef.current = window.setTimeout(
+      () => {
+        setLetterOrigin(
+          envelopeLetterRef.current?.getBoundingClientRect() ?? null,
+        );
+        setLetterOpen(true);
+      },
+      reduceMotion ? 0 : 360,
+    );
+  };
+
+  const closeHiringLetter = () => {
+    setLetterOpen(false);
+    letterTimerRef.current = window.setTimeout(
+      () => setEnvelopeOpen(false),
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 80,
+    );
+  };
 
   return (
     <div className="aboutFlow">
@@ -205,22 +239,61 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
 
           <button
             type="button"
-            className="aboutCard aboutCardLetter"
-            onClick={(e) => {
-              setLetterOrigin(e.currentTarget.getBoundingClientRect());
-              setLetterOpen(true);
-            }}
+            className={
+              "aboutCard aboutCardLetter" +
+              (envelopeOpen ? " is-envelope-open" : "")
+            }
+            onClick={openHiringLetter}
             aria-haspopup="dialog"
             aria-expanded={letterOpen}
           >
             <span className="aboutCardTitle">
               Letter to my future hiring manager.
             </span>
-            <div className="aboutLetterPreview" aria-hidden>
-              <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>
-              {HIRING_LETTER.body.map((p) => (
-                <p key={p.slice(0, 24)}>{p}</p>
-              ))}
+            <div className="aboutEnvelopeStage" aria-hidden>
+              <div className="aboutEnvelope">
+                <svg
+                  className="aboutEnvelopeBack"
+                  viewBox="0 0 620 400"
+                  preserveAspectRatio="none"
+                >
+                  <rect width="620" height="400" rx="8" />
+                </svg>
+                <div ref={envelopeLetterRef} className="aboutEnvelopeLetter">
+                  <span className="aboutEnvelopeLetterTo">
+                    Dear future hiring manager,
+                  </span>
+                  <span className="aboutEnvelopeLetterRule" />
+                  <span className="aboutEnvelopeLetterRule is-short" />
+                  <span className="aboutEnvelopeLetterSignoff">Mayank</span>
+                </div>
+                <svg
+                  className="aboutEnvelopeFlap"
+                  viewBox="0 0 620 270"
+                  preserveAspectRatio="none"
+                >
+                  <path d="M0 0H620L310 270Z" />
+                </svg>
+                <svg
+                  className="aboutEnvelopePocket"
+                  viewBox="0 0 620 400"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    className="aboutEnvelopePocketLeft"
+                    d="M0 112 310 274 0 400Z"
+                  />
+                  <path
+                    className="aboutEnvelopePocketRight"
+                    d="M620 112 310 274 620 400Z"
+                  />
+                  <path
+                    className="aboutEnvelopePocketBottom"
+                    d="M0 400 310 274 620 400Z"
+                  />
+                </svg>
+              </div>
+              <span className="aboutEnvelopeHint">Open letter</span>
             </div>
           </button>
         </div>
@@ -242,7 +315,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
       {letterOpen ? (
         <HiringLetterOverlay
           origin={letterOrigin}
-          onClose={() => setLetterOpen(false)}
+          onClose={closeHiringLetter}
         />
       ) : null}
 
