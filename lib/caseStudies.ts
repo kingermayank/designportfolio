@@ -134,13 +134,24 @@ const tb = (
   ...extras,
 });
 
-/** Desktop product shots — 16:9 frame, gray mat, vertical inset. */
+/** Desktop product shots — 16:9 frame, dark mat, vertical inset. */
 const tbDesktop = (src: string, caption: string): CaseMedia =>
   tb(src, 16 / 9, true, caption, {
-    shade: "#BCBEC4",
+    shade: "#222627",
     fit: "contain",
     pad: { top: 64, bottom: 64 },
   });
+
+/**
+ * Craft stills from /toolbox/project — each export already carries its own
+ * backdrop, so they render at natural AR with `shade` matched to that backdrop.
+ */
+const tbShot = (
+  src: string,
+  ar: number,
+  shade: string,
+  caption: string,
+): CaseMedia => ({ shade, src, ar, caption });
 
 const toolbox: CaseStudy = {
   slug: "toolbox",
@@ -179,7 +190,128 @@ const toolbox: CaseStudy = {
     scrim: true,
   },
   mediaBlocks: [
-    // Filenames on disk are out of sync with content — map by what's in the frame.
+    /* Craft stills — /toolbox/project, in the order the screens are read. */
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool1.png",
+        3840 / 2160,
+        "#222627",
+        "Setting the tone at the front door with a sign-in that reads as software a dealer group can trust.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        tbShot(
+          "/toolbox/project/tool2_1.png",
+          1878 / 2322,
+          "#222627",
+          // Row tiles are half-width — captions are one clipped line, keep short.
+          "The login card, on the shared component foundation.",
+        ),
+        tbShot(
+          "/toolbox/project/tool2_2.png",
+          1858 / 2323,
+          "#222627",
+          "One navigation spine for every dealer workflow.",
+        ),
+      ],
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool3.png",
+        3832 / 2156,
+        "#FFFFFF",
+        "An ask bar that invites dealers to start with a question instead of a filter.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        tbShot(
+          "/toolbox/project/tool4_1.png",
+          1,
+          "#FFFFFF",
+          "A voice affordance for staff with their hands full.",
+        ),
+        tbShot(
+          "/toolbox/project/tool4_2.png",
+          1,
+          "#F9F9F9",
+          "The Toolbox mark that anchors the platform.",
+        ),
+      ],
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool5.png",
+        3880 / 2183,
+        "#FFFFFF",
+        "Answers that lead with the number, then show the work and the next question worth asking.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool6.png",
+        3836 / 2722,
+        "#222627",
+        "Operational health at a glance — pairing rates, inventory mix, and off-lot exposure in one view.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool7.png",
+        3852 / 2167,
+        "#222627",
+        "Letting each dealer set their own definition of fresh, aging, and at-risk inventory.",
+      ),
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool8.png",
+        3852 / 2167,
+        "#FFFFFF",
+        "Two ways to read the same AI-ranked results — spatially on the map, or ranked in a table.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        tbShot(
+          "/toolbox/project/tool9_1.png",
+          1,
+          "#222627",
+          "Map and list, without losing your place.",
+        ),
+        tbShot(
+          "/toolbox/project/tool9_2.png",
+          1,
+          "#222627",
+          "A legend that doubles as a map filter.",
+        ),
+      ],
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool10.png",
+        3852 / 2167,
+        "#FFFFFF",
+        "Draw, lasso, and pan tools for carving a geofence straight out of the lot.",
+      ),
+    },
+
+    /* Product walkthroughs. Filenames on disk are out of sync with content —
+     * map by what's in the frame. */
     {
       type: "full",
       media: tbDesktop(
@@ -203,12 +335,13 @@ const toolbox: CaseStudy = {
     },
     {
       type: "full",
-      // Phone mockups already include their own gray art — no CSS mat/padding.
+      // Phone mockups already include their own art — cover, so no CSS mat.
       media: tb(
         "/toolbox/dashboard.mp4",
         16 / 9,
         true,
         "Making the pairing process reliable and frustration-free to prevent returning perfectly good hardware.",
+        { shade: "#222627" },
       ),
     },
     {
@@ -340,6 +473,8 @@ const warpbnb: CaseStudy = {
       },
     },
   ],
+  impact:
+    "A full product — design system, frontend, backend, content, and a video commercial — shipped solo in **two weeks**.",
   credits: [
     {
       label: "Tools",
@@ -538,6 +673,8 @@ const pathai: CaseStudy = {
     { type: "full", media: pa("/pathai/path11.png", 2738 / 1542) },
     { type: "full", media: pa("/pathai/path8.png", 2700 / 1520) },
   ],
+  impact:
+    "Region Comments cut second-opinion turnaround by **~45%**, and adoption spread beyond consults into QA, tumor boards, teaching, and research.",
   credits: [
     {
       label: "My Contribution",
@@ -671,6 +808,8 @@ const walkity: CaseStudy = {
       },
     },
   ],
+  impact:
+    "Walkity launched with one brand system and an accessible landing page that make its purpose immediate: never walk alone.",
   credits: [
     { label: "Client", value: "VisIoT Technologies Pvt. Ltd." },
     { label: "Role", value: "Head of Design" },
