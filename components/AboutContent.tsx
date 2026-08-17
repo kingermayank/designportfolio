@@ -124,6 +124,10 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    // On a pointer device the envelope is already open under the cursor, so the
+    // overlay can lift the letter straight from where it sits. Touch has no
+    // hover, so there the flap still has to turn over first.
+    const openedOnHover = window.matchMedia("(hover: hover)").matches;
     setEnvelopeOpen(true);
     letterTimerRef.current = window.setTimeout(
       () => {
@@ -132,7 +136,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
         );
         setLetterOpen(true);
       },
-      reduceMotion ? 0 : 360,
+      reduceMotion || openedOnHover ? 0 : 620,
     );
   };
 
@@ -250,48 +254,28 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             <span className="aboutCardTitle">
               Letter to my future hiring manager.
             </span>
+            {/* Layers are stacked back-to-front in real 3D (translateZ), so the
+                flap genuinely swings behind the envelope as it opens. */}
             <div className="aboutEnvelopeStage" aria-hidden>
               <div className="aboutEnvelope">
-                <svg
-                  className="aboutEnvelopeBack"
-                  viewBox="0 0 620 400"
-                  preserveAspectRatio="none"
-                >
-                  <rect width="620" height="400" rx="8" />
-                </svg>
+                <span className="aboutEnvelopeBack" />
                 <div ref={envelopeLetterRef} className="aboutEnvelopeLetter">
                   <span className="aboutEnvelopeLetterTo">
                     Dear future hiring manager,
                   </span>
                   <span className="aboutEnvelopeLetterRule" />
+                  <span className="aboutEnvelopeLetterRule" />
+                  <span className="aboutEnvelopeLetterRule" />
                   <span className="aboutEnvelopeLetterRule is-short" />
-                  <span className="aboutEnvelopeLetterSignoff">Mayank</span>
                 </div>
-                <svg
-                  className="aboutEnvelopeFlap"
-                  viewBox="0 0 620 270"
-                  preserveAspectRatio="none"
-                >
-                  <path d="M0 0H620L310 270Z" />
-                </svg>
-                <svg
-                  className="aboutEnvelopePocket"
-                  viewBox="0 0 620 400"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    className="aboutEnvelopePocketLeft"
-                    d="M0 112 310 274 0 400Z"
-                  />
-                  <path
-                    className="aboutEnvelopePocketRight"
-                    d="M620 112 310 274 620 400Z"
-                  />
-                  <path
-                    className="aboutEnvelopePocketBottom"
-                    d="M0 400 310 274 620 400Z"
-                  />
-                </svg>
+                <div className="aboutEnvelopePocket">
+                  <span className="aboutEnvelopePocketPanel is-left" />
+                  <span className="aboutEnvelopePocketPanel is-right" />
+                  <span className="aboutEnvelopePocketPanel is-bottom" />
+                </div>
+                <div className="aboutEnvelopeFlap">
+                  <span className="aboutEnvelopeFlapFace" />
+                </div>
               </div>
               <span className="aboutEnvelopeHint">Open letter</span>
             </div>
