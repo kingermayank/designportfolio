@@ -17,6 +17,6 @@ export const WORK_FIT_CTA = {
   title: "Interested in working together?",
   body: "Learn a little more about me, or just skip ahead and say hello.",
   aboutLabel: "About me",
-  contactLabel: "Get in touch",
+  contactLabel: "Let's chat",
   email: "kingermayank@gmail.com",
 };

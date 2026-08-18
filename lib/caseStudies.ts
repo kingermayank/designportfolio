@@ -1112,7 +1112,7 @@ const ikonAnalytics: CaseStudy = {
     "Established the HEART model as Toolbox's product health north star, mapping every major web and mobile workflow into instrumented, measurable touchpoints.",
   year: 2024,
   category: "Product Management",
-  shade: "#A9B2BB",
+  shade: "#FFFFFF",
   mediaOnly: true,
   inWorkGrid: false,
   accent: "#03BB7D",
@@ -1131,17 +1131,16 @@ const ikonAnalytics: CaseStudy = {
     },
   ],
   hero: {
-    shade: "#A9B2BB",
-    src: "/ikon/analytics.png?v=3",
+    shade: "#FFFFFF",
+    src: "/systems%20thinking/Slide%2016_9%20-%2060.png",
     ar: 16 / 9,
-    // Light artwork under white hero type — needs the full scrim to read.
     scrim: true,
   },
   mediaBlocks: [
     {
       type: "full",
       media: ik(
-        "/ikon/analytics.png?v=3",
+        "/systems%20thinking/Slide%2016_9%20-%2060.png",
         16 / 9,
         "Success metrics sheet: every major flow mapped to HEART goals, behavioral signals, target metrics, and the tool tracking each one.",
       ),
@@ -1309,7 +1308,7 @@ const ikonAgentic: CaseStudy = {
   ],
   hero: {
     shade: "#FFFFFF",
-    src: "/systems%20thinking/stella.png?v=4",
+    src: "/systems%20thinking/Slide%2016_9%20-%2061.png",
     ar: 16 / 9,
     scrim: true,
   },
@@ -1317,7 +1316,7 @@ const ikonAgentic: CaseStudy = {
     {
       type: "full",
       media: ik(
-        "/systems%20thinking/stella.png?v=4",
+        "/systems%20thinking/Slide%2016_9%20-%2061.png",
         16 / 9,
         "Agentic outreach for service scheduling using Stella AI. Natural language handles booking and store info; rules-based transfer routes the rest.",
       ),

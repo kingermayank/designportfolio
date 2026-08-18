@@ -154,9 +154,10 @@ export default function HiringLetterOverlay({ onClose, origin }: Props) {
         </p>
         <CopyEmailButton
           email={HIRING_LETTER.email}
-          label={HIRING_LETTER.cta}
+          label="Let's chat"
           copiedLabel="Email copied"
-          className="workFitBtn letterCopyBtn"
+          showIcon={false}
+          className="workFitBtn workFitBtnSolid letterCopyBtn"
         />
         <p className="letterHint">{HIRING_LETTER.dismissHint}</p>
       </div>

@@ -1512,7 +1512,7 @@ button.csNavItem {
   margin: 8px 0 0;
   font-family: var(--font-cesare), "Times New Roman", serif;
   font-weight: 400;
-  font-size: clamp(2rem, 8vw, 64px);
+  font-size: clamp(2.5rem, 8vw, 64px);
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--text);
@@ -1957,7 +1957,7 @@ button.aboutCard:focus-visible {
   position: relative;
   z-index: 10;
   margin-bottom: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .aboutEnvelopeStage {
@@ -2115,13 +2115,13 @@ button.aboutCard:focus-visible {
 /* Folded in first, so they sit under the bottom flap. */
 .aboutEnvelopePocketPanel.is-left {
   clip-path: polygon(0 0, 50% var(--env-junction), 0 100%);
-  background-image: linear-gradient(100deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0) 62%);
+  background-image: linear-gradient(100deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.12) 62%);
   filter: drop-shadow(1px 0 1px rgba(0, 0, 0, 0.2));
 }
 
 .aboutEnvelopePocketPanel.is-right {
   clip-path: polygon(100% 0, 50% var(--env-junction), 100% 100%);
-  background-image: linear-gradient(260deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0) 62%);
+  background-image: linear-gradient(260deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.1) 62%);
   filter: drop-shadow(-1px 0 1px rgba(0, 0, 0, 0.2));
 }
 
@@ -2147,6 +2147,14 @@ button.aboutCard:focus-visible {
   will-change: transform;
 }
 
+.aboutEnvelopeFlap::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: rgba(0, 0, 0, 0.18);
+}
+
 .aboutEnvelopeFlapFace {
   position: absolute;
   inset: 0;
@@ -2154,7 +2162,7 @@ button.aboutCard:focus-visible {
   border-radius: var(--env-radius) var(--env-radius) 0 0;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   background-color: var(--env-paper);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.1));
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(0, 0, 0, 0.02));
 }
 
 /* The gummed underside, revealed once the flap has turned over. Its top edge is
@@ -5302,7 +5310,7 @@ button.aboutCard:focus-visible {
 
 .letterHint {
   margin: 20px 0 0;
-  padding: 0;
+  padding: 0 0 4px;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 500;
@@ -5670,7 +5678,7 @@ button.aboutCard:focus-visible {
 
   .workBrand {
     flex: 1;
-    font-size: clamp(2rem, 9vw, 3.25rem);
+    font-size: clamp(2.5rem, calc(9vw + 8px), 3.75rem);
     padding-top: 6px;
     text-wrap: unset;
     white-space: nowrap;
@@ -5849,12 +5857,13 @@ button.aboutCard:focus-visible {
 
 @media (max-width: 560px) {
   .workLenses {
-    gap: 14px 18px;
+    gap: 12px 8px;
     padding: 8px 0 16px;
   }
 
   .workLens {
-    font-size: 14px;
+    font-size: 13px;
+    gap: 4px;
     min-height: 44px;
   }
 
@@ -5883,6 +5892,17 @@ button.aboutCard:focus-visible {
 
   .csDetailTitle {
     font-size: 26px;
+  }
+}
+
+@media (max-width: 400px) {
+  .workLenses {
+    gap: 10px 6px;
+  }
+
+  .workLens {
+    font-size: 12px;
+    gap: 3px;
   }
 }
 

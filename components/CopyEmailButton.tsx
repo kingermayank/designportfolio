@@ -7,6 +7,7 @@ type CopyEmailButtonProps = {
   label?: string;
   copiedLabel?: string;
   errorLabel?: string;
+  showIcon?: boolean;
   className?: string;
 };
 
@@ -15,6 +16,7 @@ export default function CopyEmailButton({
   label = "Copy Email",
   copiedLabel = "Copied",
   errorLabel = "Failed",
+  showIcon = true,
   className = "workFitBtn workFitBtnGhost",
 }: CopyEmailButtonProps) {
   return (
@@ -23,6 +25,7 @@ export default function CopyEmailButton({
       label={label}
       copiedLabel={copiedLabel}
       errorLabel={errorLabel}
+      showIcon={showIcon}
       className={className}
     />
   );

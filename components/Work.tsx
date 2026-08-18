@@ -549,10 +549,14 @@ export default function Work() {
               >
                 {WORK_FIT_CTA.aboutLabel}
               </button>
+              {/* Stacked labels lock the width to the widest one, so the
+                  copied state has to stay shorter than the label for this to
+                  match the ghost button's box. */}
               <CopyEmailButton
                 email={WORK_FIT_CTA.email}
                 label={WORK_FIT_CTA.contactLabel}
                 copiedLabel="Email copied"
+                showIcon={false}
                 className="workFitBtn workFitBtnSolid"
               />
             </div>

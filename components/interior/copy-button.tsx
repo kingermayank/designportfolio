@@ -18,6 +18,8 @@ export type CopyButtonProps = {
   onCopy?: (value: string) => void;
   onError?: (reason: unknown) => void;
   disabled?: boolean;
+  /** The leading copy glyph. Off where the button reads as a plain CTA. */
+  showIcon?: boolean;
   className?: string;
 };
 
@@ -30,6 +32,7 @@ export function CopyButton({
   onCopy,
   onError,
   disabled = false,
+  showIcon = true,
   className = "",
 }: CopyButtonProps) {
   const { copy, status } = useCopyToClipboard({ timeout, onCopy, onError });
@@ -56,65 +59,67 @@ export function CopyButton({
       transition={CELL}
       className={"intCopyBtn" + (className ? ` ${className}` : "")}
     >
-      <span className="intCopyIcon" aria-hidden="true">
-        <motion.svg
-          viewBox="0 0 14 14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={false}
-          animate={{
-            opacity: status === "idle" ? 1 : 0,
-            scale: status === "idle" ? 1 : 0.92,
-          }}
-          transition={fade}
-        >
-          <path d="M9.6 5.1V3.7A1.7 1.7 0 0 0 7.9 2H3.7A1.7 1.7 0 0 0 2 3.7v4.2a1.7 1.7 0 0 0 1.7 1.7h1.4" />
-          <rect x="5.1" y="5.1" width="6.9" height="6.9" rx="1.7" />
-        </motion.svg>
-
-        <motion.svg
-          viewBox="0 0 14 14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={false}
-          animate={{
-            opacity: status === "copied" ? 1 : 0,
-            scale: status === "copied" ? 1 : 0.92,
-          }}
-          transition={fade}
-        >
-          <motion.path
-            d="M2.9 7.4 5.6 10.1 11.1 4"
+      {showIcon ? (
+        <span className="intCopyIcon" aria-hidden="true">
+          <motion.svg
+            viewBox="0 0 14 14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
             initial={false}
-            animate={{ pathLength: status === "copied" ? 1 : 0 }}
-            transition={draw}
-          />
-        </motion.svg>
-
-        <motion.svg
-          viewBox="0 0 14 14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={false}
-          animate={{
-            opacity: status === "error" ? 1 : 0,
-            scale: status === "error" ? 1 : 0.92,
-          }}
-          transition={fade}
-        >
-          <path d="M3.6 3.6 10.4 10.4" />
-          <path d="M10.4 3.6 3.6 10.4" />
-        </motion.svg>
-      </span>
+            animate={{
+              opacity: status === "idle" ? 1 : 0,
+              scale: status === "idle" ? 1 : 0.92,
+            }}
+            transition={fade}
+          >
+            <path d="M9.6 5.1V3.7A1.7 1.7 0 0 0 7.9 2H3.7A1.7 1.7 0 0 0 2 3.7v4.2a1.7 1.7 0 0 0 1.7 1.7h1.4" />
+            <rect x="5.1" y="5.1" width="6.9" height="6.9" rx="1.7" />
+          </motion.svg>
+  
+          <motion.svg
+            viewBox="0 0 14 14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={false}
+            animate={{
+              opacity: status === "copied" ? 1 : 0,
+              scale: status === "copied" ? 1 : 0.92,
+            }}
+            transition={fade}
+          >
+            <motion.path
+              d="M2.9 7.4 5.6 10.1 11.1 4"
+              initial={false}
+              animate={{ pathLength: status === "copied" ? 1 : 0 }}
+              transition={draw}
+            />
+          </motion.svg>
+  
+          <motion.svg
+            viewBox="0 0 14 14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={false}
+            animate={{
+              opacity: status === "error" ? 1 : 0,
+              scale: status === "error" ? 1 : 0.92,
+            }}
+            transition={fade}
+          >
+            <path d="M3.6 3.6 10.4 10.4" />
+            <path d="M10.4 3.6 3.6 10.4" />
+          </motion.svg>
+        </span>
+      ) : null}
 
       <span aria-hidden="true" className="intCopyLabel">
         {labels.map(([key, text]) => (

@@ -169,12 +169,12 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           </section>
 
           <section className="aboutCard aboutCardPods">
-            <h2 className="aboutCardTitle">Podcasts I&apos;m listening to.</h2>
+            <h2 className="aboutCardTitle">Podcasts I&apos;m listening to<span className="workBrandDot">.</span></h2>
             <AboutPodcastTicker />
           </section>
 
           <section className="aboutCard aboutCardOrigin">
-            <h2 className="aboutCardTitle">{ABOUT_ORIGIN.heading}</h2>
+            <h2 className="aboutCardTitle">{ABOUT_ORIGIN.heading.replace(/\.$/, "")}<span className="workBrandDot">.</span></h2>
             <div className="aboutCardOriginBody">
               {ABOUT_ORIGIN.body.map((p) => (
                 <p key={p.slice(0, 32)} className="aboutCardBody">
@@ -189,7 +189,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           <section className="aboutCard">
             <h2 className="aboutCardTitle">
               Shaped by 7+ years of designing, building, learning, and
-              experimenting.
+              experimenting<span className="workBrandDot">.</span>
             </h2>
             <ul className="aboutCareer">
               {ABOUT_CAREER.map((job) => (
@@ -252,7 +252,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             aria-expanded={letterOpen}
           >
             <span className="aboutCardTitle">
-              Letter to my future hiring manager.
+              Letter to my future hiring manager<span className="workBrandDot">.</span>
             </span>
             {/* Layers are stacked back-to-front in real 3D (translateZ), so the
                 flap genuinely swings behind the envelope as it opens. */}
@@ -286,7 +286,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
       {/* Philosophy left, testimonials right — same 8px gutter as the cards above. */}
       <div className="aboutSplit aboutSplitMid">
         <section className="aboutCard aboutCardPhilosophy">
-          <h2 className="aboutCardTitle">{ABOUT_PHILOSOPHY.title}</h2>
+          <h2 className="aboutCardTitle">{ABOUT_PHILOSOPHY.title.replace(/\.$/, "")}<span className="workBrandDot">.</span></h2>
           <p className="aboutCardBody">{ABOUT_PHILOSOPHY.lede}</p>
           <PhilosophyAccordion principles={ABOUT_PHILOSOPHY.principles} />
         </section>
