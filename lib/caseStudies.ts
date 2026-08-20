@@ -181,7 +181,7 @@ const toolbox: CaseStudy = {
     },
   ],
   // Work card thumbnail video; case hero keeps the live-site hero reel.
-  workCover: "/toolbox/Toolbox.mp4",
+  workCover: "/toolbox/toolbox.mp4",
   hero: {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
