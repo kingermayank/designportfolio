@@ -677,7 +677,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                       {c.logo || c.thumb ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={i === activeIdx ? c.logo || c.thumb : undefined}
+                          src={c.logo || c.thumb}
                           alt=""
                           decoding="async"
                         />
