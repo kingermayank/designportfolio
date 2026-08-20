@@ -1375,6 +1375,22 @@ button.csNavItem {
   height: 100cqh;
 }
 
+/* Interactive case-study modules use their own figure/media shell. Nest that
+   shell inside the shared hover frame so embeds reveal captions identically. */
+.csMediaEmbedHover > .csMediaHoverWrap > .csFigure,
+.csMediaEmbedHover > .csMediaHoverWrap > .csFigure > .csMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.csMediaEmbedHover > .csMediaHoverWrap > .csFigure > .csMedia {
+  aspect-ratio: auto;
+  border-radius: inherit;
+}
+
 /* Contained + padded stages: keep mat pads, but lock height to the unhovered
    frame so hover only crops — never rescales the video inside the mat. */
 .csMediaHoverWrap > .csMediaStage {

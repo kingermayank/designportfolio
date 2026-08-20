@@ -62,6 +62,7 @@ export type MediaBlock =
       embed: MediaEmbedId;
       shade: string;
       ar: number;
+      caption?: string;
     };
 
 export type CaseHighlight = {
@@ -662,11 +663,13 @@ const pa = (
   src: string,
   ar: number,
   video?: boolean,
+  caption?: string,
 ): CaseMedia => ({
   shade: "#282828",
   src,
   ar,
   video,
+  caption,
 });
 
 const pathai: CaseStudy = {
@@ -712,29 +715,102 @@ const pathai: CaseStudy = {
     {
       type: "split",
       columns: [2, 3],
-      left: pa("/pathai/path1-1.png", 1742 / 1966),
-      right: [pa("/pathai/path1-2.png", 5462 / 4096)],
+      left: pa(
+        "/pathai/path1-1.png",
+        1742 / 1966,
+        false,
+        "AI Sight DX, PathAI's digital pathology platform.",
+      ),
+      right: [
+        pa(
+          "/pathai/path1-2.png",
+          5462 / 4096,
+          false,
+          "A pathologist reviewing a digital slide in the lab.",
+        ),
+      ],
     },
-    { type: "full", media: pa("/pathai/path2.png", 3224 / 1816) },
-    { type: "full", media: pa("/pathai/path3.png", 3288 / 2192) },
+    {
+      type: "full",
+      media: pa(
+        "/pathai/path2.png",
+        3224 / 1816,
+        false,
+        "Region Comments surfaced in the slide-viewer toolbar.",
+      ),
+    },
+    {
+      type: "full",
+      media: pa(
+        "/pathai/path3.png",
+        3288 / 2192,
+        false,
+        "The slide panel keeps discussion anchored to diagnostic context.",
+      ),
+    },
     // Input states (Default → Focus → Typing → Completed).
     {
       type: "embed",
       embed: "pathai-comment-states",
       shade: "#dce0e9",
       ar: 16 / 9,
+      caption: "Comment-card states from entry through completed discussion.",
     },
-    { type: "full", media: pa("/pathai/path7.mp4", 3668 / 2064, true) },
-    { type: "full", media: pa("/pathai/path9.png", 2720 / 1814) },
-    { type: "full", media: { ...pa("/pathai/path10.mp4", 3840 / 2160, true), playbackRate: 0.5 } },
-    { type: "full", media: pa("/pathai/path11.png", 2738 / 1542) },
-    { type: "full", media: pa("/pathai/path8.png", 2700 / 1520) },
+    {
+      type: "full",
+      media: pa(
+        "/pathai/path7.mp4",
+        3668 / 2064,
+        true,
+        "Tab order guides pathologists through the commenting workflow.",
+      ),
+    },
+    {
+      type: "full",
+      media: pa(
+        "/pathai/path9.png",
+        2720 / 1814,
+        false,
+        "The accession discussion panel gathers case-level collaboration.",
+      ),
+    },
+    {
+      type: "full",
+      media: {
+        ...pa(
+          "/pathai/path10.mp4",
+          3840 / 2160,
+          true,
+          "Multi-slide views preserve context across an accession.",
+        ),
+        playbackRate: 0.5,
+      },
+    },
+    {
+      type: "full",
+      media: pa(
+        "/pathai/path11.png",
+        2738 / 1542,
+        false,
+        "An email notifies a pathologist when they are tagged in a response.",
+      ),
+    },
+    {
+      type: "full",
+      media: pa(
+        "/pathai/path8.png",
+        2700 / 1520,
+        false,
+        "Acceptance and rejection reasons support the give-and-take of review.",
+      ),
+    },
     // Region selection edge cases — closing interactive beat before impact.
     {
       type: "embed",
       embed: "pathai-region-edge-cases",
       shade: "#dce0e9",
       ar: 16 / 9,
+      caption: "Special region-selection edge cases defined for production.",
     },
   ],
   impact:

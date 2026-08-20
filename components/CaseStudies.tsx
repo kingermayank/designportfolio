@@ -191,16 +191,38 @@ function MediaTile({
 }
 
 function MediaEmbed({ embed }: { embed: MediaBlock & { type: "embed" } }) {
+  let content: ReactNode = null;
   if (embed.embed === "pathai-comment-states") {
-    return <CommentFieldStates />;
+    content = <CommentFieldStates />;
   }
-if (embed.embed === "pathai-region-edge-cases") {
-    return <RegionEdgeCases />;
+  if (embed.embed === "pathai-region-edge-cases") {
+    content = <RegionEdgeCases />;
   }
   if (embed.embed === "toolbox-lot-age-range") {
-    return <LotAgeRangeEmbed />;
+    content = <LotAgeRangeEmbed />;
   }
-  return null;
+  if (!content) return null;
+
+  const caption = embed.caption?.trim();
+  if (!caption) return content;
+
+  return (
+    <figure className="csFigure">
+      <RevealedMediaFrame
+        className="csMedia csMediaHover csMediaEmbedHover"
+        style={{ aspectRatio: embed.ar }}
+        tabIndex={0}
+      >
+        <div
+          className="csMediaHoverWrap"
+          style={{ background: embed.shade }}
+        >
+          {content}
+        </div>
+        <span className="csMediaHoverCaption">{caption}</span>
+      </RevealedMediaFrame>
+    </figure>
+  );
 }
 
 function MediaBlocks({
