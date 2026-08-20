@@ -218,7 +218,7 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
   return {
     slug: s.slug,
     title: s.title,
-    tagline: s.workCaption ?? s.tagline,
+    tagline: s.tagline,
     description: s.workSummary ?? s.description,
     year: s.year,
     category: s.category,
