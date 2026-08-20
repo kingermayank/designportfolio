@@ -2818,7 +2818,7 @@ button.aboutCard:focus-visible {
   }
 
   .aboutPageTitle {
-    font-size: clamp(3rem, calc(9vw + 16px), 4.25rem);
+    font-size: clamp(3rem, calc(9vw + 24px), 4.75rem);
   }
 
   .aboutPtoGrid,
@@ -5682,7 +5682,7 @@ button.aboutCard:focus-visible {
 
   .workBrand {
     flex: 1;
-    font-size: clamp(3rem, calc(9vw + 16px), 4.25rem);
+    font-size: clamp(3rem, calc(9vw + 24px), 4.75rem);
     padding-top: 6px;
     text-wrap: unset;
     white-space: nowrap;

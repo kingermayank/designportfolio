@@ -31,8 +31,8 @@ export type CaseSection = {
 /** Interactive embed rendered inside a case-study media stack. */
 export type MediaEmbedId =
   | "pathai-comment-states"
-  | "pathai-comment-anatomy"
-  | "pathai-region-edge-cases";
+  | "pathai-region-edge-cases"
+  | "toolbox-lot-age-range";
 
 /** Full-width row, or left tile + right column (one or more stacked). */
 export type MediaBlock =
@@ -181,7 +181,7 @@ const toolbox: CaseStudy = {
     },
   ],
   // Work card thumbnail video; case hero keeps the live-site hero reel.
-  workCover: "/toolbox/toolbox.mp4",
+  workCover: "/toolbox/thumbnail.mp4",
   hero: {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
@@ -221,6 +221,13 @@ const toolbox: CaseStudy = {
     },
     {
       type: "full",
+      media: tbDesktop(
+        "/toolbox/inventory.mp4", // Agent chat UI
+        "Giving dealers a conversational way to understand inventory, customers, service opportunities, and operational risks.",
+      ),
+    },
+    {
+      type: "full",
       media: tbShot(
         "/toolbox/project/tool3.png",
         3832 / 2156,
@@ -239,10 +246,10 @@ const toolbox: CaseStudy = {
           "A voice affordance for staff with their hands full.",
         ),
         tbShot(
-          "/toolbox/project/tool4_2.png",
+          "/toolbox/project/tool4_2_2.png",
           1,
-          "#F9F9F9",
-          "The Toolbox mark that anchors the platform.",
+          "#222627",
+          "Plugging into the CRMs dealers already use.",
         ),
       ],
     },
@@ -257,6 +264,13 @@ const toolbox: CaseStudy = {
     },
     {
       type: "full",
+      media: tbDesktop(
+        "/toolbox/invoices.mp4", // Dashboard
+        "Helping dealers monitor operational health and catch issues before they become costly problems.",
+      ),
+    },
+    {
+      type: "full",
       media: tbShot(
         "/toolbox/project/tool6.png",
         3836 / 2722,
@@ -266,20 +280,9 @@ const toolbox: CaseStudy = {
     },
     {
       type: "full",
-      media: tbShot(
-        "/toolbox/project/tool7.png",
-        3852 / 2167,
-        "#222627",
-        "Letting each dealer set their own definition of fresh, aging, and at-risk inventory.",
-      ),
-    },
-    {
-      type: "full",
-      media: tbShot(
-        "/toolbox/project/tool8.png",
-        3852 / 2167,
-        "#FFFFFF",
-        "Two ways to read the same AI-ranked results — spatially on the map, or ranked in a table.",
+      media: tbDesktop(
+        "/toolbox/configurations.mp4", // Inventory map
+        "Helping sales teams find vehicles and keys faster so customers are not left waiting during test drives.",
       ),
     },
     {
@@ -302,6 +305,46 @@ const toolbox: CaseStudy = {
     },
     {
       type: "full",
+      media: tbDesktop(
+        "/toolbox/invoices-ui.mp4", // Invoices
+        "Reducing billing confusion by bringing invoice visibility and dispute resolution into the dealer's portal.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        tbShot(
+          "/toolbox/project/tool7_2.png",
+          1,
+          "#222627",
+          "A clear, scannable invoice built for dealership accounting.",
+        ),
+        tbShot(
+          "/toolbox/project/tool7_1.png",
+          1,
+          "#FFFFFF",
+          "Location, key, and battery status at a glance.",
+        ),
+      ],
+    },
+    {
+      type: "embed",
+      embed: "toolbox-lot-age-range",
+      shade: "#222627",
+      ar: 16 / 9,
+    },
+    /* Product walkthroughs. Filenames on disk are out of sync with content —
+     * map by what's in the frame. */
+    {
+      type: "full",
+      media: tbDesktop(
+        "/toolbox/gateways.mp4",
+        "Bringing key-tracking infrastructure in-house to improve location accuracy and reduce operational costs.",
+      ),
+    },
+    {
+      type: "full",
       media: tbShot(
         "/toolbox/project/tool10.png",
         3852 / 2167,
@@ -309,60 +352,49 @@ const toolbox: CaseStudy = {
         "Draw, lasso, and pan tools for carving a geofence straight out of the lot.",
       ),
     },
-
-    /* Product walkthroughs. Filenames on disk are out of sync with content —
-     * map by what's in the frame. */
     {
       type: "full",
-      media: tbDesktop(
-        "/toolbox/inventory.mp4", // Agent chat UI
-        "Giving dealers a conversational way to understand inventory, customers, service opportunities, and operational risks.",
+      media: tbShot(
+        "/toolbox/project/tool_5.png",
+        6000 / 4500,
+        "#222627",
+        "Scanning and pairing devices in the field with the mobile companion app.",
+      ),
+    },
+    {
+      type: "row",
+      columns: 2,
+      media: [
+        tbShot(
+          "/toolbox/project/tool_6_1.png",
+          1888 / 2367,
+          "#222627",
+          "QR and barcode scanning for device pairing.",
+        ),
+        tbShot(
+          "/toolbox/project/tool_6_2.png",
+          1888 / 2367,
+          "#FFFFFF",
+          "The vehicle tracker that powers it all.",
+        ),
+      ],
+    },
+    {
+      type: "full",
+      media: tbShot(
+        "/toolbox/project/tool_map.png",
+        2276 / 1280,
+        "#222627",
+        "Locating vehicles and keys on the lot from the mobile app.",
       ),
     },
     {
       type: "full",
-      media: tbDesktop(
-        "/toolbox/configurations.mp4", // Inventory map
-        "Helping sales teams find vehicles and keys faster so customers are not left waiting during test drives.",
-      ),
-    },
-    {
-      type: "full",
-      media: tbDesktop(
-        "/toolbox/device-pairing.mp4", // Configurations
-        "Giving dealers control over sell-first rules and battery thresholds so they can prioritize the right vehicles before problems happen.",
-      ),
-    },
-    {
-      type: "full",
-      // Phone mockups already include their own art — cover, so no CSS mat.
-      media: tb(
-        "/toolbox/dashboard.mp4",
-        16 / 9,
-        true,
-        "Making the pairing process reliable and frustration-free to prevent returning perfectly good hardware.",
-        { shade: "#222627" },
-      ),
-    },
-    {
-      type: "full",
-      media: tbDesktop(
-        "/toolbox/invoices.mp4", // Dashboard
-        "Helping dealers monitor operational health and catch issues before they become costly problems.",
-      ),
-    },
-    {
-      type: "full",
-      media: tbDesktop(
-        "/toolbox/invoices-ui.mp4", // Invoices
-        "Reducing billing confusion by bringing invoice visibility and dispute resolution into the dealer's portal.",
-      ),
-    },
-    {
-      type: "full",
-      media: tbDesktop(
-        "/toolbox/gateways.mp4",
-        "Bringing key-tracking infrastructure in-house to improve location accuracy and reduce operational costs.",
+      media: tbShot(
+        "/toolbox/project/tool_device.png",
+        9104 / 5120,
+        "#222627",
+        "Surfacing pairing errors with clear status and next steps so dealers can self-resolve.",
       ),
     },
   ],
@@ -668,21 +700,7 @@ const pathai: CaseStudy = {
     },
     { type: "full", media: pa("/pathai/path2.png", 3224 / 1816) },
     { type: "full", media: pa("/pathai/path3.png", 3288 / 2192) },
-    // 4 — Region selection edge cases (nested, overlap priority, draw-over).
-    {
-      type: "embed",
-      embed: "pathai-region-edge-cases",
-      shade: "#dce0e9",
-      ar: 16 / 9,
-    },
-    // 5 — Anatomy of a completed comment card (name / date / message).
-    {
-      type: "embed",
-      embed: "pathai-comment-anatomy",
-      shade: "#dce0e9",
-      ar: 16 / 9,
-    },
-    // 6 — Input states (Default → Focus → Typing → Completed).
+    // Input states (Default → Focus → Typing → Completed).
     {
       type: "embed",
       embed: "pathai-comment-states",
@@ -694,6 +712,13 @@ const pathai: CaseStudy = {
     { type: "full", media: { ...pa("/pathai/path10.mp4", 3840 / 2160, true), playbackRate: 0.5 } },
     { type: "full", media: pa("/pathai/path11.png", 2738 / 1542) },
     { type: "full", media: pa("/pathai/path8.png", 2700 / 1520) },
+    // Region selection edge cases — closing interactive beat before impact.
+    {
+      type: "embed",
+      embed: "pathai-region-edge-cases",
+      shade: "#dce0e9",
+      ar: 16 / 9,
+    },
   ],
   impact:
     "Region Comments cut second-opinion turnaround by **~45%**, and adoption spread beyond consults into QA, tumor boards, teaching, and research.",

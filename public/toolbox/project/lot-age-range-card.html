@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lot Age Range — interactive embed</title>
+
+<!--
+  Lot Age Range card — standalone, dependency-free embed.
+
+  A faithful port of the React component (Next.js + Base UI + @number-flow/react) to plain
+  HTML/CSS/JS so it can be dropped into any site via <iframe>. Nothing here is loaded from the
+  product: the marker artwork is inlined SVG, the odometer digits are a small hand-rolled
+  implementation, and the only external request is the Saira webfont.
+
+  Interactions preserved: drag either handle, click anywhere on the track, keyboard (arrows,
+  Home/End, PageUp/PageDown), odometer digit rolls that are direction-aware, and the full
+  hover / pressed / focus chrome on the handles.
+
+  Options (query string):
+    ?fresh=46&aged=108   initial thresholds
+    ?max=150             upper bound of the scale
+    ?width=836           max card width in px; it centres and shrinks below this
+    ?chrome=off          render the slider only, without the surrounding card
+
+  Embedding:
+    <iframe src=".../lot-age-range-card.html" style="width:100%;border:0"
+            height="300" title="Lot Age Range" loading="lazy"></iframe>
+
+  The page posts {type:"lot-age-embed:height", height} to the parent on load and on resize, so
+  the host can size the iframe to its content. See the bottom of this file.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ---------------------------------------------------------------------------
+ * Design tokens — resolved from the product theme so this file needs no build step.
+ * ------------------------------------------------------------------------- */
+:root {
+  --foreground: #111;
+  --muted-foreground: #6a6a6a;
+  --card: #fdfdfd;
+  --border: #e4e4e5;
+  --stroke-default: #e1e1e1;
+  --text-tertiary: #6a6a6a;
+
+  /* Lot-age tier hues (inventoryDataVizWarm sage600 / honey600 / coral600). */
+  --tier-fresh: #569d6c;
+  --tier-aging: #e6a41e;
+  --tier-risk: #e6594a;
+
+  --font-sans: "Saira", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --roll-duration: 220ms;
+}
+
+* { box-sizing: border-box; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Card chrome --------------------------------------------------------- */
+/*
+ * 836px is the card's measured width in the product: a 960px content column, less its 32px
+ * gutters and the 24px card padding on each side. The card centres and shrinks below that, so a
+ * narrower host still gets the right proportions rather than a cropped one.
+ */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: var(--card-max-width, 836px);
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.card__header { display: flex; flex-direction: column; gap: 4px; }
+
+.card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--foreground);
+}
+
+.card__description {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.card__body { padding: 24px 0; }
+
+/* `?chrome=off` strips the card so the host page can supply its own container. */
+.no-chrome .card {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.no-chrome .card__header { display: none; }
+.no-chrome .card__body { padding: 0; }
+
+/* ---------------------------------------------------------------------------
+ * Slider
+ * ------------------------------------------------------------------------- */
+.slider { display: flex; width: 100%; flex-direction: column; gap: 12px; }
+
+/* --- Legend -------------------------------------------------------------- */
+.legend {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.legend__column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Wrapper carries the shadow so it does not fight the SVG's own drop-shadow filter. */
+.legend__pin {
+  display: inline-flex;
+  margin-bottom: -2px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(24, 22, 20, 0.14))
+    drop-shadow(0 1px 2px rgba(24, 22, 20, 0.09));
+}
+.legend__pin svg { display: block; }
+
+.legend__label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+/*
+ * `inline-block`, not `inline-flex`: a flex container trims whitespace-only text runs between
+ * its items, which would collapse "0 to 46 days" into "0 to46days".
+ */
+.legend__range {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
+}
+
+/* --- Track --------------------------------------------------------------- */
+.slider__control {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 40px;
+  align-items: center;
+  padding: 8px 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.slider__control:active { cursor: grabbing; }
+
+.slider__rail { width: 100%; padding: 0 8px; }
+
+.slider__track {
+  position: relative;
+  isolation: isolate;
+  height: 8px;
+  width: 100%;
+  flex-grow: 1;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid rgba(58, 54, 48, 0.12);
+  box-shadow: 0 1px 2px rgba(24, 22, 20, 0.06);
+}
+
+/*
+ * Inset rim sits above the sweeping beam. An inset box-shadow on the track itself would paint
+ * under the ::after layer and the lacquer read would go flat.
+ */
+.slider__track::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 253, 248, 0.65),
+    inset 0 -1px 1px rgba(42, 38, 34, 0.14);
+}
+
+/* Slow highlight sweep across the gauge. */
+.slider__track::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 42%;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 18%,
+    rgba(255, 255, 255, 0.28) 48%,
+    rgba(255, 255, 255, 0.52) 50%,
+    rgba(255, 255, 255, 0.28) 52%,
+    rgba(255, 255, 255, 0) 82%,
+    transparent 100%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.92;
+  transform: translate3d(-100%, 0, 0);
+  animation: track-beam 2.75s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes track-beam {
+  0% { transform: translate3d(-105%, 0, 0); }
+  100% { transform: translate3d(340%, 0, 0); }
+}
+
+/* --- Thumb --------------------------------------------------------------- */
+/*
+ * Machined control knob: a brushed-aluminium conic sheen under a single overhead specular,
+ * with the two grip bars as the affordance.
+ *
+ * The shadow stack is split into three named roles so a state overrides one role rather than
+ * restating all six layers. Each role must keep its shadow *count* constant across states, or
+ * `box-shadow` falls back to a discrete swap instead of interpolating.
+ *   lift → distance off the track (grows on hover, collapses when pressed)
+ *   rim  → the machined edge
+ *   form → internal shading that reads convex (inverts when pressed)
+ */
+.thumb {
+  --thumb-lift: 0 3px 9px rgba(24, 22, 20, 0.16), 0 1px 2px rgba(24, 22, 20, 0.1);
+  --thumb-rim: inset 0 0 0 1px rgba(255, 255, 255, 0.85),
+    inset 0 0 0 1.5px rgba(24, 22, 20, 0.14);
+  --thumb-form: inset 0 3px 5px rgba(255, 255, 255, 0.9),
+    inset 0 -4px 8px rgba(24, 22, 20, 0.18);
+
+  position: absolute;
+  top: 50%;
+  translate: -50% -50%;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 9999px;
+  outline: none;
+  padding: 0;
+  z-index: 1;
+  box-shadow: var(--thumb-lift), var(--thumb-rim), var(--thumb-form);
+  background:
+    /* Two grip bars. */
+    linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0) 0 2px,
+        #7a7a80 2px 4px,
+        rgba(0, 0, 0, 0) 4px 6px,
+        #7a7a80 6px 8px,
+        rgba(0, 0, 0, 0) 8px 10px
+      )
+      no-repeat 50% 50% / 10px 10px,
+    /* Specular hotspot — directly above, matching --thumb-form and the drop shadow. */
+      radial-gradient(
+        ellipse 130% 78% at 50% -14%,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0) 60%
+      )
+      no-repeat 50% 50% / 100% 100%,
+    /* Brushed-aluminium anisotropy: the highlight sweeps around rather than pooling. */
+      conic-gradient(
+        from 202deg at 50% 46%,
+        #cfcfd6 0deg,
+        #fcfcfd 44deg,
+        #c2c2ca 98deg,
+        #f4f4f6 170deg,
+        #babac2 236deg,
+        #f8f8fa 302deg,
+        #cfcfd6 360deg
+      );
+  transition:
+    transform var(--roll-duration) var(--ease-out),
+    box-shadow var(--roll-duration) var(--ease-out),
+    filter var(--roll-duration) var(--ease-out);
+}
+
+/* Invisible 44px pointer target centred on the 28px knob (WCAG 2.5.5). */
+.thumb::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 9999px;
+}
+
+/* Hover is an enhancement, never a requirement — and it must not stick on touch. */
+@media (hover: hover) {
+  .thumb:hover {
+    --thumb-lift: 0 6px 14px rgba(24, 22, 20, 0.22), 0 2px 4px rgba(24, 22, 20, 0.12);
+    transform: scale(1.05);
+  }
+  /* While one handle is dragged, hovering the other must not lift it. */
+  .slider[data-dragging] .thumb:hover { --thumb-lift: 0 3px 9px rgba(24, 22, 20, 0.16), 0 1px 2px rgba(24, 22, 20, 0.1); transform: none; }
+}
+
+/*
+ * Pressed = depressed. The knob sinks toward the track, its cast shadow collapses, and the
+ * internal shading inverts so the top edge catches a contact shadow instead of the highlight.
+ */
+.slider .thumb[data-pressed],
+.slider[data-dragging] .thumb[data-pressed]:hover {
+  --thumb-lift: 0 1px 2px rgba(24, 22, 20, 0.26), 0 1px 1px rgba(24, 22, 20, 0.16);
+  --thumb-form: inset 0 3px 6px rgba(24, 22, 20, 0.3),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.55);
+  transform: scale(0.94);
+  filter: brightness(0.95);
+}
+
+/*
+ * Keyboard focus expressed in the knob's own chrome rather than a coloured ring: it lifts and
+ * its rim darkens. Focus is dropped on pointerup (see the script) so this only paints for
+ * keyboard — otherwise the treatment lingers on the handle after a mouse drag.
+ */
+.thumb:focus-visible {
+  --thumb-lift: 0 6px 14px rgba(24, 22, 20, 0.22), 0 2px 4px rgba(24, 22, 20, 0.12);
+  --thumb-rim: inset 0 0 0 1px rgba(255, 255, 255, 0.95),
+    inset 0 0 0 2px rgba(24, 22, 20, 0.38);
+  transform: scale(1.05);
+}
+
+/* --- Scale marks --------------------------------------------------------- */
+.marks { display: flex; width: 100%; flex-direction: column; gap: 4px; }
+.marks__ticks { position: relative; height: 8px; width: 100%; flex-shrink: 0; }
+.marks__labels { position: relative; height: 16px; width: 100%; flex-shrink: 0; }
+
+.marks__tick {
+  position: absolute;
+  bottom: 0;
+  height: 8px;
+  width: 1px;
+  transform: translateX(-50%);
+  background: var(--stroke-default);
+}
+
+.marks__label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 12px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+}
+
+/* ---------------------------------------------------------------------------
+ * Odometer digits
+ *
+ * Each digit gets its own fixed-height slot with `overflow: hidden`. On change, only the slots
+ * whose digit actually changed animate: the column holding [outgoing, incoming] slides by
+ * exactly one digit height. Direction follows the value — increasing rolls up, decreasing rolls
+ * down. Unchanged slots are never touched, so they stay perfectly still.
+ * ------------------------------------------------------------------------- */
+.odo {
+  display: inline-flex;
+  height: 24px;
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
+.odo__slot { display: block; height: 24px; overflow: hidden; }
+.odo__col { display: block; }
+.odo__digit { display: block; height: 24px; line-height: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slider__track::after {
+    animation: none;
+    transform: translate3d(18%, 0, 0);
+    opacity: 0.35;
+  }
+  .thumb { transition: none; }
+  .thumb:hover,
+  .thumb:focus-visible,
+  .slider .thumb[data-pressed] { transform: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="card" id="card">
+  <div class="card__header">
+    <h2 class="card__title">Lot Age Range</h2>
+    <p class="card__description">
+      Vehicles will be shown and categorized on the map and in data according to those lot age values.
+    </p>
+  </div>
+
+  <div class="card__body">
+    <div class="slider" id="slider">
+      <div class="legend" id="legend"></div>
+
+      <div class="slider__rail">
+        <div class="slider__control" id="control">
+          <div class="slider__track" id="track"></div>
+          <div class="thumb" id="thumb-fresh" role="slider" tabindex="0"
+               aria-label="Fresh / Aging boundary (days)"></div>
+          <div class="thumb" id="thumb-aged" role="slider" tabindex="0"
+               aria-label="Aging / At Risk boundary (days)"></div>
+        </div>
+        <div class="marks" aria-hidden="true">
+          <div class="marks__ticks" id="ticks"></div>
+          <div class="marks__labels" id="tickLabels"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var params = new URLSearchParams(location.search);
+  var MIN = 0;
+  var MAX = clampInt(params.get("max"), 10, 100000, 150);
+  var STEP = 1;
+  var MIN_GAP = 1;          // days that must separate the two thresholds
+  var MARK_STEP = 30;
+  var EDGE_INSET_PX = 4;    // keeps the end marks from bleeding past the rail
+
+  var TIERS = {
+    fresh: { fill: "#569D6C", stroke: "#366243" },
+    aging: { fill: "#E6B117", stroke: "#AF850C" },
+    stale: { fill: "#E64B17", stroke: "#AE340B" }
+  };
+
+  var ZONES = [
+    { key: "fresh", label: "Fresh", tier: "fresh" },
+    { key: "moderate", label: "Aging", tier: "aging" },
+    { key: "aged", label: "At Risk", tier: "stale" }
+  ];
+
+  var PIN_WIDTH = 52;
+  var PIN_ASPECT = 54.2832 / 50;
+
+  var state = {
+    fresh: clampInt(params.get("fresh"), MIN, MAX, 46),
+    aged: clampInt(params.get("aged"), MIN, MAX, 108)
+  };
+  if (state.aged < state.fresh + MIN_GAP) state.aged = Math.min(MAX, state.fresh + MIN_GAP);
+
+  var el = {
+    card: document.getElementById("card"),
+    slider: document.getElementById("slider"),
+    legend: document.getElementById("legend"),
+    control: document.getElementById("control"),
+    track: document.getElementById("track"),
+    fresh: document.getElementById("thumb-fresh"),
+    aged: document.getElementById("thumb-aged"),
+    ticks: document.getElementById("ticks"),
+    tickLabels: document.getElementById("tickLabels")
+  };
+
+  if (params.get("chrome") === "off") document.body.classList.add("no-chrome");
+
+  var widthOverride = parseInt(params.get("width"), 10);
+  if (Number.isFinite(widthOverride)) {
+    el.card.style.setProperty("--card-max-width", widthOverride + "px");
+  }
+
+  /* --- Marker artwork ----------------------------------------------------
+   * All three pins share one geometry; only fill and stroke differ. The source files carry a
+   * verbose Figma drop-shadow filter chain, collapsed here to a single feDropShadow.
+   */
+  function pinSvg(tier, title) {
+    var c = TIERS[tier];
+    var id = "pin-shadow-" + tier;
+    var h = Math.round(PIN_WIDTH * PIN_ASPECT);
+    return '' +
+'<svg xmlns="http://www.w3.org/2000/svg" viewBox="88 295 50 54.2832" width="' + PIN_WIDTH + '" height="' + h + '" fill="none" role="img" aria-label="' + title + '">' +
+  '<defs><filter id="' + id + '" x="88" y="295" width="50" height="54.2832" filterUnits="userSpaceOnUse">' +
+    '<feDropShadow dy="2" stdDeviation="1" flood-color="#000" flood-opacity="0.12"/>' +
+  '</filter></defs>' +
+  '<g filter="url(#' + id + ')">' +
+    '<path d="M97 304C97 301.791 98.7909 300 101 300H125C127.209 300 129 301.791 129 304V319.783C129 321.162 128.29 322.444 127.12 323.175L115.12 330.675C113.823 331.486 112.177 331.486 110.88 330.675L98.88 323.175C97.7105 322.444 97 321.162 97 319.783V304Z" fill="' + c.fill + '"/>' +
+    '<path d="M125 299C127.761 299 130 301.239 130 304V319.783C130 321.507 129.112 323.11 127.65 324.023L115.65 331.523C114.029 332.537 111.971 332.537 110.35 331.523L98.3496 324.023C96.8878 323.11 96.0001 321.507 96 319.783V304C96 301.239 98.2386 299 101 299H125Z" stroke="' + c.stroke + '" stroke-width="2"/>' +
+  '</g>' +
+  '<path d="M107.499 315.501C108.174 315.501 108.721 314.941 108.721 314.251C108.721 313.56 108.174 313.001 107.499 313.001C106.824 313.001 106.276 313.56 106.276 314.251C106.276 314.941 106.824 315.501 107.499 315.501Z" fill="white"/>' +
+  '<path d="M119.314 314.251C119.314 314.941 118.766 315.501 118.091 315.501C117.416 315.501 116.869 314.941 116.869 314.251C116.869 313.56 117.416 313.001 118.091 313.001C118.766 313.001 119.314 313.56 119.314 314.251Z" fill="white"/>' +
+  '<path fill-rule="evenodd" clip-rule="evenodd" d="M110.465 306.334C109.103 306.334 107.831 307.03 107.075 308.189L106.112 309.667H104.647C104.197 309.667 103.832 310.04 103.832 310.501C103.832 310.961 104.197 311.334 104.647 311.334H105.026L104.516 312.115C104.07 312.8 103.832 313.604 103.832 314.427V318.001C103.832 318.921 104.562 319.667 105.462 319.667H107.906C108.806 319.667 109.536 318.921 109.536 318.001V317.584H116.462V318.001C116.462 318.921 117.191 319.667 118.091 319.667H120.536C121.436 319.667 122.165 318.921 122.165 318.001V314.427C122.165 313.604 121.927 312.8 121.481 312.115L120.972 311.334H121.351C121.801 311.334 122.165 310.961 122.165 310.501C122.165 310.04 121.801 309.667 121.351 309.667H119.885L118.922 308.189C118.166 307.03 116.894 306.334 115.532 306.334H110.465ZM108.431 309.114C108.885 308.418 109.648 308.001 110.465 308.001H115.532C116.349 308.001 117.113 308.418 117.566 309.114L118.435 310.447C118.139 310.598 117.793 310.7 117.345 310.771C116.464 310.91 115.267 310.917 113.39 310.917H113.015C111.138 310.917 109.941 310.91 109.059 310.771C108.456 310.675 108.037 310.523 107.677 310.271L108.431 309.114ZM112.43 312.588C112.689 312.586 112.946 312.584 113.202 312.584C113.459 312.584 113.716 312.586 113.974 312.588C115.182 312.597 116.405 312.606 117.595 312.418C118.27 312.311 118.836 312.132 119.343 311.84L120.125 313.04C120.393 313.45 120.536 313.933 120.536 314.427V318.001H118.091V316.959C118.091 316.384 117.635 315.917 117.073 315.917H108.925C108.362 315.917 107.906 316.384 107.906 316.959V318.001H105.462V314.427C105.462 313.933 105.605 313.45 105.872 313.04L106.773 311.657C107.354 312.061 108.004 312.29 108.81 312.418C110 312.606 111.223 312.597 112.43 312.588Z" fill="white"/>' +
+'</svg>';
+  }
+
+  /* --- Odometer ----------------------------------------------------------- */
+  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function createOdometer(initial) {
+    var root = document.createElement("span");
+    root.className = "odo";
+    var current = String(initial);
+    current.split("").forEach(function (ch) { root.appendChild(makeSlot(ch)); });
+
+    function makeSlot(ch) {
+      var slot = document.createElement("span");
+      slot.className = "odo__slot";
+      var col = document.createElement("span");
+      col.className = "odo__col";
+      col.appendChild(makeDigit(ch));
+      slot.appendChild(col);
+      return slot;
+    }
+
+    function makeDigit(ch) {
+      var d = document.createElement("span");
+      d.className = "odo__digit";
+      d.textContent = ch;
+      return d;
+    }
+
+    /** Collapse a slot back to a single resting digit and drop the animation that held it. */
+    function settle(col, ch) {
+      clearPending(col);
+      col.getAnimations().forEach(function (a) { a.cancel(); });
+      col.style.transform = "";
+      col.textContent = "";
+      col.appendChild(makeDigit(ch));
+    }
+
+    function clearPending(col) {
+      if (col.settleTimer) {
+        clearTimeout(col.settleTimer);
+        col.settleTimer = null;
+      }
+    }
+
+    root.setValue = function (next) {
+      var nextStr = String(next);
+      if (nextStr === current) return;
+      var goingUp = Number(next) > Number(current);
+      var prevStr = current;
+      current = nextStr;
+
+      // Match the slot count to the new digit count, adding/removing from the left so the
+      // rightmost digits keep their positions across a 99 → 100 style transition.
+      while (root.children.length < nextStr.length) {
+        root.insertBefore(makeSlot(""), root.firstChild);
+      }
+      while (root.children.length > nextStr.length) {
+        root.removeChild(root.firstChild);
+      }
+
+      for (var i = 0; i < nextStr.length; i++) {
+        var fromRight = nextStr.length - 1 - i;
+        var prevDigit = prevStr[prevStr.length - 1 - fromRight];
+        var nextDigit = nextStr[i];
+        var col = root.children[i].firstChild;
+
+        if (prevDigit === nextDigit) continue;              // unchanged → never touched
+        if (prefersReducedMotion.matches) {
+          settle(col, nextDigit);
+          continue;
+        }
+        roll(col, prevDigit === undefined ? "" : prevDigit, nextDigit, goingUp);
+      }
+    };
+
+    function roll(col, from, to, goingUp) {
+      clearPending(col);
+      col.getAnimations().forEach(function (a) { a.cancel(); });
+      col.textContent = "";
+      // Stack the two digits so that a one-digit-height slide reveals the incoming one:
+      // rolling up puts the outgoing on top, rolling down puts the incoming on top.
+      col.appendChild(makeDigit(goingUp ? from : to));
+      col.appendChild(makeDigit(goingUp ? to : from));
+
+      col.animate(
+        [
+          { transform: goingUp ? "translateY(0%)" : "translateY(-50%)" },
+          { transform: goingUp ? "translateY(-50%)" : "translateY(0%)" }
+        ],
+        { duration: 220, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", fill: "both" }
+      );
+
+      /*
+       * Settle on a timer rather than the animation's `finish` event. Browsers throttle the
+       * animation event loop in hidden tabs and offscreen iframes, so `finish` can be delayed
+       * indefinitely — the digits would sit forever in their two-digit transitional markup.
+       * `fill: "both"` holds the finished frame until this fires, so a late settle is invisible.
+       */
+      col.settleTimer = setTimeout(function () { settle(col, to); }, 260);
+    }
+
+    return root;
+  }
+
+  /* --- Legend ------------------------------------------------------------- */
+  var odometers = {};
+  var srText = {};
+
+  function buildLegend() {
+    ZONES.forEach(function (zone) {
+      var column = document.createElement("div");
+      column.className = "legend__column";
+
+      var pin = document.createElement("span");
+      pin.className = "legend__pin";
+      pin.innerHTML = pinSvg(zone.tier, zone.label + " — lot age map marker");
+
+      var label = document.createElement("span");
+      label.className = "legend__label";
+      label.textContent = zone.label;
+
+      var range = document.createElement("span");
+      range.className = "legend__range";
+      buildRangeCopy(zone.key, range);
+
+      column.append(pin, label, range);
+      el.legend.appendChild(column);
+    });
+  }
+
+  /*
+   * Boundaries are inclusive and non-overlapping, matching the product copy: Fresh ends on the
+   * lower threshold, Aging picks up the next day, At Risk is open-ended. Only the threshold
+   * digits are odometers — the literal "0" and the surrounding words never change.
+   */
+  function buildRangeCopy(key, host) {
+    /*
+     * Mid-roll a slot holds two digits, so the visual markup momentarily spells nonsense like
+     * "1907" for 107. Assistive tech reads the sibling text node instead, which always carries
+     * the settled value.
+     */
+    var announced = document.createElement("span");
+    announced.className = "sr-only";
+    srText[key] = announced;
+
+    var visual = document.createElement("span");
+    visual.setAttribute("aria-hidden", "true");
+
+    if (key === "fresh") {
+      odometers.freshUntil = createOdometer(state.fresh);
+      visual.append("0 to ", odometers.freshUntil, " days");
+    } else if (key === "aged") {
+      odometers.riskFrom = createOdometer(state.aged + 1);
+      visual.append(odometers.riskFrom, "+ days");
+    } else {
+      odometers.agingFrom = createOdometer(state.fresh + 1);
+      odometers.agingTo = createOdometer(state.aged);
+      visual.append(odometers.agingFrom, " to ", odometers.agingTo, " days");
+    }
+
+    host.append(announced, visual);
+  }
+
+  function renderAnnouncedRanges() {
+    srText.fresh.textContent = "0 to " + state.fresh + " days";
+    srText.moderate.textContent = state.fresh + 1 + " to " + state.aged + " days";
+    srText.aged.textContent = state.aged + 1 + "+ days";
+  }
+
+  /* --- Scale marks -------------------------------------------------------- */
+  function buildMarks() {
+    for (var v = MIN; v <= MAX; v += MARK_STEP) {
+      var left = edgeInsetLeft(v);
+
+      var tick = document.createElement("span");
+      tick.className = "marks__tick";
+      tick.style.left = left;
+      el.ticks.appendChild(tick);
+
+      var label = document.createElement("span");
+      label.className = "marks__label";
+      label.style.left = left;
+      label.textContent = String(v);
+      el.tickLabels.appendChild(label);
+    }
+  }
+
+  function edgeInsetLeft(value) {
+    var percent = toPercent(value);
+    if (value === MIN) return "calc(" + percent + "% + " + EDGE_INSET_PX + "px)";
+    if (value === MAX) return "calc(" + percent + "% - " + EDGE_INSET_PX + "px)";
+    return percent + "%";
+  }
+
+  /* --- Render ------------------------------------------------------------- */
+  function toPercent(value) {
+    return ((clamp(value, MIN, MAX) - MIN) / (MAX - MIN)) * 100;
+  }
+
+  function render() {
+    var p1 = toPercent(state.fresh).toFixed(4);
+    var p2 = toPercent(state.aged).toFixed(4);
+
+    el.track.style.backgroundImage =
+      "linear-gradient(90deg," +
+      " var(--tier-fresh) 0%, var(--tier-fresh) " + p1 + "%," +
+      " var(--tier-aging) " + p1 + "%, var(--tier-aging) " + p2 + "%," +
+      " var(--tier-risk) " + p2 + "%, var(--tier-risk) 100%)";
+
+    el.fresh.style.left = p1 + "%";
+    el.aged.style.left = p2 + "%";
+
+    setThumbAria(el.fresh, state.fresh, MIN, state.aged - MIN_GAP);
+    setThumbAria(el.aged, state.aged, state.fresh + MIN_GAP, MAX);
+
+    odometers.freshUntil.setValue(state.fresh);
+    odometers.agingFrom.setValue(state.fresh + 1);
+    odometers.agingTo.setValue(state.aged);
+    odometers.riskFrom.setValue(state.aged + 1);
+
+    renderAnnouncedRanges();
+  }
+
+  function setThumbAria(node, value, min, max) {
+    node.setAttribute("aria-valuenow", String(value));
+    node.setAttribute("aria-valuemin", String(min));
+    node.setAttribute("aria-valuemax", String(max));
+    node.setAttribute("aria-valuetext", value + " days");
+    node.setAttribute("aria-orientation", "horizontal");
+  }
+
+  /* --- Value updates ------------------------------------------------------ */
+  function setFresh(next) {
+    state.fresh = clamp(Math.round(next), MIN, state.aged - MIN_GAP);
+    render();
+    emitChange();
+  }
+
+  function setAged(next) {
+    state.aged = clamp(Math.round(next), state.fresh + MIN_GAP, MAX);
+    render();
+    emitChange();
+  }
+
+  function valueFromClientX(clientX) {
+    var rect = el.track.getBoundingClientRect();
+    if (rect.width === 0) return MIN;
+    var ratio = (clientX - rect.left) / rect.width;
+    return MIN + clamp(ratio, 0, 1) * (MAX - MIN);
+  }
+
+  /* --- Pointer ------------------------------------------------------------ */
+  var dragging = null;
+
+  function beginDrag(which, event) {
+    dragging = which;
+    el.slider.setAttribute("data-dragging", "");
+    thumbFor(which).setAttribute("data-pressed", "");
+    el.control.setPointerCapture(event.pointerId);
+  }
+
+  function thumbFor(which) { return which === "fresh" ? el.fresh : el.aged; }
+
+  el.control.addEventListener("pointerdown", function (event) {
+    if (event.button !== 0 && event.pointerType === "mouse") return;
+    event.preventDefault();
+
+    var target = event.target.closest ? event.target.closest(".thumb") : null;
+    var which;
+    if (target === el.fresh) which = "fresh";
+    else if (target === el.aged) which = "aged";
+    else {
+      // Track press: grab whichever handle is nearer, then jump it under the pointer.
+      var v = valueFromClientX(event.clientX);
+      which = Math.abs(v - state.fresh) <= Math.abs(v - state.aged) ? "fresh" : "aged";
+      which === "fresh" ? setFresh(v) : setAged(v);
+    }
+
+    beginDrag(which, event);
+    thumbFor(which).focus({ preventScroll: true });
+  });
+
+  el.control.addEventListener("pointermove", function (event) {
+    if (!dragging) return;
+    var v = valueFromClientX(event.clientX);
+    dragging === "fresh" ? setFresh(v) : setAged(v);
+  });
+
+  function endDrag() {
+    if (!dragging) return;
+    thumbFor(dragging).removeAttribute("data-pressed");
+    dragging = null;
+    el.slider.removeAttribute("data-dragging");
+    /*
+     * Drop focus so the handle returns to its resting state. Browsers keep focus on the element
+     * the drag started from, and the focus treatment would stay painted after the mouse left.
+     * Keyboard focus is unaffected: arrow keys never come through here.
+     */
+    if (document.activeElement && el.control.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+  }
+
+  el.control.addEventListener("pointerup", endDrag);
+  el.control.addEventListener("pointercancel", endDrag);
+
+  /* --- Keyboard ----------------------------------------------------------- */
+  function attachKeys(node, which) {
+    node.addEventListener("keydown", function (event) {
+      var value = which === "fresh" ? state.fresh : state.aged;
+      var next = null;
+
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowUp": next = value + STEP; break;
+        case "ArrowLeft":
+        case "ArrowDown": next = value - STEP; break;
+        case "PageUp": next = value + STEP * 10; break;
+        case "PageDown": next = value - STEP * 10; break;
+        case "Home": next = MIN; break;
+        case "End": next = MAX; break;
+        default: return;
+      }
+
+      event.preventDefault();
+      which === "fresh" ? setFresh(next) : setAged(next);
+    });
+  }
+
+  attachKeys(el.fresh, "fresh");
+  attachKeys(el.aged, "aged");
+
+  /* --- Host integration --------------------------------------------------- */
+  function emitChange() {
+    post({ type: "lot-age-embed:change", fresh: state.fresh, aged: state.aged });
+  }
+
+  function postHeight() {
+    post({ type: "lot-age-embed:height", height: Math.ceil(el.card.getBoundingClientRect().height) });
+  }
+
+  function post(message) {
+    if (window.parent === window) return;
+    try { window.parent.postMessage(message, "*"); } catch (err) { /* cross-origin host */ }
+  }
+
+  /* --- Helpers ------------------------------------------------------------ */
+  function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+
+  function clampInt(raw, min, max, fallback) {
+    var n = parseInt(raw, 10);
+    return Number.isFinite(n) ? clamp(n, min, max) : fallback;
+  }
+
+  /* --- Boot --------------------------------------------------------------- */
+  buildLegend();
+  buildMarks();
+  render();
+
+  postHeight();
+  window.addEventListener("load", postHeight);
+  if (typeof ResizeObserver === "function") {
+    new ResizeObserver(postHeight).observe(el.card);
+  }
+})();
+</script>
+</body>
+</html>

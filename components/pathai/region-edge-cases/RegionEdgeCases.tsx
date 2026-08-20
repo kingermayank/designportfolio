@@ -20,36 +20,37 @@ const STAGE_H = Math.round((STAGE_W * 9) / 16); // 1466
 const SLIDE_BG = "/pathai/region-edge-cases/slide-bg.png";
 
 const FONT = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
-const FONT_LABEL = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
+const FONT_LABEL =
+  "var(--font-azeret-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
 const BACKGROUND = "#dce0e9";
 const RADIUS = 14.074;
 
-/* ── Persistent centered wrapper ───────────────────────────────────────── */
-const HERO_W = 1700;
-const HERO_H = Math.round((HERO_W * 9) / 16); // 956
-const HERO_TOP = 64;
-const HERO_CENTER_X = STAGE_W / 2;
-const HERO_CENTER_Y = HERO_TOP + HERO_H / 2;
-
-const HERO_CROSSFADE = "opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)";
-
-/* ── Selector strip — below the panel, never overlapping ───────────────── */
+/* ── Selector strip — sized first so the hero can center above it ──────── */
 const THUMB_W = 400;
 const THUMB_H = Math.round((THUMB_W * 9) / 16); // 225
-const STRIP_SCALE = 0.8;
+const STRIP_SCALE = 0.7;
 const STRIP_SCALE_ACTIVE = 1.14;
 const STRIP_GAP = 56;
 const STRIP_SLOT_W = Math.ceil(THUMB_W * STRIP_SCALE * STRIP_SCALE_ACTIVE) + 12;
 const STRIP_SLOT_H = Math.ceil(THUMB_H * STRIP_SCALE * STRIP_SCALE_ACTIVE) + 12;
 const STRIP_LABEL_H = 84;
-const STRIP_BOTTOM = 60;
+const STRIP_BOTTOM = 36;
 const STRIP_TOP = STAGE_H - STRIP_BOTTOM - (STRIP_SLOT_H + 16 + STRIP_LABEL_H);
+
+/* ── Hero panel — centered in the space above the strip ────────────────── */
+const HERO_W = 1700;
+const HERO_H = Math.round((HERO_W * 9) / 16); // 956
+const HERO_CENTER_X = STAGE_W / 2;
+const HERO_CENTER_Y = STRIP_TOP / 2;
+
+const HERO_CROSSFADE = "opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)";
 
 const STRIP_TRANSITION =
   "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), filter 300ms ease, opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)";
 const STRIP_INACTIVE_OPACITY = 0.75;
 const STRIP_INACTIVE_GRAYSCALE = 0.42;
-const STRIP_LABEL_SIZE = 25;
+const STRIP_LABEL_SIZE = 16;
+const STRIP_LABEL_LETTER_SPACING = 0.6;
 const STRIP_LABEL_ACTIVE = "#2C3548";
 const STRIP_LABEL_INACTIVE = "#5E6A87";
 
@@ -389,7 +390,7 @@ export default function RegionEdgeCases() {
                       fontFamily: FONT_LABEL,
                       fontSize: STRIP_LABEL_SIZE,
                       fontWeight: 600,
-                      letterSpacing: 2.2,
+                      letterSpacing: STRIP_LABEL_LETTER_SPACING,
                       textTransform: "uppercase",
                       color: active ? STRIP_LABEL_ACTIVE : STRIP_LABEL_INACTIVE,
                       opacity: active ? 1 : 0.68,

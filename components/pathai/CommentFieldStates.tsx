@@ -85,11 +85,11 @@ const HERO_CENTER_Y = STAGE_H / 2 - 100;
  * Bottom strip — static previews; active scales from center; inactive softly muted.
  * Clip wrappers hug each card’s natural height so the progress fill never overshoots.
  */
-const STRIP_SCALE = 0.8;
+const STRIP_SCALE = 0.64;
 const STRIP_SCALE_ACTIVE = 1.14;
 const STRIP_GAP = 40;
 const STRIP_BOTTOM = 76;
-const STRIP_LABEL_SIZE = 27;
+const STRIP_LABEL_SIZE = 18;
 const STRIP_LABEL_ACTIVE = "#2C3548";
 const STRIP_LABEL_INACTIVE = "#5E6A87";
 /** Soft mute — same family as inactive cards; ~½ prior strong contrast. */
@@ -101,7 +101,8 @@ const PROGRESS_LINE = "rgba(20, 107, 194, 0.52)";
 const PROGRESS_LINE_W = 1.5;
 
 const STATE_NAMES = ["Default", "Focused", "Typing", "Completed"] as const;
-const FONT_LABEL = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
+const FONT_LABEL =
+  "var(--font-azeret-mono), ui-monospace, SFMono-Regular, Menlo, monospace";
 
 const FONT = "var(--font-gotham-narrow), 'Gotham Narrow', sans-serif";
 const BLUE = "#146bc2";
@@ -837,7 +838,7 @@ function Stage({
                   fontFamily: FONT_LABEL,
                   fontSize: STRIP_LABEL_SIZE,
                   fontWeight: 600,
-                  letterSpacing: 2.8,
+                  letterSpacing: 0.8,
                   textTransform: "uppercase",
                   color: active ? STRIP_LABEL_ACTIVE : STRIP_LABEL_INACTIVE,
                   opacity: active ? 1 : 0.68,

@@ -11,8 +11,8 @@ import { caseHeroProps } from "@/lib/caseHero";
 import { boldRuns } from "@/lib/richText";
 import { CaseHero, MetadataList, PrimaryButton, onAccent } from "@/components/case-hero";
 import CommentFieldStates from "@/components/pathai/CommentFieldStates";
-import CommentCardAnatomy from "@/components/pathai/CommentCardAnatomy";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
+import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
 import Rise from "@/components/Rise";
 import SiteFooter from "@/components/SiteFooter";
@@ -156,11 +156,11 @@ function MediaEmbed({ embed }: { embed: MediaBlock & { type: "embed" } }) {
   if (embed.embed === "pathai-comment-states") {
     return <CommentFieldStates />;
   }
-  if (embed.embed === "pathai-comment-anatomy") {
-    return <CommentCardAnatomy />;
-  }
-  if (embed.embed === "pathai-region-edge-cases") {
+if (embed.embed === "pathai-region-edge-cases") {
     return <RegionEdgeCases />;
+  }
+  if (embed.embed === "toolbox-lot-age-range") {
+    return <LotAgeRangeEmbed />;
   }
   return null;
 }

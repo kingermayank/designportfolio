@@ -93,7 +93,8 @@ export type EngKind =
   | "Website"
   | "npm package"
   | "Marketing Landing Page"
-  | "B2B SaaS tool";
+  | "B2B SaaS tool"
+  | "3D Model";
 
 
 
@@ -157,6 +158,21 @@ export const ENG_COMPONENTS: EngComponent[] = [
     stack: ["React", "Inline tokens", "No deps"],
   },
   {
+    id: "shift-playground",
+    title: "Shift Playground",
+    kind: "Component",
+    body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
+    shade: "#282828",
+    thumb: "/shift-playground/thumbs/work-cover.jpg",
+    src: "/shift-playground/playground.mp4",
+    video: true,
+    href: "https://design-playground-virid.vercel.app/",
+    embedUrl: "https://design-playground-virid.vercel.app/",
+    frame: "cover",
+    stack: ["React", "Design tokens", "Component lab"],
+    note: "Interactive playground for the Shift Design System: pick a component, tweak its props, and preview in real time.",
+  },
+  {
     id: "walkity-site",
     title: "walkity.com",
     kind: "Marketing Landing Page",
@@ -211,6 +227,20 @@ export const ENG_COMPONENTS: EngComponent[] = [
     frame: "site",
     matte: "#EAF5C8",
     stack: ["Next.js", "Vercel", "Simulation"],
+  },
+  {
+    id: "keytag-3d",
+    title: "Key Tracker 3D",
+    kind: "3D Model",
+    body: "Interactive 3D model of Ikon's key tracker tag. Rotate, zoom, and edit the tag ID live.",
+    shade: "#050e1d",
+    thumb: "/keytag/thumbs/work-cover.jpg",
+    src: "/keytag/thumbnail.mp4",
+    video: true,
+    embedUrl: "/keytag/embed.html",
+    frame: "cover",
+    stack: ["Three.js", "WebGL", "QR generation"],
+    note: "A constantly rotating 3D key tracker tag with live QR code updates.",
   },
   {
     id: "retell-benchmark",
