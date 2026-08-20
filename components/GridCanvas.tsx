@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { TILES, packRows } from "@/lib/tiles";
 import ModeToggle from "@/components/ModeToggle";
 import Work from "@/components/Work";
+import type { WorkLensId } from "@/lib/workLenses";
 
 type Target = {
   x: number;
@@ -71,8 +72,12 @@ const COPY_STRIDE = 100000; // uid namespace per duplicated copy
 
 export default function GridCanvas({
   initialMode = "work",
+  initialLens,
+  initialOpenItem,
 }: {
   initialMode?: Mode;
+  initialLens?: WorkLensId;
+  initialOpenItem?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const rowsRef = useRef<HTMLDivElement | null>(null);
@@ -313,7 +318,7 @@ export default function GridCanvas({
           exit={anim.exit}
         >
           {mode === "work" ? (
-            <Work />
+            <Work initialLens={initialLens} initialOpenItem={initialOpenItem} />
           ) : (
             <>
               <div ref={scrollRef} className="scroller" onClick={() => closeRef.current()}>

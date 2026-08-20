@@ -15,8 +15,8 @@ export type HeroImageProps = {
   ratio?: number;
   /** Fill shown before the media paints (and behind transparent art). */
   shade?: string;
-  /** Flat black overlay. `true` = 80%; a number is opacity 0–1. */
-  scrim?: boolean | number;
+  /** Flat black overlay. `true` = 80%; a number is opacity 0–1; a string is a custom CSS background. */
+  scrim?: boolean | number | string;
   rounded?: boolean;
   className?: string;
 };
@@ -40,7 +40,10 @@ export default function HeroImage({
   const style: CSSProperties & Record<string, string | undefined> = {};
   if (ratio) style["--ch-hero-ratio"] = String(ratio);
   if (shade) style["--ch-shade"] = shade;
-  if (typeof scrim === "number") {
+  if (typeof scrim === "string") {
+    style["--ch-scrim-bg"] = scrim;
+    style["--ch-scrim-opacity"] = "1";
+  } else if (typeof scrim === "number") {
     style["--ch-scrim-opacity"] = String(scrim);
   } else if (scrim) {
     style["--ch-scrim-opacity"] = "0.8";

@@ -2817,6 +2817,10 @@ button.aboutCard:focus-visible {
     padding-right: 1.25rem;
   }
 
+  .aboutPageTitle {
+    font-size: clamp(3rem, calc(9vw + 16px), 4.25rem);
+  }
+
   .aboutPtoGrid,
   .aboutSplit {
     grid-template-columns: 1fr;
@@ -5678,7 +5682,7 @@ button.aboutCard:focus-visible {
 
   .workBrand {
     flex: 1;
-    font-size: clamp(2.5rem, calc(9vw + 8px), 3.75rem);
+    font-size: clamp(3rem, calc(9vw + 16px), 4.25rem);
     padding-top: 6px;
     text-wrap: unset;
     white-space: nowrap;
@@ -6136,7 +6140,7 @@ button.aboutCard:focus-visible {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: #000;
+  background: var(--ch-scrim-bg, #000);
   opacity: var(--ch-scrim-opacity, 0.8);
 }
 

@@ -11,12 +11,14 @@ export type WorkLens = {
   label: string;
   /** Deep-link hash (/#visual-craft). */
   anchor: string;
+  /** Route path for this lens. */
+  path: string;
 };
 
 export const WORK_LENSES: WorkLens[] = [
-  { id: "visual", label: "Visual Craft", anchor: "visual-craft" },
-  { id: "systems", label: "Product Thinking", anchor: "product-thinking" },
-  { id: "engineering", label: "Design Engineering", anchor: "design-engineering" },
+  { id: "visual", label: "Visual Craft", anchor: "visual-craft", path: "/" },
+  { id: "systems", label: "Product Thinking", anchor: "product-thinking", path: "/product-thinking" },
+  { id: "engineering", label: "Design Engineering", anchor: "design-engineering", path: "/design-engineering" },
 ];
 
 export type WorkListItem = {

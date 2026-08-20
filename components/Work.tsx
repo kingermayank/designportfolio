@@ -390,17 +390,24 @@ function EngCard({
   );
 }
 
-export default function Work() {
+export default function Work({ initialLens, initialOpenItem }: { initialLens?: WorkLensId; initialOpenItem?: string }) {
   const isNarrow = useIsNarrow();
   const reduceMotion = useReducedMotion();
-  const [lens, setLens] = useState<WorkLensId>("visual");
+  const [lens, setLens] = useState<WorkLensId>(initialLens ?? "visual");
   const [lensDir, setLensDir] = useState(1);
   const [hoverIdx, setHoverIdx] = useState(-1);
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
-  const [engActive, setEngActive] = useState<EngComponent | null>(null);
-  const [systemsActive, setSystemsActive] = useState<WorkListItem | null>(
-    null,
+  const [engActive, setEngActive] = useState<EngComponent | null>(() =>
+    initialOpenItem && initialLens === "engineering"
+      ? ENG_COMPONENTS.find((c) => c.id === initialOpenItem) ?? null
+      : null,
   );
+  const [systemsActive, setSystemsActive] = useState<WorkListItem | null>(() =>
+    initialOpenItem && initialLens === "systems"
+      ? SYSTEMS_LIST.find((s) => s.slug === initialOpenItem || s.id === initialOpenItem) ?? null
+      : null,
+  );
+  const pushedOverlayUrl = useRef(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const { open } = usePageTransition();
   // The panel's hover rail belongs to the project grid — only while Visual Craft.
@@ -443,18 +450,32 @@ export default function Work() {
     setEngActive(null);
     setSystemsActive(null);
     setHoverIdx(-1);
-    if (next) window.history.replaceState(null, "", `#${next.anchor}`);
+    if (next) window.history.replaceState(null, "", next.path);
     rootRef.current?.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
-  // Deep link — /#product-thinking opens that lens.
+  // Deep link — /product-thinking or legacy /#product-thinking opens that lens.
   useEffect(() => {
-    const anchor = window.location.hash.slice(1);
-    if (!anchor) return;
-    const match = WORK_LENSES.find((l) => l.anchor === anchor);
+    if (initialLens) return;
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const match = WORK_LENSES.find((l) => l.anchor === hash);
     if (!match || match.id === "visual") return;
     setLensDir(LENS_INDEX[match.id] - LENS_INDEX.visual || 1);
     setLens(match.id);
+  }, [initialLens]);
+
+  useEffect(() => {
+    const onPop = () => {
+      if (pushedOverlayUrl.current) {
+        pushedOverlayUrl.current = false;
+        setEngActive(null);
+        setSystemsActive(null);
+        setHoverIdx(-1);
+      }
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
   // Keep off-screen loops paused — same gate GridCanvas uses for its tiles.
@@ -503,6 +524,9 @@ export default function Work() {
             onOpen={() => {
               setHoverIdx(-1);
               setSystemsActive(item);
+              const slug = item.slug ?? item.id;
+              window.history.pushState(null, "", `/product-thinking/${slug}`);
+              pushedOverlayUrl.current = true;
             }}
           />
         ))}
@@ -513,7 +537,11 @@ export default function Work() {
           <EngCard
             key={item.id}
             item={item}
-            onOpen={() => setEngActive(item)}
+            onOpen={() => {
+              setEngActive(item);
+              window.history.pushState(null, "", `/design-engineering/${item.id}`);
+              pushedOverlayUrl.current = true;
+            }}
           />
         ))}
       </div>
@@ -555,7 +583,7 @@ export default function Work() {
               <CopyEmailButton
                 email={WORK_FIT_CTA.email}
                 label={WORK_FIT_CTA.contactLabel}
-                copiedLabel="Email copied"
+                copiedLabel="Copied"
                 showIcon={false}
                 className="workFitBtn workFitBtnSolid"
               />
@@ -673,7 +701,15 @@ export default function Work() {
       <SiteFooter />
 
       {engActive ? (
-        <EngDetailModal item={engActive} onClose={() => setEngActive(null)} />
+        <EngDetailModal item={engActive} onClose={() => {
+          setEngActive(null);
+          if (pushedOverlayUrl.current) {
+            pushedOverlayUrl.current = false;
+            window.history.back();
+          } else {
+            window.history.replaceState(null, "", "/design-engineering");
+          }
+        }} />
       ) : null}
       {systemsActive ? (
         <SystemsDetailOverlay
@@ -681,6 +717,12 @@ export default function Work() {
           onClose={() => {
             setHoverIdx(-1);
             setSystemsActive(null);
+            if (pushedOverlayUrl.current) {
+              pushedOverlayUrl.current = false;
+              window.history.back();
+            } else {
+              window.history.replaceState(null, "", "/product-thinking");
+            }
           }}
         />
       ) : null}

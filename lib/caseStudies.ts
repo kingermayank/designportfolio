@@ -14,10 +14,10 @@ export type CaseMedia = {
   /** HTML video playbackRate (1 = normal). */
   playbackRate?: number;
   /**
-   * Flat black overlay on the hero. `true` = 80% (Toolbox default);
-   * a number is opacity 0–1 (e.g. 0.2 for PathAI).
+   * Flat black overlay on the hero. `true` = 80%; a number is opacity 0–1;
+   * a string is a custom CSS background (e.g. a gradient).
    */
-  scrim?: boolean | number;
+  scrim?: boolean | number | string;
   caption?: string;
 };
 
@@ -181,7 +181,7 @@ const toolbox: CaseStudy = {
     },
   ],
   // Work card thumbnail video; case hero keeps the live-site hero reel.
-  workCover: "/toolbox/thumbnail.mp4",
+  workCover: "/toolbox/Toolbox.mp4",
   hero: {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
@@ -367,7 +367,7 @@ const toolbox: CaseStudy = {
     },
   ],
   impact:
-    "Toolbox pre-launch drove a 33% surge in dealership customers.",
+    "Pre-launch drove a **33% surge** in dealership sign-ups, securing **134 new dealerships** before public release.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
     { label: "Industry", value: "Automotive, IoT Hardware, RevOps" },
@@ -392,11 +392,13 @@ const wb = (
   src: string,
   ar: number,
   video?: boolean,
+  caption?: string,
 ): CaseMedia => ({
   shade: "#2b2b2b",
   src,
   ar,
   video,
+  caption,
 });
 
 const warpbnb: CaseStudy = {
@@ -436,45 +438,65 @@ const warpbnb: CaseStudy = {
   },
   // Numbered stack: 3-1 / 3-2 sit side by side; the commercial closes it out.
   mediaBlocks: [
-    { type: "full", media: wb("/warpbnb/warp1.png", 3840 / 2160) },
-    { type: "full", media: wb("/warpbnb/warp2.png", 2146 / 1138) },
+    { type: "full", media: wb("/warpbnb/warp1.png", 3840 / 2160, false, "Mobile app close-up: navigation and the Warpbnb wordmark.") },
+    { type: "full", media: wb("/warpbnb/warp2.png", 2146 / 1138, false, "3D era icons generated with thiings.co for every category.") },
     {
       type: "split",
       // Wide clips letterboxed into matching square frames (white bars top/bottom).
       left: {
-        shade: "#ffffff",
+        shade: "#FCFCFC",
         src: "/warpbnb/warp3-1.mp4",
         video: true,
         ar: 1,
         fit: "contain",
+        caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness.",
       },
       right: [
         {
-          shade: "#ffffff",
+          shade: "#FCFCFC",
           src: "/warpbnb/warp3-2.mp4",
           video: true,
           ar: 1,
           fit: "contain",
+          caption: "Browsing a listing detail on mobile.",
         },
       ],
     },
-    { type: "full", media: wb("/warpbnb/warp4.png", 4066 / 2285) },
-    { type: "full", media: wb("/warpbnb/warp5.png", 4074 / 2292) },
-    { type: "full", media: wb("/warpbnb/warp6.mp4", 1922 / 1080, true) },
-    { type: "full", media: wb("/warpbnb/warp7.mp4", 3340 / 2160, true) },
-    { type: "full", media: wb("/warpbnb/warp8.mp4", 1920 / 1080, true) },
+    { type: "full", media: wb("/warpbnb/warp4.png", 4066 / 2285, false, "Desktop homepage with theme filters and listing cards.") },
+    { type: "full", media: wb("/warpbnb/warp5.png", 4074 / 2292, false, "Listing detail: Mars Colony Pod, Olympus Mons.") },
+    { type: "full", media: wb("/warpbnb/warp6.mp4", 1922 / 1080, true, "Host reviews and booking flow in action.") },
+    {
+      type: "split",
+      left: {
+        shade: "#F8E8EC",
+        src: "/warpbnb/warp7.mp4",
+        video: true,
+        ar: 4 / 5,
+        caption: "Checkout with animated transportation methods.",
+      },
+      right: [
+        {
+          shade: "#FCFCFC",
+          src: "/warpbnb/warp8.mp4",
+          video: true,
+          ar: 4 / 5,
+          fit: "contain",
+          caption: "Transportation methods animated with Kling 3.0 for checkout.",
+        },
+      ],
+    },
     {
       type: "full",
       media: {
         shade: "#2b2b2b",
-        src: "https://www.youtube.com/watch?v=3JfVbt3C4Q8",
+        src: "https://www.youtube.com/watch?v=2JfVbt3C4Q8",
         youtube: true,
         ar: 16 / 9,
       },
     },
   ],
   impact:
-    "A full product — design system, frontend, backend, content, and a video commercial — shipped solo in **two weeks**.",
+    "A full product — design system, frontend, backend, content, and a video commercial — shipped solo in **two weeks**, earning widespread positive reactions across the design and tech community.",
   credits: [
     {
       label: "Tools",
@@ -545,8 +567,8 @@ const warpbnb: CaseStudy = {
         "For the logo I generated the concept in Nanobanana, vectorized it in Figma, and added a cursor-follow effect in Rive so the eyes track your cursor as you zoom in.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/particles.mp4", video: true, ar: 1.78, caption: "Hover, tap, jiggle, grow, snap back." },
-        { shade: G, src: "/warpbnb/snap.mp4", video: true, ar: 1.78, caption: "Inspired by Thanos's snap: press the button and it disintegrates." },
+        { shade: G, src: "/warpbnb/particles.mp4", video: true, ar: 1.78, caption: "Hover, tap, jiggle, grow, snap back. Until Mindscapes?" },
+        { shade: G, src: "/warpbnb/snap.mp4", video: true, ar: 1.78, caption: "Thanos's snap from Infinity War. Press the button and it disintegrates." },
         { shade: G, src: "/warpbnb/rive-logo.mp4", video: true, ar: 1.78, caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness." },
       ],
     },
@@ -610,7 +632,7 @@ const pathai: CaseStudy = {
     "I designed and shipped Region Comments, a collaboration tool on PathAI's Patient Diagnostics platform. It cut second-opinion turnaround times by ~45% and noticeably increased the number of cases pathologists sign out daily.",
   year: 2022,
   category: "Product Design",
-  shade: "#282828",
+  shade: "#0E0E0E",
   mediaOnly: true,
   accent: "#D18BFF", // PathAI brand purple
   highlights: [
@@ -629,10 +651,10 @@ const pathai: CaseStudy = {
   ],
   // Cover drives Work 1 card + detail hero (~4:3 monitor shot).
   hero: {
-    shade: "#282828",
+    shade: "#0E0E0E",
     src: "/pathai/cover.png",
     ar: 16 / 9,
-    scrim: 0.4,
+    scrim: "rgba(14,14,14,0.4)",
   },
   workCover: "/pathai/thumbs/work-cover.jpg",
   // Numbered stack: files are laid out by number, `n-1`/`n-2` sit side by side.
@@ -740,11 +762,13 @@ const wk = (
   src: string,
   ar: number,
   video?: boolean,
+  caption?: string,
 ): CaseMedia => ({
   shade: "#222222",
   src,
   ar,
   video,
+  caption,
 });
 
 const walkity: CaseStudy = {
@@ -778,24 +802,25 @@ const walkity: CaseStudy = {
   workCover: "/walkity/thumbs/work-cover.jpg?v=1",
   hero: {
     shade: "#222222",
-    src: "/walkity/cover.png",
+    src: "/walkity/walk8-hero.mp4",
+    video: true,
     ar: 16 / 9,
-    scrim: 0.3,
+    scrim: "linear-gradient(to bottom, rgba(14,14,14,0.25), rgba(14,14,14,1))",
   },
   // Numbered stack: 4 / 4-2 are the paired squares, side by side.
   mediaBlocks: [
-    { type: "full", media: wk("/walkity/walk1.png", 4016 / 2241) },
-    { type: "full", media: wk("/walkity/walk2.png", 3354 / 2514) },
-    { type: "full", media: wk("/walkity/walk3.png", 6000 / 4500) },
+    { type: "full", media: wk("/walkity/walk1.png", 4016 / 2241, false, "Footsteps plus haptic technology equals Walkity.") },
+    { type: "full", media: wk("/walkity/walk2.png", 3354 / 2514, false, "Brand guidelines: color palette, typography, and logo system.") },
+    { type: "full", media: wk("/walkity/walk3.png", 6000 / 4500, false, "Brand philosophy, stationery, and print collateral.") },
     {
       type: "split",
-      left: wk("/walkity/walk4.png", 2515 / 2515),
-      right: [wk("/walkity/walk4-2.png", 2515 / 2515)],
+      left: wk("/walkity/walk4.png", 2515 / 2515, false, "Logo construction on a geometric grid."),
+      right: [wk("/walkity/walk4-2.png", 2515 / 2515, false, "App icon sitting on the home screen.")],
     },
-    { type: "full", media: wk("/walkity/walk5.png", 6000 / 4000) },
-    { type: "full", media: wk("/walkity/walk6.png", 6000 / 4500) },
-    { type: "full", media: wk("/walkity/walk7.png", 6000 / 4000) },
-    { type: "full", media: wk("/walkity/walk8.mp4", 3 / 2, true) },
+    { type: "full", media: wk("/walkity/walk5.png", 6000 / 4000, false, "Live navigation with turn-by-turn haptic guidance.") },
+    { type: "full", media: wk("/walkity/walk6.png", 6000 / 4500, false, "Business card design — front and back.") },
+    { type: "full", media: wk("/walkity/walk7.png", 6000 / 4000, false, "Branded tote bag with the tagline: Let your steps lead.") },
+    { type: "full", media: wk("/walkity/walk8.mp4", 3 / 2, true, "The full landing page in motion.") },
     {
       type: "full",
       media: {
@@ -805,11 +830,13 @@ const walkity: CaseStudy = {
         ar: 3 / 2,
         fit: "contain",
         pad: { top: 100, bottom: 100 },
+        caption: "Desktop walkthrough of the shipped marketing site.",
       },
     },
+    { type: "full", media: wk("/walkity/walk10.mp4", 3 / 2, true, "Mobile experience of the landing page.") },
   ],
   impact:
-    "Walkity launched with one brand system and an accessible landing page that make its purpose immediate: never walk alone.",
+    "The brand launch helped Walkity raise **₹20 lakh in funding from NSRCEL Bangalore**, establishing a clear identity and an accessible landing page that made the product's purpose immediate.",
   credits: [
     { label: "Client", value: "VisIoT Technologies Pvt. Ltd." },
     { label: "Role", value: "Head of Design" },
@@ -885,7 +912,7 @@ const bigbasket: CaseStudy = {
     },
     {
       label: "Outcome",
-      body: "A documented design system that streamlined UX process and gave teams a common language for shipping cohesive grocery experiences.",
+      body: "Adopted org-wide by 200+ engineers and product teams, improving design-to-dev handoff efficiency by ~35% and giving teams a common language for shipping cohesive grocery experiences.",
     },
   ],
   hero: {
@@ -1049,7 +1076,7 @@ const bigbasket: CaseStudy = {
     },
   ],
   impact:
-    "Melon streamlined the UX process and gave design and engineering one shared language for shipping cohesive grocery experiences.",
+    "Adopted by **200+** product and engineering team members, improving design-to-dev handoff efficiency by **~35%** across **250+** audited components.",
   credits: [
     {
       label: "My Contribution",
