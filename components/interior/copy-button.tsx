@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { useCopyToClipboard, type CopyStatus } from "@/hooks/useCopyToClipboard";
+import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
@@ -20,6 +21,7 @@ export type CopyButtonProps = {
   disabled?: boolean;
   /** The leading copy glyph. Off where the button reads as a plain CTA. */
   showIcon?: boolean;
+  idleIcon?: "copy" | "email";
   className?: string;
 };
 
@@ -33,19 +35,19 @@ export function CopyButton({
   onError,
   disabled = false,
   showIcon = true,
+  idleIcon = "copy",
   className = "",
 }: CopyButtonProps) {
   const { copy, status } = useCopyToClipboard({ timeout, onCopy, onError });
   const reduced = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
 
   const fade = reduced ? INSTANT : CROSSFADE;
   const draw = reduced ? INSTANT : DRAW;
+  const showHoverCopy = idleIcon === "email" && isHovered && status === "idle";
 
-  const labels: Array<[CopyStatus, string]> = [
-    ["idle", label],
-    ["copied", copiedLabel],
-    ["error", errorLabel],
-  ];
+  const activeLabel =
+    status === "copied" ? copiedLabel : status === "error" ? errorLabel : label;
 
   return (
     <motion.button
@@ -55,9 +57,19 @@ export function CopyButton({
       onClick={() => {
         void copy(value);
       }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
       whileTap={disabled || reduced ? undefined : { y: 1 }}
-      transition={CELL}
-      className={"intCopyBtn" + (className ? ` ${className}` : "")}
+      layout={reduced ? false : "size"}
+      transition={{
+        ...CELL,
+        layout: reduced ? INSTANT : { duration: 0.3, ease: EASE },
+      }}
+      className={
+        "intCopyBtn" +
+        (idleIcon === "email" ? " intCopyBtnIconAfter" : "") +
+        (className ? ` ${className}` : "")
+      }
     >
       {showIcon ? (
         <span className="intCopyIcon" aria-hidden="true">
@@ -70,14 +82,43 @@ export function CopyButton({
             strokeLinejoin="round"
             initial={false}
             animate={{
-              opacity: status === "idle" ? 1 : 0,
-              scale: status === "idle" ? 1 : 0.92,
+              opacity: status === "idle" && !showHoverCopy ? 1 : 0,
+              scale: status === "idle" && !showHoverCopy ? 1 : 0.92,
             }}
             transition={fade}
           >
-            <path d="M9.6 5.1V3.7A1.7 1.7 0 0 0 7.9 2H3.7A1.7 1.7 0 0 0 2 3.7v4.2a1.7 1.7 0 0 0 1.7 1.7h1.4" />
-            <rect x="5.1" y="5.1" width="6.9" height="6.9" rx="1.7" />
+            {idleIcon === "email" ? (
+              <>
+                <rect x="1.5" y="2.75" width="11" height="8.5" rx="1.5" />
+                <path d="m2.25 4 4.12 3.22a1 1 0 0 0 1.26 0L11.75 4" />
+              </>
+            ) : (
+              <>
+                <path d="M9.6 5.1V3.7A1.7 1.7 0 0 0 7.9 2H3.7A1.7 1.7 0 0 0 2 3.7v4.2a1.7 1.7 0 0 0 1.7 1.7h1.4" />
+                <rect x="5.1" y="5.1" width="6.9" height="6.9" rx="1.7" />
+              </>
+            )}
           </motion.svg>
+
+          {idleIcon === "email" ? (
+            <motion.svg
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={false}
+              animate={{
+                opacity: showHoverCopy ? 1 : 0,
+                scale: showHoverCopy ? 1 : 0.92,
+              }}
+              transition={fade}
+            >
+              <path d="M9.6 5.1V3.7A1.7 1.7 0 0 0 7.9 2H3.7A1.7 1.7 0 0 0 2 3.7v4.2a1.7 1.7 0 0 0 1.7 1.7h1.4" />
+              <rect x="5.1" y="5.1" width="6.9" height="6.9" rx="1.7" />
+            </motion.svg>
+          ) : null}
   
           <motion.svg
             viewBox="0 0 14 14"
@@ -122,20 +163,17 @@ export function CopyButton({
       ) : null}
 
       <span aria-hidden="true" className="intCopyLabel">
-        {labels.map(([key, text]) => (
+        <AnimatePresence initial={false} mode="popLayout">
           <motion.span
-            key={key}
-            initial={false}
-            animate={
-              key === status
-                ? { opacity: 1, y: 0, filter: "blur(0px)" }
-                : { opacity: 0, y: 3, filter: "blur(3px)" }
-            }
+            key={status}
+            initial={{ opacity: 0, y: -3, filter: "blur(3px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: 3, filter: "blur(3px)" }}
             transition={fade}
           >
-            {text}
+            {activeLabel}
           </motion.span>
-        ))}
+        </AnimatePresence>
       </span>
 
       <span role="status" aria-live="polite" className="srOnly">

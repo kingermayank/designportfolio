@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import DeferredVideo from "@/components/DeferredVideo";
 
 export type HeroImageProps = {
   /** Image or video in /public, or an absolute URL. */
@@ -65,19 +66,22 @@ export default function HeroImage({
     >
       {src ? (
         video ? (
-          <video
+          <DeferredVideo
             className="chMediaFill"
             src={src}
             poster={poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            activation="visible"
+            posterPriority
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="chMediaFill" src={src} alt={alt} />
+          <img
+            className="chMediaFill"
+            src={src}
+            alt={alt}
+            fetchPriority="high"
+            decoding="async"
+          />
         )
       ) : null}
     </figure>

@@ -26,6 +26,7 @@ export default function CopyEmailButton({
       copiedLabel={copiedLabel}
       errorLabel={errorLabel}
       showIcon={showIcon}
+      idleIcon="email"
       className={className}
     />
   );

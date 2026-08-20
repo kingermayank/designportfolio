@@ -102,6 +102,29 @@ body {
   overflow-x: clip;
 }
 
+/* ---------- Shared entrance language ---------- */
+
+.stage > .window {
+  animation: site-window-enter 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes site-window-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage > .window {
+    animation: none;
+  }
+}
+
 .stage {
   height: 100vh;
   height: 100dvh;
@@ -3930,6 +3953,16 @@ button.aboutCard:focus-visible {
   border-radius: var(--radius-lg);
 }
 
+.sysOverlayFigureMedia[aria-roledescription="carousel"] {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.sysOverlayFigureMedia[aria-roledescription="carousel"]:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
 .sysOverlayFigure.has-impact .sysOverlayFigureMedia {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -3947,14 +3980,15 @@ button.aboutCard:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: var(--radius-sm);
   background: rgba(20, 20, 20, 0.55);
   color: #ffffff;
   cursor: pointer;
+  touch-action: manipulation;
   transition: background-color 167ms linear;
 }
 
@@ -3964,8 +3998,15 @@ button.aboutCard:focus-visible {
   display: block;
 }
 
-.sysOverlayFigureNav:hover {
-  background: rgba(20, 20, 20, 0.78);
+@media (hover: hover) and (pointer: fine) {
+  .sysOverlayFigureNav:hover {
+    background: rgba(20, 20, 20, 0.78);
+  }
+}
+
+.sysOverlayFigureNav:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .sysOverlayFigureNav.is-prev {
@@ -3983,6 +4024,31 @@ button.aboutCard:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  animation: sys-overlay-shot-next 180ms ease-out both;
+}
+
+.sysOverlayFigure img.from-prev {
+  animation-name: sys-overlay-shot-prev;
+}
+
+@keyframes sys-overlay-shot-next {
+  from {
+    opacity: 0.72;
+    transform: translateX(12px);
+  }
+}
+
+@keyframes sys-overlay-shot-prev {
+  from {
+    opacity: 0.72;
+    transform: translateX(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sysOverlayFigure img {
+    animation: none;
+  }
 }
 
 .sysOverlayHighlights {
@@ -4521,6 +4587,11 @@ button.aboutCard:focus-visible {
   white-space: nowrap;
 }
 
+.engInteractiveChip li {
+  background: #ffffff;
+  color: #121413;
+}
+
 .engModalNote {
   margin: 0;
   max-width: 62ch;
@@ -4780,6 +4851,52 @@ button.aboutCard:focus-visible {
 
 .workBrandDot {
   color: var(--color-accent-orange);
+}
+
+.workBrandDotBounce {
+  display: inline-block;
+  transform-origin: 50% 85%;
+  animation: work-brand-dot-bounce 860ms linear 600ms both;
+}
+
+/* Three diminishing contacts, ending at the period's normal baseline. */
+@keyframes work-brand-dot-bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-1.1em) scale(0.94, 1.06);
+  }
+  5% {
+    opacity: 1;
+    transform: translateY(-1.1em) scale(0.94, 1.06);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(0) scale(1.12, 0.82);
+  }
+  45% {
+    transform: translateY(-0.58em) scale(0.96, 1.04);
+  }
+  61% {
+    transform: translateY(0) scale(1.08, 0.88);
+  }
+  74% {
+    transform: translateY(-0.24em) scale(0.98, 1.02);
+  }
+  85% {
+    transform: translateY(0) scale(1.04, 0.94);
+  }
+  93% {
+    transform: translateY(-0.07em) scale(1, 1);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workBrandDotBounce {
+    animation: none;
+  }
 }
 
 .workUniform .workSubtitle {
@@ -5135,11 +5252,20 @@ button.aboutCard:focus-visible {
     background-color 167ms linear, color 167ms linear;
 }
 
-/* Interior copy-button — stacked labels lock width; icons share one cell. */
+/* Interior copy-button — active labels size naturally; icons share one cell. */
 .intCopyBtn {
   position: relative;
   font-weight: 500;
   text-decoration: none;
+}
+
+.intCopyBtnIconAfter {
+  gap: 6px;
+  transform-origin: left center;
+}
+
+.intCopyBtnIconAfter .intCopyIcon {
+  order: 1;
 }
 
 .intCopyIcon {
@@ -5157,7 +5283,8 @@ button.aboutCard:focus-visible {
 }
 
 .intCopyLabel {
-  display: grid;
+  position: relative;
+  display: inline-grid;
   line-height: 1;
   font-weight: 500;
 }
@@ -5455,6 +5582,55 @@ button.aboutCard:focus-visible {
   container-type: size;
 }
 
+.workGrid > .workCard,
+.workGrid > .workCol > .workCard {
+  animation: work-card-enter 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--work-card-enter-delay, 100ms);
+}
+
+.workGridFlat > .workCard:nth-child(1),
+.workGrid > .workCol:nth-child(1) > .workCard:nth-child(1) {
+  --work-card-enter-delay: 100ms;
+}
+
+.workGridFlat > .workCard:nth-child(2),
+.workGrid > .workCol:nth-child(2) > .workCard:nth-child(1) {
+  --work-card-enter-delay: 150ms;
+}
+
+.workGridFlat > .workCard:nth-child(3),
+.workGrid > .workCol:nth-child(1) > .workCard:nth-child(2) {
+  --work-card-enter-delay: 200ms;
+}
+
+.workGridFlat > .workCard:nth-child(4),
+.workGrid > .workCol:nth-child(2) > .workCard:nth-child(2) {
+  --work-card-enter-delay: 250ms;
+}
+
+.workGridFlat > .workCard:nth-child(n + 5),
+.workGrid > .workCol > .workCard:nth-child(n + 3) {
+  --work-card-enter-delay: 300ms;
+}
+
+@keyframes work-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workGrid > .workCard,
+  .workGrid > .workCol > .workCard {
+    animation: none;
+  }
+}
+
 .workCardStatic {
   cursor: default;
 }
@@ -5548,15 +5724,52 @@ button.aboutCard:focus-visible {
 }
 
 .workCardTagline {
+  display: block;
+  flex: 1;
+  min-width: 0;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 400;
   color: var(--muted);
   text-align: right;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  min-width: 0;
+}
+
+.workCardTagline.is-overflowing {
+  text-align: left;
+}
+
+.workCardTaglineTrack {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.workCardTaglineGap {
+  display: inline-flex;
+  width: 32px;
+  flex: 0 0 32px;
+  justify-content: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .workCard:hover .workCardTagline.is-overflowing .workCardTaglineTrack,
+  .workCard:focus-visible .workCardTagline.is-overflowing .workCardTaglineTrack {
+    animation: work-card-marquee-ltr var(--work-marquee-duration) linear 500ms infinite both;
+  }
+}
+
+@keyframes work-card-marquee-ltr {
+  from {
+    transform: translate3d(calc(-50% - 16px), 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 @media (max-width: 900px) {
@@ -5750,6 +5963,9 @@ button.aboutCard:focus-visible {
   .workCardCaption {
     position: static;
     height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
     opacity: 1;
     overflow: visible;
     pointer-events: none;
@@ -5767,6 +5983,20 @@ button.aboutCard:focus-visible {
 
   .workCardTagline {
     text-align: left;
+    overflow: visible;
+  }
+
+  .workCardTaglineTrack {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    animation: none;
+    transform: none;
+  }
+
+  .workCardTaglineGap,
+  .workCardTaglineDuplicate {
+    display: none;
   }
 
   .siteFooter {
@@ -5843,7 +6073,7 @@ button.aboutCard:focus-visible {
   }
 
   .workCardCaption {
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .workCardName {
@@ -5852,16 +6082,15 @@ button.aboutCard:focus-visible {
   }
 
   .workCardTagline {
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: left;
+    white-space: normal;
+    overflow: visible;
   }
 }
 
 @media (max-width: 560px) {
   .workLenses {
-    gap: 12px 8px;
+    gap: 12px 10px;
     padding: 8px 0 16px;
   }
 
@@ -5901,7 +6130,7 @@ button.aboutCard:focus-visible {
 
 @media (max-width: 400px) {
   .workLenses {
-    gap: 10px 6px;
+    gap: 10px 8px;
   }
 
   .workLens {
@@ -5932,6 +6161,40 @@ button.aboutCard:focus-visible {
   }
 }
 
+@media (hover: none) and (min-width: 901px) {
+  .workCard .workCardMediaWrap {
+    bottom: 44px;
+  }
+
+  .workCard .workCardCaption {
+    height: 44px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1px;
+  }
+
+  .workCardTagline {
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .workCardTaglineTrack {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    animation: none;
+    transform: none;
+  }
+
+  .workCardTaglineGap,
+  .workCardTaglineDuplicate {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .workNavDot,
   .workNavDescWrap,
@@ -5941,6 +6204,42 @@ button.aboutCard:focus-visible {
   .csMediaHoverWrap > .csMediaStage,
   .csMediaHoverCaption {
     transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (min-width: 901px) {
+  .workCard:hover .workCardMediaWrap,
+  .workCard:focus-visible .workCardMediaWrap {
+    bottom: 44px;
+  }
+
+  .workCard:hover .workCardCaption,
+  .workCard:focus-visible .workCardCaption {
+    height: 44px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1px;
+  }
+
+  .workCardTagline {
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .workCardTaglineTrack {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    animation: none;
+    transform: none;
+  }
+
+  .workCardTaglineGap,
+  .workCardTaglineDuplicate {
+    display: none;
   }
 }
 

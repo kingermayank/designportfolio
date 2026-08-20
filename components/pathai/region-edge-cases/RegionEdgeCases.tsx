@@ -407,6 +407,12 @@ export default function RegionEdgeCases() {
             })}
           </div>
         </div>
+        <ul
+          className="engModalStack engInteractiveChip"
+          aria-label="Experience type"
+        >
+          <li>Interactive</li>
+        </ul>
       </div>
     </figure>
   );

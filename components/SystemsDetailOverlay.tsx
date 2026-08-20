@@ -5,11 +5,12 @@ import {
   useId,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
 import { CASE_STUDIES, type CaseMedia } from "@/lib/caseStudies";
 import { boldRuns } from "@/lib/richText";
 import type { WorkListItem } from "@/lib/workLenses";
@@ -23,6 +24,7 @@ type Props = {
 // tail that decelerates far more gently than a standard ease-out.
 const OPEN_MS = 500;
 const EASE = "cubic-bezier(0.15, 0, 0.3, 1)";
+const subscribeToClient = () => () => {};
 
 function galleryMedia(slug?: string): CaseMedia[] {
   if (!slug) return [];
@@ -64,10 +66,21 @@ function ImpactLine({ impact }: { impact: string }) {
 export default function SystemsDetailOverlay({ item, onClose }: Props) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    subscribeToClient,
+    () => true,
+    () => false,
+  );
   const [open, setOpen] = useState(false);
   const [shotIdx, setShotIdx] = useState(0);
+  const [shotDir, setShotDir] = useState(1);
   const closingRef = useRef(false);
+  const swipeRef = useRef<{
+    pointerId: number;
+    x: number;
+    y: number;
+    time: number;
+  } | null>(null);
 
   const study = item.slug
     ? CASE_STUDIES.find((s) => s.slug === item.slug)
@@ -78,18 +91,45 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
   const highlights = study?.highlights ?? [];
   const impact = study?.impact;
   const tags = item.badges ?? [];
-  const shots = galleryMedia(item.slug);
+  const shots = item.gallery ?? galleryMedia(item.slug);
   const figure = shots[shotIdx] ?? shots[0];
-  // Match the Product Thinking card art in its detail view. Stella already
-  // followed this path; the other studies previously swapped to case media.
-  const figureSrc = item.thumb ?? figure?.src;
+  // Curated galleries take precedence; other projects retain their card art.
+  const figureSrc = item.gallery?.length ? figure?.src : item.thumb ?? figure?.src;
   const figureShade = item.shade;
   const figureAr = 16 / 9;
   const figureCaption = figure?.caption;
-  const isDataDictionary = item.id === "ikon-data-dictionary";
   const hasGallery = shots.length > 1;
-  const stepShot = (dir: number) =>
+  const stepShot = (dir: number) => {
+    setShotDir(dir);
     setShotIdx((i) => (i + dir + shots.length) % shots.length);
+  };
+
+  const onGalleryPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!hasGallery || e.button !== 0) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+    swipeRef.current = {
+      pointerId: e.pointerId,
+      x: e.clientX,
+      y: e.clientY,
+      time: performance.now(),
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onGalleryPointerUp = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const start = swipeRef.current;
+    swipeRef.current = null;
+    if (!start || start.pointerId !== e.pointerId) return;
+
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    const elapsed = Math.max(performance.now() - start.time, 1);
+    const fastSwipe = Math.abs(dx) / elapsed > 0.45;
+    const horizontal = Math.abs(dx) > Math.abs(dy) * 1.15;
+    if (horizontal && (Math.abs(dx) >= 44 || (Math.abs(dx) >= 24 && fastSwipe))) {
+      stepShot(dx < 0 ? 1 : -1);
+    }
+  };
 
   const requestClose = () => {
     if (closingRef.current) return;
@@ -99,8 +139,11 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
   };
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    item.gallery?.slice(1).forEach(({ src }) => {
+      const image = new window.Image();
+      image.src = src;
+    });
+  }, [item.gallery]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -207,7 +250,7 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
               </ul>
             ) : null}
 
-            {figureSrc || isDataDictionary ? (
+            {figureSrc ? (
               <figure
                 className={
                   "sysOverlayFigure" +
@@ -220,13 +263,40 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
                     aspectRatio: String(figureAr),
                     background: figureShade,
                   }}
+                  role={hasGallery ? "group" : undefined}
+                  aria-roledescription={hasGallery ? "carousel" : undefined}
+                  aria-label={hasGallery ? `${headline} image gallery` : undefined}
+                  tabIndex={hasGallery ? 0 : undefined}
+                  onKeyDown={(e) => {
+                    if (e.key === "ArrowLeft") {
+                      e.preventDefault();
+                      stepShot(-1);
+                    } else if (e.key === "ArrowRight") {
+                      e.preventDefault();
+                      stepShot(1);
+                    }
+                  }}
+                  onPointerDown={onGalleryPointerDown}
+                  onPointerUp={onGalleryPointerUp}
+                  onPointerCancel={() => {
+                    swipeRef.current = null;
+                  }}
                 >
-                  {isDataDictionary ? (
-                    <DataDictionaryThumbnail />
-                  ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={figureSrc} alt={figureCaption ?? ""} />
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    key={figureSrc}
+                    className={shotDir > 0 ? "from-next" : "from-prev"}
+                    src={figureSrc}
+                    alt={figureCaption ?? ""}
+                    draggable={false}
+                    decoding="async"
+                  />
+
+                  {hasGallery ? (
+                    <span className="srOnly" aria-live="polite">
+                      Image {shotIdx + 1} of {shots.length}
+                    </span>
+                  ) : null}
 
                   {hasGallery ? (
                     <>

@@ -32,6 +32,11 @@ export type WorkListItem = {
   shade: string;
   /** Category chips on the Product Thinking card. */
   badges?: string[];
+  /** Ordered media shown in the Product Thinking detail carousel. */
+  gallery?: Array<{
+    src: string;
+    caption: string;
+  }>;
   year?: number;
 };
 
@@ -46,6 +51,16 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     thumb: "/ikon/thumbs/dictionary.jpg?v=3",
     shade: "#FFFFFF",
     badges: ["Data Strategy", "Product Enablement", "Business Analysis"],
+    gallery: [
+      {
+        src: "/systems%20thinking/data%20dictionary_1.png",
+        caption: "Unified data dictionary overview and source catalogue.",
+      },
+      {
+        src: "/systems%20thinking/data%20dictionary_2.png",
+        caption: "Data dictionary relationships and aligned definitions.",
+      },
+    ],
     year: 2024,
   },
   {
@@ -54,9 +69,19 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     title: "One operational source of truth across disconnected ops",
     meta: "Ikon Technologies · Service Blueprint · 2024",
     body: "Mapped the device lifecycle end to end across accounting, operations, warehouse, and dealership, providing the blueprint NetSuite consultants used to start the warehouse management system project.",
-    thumb: "/ikon/thumbs/blueprint.jpg?v=3",
+    thumb: "/systems%20thinking/flow.png",
     shade: "#A9B2BB",
     badges: ["Service Design", "Systems Mapping", "Process Transformation"],
+    gallery: [
+      {
+        src: "/systems%20thinking/tunr.png",
+        caption: "End-to-end operational source-of-truth map.",
+      },
+      {
+        src: "/systems%20thinking/figjam.png",
+        caption: "Collaborative service-blueprint workspace in FigJam.",
+      },
+    ],
     year: 2024,
   },
   {
@@ -68,6 +93,16 @@ export const SYSTEMS_LIST: WorkListItem[] = [
     thumb: "/systems%20thinking/Slide%2016_9%20-%2060.png",
     shade: "#FFFFFF",
     badges: ["Product Analytics", "Growth Strategy"],
+    gallery: [
+      {
+        src: "/systems%20thinking/Slide%2016_9%20-%2060.png",
+        caption: "HEART metrics framework used as the project thumbnail.",
+      },
+      {
+        src: "/systems%20thinking/data%20analytics.png",
+        caption: "Product analytics instrumentation and measurement model.",
+      },
+    ],
     year: 2024,
   },
   {
@@ -94,7 +129,10 @@ export type EngKind =
   | "npm package"
   | "Marketing Landing Page"
   | "B2B SaaS tool"
-  | "3D Model";
+  | "3D Model"
+  | "Prototyping Environment"
+  | "Playful Side Project"
+  | "3D Simulation";
 
 
 
@@ -145,22 +183,9 @@ export const ENG_COMPONENTS: EngComponent[] = [
     note: "Surface preview from the Toolbox case study: Shift Design System 2.0.",
   },
   {
-    id: "warpbnb-search",
-    title: "Search Bar",
-    kind: "Component",
-    body: "Theme, era, and guests. Play with the Warpbnb search field live.",
-    shade: "#FFE4EE",
-    thumb: "/warpbnb/search_de.png",
-    src: "/warpbnb/search_de.png",
-    embedUrl: "/labs/search",
-    frame: "cover",
-    matte: "#FFE4EE",
-    stack: ["React", "Inline tokens", "No deps"],
-  },
-  {
     id: "shift-playground",
     title: "Shift Playground",
-    kind: "Component",
+    kind: "Prototyping Environment",
     body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
     shade: "#282828",
     thumb: "/shift-playground/thumbs/work-cover.jpg",
@@ -178,8 +203,9 @@ export const ENG_COMPONENTS: EngComponent[] = [
     kind: "Marketing Landing Page",
     body: "Brand strategy and landing page from scratch, with accessibility at the center, shipped as a live marketing site.",
     shade: "#1a1a1a",
-    thumb: "/walkity/thumbs/site-desktop.jpg",
-    src: "/walkity/thumbs/site-desktop.jpg",
+    thumb: "/walkity/thumbs/hero-preview.jpg",
+    src: "/walkity/thumbs/hero-preview.mp4",
+    video: true,
     href: "https://walkity.vercel.app/",
     embedUrl: "https://walkity.vercel.app/",
     frame: "site",
@@ -189,7 +215,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "warpbnb-site",
     title: "warpbnb.com",
-    kind: "Website",
+    kind: "Playful Side Project",
     body: "Full-stack fictional product site covering design, code, motion, and commercial.",
     shade: "#2b2b2b",
     thumb: "/warpbnb/thumbs/site-desktop.jpg?v=2",
@@ -204,10 +230,10 @@ export const ENG_COMPONENTS: EngComponent[] = [
     id: "agave-site",
     title: "Agave Landing Page",
     kind: "B2B SaaS tool",
-    body: "Password-gated design assessment landing: one connected view of financial operations.",
+    body: "A connected financial operations workspace for approvals, exceptions, expenses, and ERP sync.",
     shade: "#1a2e1c",
-    thumb: "/agave/thumbs/site-desktop.jpg",
-    src: "/agave/thumbs/site-desktop.jpg",
+    thumb: "/agave/thumbs/dashboard-preview.jpg",
+    src: "/agave/thumbs/dashboard-preview.jpg",
     href: "https://agave-kappa.vercel.app/",
     embedUrl: "https://agave-kappa.vercel.app/",
     frame: "site",
@@ -217,16 +243,29 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "f1-sim",
     title: "APEX F1 Sim",
-    kind: "Website",
+    kind: "3D Simulation",
     body: "Shanghai 2026 race simulation. Watch the Chinese Grand Prix unfold, then ask why every decision happened.",
     shade: "#141414",
-    thumb: "/f1-sim/thumbs/site-desktop.jpg",
-    src: "/f1-sim/thumbs/site-desktop.jpg",
+    thumb: "/f1-sim/thumbs/race-preview.jpg",
+    src: "/f1-sim/thumbs/race-preview.mp4",
+    video: true,
     href: "https://f1-sim-nine.vercel.app/",
     embedUrl: "https://f1-sim-nine.vercel.app/",
-    frame: "site",
-    matte: "#EAF5C8",
+    frame: "cover",
     stack: ["Next.js", "Vercel", "Simulation"],
+  },
+  {
+    id: "warpbnb-search",
+    title: "Search Bar",
+    kind: "Component",
+    body: "Theme, era, and guests. Play with the Warpbnb search field live.",
+    shade: "#FFE4EE",
+    thumb: "/warpbnb/search_de.png",
+    src: "/warpbnb/search_de.png",
+    embedUrl: "/labs/search",
+    frame: "cover",
+    matte: "#FFE4EE",
+    stack: ["React", "Inline tokens", "No deps"],
   },
   {
     id: "keytag-3d",
@@ -248,8 +287,9 @@ export const ENG_COMPONENTS: EngComponent[] = [
     kind: "Website",
     body: "Compare leading AI models across response quality, speed, and cost, built for voice-agent tradeoffs.",
     shade: "#0E1626",
-    thumb: "/retell/thumbs/site-desktop.jpg",
-    src: "/retell/thumbs/site-desktop.jpg",
+    thumb: "/retell/thumbs/scroll-preview.jpg",
+    src: "/retell/thumbs/scroll-preview.mp4",
+    video: true,
     href: "https://retell-design.vercel.app/",
     embedUrl: "https://retell-design.vercel.app/",
     frame: "site",

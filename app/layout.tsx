@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Azeret_Mono } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
+import {
+  createMetadata,
+  DEFAULT_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo";
 import "./globals.css";
 
 // The whole site runs on three faces: Azeret (everything), Azeret Mono (small
@@ -88,9 +94,32 @@ const gothamNarrow = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mayank Kinger",
-  description:
-    "Product designer and high agency builder with a founder's mindset who ships experiences with speed, taste, and judgement.",
+  metadataBase: SITE_URL,
+  applicationName: SITE_NAME,
+  ...createMetadata(),
+  authors: [{ name: "Mayank Kinger", url: SITE_URL }],
+  creator: "Mayank Kinger",
+  publisher: "Mayank Kinger",
+  keywords: [
+    "Mayank Kinger",
+    "product designer",
+    "design engineer",
+    "product design portfolio",
+    "UX designer",
+    "design systems",
+  ],
+  category: "portfolio",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
     icon: [
       {
@@ -109,6 +138,22 @@ export const metadata: Metadata = {
   },
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Mayank Kinger",
+  url: SITE_URL.toString(),
+  image: new URL("/about/hero.jpg", SITE_URL).toString(),
+  jobTitle: "Product Designer",
+  description: DEFAULT_DESCRIPTION,
+  sameAs: [
+    "https://www.linkedin.com/in/kingermayank/",
+    "https://x.com/kingermayank",
+    "https://github.com/kingermayank",
+    "https://nextgendesigner.substack.com/",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -120,6 +165,12 @@ export default function RootLayout({
       className={`${azeret.variable} ${azeretMono.variable} ${cesare.variable} ${palmerLakePrint.variable} ${palmerLakeScript.variable} ${gothamNarrow.variable}`}
     >
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

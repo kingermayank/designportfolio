@@ -1,6 +1,7 @@
 "use client";
 
 import type { EngComponent } from "@/lib/workLenses";
+import DeferredVideo from "@/components/DeferredVideo";
 
 /** Card covers for Design Engineering entries — static capture or looping video. */
 export default function EngCardPreview({ item }: { item: EngComponent }) {
@@ -19,14 +20,10 @@ export default function EngCardPreview({ item }: { item: EngComponent }) {
       }}
     >
       {item.video && item.src ? (
-        <video
+        <DeferredVideo
           src={item.src}
-          poster={item.thumb}
-          muted
-          loop
-          playsInline
-          autoPlay
-          preload="metadata"
+          poster={item.thumb || item.src}
+          activation="visible"
         />
       ) : hasMedia ? (
         // eslint-disable-next-line @next/next/no-img-element

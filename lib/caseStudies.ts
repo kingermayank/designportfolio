@@ -76,6 +76,10 @@ export type CaseStudy = {
   detailTitle?: string;
   tagline: string;
   description: string;
+  /** Concise proof point revealed in the Visual Craft card caption. */
+  workCaption?: string;
+  /** Focused hover summary for fast portfolio scanning. */
+  workSummary?: string;
   year: number;
   category: string;
   shade: string;
@@ -84,6 +88,8 @@ export type CaseStudy = {
   workStill?: boolean;
   /** Optional Work 1 cover (still or video) — overrides hero / workStill on the grid. */
   workCover?: string;
+  /** Lightweight high-resolution poster painted before an optional Work video loads. */
+  workPoster?: string;
   credits?: { label: string; value: string }[];
   sections: CaseSection[];
   /** Right column is a stacked media grid only — no body copy or captions. */
@@ -161,6 +167,9 @@ const toolbox: CaseStudy = {
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
     "I led everything design-related for Toolbox as we onboarded dealerships from legacy to the new NextGen platform: 450 dealerships onboarded, and 40 directions across 450 relationships migrated from legacy. Showcasing the product at NADA 2026 drove 132 more dealership signups.",
+  workCaption: "Solo design lead → AI-native platform.",
+  workSummary:
+    "Led Toolbox end to end—from product design into design engineering—helping move 450 dealerships onto the next-generation platform.",
   year: 2025,
   category: "Design Engineering",
   shade: "#282828",
@@ -181,7 +190,8 @@ const toolbox: CaseStudy = {
     },
   ],
   // Work card thumbnail video; case hero keeps the live-site hero reel.
-  workCover: "/toolbox/thumbnail.mp4",
+  workCover: "/toolbox/thumbnail-optimized.mp4",
+  workPoster: "/toolbox/thumbs/thumbnail.webp",
   hero: {
     shade: "#282828",
     src: "/toolbox/hero.mp4",
@@ -304,6 +314,12 @@ const toolbox: CaseStudy = {
       ],
     },
     {
+      type: "embed",
+      embed: "toolbox-lot-age-range",
+      shade: "#222627",
+      ar: 16 / 9,
+    },
+    {
       type: "full",
       media: tbDesktop(
         "/toolbox/invoices-ui.mp4", // Invoices
@@ -315,24 +331,18 @@ const toolbox: CaseStudy = {
       columns: 2,
       media: [
         tbShot(
-          "/toolbox/project/tool7_2.png",
-          1,
-          "#222627",
-          "A clear, scannable invoice built for dealership accounting.",
-        ),
-        tbShot(
           "/toolbox/project/tool7_1.png",
           1,
           "#FFFFFF",
           "Location, key, and battery status at a glance.",
         ),
+        tbShot(
+          "/toolbox/project/tool7_2.png",
+          1,
+          "#222627",
+          "A clear, scannable invoice built for dealership accounting.",
+        ),
       ],
-    },
-    {
-      type: "embed",
-      embed: "toolbox-lot-age-range",
-      shade: "#222627",
-      ar: 16 / 9,
     },
     /* Product walkthroughs. Filenames on disk are out of sync with content —
      * map by what's in the frame. */
@@ -440,6 +450,9 @@ const warpbnb: CaseStudy = {
   tagline: "Reimagining Airbnb for time travel across eras.",
   description:
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
+  workCaption: "Two weeks. Solo. Zero to shipped.",
+  workSummary:
+    "Designed, coded, populated, animated, and marketed a fictional product solo in two weeks—using AI without giving up taste or craft.",
   year: 2025,
   category: "Full-Stack AI Build",
   shade: "#2b2b2b",
@@ -461,7 +474,8 @@ const warpbnb: CaseStudy = {
     },
   ],
   // Detail hero stays on warp11; Work 1 card uses warp12 from /warpbnb/new.
-  workCover: "/warpbnb/thumbnail.mp4",
+  workCover: "/warpbnb/thumbnail-optimized.mp4",
+  workPoster: "/warpbnb/thumbs/thumbnail.webp",
   hero: {
     shade: "#2b2b2b",
     src: "/warpbnb/cover.png",
@@ -558,8 +572,8 @@ const warpbnb: CaseStudy = {
         "I installed Storybook and had the agent create stories for every component, each in isolation, all variants, all states. That's where I did design QA: padding off, hover states not triggering, dark mode breaking. A full-page review hides these things; Storybook does not. Once the foundation was in, everything downstream got dramatically easier. Mobile responsiveness was a prompt. The hard part is always the beginning; after that you're mostly directing.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/figma-screens.mp4", video: true, ar: 1.56, caption: "Screens drawn out the traditional way before pushing to MagicPath." },
-        { shade: G, src: "/warpbnb/storybook.mp4", video: true, ar: 1.55, caption: "Every component in isolation, all variants, all states." },
+        { shade: G, src: "/warpbnb/archive/figma-screens.mp4", video: true, ar: 1.56, caption: "Screens drawn out the traditional way before pushing to MagicPath." },
+        { shade: G, src: "/warpbnb/archive/storybook.mp4", video: true, ar: 1.55, caption: "Every component in isolation, all variants, all states." },
       ],
     },
     {
@@ -571,9 +585,9 @@ const warpbnb: CaseStudy = {
         "For iconography I pointed a better-icons skill at the codebase. It read the amenity copy, understood each item, and matched it to the right Lucide icon using related names and tags: 64+ amenities, no manual list, done in under five minutes.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/reviews.mp4", video: true, ar: 1.78, caption: "Guest reviews generated with a custom-trained skill." },
-        { shade: G, src: "/warpbnb/icons.png", ar: 1.78, caption: "64+ amenities matched to icons without a single manual instruction." },
-        { shade: G, src: "/warpbnb/thiings.png", ar: 1.78, caption: "thiings.co handled most of the 3D illustration heavy lifting." },
+        { shade: G, src: "/warpbnb/archive/reviews.mp4", video: true, ar: 1.78, caption: "Guest reviews generated with a custom-trained skill." },
+        { shade: G, src: "/warpbnb/archive/icons.png", ar: 1.78, caption: "64+ amenities matched to icons without a single manual instruction." },
+        { shade: G, src: "/warpbnb/archive/thiings.png", ar: 1.78, caption: "thiings.co handled most of the 3D illustration heavy lifting." },
       ],
     },
     {
@@ -585,9 +599,9 @@ const warpbnb: CaseStudy = {
         "One thing I didn't expect: different models behaved completely differently by era. Luma Dream Machine for futuristic settings: the lighting, the scale, the surreal quality. Nanobanana for historical eras: grittier, more grounded texture. Once I noticed the pattern I leaned in and consistency improved. Final selects were upscaled through Topaz Bloom.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/prompt-arch.png", ar: 1.78, caption: "The prompt architecture drafted for each listing." },
-        { shade: G, src: "/warpbnb/automation-fail.png", ar: 1.78, caption: "What happens when you automate image generation without guardrails." },
-        { shade: G, src: "/warpbnb/topaz.mp4", video: true, ar: 1.78, caption: "Same image before and after Topaz Bloom. The difference is not subtle." },
+        { shade: G, src: "/warpbnb/archive/prompt-arch.png", ar: 1.78, caption: "The prompt architecture drafted for each listing." },
+        { shade: G, src: "/warpbnb/archive/automation-fail.png", ar: 1.78, caption: "What happens when you automate image generation without guardrails." },
+        { shade: G, src: "/warpbnb/archive/topaz.mp4", video: true, ar: 1.78, caption: "Same image before and after Topaz Bloom. The difference is not subtle." },
       ],
     },
     {
@@ -599,9 +613,9 @@ const warpbnb: CaseStudy = {
         "For the logo I generated the concept in Nanobanana, vectorized it in Figma, and added a cursor-follow effect in Rive so the eyes track your cursor as you zoom in.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/particles.mp4", video: true, ar: 1.78, caption: "Hover, tap, jiggle, grow, snap back. Until Mindscapes?" },
-        { shade: G, src: "/warpbnb/snap.mp4", video: true, ar: 1.78, caption: "Thanos's snap from Infinity War. Press the button and it disintegrates." },
-        { shade: G, src: "/warpbnb/rive-logo.mp4", video: true, ar: 1.78, caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness." },
+        { shade: G, src: "/warpbnb/archive/particles.mp4", video: true, ar: 1.78, caption: "Hover, tap, jiggle, grow, snap back. Until Mindscapes?" },
+        { shade: G, src: "/warpbnb/archive/snap.mp4", video: true, ar: 1.78, caption: "Thanos's snap from Infinity War. Press the button and it disintegrates." },
+        { shade: G, src: "/warpbnb/archive/rive-logo.mp4", video: true, ar: 1.78, caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness." },
       ],
     },
     {
@@ -612,8 +626,8 @@ const warpbnb: CaseStudy = {
         "For the voiceover I cloned an ad-read voice style in ElevenLabs. Writing a script that sounds right when spoken took more iteration than expected: some words needed phonetic spelling, and emphasis had to be marked manually to land excitement in the right places. The difference between a flat read and an energetic one is often just a few spelling tricks and some punctuation.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/commercial.png", ar: 1.78, caption: "The full commercial pipeline: every generation that went into the final cut." },
-        { shade: G, src: "/warpbnb/voiceover.png", ar: 1.78, caption: "The voiceover script: phonetic spelling and emphasis marks included." },
+        { shade: G, src: "/warpbnb/archive/commercial.png", ar: 1.78, caption: "The full commercial pipeline: every generation that went into the final cut." },
+        { shade: G, src: "/warpbnb/archive/voiceover.png", ar: 1.78, caption: "The voiceover script: phonetic spelling and emphasis marks included." },
       ],
     },
     {
@@ -624,7 +638,7 @@ const warpbnb: CaseStudy = {
         "The whole point of this project was unslopifying that output. Getting from the slop baseline to something that actually looked considered took real work. Every tool in this stack will produce bad output if you let it. The gap between what AI generates by default and what you actually want to ship is where all the real design work lives, and that gap is not shrinking as fast as people think.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/slop.png", ar: 1.78, caption: "Everything that went wrong before anything went right." },
+        { shade: G, src: "/warpbnb/archive/slop.png", ar: 1.78, caption: "Everything that went wrong before anything went right." },
       ],
     },
     {
@@ -662,6 +676,9 @@ const pathai: CaseStudy = {
   tagline: "Empowering pathologists to diagnose with speed and confidence.",
   description:
     "I designed and shipped Region Comments, a collaboration tool on PathAI's Patient Diagnostics platform. It cut second-opinion turnaround times by ~45% and noticeably increased the number of cases pathologists sign out daily.",
+  workCaption: "~45% faster second opinions.",
+  workSummary:
+    "Designed and shipped Region Comments, cutting second-opinion turnaround time by ~45%.",
   year: 2022,
   category: "Product Design",
   shade: "#0E0E0E",
@@ -803,6 +820,9 @@ const walkity: CaseStudy = {
   tagline: "Brand strategy and landing page from scratch.",
   description:
     "Creating Walkity's brand strategy and landing page from scratch, with accessibility at the center of the work.",
+  workCaption: "Accessibility-led, built from scratch.",
+  workSummary:
+    "Built the brand and accessible landing experience from scratch around one promise: never walk alone.",
   year: 2023,
   category: "Brand Design",
   shade: "#222222",
@@ -858,7 +878,15 @@ const walkity: CaseStudy = {
         caption: "Desktop walkthrough of the shipped marketing site.",
       },
     },
-    { type: "full", media: wk("/walkity/walk10.mp4", 3 / 2, true, "Mobile experience of the landing page.") },
+    {
+      type: "full",
+      media: wk(
+        "/walkity/walk10.mp4",
+        3 / 2,
+        true,
+        "Lottie animation on the watch.",
+      ),
+    },
   ],
   impact:
     "The brand launch helped Walkity raise **₹20 lakh in funding from NSRCEL Bangalore**, establishing a clear identity and an accessible landing page that made the product's purpose immediate.",
@@ -920,6 +948,9 @@ const bigbasket: CaseStudy = {
     "Creating a Design System for India's largest grocery delivery app",
   description:
     "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
+  workCaption: "Adopted by 200+ engineers.",
+  workSummary:
+    "Built a design system adopted by 200+ engineers, improving design-to-development handoff by ~35%.",
   year: 2021,
   category: "Design Systems",
   shade: "#242424",
@@ -1394,10 +1425,14 @@ const rolipoli: CaseStudy = {
   tagline: "An adaptive product to fold and store your sleeping bag.",
   description:
     "An adaptive product to fold and store your sleeping bag.",
+  workCaption: "Adaptive gear, designed for independence.",
+  workSummary:
+    "Designed an adaptive way to fold and store a sleeping bag with less effort.",
   year: 2024,
   category: "Product Design",
   shade: "#262626",
   workCover: "/rolipoli/thumbnail.mp4",
+  workPoster: "/rolipoli/thumbs/thumbnail.webp",
   linkable: false,
   externalUrl: "https://www.youtube.com/watch?v=u9v3gzVkyDk",
   sections: [

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import WorkCasePage from "@/components/WorkCasePage";
 import { LINKABLE_CASE_STUDIES, isCaseLinkable } from "@/lib/caseStudies";
+import { createMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -14,12 +15,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const study = LINKABLE_CASE_STUDIES.find((s) => s.slug === slug);
-  if (!study) return { title: "Not found" };
+  if (!study) return { title: "Not found", robots: { index: false } };
 
-  return {
-    title: `${study.title} · Mayank Kinger`,
+  return createMetadata({
+    title: study.title,
     description: study.description,
-  };
+    path: `/work/${study.slug}`,
+  });
 }
 
 export default async function WorkSlugPage({ params }: Props) {

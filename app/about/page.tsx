@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import AboutPage from "@/components/AboutPage";
+import { createMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About · Mayank Kinger",
+export const metadata = createMetadata({
+  title: "About",
   description:
     "I'm a T-shaped, systems-thinking product designer who thrives in ambiguity, blurring the lines between business priorities, product strategy, and implementation to deliver tangible impact.",
-};
+  path: "/about",
+});
 
 export default function AboutRoute() {
   return (

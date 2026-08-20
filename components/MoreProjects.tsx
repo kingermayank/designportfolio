@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import DeferredVideo from "@/components/DeferredVideo";
 import { usePageTransition } from "@/components/PageTransition";
 import {
   VISUAL_CRAFT_STUDIES,
@@ -54,6 +55,7 @@ function cardFromStudy(s: CaseStudy): Card {
   const cover = s.workCover;
   const coverVideo = isVideoSrc(cover);
   const thumb =
+    s.workPoster ??
     (cover && !coverVideo ? cover : undefined) ??
     (coverVideo ? thumbFor(cover) : undefined) ??
     thumbFor(s.hero?.src) ??
@@ -91,15 +93,11 @@ function MoreProjectCard({ card }: { card: Card }) {
         style={{ background: card.shade }}
       >
         {gridSrc ? (
-          <video
+          <DeferredVideo
             className="workCardMedia"
             src={gridSrc}
             poster={card.thumb}
-            muted
-            loop
-            playsInline
-            autoPlay
-            preload="metadata"
+            activation="visible"
           />
         ) : card.thumb || card.media ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -113,6 +111,7 @@ function MoreProjectCard({ card }: { card: Card }) {
                 : undefined
             }
             alt=""
+            loading="lazy"
             decoding="async"
           />
         ) : (

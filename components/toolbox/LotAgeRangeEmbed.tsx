@@ -52,18 +52,12 @@ export default function LotAgeRangeEmbed() {
               }}
             />
           </div>
-          <span
-            className="engCardKind"
-            style={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              zIndex: 2,
-              pointerEvents: "none" as const,
-            }}
+          <ul
+            className="engModalStack engInteractiveChip"
+            aria-label="Experience type"
           >
-            Interactive
-          </span>
+            <li>Interactive</li>
+          </ul>
         </div>
         <span className="csMediaHoverCaption">{CAPTION}</span>
       </div>

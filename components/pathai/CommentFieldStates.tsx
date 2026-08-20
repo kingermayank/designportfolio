@@ -962,6 +962,12 @@ export default function CommentFieldStates() {
             onSelect={selectCard}
           />
         </div>
+        <ul
+          className="engModalStack engInteractiveChip"
+          aria-label="Experience type"
+        >
+          <li>Interactive</li>
+        </ul>
       </div>
     </figure>
   );

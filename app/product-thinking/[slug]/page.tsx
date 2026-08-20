@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import GridCanvas from "@/components/GridCanvas";
+import { createMetadata } from "@/lib/seo";
 import { SYSTEMS_LIST } from "@/lib/workLenses";
 
 type Props = {
@@ -14,12 +15,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = SYSTEMS_LIST.find((s) => s.slug === slug || s.id === slug);
-  if (!item) return { title: "Not found" };
+  if (!item) return { title: "Not found", robots: { index: false } };
 
-  return {
-    title: `${item.title} · Mayank Kinger`,
+  return createMetadata({
+    title: item.title,
     description: item.body,
-  };
+    path: `/product-thinking/${item.slug ?? item.id}`,
+  });
 }
 
 export default async function ProductThinkingItemPage({ params }: Props) {

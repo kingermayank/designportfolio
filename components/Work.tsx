@@ -12,6 +12,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
+import DeferredVideo from "@/components/DeferredVideo";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
 import SiteFooter from "@/components/SiteFooter";
@@ -138,6 +139,55 @@ type Card = {
   externalUrl?: string;
 };
 
+function OverflowTicker({ text }: { text: string }) {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const label = textRef.current;
+    if (!container || !label) return;
+
+    let frame = 0;
+    const measure = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        setOverflowing(label.getBoundingClientRect().width > container.clientWidth + 1);
+      });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    measure();
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [text]);
+
+  return (
+    <span
+      ref={containerRef}
+      className={"workCardTagline" + (overflowing ? " is-overflowing" : "")}
+      style={
+        {
+          "--work-marquee-duration": `${Math.max(6, text.length * 0.16)}s`,
+        } as CSSProperties
+      }
+    >
+      <span className="workCardTaglineTrack">
+        <span ref={textRef}>{text}</span>
+        {overflowing ? (
+          <>
+            <span className="workCardTaglineGap" aria-hidden>—</span>
+            <span className="workCardTaglineDuplicate" aria-hidden>{text}</span>
+          </>
+        ) : null}
+      </span>
+    </span>
+  );
+}
+
 /** Responsive stills for work covers that ship 1x + 2x files. */
 const THUMB_SRCSET: Partial<Record<string, string>> = {
   pathai:
@@ -158,6 +208,7 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
   // A workCover is a purpose-built card asset (thumbnail.png / .mp4) — use it
   // as given. Only fall back to the derived /thumbs/ path when there isn't one.
   const thumb =
+    s.workPoster ??
     (cover && !coverVideo ? cover : undefined) ??
     (coverVideo ? thumbFor(cover) : undefined) ??
     thumbFor(s.hero?.src) ??
@@ -167,8 +218,8 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
   return {
     slug: s.slug,
     title: s.title,
-    tagline: s.tagline,
-    description: s.description,
+    tagline: s.workCaption ?? s.tagline,
+    description: s.workSummary ?? s.description,
     year: s.year,
     category: s.category,
     shade: s.shade,
@@ -186,9 +237,11 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
 function WorkCard({
   card,
   onHover,
+  priority = false,
 }: {
   card: Card;
   onHover?: (card: Card | null) => void;
+  priority?: boolean;
 }) {
   const { open } = usePageTransition();
   // Video covers play from the path as authored — the old /grid/ rewrite only
@@ -207,15 +260,12 @@ function WorkCard({
         style={{ background: card.shade }}
       >
         {gridSrc ? (
-          <video
+          <DeferredVideo
             className="workCardMedia"
             src={gridSrc}
             poster={card.thumb}
-            muted
-            loop
-            playsInline
-            autoPlay
-            preload="metadata"
+            activation="eager"
+            posterPriority={priority}
           />
         ) : card.thumb || card.media ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -229,6 +279,8 @@ function WorkCard({
                 : undefined
             }
             alt=""
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
             decoding="async"
           />
         ) : (
@@ -237,7 +289,7 @@ function WorkCard({
       </div>
       <span className="workCardCaption">
         <span className="workCardName">{card.title}</span>
-        <span className="workCardTagline">{card.tagline}</span>
+        <OverflowTicker text={card.tagline} />
       </span>
     </div>
   );
@@ -478,38 +530,25 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  // Keep off-screen loops paused — same gate GridCanvas uses for its tiles.
-  useEffect(() => {
-    const sc = rootRef.current;
-    if (!sc) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const v = e.target as HTMLVideoElement;
-          if (e.isIntersecting) void v.play().catch(() => {});
-          else v.pause();
-        }
-      },
-      { root: sc, rootMargin: "300px 0px" },
-    );
-    sc.querySelectorAll<HTMLVideoElement>("video").forEach((v) => io.observe(v));
-    return () => io.disconnect();
-  }, [isNarrow, lens]);
-
   const body =
     lens === "visual" ? (
       isNarrow ? (
         <div className="workGrid workGridFlat">
-          {cards.map((card) => (
-            <WorkCard key={card.slug} card={card} />
+          {cards.map((card, index) => (
+            <WorkCard key={card.slug} card={card} priority={index === 0} />
           ))}
         </div>
       ) : (
         <div className="workGrid">
           {columns.map((col, ci) => (
             <div className="workCol" key={ci}>
-              {col.map((card) => (
-                <WorkCard key={card.slug} card={card} onHover={setHoverCard} />
+              {col.map((card, index) => (
+                <WorkCard
+                  key={card.slug}
+                  card={card}
+                  onHover={setHoverCard}
+                  priority={index === 0}
+                />
               ))}
             </div>
           ))}
@@ -553,7 +592,8 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
         <div className="workPanelTop">
           <div className="workBrandRow">
             <h1 className="workBrand">
-              Mayank Kinger<span className="workBrandDot">.</span>
+              Mayank Kinger
+              <span className="workBrandDot workBrandDotBounce">.</span>
             </h1>
             <SocialMenu />
           </div>
@@ -577,14 +617,10 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
               >
                 {WORK_FIT_CTA.aboutLabel}
               </button>
-              {/* Stacked labels lock the width to the widest one, so the
-                  copied state has to stay shorter than the label for this to
-                  match the ghost button's box. */}
               <CopyEmailButton
                 email={WORK_FIT_CTA.email}
                 label={WORK_FIT_CTA.contactLabel}
-                copiedLabel="Copied"
-                showIcon={false}
+                copiedLabel="Email copied"
                 className="workFitBtn workFitBtnSolid"
               />
             </div>
@@ -640,7 +676,11 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                     >
                       {c.logo || c.thumb ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={c.logo || c.thumb} alt="" />
+                        <img
+                          src={i === activeIdx ? c.logo || c.thumb : undefined}
+                          alt=""
+                          decoding="async"
+                        />
                       ) : null}
                     </div>
                     <div>

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import DeferredVideo from "@/components/DeferredVideo";
 import { TILES, packRows } from "@/lib/tiles";
 import ModeToggle from "@/components/ModeToggle";
 import Work from "@/components/Work";
@@ -169,25 +170,6 @@ export default function GridCanvas({
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [mode, reduce, rows, wrapScroll]);
-
-  // Only play the loops that are actually on screen.
-  useEffect(() => {
-    if (mode !== "grid") return;
-    const sc = scrollRef.current;
-    if (!sc) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const v = e.target as HTMLVideoElement;
-          if (e.isIntersecting) void v.play().catch(() => {});
-          else v.pause();
-        }
-      },
-      { root: sc, rootMargin: "300px 0px" },
-    );
-    sc.querySelectorAll<HTMLVideoElement>("video.tileFill").forEach((v) => io.observe(v));
-    return () => io.disconnect();
-  }, [mode, rows]);
 
   const focusTile = useCallback((id: number) => {
     const sc = scrollRef.current;
@@ -371,28 +353,23 @@ export default function GridCanvas({
                             }}
                           >
                             {t.video ? (
-                              <video
+                              <DeferredVideo
                                 className="tileFill"
                                 src={t.grid}
                                 poster={t.thumb}
-                                muted
-                                loop
-                                playsInline
-                                autoPlay
-                                preload="metadata"
+                                activation="visible"
                               />
                             ) : (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img className="tileFill" src={t.thumb} alt="" loading="lazy" />
                             )}
                             {focused === uid && t.video && (
-                              <video
+                              <DeferredVideo
                                 className="tileFill"
                                 src={t.full}
-                                autoPlay
-                                muted
-                                loop
-                                playsInline
+                                poster={t.thumb}
+                                activation="visible"
+                                posterPriority
                               />
                             )}
                             {focused === uid && (

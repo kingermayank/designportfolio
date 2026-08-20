@@ -1,6 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   LINKABLE_CASE_STUDIES,
   isVisualCraft,
@@ -14,13 +23,14 @@ import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
 import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
+import DeferredVideo from "@/components/DeferredVideo";
 import Rise from "@/components/Rise";
 import SiteFooter from "@/components/SiteFooter";
 
-// /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg — every asset has one, so a
-// video shows its first frame immediately instead of flashing its backdrop.
+// /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg
+// /warpbnb/archive/topaz.mp4 -> /warpbnb/archive/thumbs/topaz.jpg
 function posterFor(src: string): string | undefined {
-  const m = src.match(/^\/([^/]+)\/([^/]+)\.mp4$/);
+  const m = src.match(/^\/(.+)\/([^/]+)\.mp4$/);
   return m ? `/${m[1]}/thumbs/${m[2]}.jpg` : undefined;
 }
 
@@ -59,24 +69,24 @@ function MediaFill({ media }: { media?: CaseMedia }) {
   const frameStyle =
     media.radius != null ? { borderRadius: `${media.radius}px` } : undefined;
   const asset = media.video ? (
-    <video
+    <DeferredVideo
       className={fillClass}
       style={frameStyle}
       src={media.src}
       poster={posterFor(media.src)}
-      autoPlay
-      muted
-      loop
-      playsInline
-      ref={(el) => {
-        if (!el) return;
-        const rate = media.playbackRate ?? 1;
-        if (el.playbackRate !== rate) el.playbackRate = rate;
-      }}
+      playbackRate={media.playbackRate}
+      activation="visible"
     />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={fillClass} style={frameStyle} src={media.src} alt="" />
+    <img
+      className={fillClass}
+      style={frameStyle}
+      src={media.src}
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
   );
 
   // Contained media sits in a padded stage so object-fit:contain can shrink
@@ -107,6 +117,34 @@ function MediaFill({ media }: { media?: CaseMedia }) {
   return asset;
 }
 
+function RevealedMediaFrame({
+  className,
+  style,
+  tabIndex,
+  children,
+}: {
+  className: string;
+  style?: CSSProperties;
+  tabIndex?: number;
+  children: ReactNode;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      style={style}
+      tabIndex={tabIndex}
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.985, y: 6 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -8% 0px" }}
+      transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function MediaTile({
   media,
   fill,
@@ -121,7 +159,7 @@ function MediaTile({
   const caption = media.caption?.trim();
   return (
     <figure className={"csFigure" + (bleed ? " csFigureBleed" : "")}>
-      <div
+      <RevealedMediaFrame
         className={
           "csMedia" +
           (caption ? " csMediaHover" : "") +
@@ -147,7 +185,7 @@ function MediaTile({
         {caption ? (
           <span className="csMediaHoverCaption">{caption}</span>
         ) : null}
-      </div>
+      </RevealedMediaFrame>
     </figure>
   );
 }
@@ -905,7 +943,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                         ))}
                         {sec.media.map((m, j) => (
                           <figure key={j} className="csFigure">
-                            <div
+                            <RevealedMediaFrame
                               className="csMedia"
                               style={{
                                 background: m.shade,
@@ -913,7 +951,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               }}
                             >
                               <MediaFill media={m} />
-                            </div>
+                            </RevealedMediaFrame>
                             {m.caption && (
                               <figcaption className="csCaption mono">
                                 {m.caption}
