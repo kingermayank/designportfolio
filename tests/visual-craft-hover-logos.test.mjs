@@ -14,3 +14,12 @@ test("every Visual Craft hover layer keeps its logo source loaded", async () => 
     /src=\{i === activeIdx \? c\.logo \|\| c\.thumb : undefined\}/,
   );
 });
+
+test("Rolipoli uses its project-specific hover logo", async () => {
+  const source = await readFile(
+    new URL("../components/Work.tsx", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /rolipoli:\s*"\/rolipoli\/logo_rolipoli\.png"/);
+});

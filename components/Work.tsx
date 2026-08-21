@@ -80,6 +80,13 @@ const ASPECT_BY_SLUG: Partial<Record<string, Aspect>> = {
   rolipoli: "4 / 3",
 };
 
+/** Display-year overrides scoped to the Visual Craft project grid. */
+const VISUAL_CRAFT_YEAR_BY_SLUG: Partial<Record<string, number>> = {
+  toolbox: 2026,
+  warpbnb: 2026,
+  rolipoli: 2023,
+};
+
 function thumbFor(src?: string): string | undefined {
   if (!src) return undefined;
   // Nested paths like /toolbox/new/cover.mp4 → /toolbox/thumbs/cover.jpg
@@ -118,7 +125,7 @@ const LOGO_BY_SLUG: Record<string, string> = {
   pathai: "/logos/pathai.png?v=2",
   bigbasket: "/logos/bigbasket.png?v=2",
   walkity: "/logos/walkity.png?v=3",
-  rolipoli: "/logos/rolipoli.png",
+  rolipoli: "/rolipoli/logo_rolipoli.png",
 };
 
 type Card = {
@@ -220,7 +227,7 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
     title: s.title,
     tagline: s.tagline,
     description: s.workSummary ?? s.description,
-    year: s.year,
+    year: VISUAL_CRAFT_YEAR_BY_SLUG[s.slug] ?? s.year,
     category: s.category,
     shade: s.shade,
     media: coverVideo ? cover : still ? thumb : s.hero?.src,
