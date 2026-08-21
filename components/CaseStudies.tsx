@@ -145,6 +145,63 @@ function RevealedMediaFrame({
   );
 }
 
+function CaseCaptionTicker({ text }: { text: string }) {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const label = textRef.current;
+    if (!container || !label) return;
+
+    let frame = 0;
+    const measure = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        setOverflowing(
+          label.getBoundingClientRect().width > container.clientWidth + 1,
+        );
+      });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    observer.observe(label);
+    measure();
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [text]);
+
+  return (
+    <span
+      ref={containerRef}
+      className={
+        "csMediaHoverCaption" + (overflowing ? " is-overflowing" : "")
+      }
+      style={
+        {
+          "--cs-caption-marquee-duration": `${Math.max(7, text.length * 0.14)}s`,
+        } as CSSProperties
+      }
+    >
+      <span className="csMediaHoverCaptionTrack">
+        <span ref={textRef}>{text}</span>
+        {overflowing ? (
+          <>
+            <span className="csMediaHoverCaptionGap" aria-hidden />
+            <span className="csMediaHoverCaptionDuplicate" aria-hidden>
+              {text}
+            </span>
+          </>
+        ) : null}
+      </span>
+    </span>
+  );
+}
+
 function MediaTile({
   media,
   fill,
@@ -182,9 +239,7 @@ function MediaTile({
         ) : (
           <MediaFill media={media} />
         )}
-        {caption ? (
-          <span className="csMediaHoverCaption">{caption}</span>
-        ) : null}
+        {caption ? <CaseCaptionTicker text={caption} /> : null}
       </RevealedMediaFrame>
     </figure>
   );
@@ -219,7 +274,7 @@ function MediaEmbed({ embed }: { embed: MediaBlock & { type: "embed" } }) {
         >
           {content}
         </div>
-        <span className="csMediaHoverCaption">{caption}</span>
+        <CaseCaptionTicker text={caption} />
       </RevealedMediaFrame>
     </figure>
   );
@@ -713,7 +768,11 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 </div>
 
                 <section
-                  className={"csEditorialIntro csFade" + (contentIn ? " in" : "")}
+                  className={
+                    "csEditorialIntro csFade" +
+                    (isVisualCraft(study) ? " csEditorialIntroVisual" : "") +
+                    (contentIn ? " in" : "")
+                  }
                   style={
                     overviewAccent
                       ? ({ ["--ch-accent"]: overviewAccent } as CSSProperties)
@@ -748,7 +807,9 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 {study.impact ? (
                   <section
                     className={
-                      "csEditorialImpact csFade" + (contentIn ? " in" : "")
+                      "csEditorialImpact csFade" +
+                      (isVisualCraft(study) ? " csEditorialImpactVisual" : "") +
+                      (contentIn ? " in" : "")
                     }
                     style={
                       overviewAccent

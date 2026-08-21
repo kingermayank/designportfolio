@@ -102,9 +102,14 @@ export default function EngDetailModal({ item, onClose }: Props) {
     const measure = () => {
       const { clientWidth: w, clientHeight: h } = el;
       if (!w || !h) return;
-      // Fill the stage width and anchor to the top of the page — letterboxing
-      // to fit the height leaves the preview unreadably small on narrow panes.
-      setFrameScale(Math.max(w / FRAME_W, h / FRAME_H));
+      const mobileViewport = window.matchMedia("(max-width: 720px)").matches;
+      // Mobile previews show the complete logical viewport. Larger layouts
+      // retain the existing edge-to-edge crop for a more immersive preview.
+      setFrameScale(
+        mobileViewport
+          ? Math.min(w / FRAME_W, h / FRAME_H)
+          : Math.max(w / FRAME_W, h / FRAME_H),
+      );
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -211,23 +216,25 @@ export default function EngDetailModal({ item, onClose }: Props) {
               }
             >
               {hasEmbed ? (
-                <iframe
-                  className="engModalFrame"
-                  src={item.embedUrl}
-                  title={
-                    isWebsite
-                      ? `${item.title} live site`
-                      : `${item.title} playground`
-                  }
-                  loading="lazy"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  {...(embedIsExternal
-                    ? {}
-                    : {
-                        sandbox:
-                          "allow-scripts allow-same-origin allow-forms",
-                      })}
-                />
+                <div className="engModalFrameViewport">
+                  <iframe
+                    className="engModalFrame"
+                    src={item.embedUrl}
+                    title={
+                      isWebsite
+                        ? `${item.title} live site`
+                        : `${item.title} playground`
+                    }
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    {...(embedIsExternal
+                      ? {}
+                      : {
+                          sandbox:
+                            "allow-scripts allow-same-origin allow-forms",
+                        })}
+                  />
+                </div>
               ) : isWebsite && visitHref ? (
                 <a
                   className="engModalSiteHit"

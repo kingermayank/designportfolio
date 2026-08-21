@@ -40,13 +40,12 @@ export default function LotAgeRangeEmbed() {
             }}
           >
             <iframe
+              className="lotAgeRangeFrame"
               src="/toolbox/project/lot-age-range-card.html"
               title="Lot Age Range"
               loading="lazy"
               style={{
                 border: 0,
-                width: "100%",
-                maxWidth: 836,
                 height: iframeH,
                 background: "transparent",
               }}

@@ -1391,6 +1391,15 @@ button.csNavItem {
   border-radius: inherit;
 }
 
+/* Preserve the desktop Lot Age Range composition inside narrow case-study
+   frames instead of letting the iframe reflow taller and crop vertically. */
+.lotAgeRangeFrame {
+  width: 836px;
+  flex: 0 0 836px;
+  transform: scale(min(1, calc(100cqw / 836px)));
+  transform-origin: center;
+}
+
 /* Contained + padded stages: keep mat pads, but lock height to the unhovered
    frame so hover only crops — never rescales the video inside the mat. */
 .csMediaHoverWrap > .csMediaStage {
@@ -1428,6 +1437,29 @@ button.csNavItem {
   text-align: center;
   white-space: nowrap;
 }
+
+.csMediaHoverCaptionTrack {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.csMediaHoverCaptionGap,
+.csMediaHoverCaptionDuplicate {
+  display: none;
+}
+
+@keyframes cs-caption-marquee-rtl {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(calc(-50% - 16px), 0, 0);
+  }
+}
+
 .csMediaHover:hover .csMediaHoverCaption,
 .csMediaHover:focus-visible .csMediaHoverCaption {
   opacity: 1;
@@ -3880,7 +3912,10 @@ button.aboutCard:focus-visible {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   pointer-events: auto;
   background: var(--sys-off-black);
   border-radius: 12px 12px 0 0;
@@ -3941,6 +3976,13 @@ button.aboutCard:focus-visible {
   letter-spacing: -0.02em;
   color: var(--text);
   text-wrap: pretty;
+}
+
+@media (max-width: 900px) {
+  .sysOverlayHeadline {
+    font-size: 28px;
+    line-height: 32px;
+  }
 }
 
 /* Kind chips under the headline — same chip language as the eng modal. */
@@ -4548,15 +4590,22 @@ button.aboutCard:focus-visible {
 
 /* Every embed renders at one logical desktop viewport, then scales to fit —
    so a site, a playground, and a video all read at the same proportions. */
-.engModalFrame {
+.engModalFrameViewport {
   position: absolute;
-  top: 0;
-  left: 50%;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.engModalFrame {
+  position: relative;
   width: var(--eng-frame-w, 1440px);
   height: var(--eng-frame-h, 900px);
   border: 0;
   transform-origin: top center;
-  transform: translateX(-50%) scale(var(--eng-frame-scale, 1));
+  transform: scale(var(--eng-frame-scale, 1));
 }
 
 .engModalMedia {
@@ -4876,17 +4925,36 @@ button.aboutCard:focus-visible {
 
   .engModal {
     width: 100%;
-    height: calc(100vh - 24px);
+    height: calc(100dvh - 24px);
   }
 
-  /* Phones can't fit stage + copy at a usable size — let this one scroll. */
+  /* Keep the preview and description compact, then let the body itself scroll
+     if a short phone cannot show the full card. */
   .engModalBody {
-    overflow: auto;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .engModalStageWrap {
+    flex: 0 0 auto;
   }
 
   .engModalStage {
     flex: 0 0 auto;
-    height: 46vh;
+    aspect-ratio: 4 / 3;
+    height: auto;
+  }
+
+  .engModalFrameViewport {
+    align-items: center;
+  }
+
+  .engModalFrame {
+    transform-origin: center;
   }
 
   .engModalTitle {
@@ -5907,6 +5975,49 @@ button.aboutCard:focus-visible {
 }
 
 @media (max-width: 900px) {
+  /* Keep the interactive card off the mobile frame edges while retaining its
+     fixed desktop proportions. */
+  .lotAgeRangeFrame {
+    transform: scale(min(1, calc((100cqw - 48px) / 836px)));
+  }
+
+  .csEditorialImpactVisual > p {
+    width: 100%;
+    max-width: none;
+    font-size: 27px;
+    line-height: 32px;
+  }
+
+  .csEditorialIntroVisual .csEditorialOverview p {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .csMediaHoverCaption {
+    font-size: 12px;
+  }
+
+  .csMediaHoverCaption.is-overflowing {
+    justify-content: flex-start;
+  }
+
+  .csMediaHoverCaptionGap,
+  .csMediaHoverCaptionDuplicate {
+    display: inline-flex;
+  }
+
+  .csMediaHoverCaptionGap {
+    width: 32px;
+    flex: 0 0 32px;
+    justify-content: center;
+  }
+
+  .csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
+    animation: cs-caption-marquee-rtl
+      var(--cs-caption-marquee-duration) linear 600ms infinite both;
+    will-change: transform;
+  }
+
   .csListInner,
   .csDetailInner {
     flex-direction: column;
@@ -6339,6 +6450,11 @@ button.aboutCard:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
+    animation: none;
+    will-change: auto;
+  }
+
   .workNavDot,
   .workNavDescWrap,
   .workCardCaption,
@@ -6897,7 +7013,7 @@ button.aboutCard:focus-visible {
 
 .chMetaValue {
   color: #ffffff;
-  font-size: calc(var(--ch-text-body) + 1px);
+  font-size: calc(var(--ch-text-body) - 1px);
   line-height: 1.5;
 }
 
@@ -6939,7 +7055,7 @@ button.aboutCard:focus-visible {
   margin: 0;
   padding: 0;
   color: #ffffff;
-  font-size: calc(var(--ch-text-body) + 1px);
+  font-size: calc(var(--ch-text-body) - 1px);
   line-height: 1.55;
   text-align: left;
   text-wrap: pretty;
