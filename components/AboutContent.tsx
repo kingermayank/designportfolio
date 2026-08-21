@@ -275,6 +275,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
                 </div>
                 <div className="aboutEnvelopeFlap">
                   <span className="aboutEnvelopeFlapFace" />
+                  <span className="aboutEnvelopeSeal">MK</span>
                 </div>
               </div>
               <span className="aboutEnvelopeHint">Open letter</span>

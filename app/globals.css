@@ -222,7 +222,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 28px 24px max(28px, env(safe-area-inset-bottom));
+  padding: 8px 24px max(8px, env(safe-area-inset-bottom));
 }
 
 .siteFooterCopy {
@@ -249,7 +249,7 @@ body {
   bottom: var(--space-4);
   z-index: 80;
   pointer-events: auto;
-  display: flex;
+  display: none;
   align-items: center;
   box-sizing: border-box;
   width: 44px;
@@ -1755,6 +1755,7 @@ button.aboutCard:focus-visible {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-lg);
+  corner-shape: squircle;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -1874,7 +1875,7 @@ button.aboutCard:focus-visible {
 .aboutPodViewport {
   overflow: hidden;
   width: 100%;
-  padding: 12px 0 26px;
+  padding: 12px 0 40px;
   display: flex;
   align-items: center;
   -webkit-mask-image: linear-gradient(
@@ -1925,6 +1926,7 @@ button.aboutCard:focus-visible {
   height: var(--about-pod-size);
   flex-shrink: 0;
   border-radius: 10px;
+  corner-shape: squircle;
   overflow: hidden;
   background: #2b2b2b;
   box-shadow:
@@ -2018,7 +2020,15 @@ button.aboutCard:focus-visible {
   --env-junction: 44%;
   --env-flap-h: 58%;
   --env-open: -145deg; /* a real flap never lies perfectly flat */
-  --env-paper: #d7d5cc;
+  --env-paper: #f0eadf;
+  --env-letter-top: #fbf8f1;
+  --env-letter-bottom: #e8dfd0;
+  --env-depth-top: #a49b8e;
+  --env-depth-mid: #bcb3a5;
+  --env-depth-bottom: #d2c8b8;
+  --env-fold-shadow: rgba(0, 0, 0, 0.16);
+  --env-fold-shadow-soft: rgba(0, 0, 0, 0.06);
+  --env-seal: #a52b2b;
   --env-radius: 7px;
   --env-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -2087,7 +2097,12 @@ button.aboutCard:focus-visible {
   display: block;
   border-radius: var(--env-radius);
   /* The mouth of the envelope — dark, so the opening reads as depth. */
-  background: linear-gradient(180deg, #6d6b65 0%, #8b8982 36%, #a2a099 100%);
+  background: linear-gradient(
+    180deg,
+    var(--env-depth-top) 0%,
+    var(--env-depth-mid) 36%,
+    var(--env-depth-bottom) 100%
+  );
   box-shadow: var(--env-shadow);
   transform: translateZ(0);
   transition: box-shadow 420ms var(--env-ease);
@@ -2103,7 +2118,7 @@ button.aboutCard:focus-visible {
   height: 78%;
   padding: 7% 8% 0;
   border-radius: 4px 4px 2px 2px;
-  background: linear-gradient(180deg, #f3f1e9 0%, #e5e3da 100%);
+  background: linear-gradient(180deg, var(--env-letter-top) 0%, var(--env-letter-bottom) 100%);
   box-shadow: var(--env-letter-shadow);
   color: #121413;
   overflow: hidden;
@@ -2154,19 +2169,27 @@ button.aboutCard:focus-visible {
 /* Folded in first, so they sit under the bottom flap. */
 .aboutEnvelopePocketPanel.is-left {
   clip-path: polygon(0 0, 50% var(--env-junction), 0 100%);
-  background-image: linear-gradient(100deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.12) 62%);
+  background-image: linear-gradient(
+    100deg,
+    var(--env-fold-shadow),
+    var(--env-fold-shadow-soft) 62%
+  );
   filter: drop-shadow(1px 0 1px rgba(0, 0, 0, 0.2));
 }
 
 .aboutEnvelopePocketPanel.is-right {
   clip-path: polygon(100% 0, 50% var(--env-junction), 100% 100%);
-  background-image: linear-gradient(260deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.1) 62%);
+  background-image: linear-gradient(
+    260deg,
+    var(--env-fold-shadow),
+    var(--env-fold-shadow-soft) 62%
+  );
   filter: drop-shadow(-1px 0 1px rgba(0, 0, 0, 0.2));
 }
 
 .aboutEnvelopePocketPanel.is-bottom {
   clip-path: polygon(0 100%, 50% var(--env-junction), 100% 100%);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.06));
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(0, 0, 0, 0.03));
   filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.22));
 }
 
@@ -2213,6 +2236,44 @@ button.aboutCard:focus-visible {
   background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.08));
   opacity: var(--env-inner);
   transition: opacity 240ms linear 180ms;
+}
+
+.aboutEnvelopeSeal {
+  position: absolute;
+  left: 50%;
+  top: 76%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(28px, 13cqw, 38px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(86, 11, 11, 0.38);
+  border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%;
+  background: radial-gradient(
+    circle at 34% 28%,
+    #c94c47 0%,
+    var(--env-seal) 48%,
+    #741919 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -2px 3px rgba(63, 3, 3, 0.34),
+    0 3px 5px rgba(0, 0, 0, 0.3);
+  color: #efc1a8;
+  font-family: var(--font-cesare), "Times New Roman", serif;
+  font-size: clamp(13px, 5cqw, 16px);
+  font-weight: 400;
+  line-height: 1;
+  transform: translate(-50%, -50%) translateZ(8px) rotate(-7deg);
+}
+
+.aboutEnvelopeSeal::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(239, 193, 168, 0.4);
+  border-radius: inherit;
 }
 
 .aboutEnvelopeHint {
@@ -4779,7 +4840,23 @@ button.aboutCard:focus-visible {
 
 @media (max-width: 720px) {
   .workLenses {
-    gap: 16px 20px;
+    flex-wrap: nowrap;
+    gap: 16px 26px;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .workLenses::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workLens {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
   .workListRow {
@@ -4946,6 +5023,28 @@ button.aboutCard:focus-visible {
   font-weight: 400;
   line-height: 1.25;
   letter-spacing: -0.01em;
+}
+
+.currentlySoftware {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.currentlySoftwareLogo {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  border-radius: 4px;
+  corner-shape: squircle;
+  object-fit: cover;
+}
+
+.currentlySoftwareLogo.is-on-light {
+  background: #fff;
+  padding: 3px;
 }
 
 .workCurrentlyLoop,
@@ -5491,7 +5590,6 @@ button.aboutCard:focus-visible {
 .workUniform .workFeaturedTitle,
 .workUniform .workFeaturedTag,
 .workUniform .workFeaturedCat,
-.workUniform .workCardName,
 .workUniform .workCardTagline,
 .workUniform .workCardPlaceholder,
 .workUniform .mono {
@@ -5685,6 +5783,26 @@ button.aboutCard:focus-visible {
   object-fit: cover;
   pointer-events: none;
   border-radius: inherit;
+  transform-origin: center;
+  transition: transform 167ms ease-out;
+  will-change: transform;
+}
+
+.workCard:not(.workCardStatic):hover .workCardMedia,
+.workCard:not(.workCardStatic):focus-visible .workCardMedia {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workCardMedia {
+    transition: none;
+    will-change: auto;
+  }
+
+  .workCard:not(.workCardStatic):hover .workCardMedia,
+  .workCard:not(.workCardStatic):focus-visible .workCardMedia {
+    transform: none;
+  }
 }
 
 .workCardPlaceholder {
@@ -5733,7 +5851,7 @@ button.aboutCard:focus-visible {
 .workCardName {
   font-family: var(--font-body);
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--text);
   white-space: nowrap;
   flex-shrink: 0;
@@ -6106,12 +6224,12 @@ button.aboutCard:focus-visible {
 
 @media (max-width: 560px) {
   .workLenses {
-    gap: 12px 10px;
+    gap: 12px 16px;
     padding: 8px 0 16px;
   }
 
   .workLens {
-    font-size: 13px;
+    font-size: 15px;
     gap: 4px;
     min-height: 44px;
   }
@@ -6146,11 +6264,11 @@ button.aboutCard:focus-visible {
 
 @media (max-width: 400px) {
   .workLenses {
-    gap: 10px 8px;
+    gap: 10px 14px;
   }
 
   .workLens {
-    font-size: 12px;
+    font-size: 15px;
     gap: 3px;
   }
 }

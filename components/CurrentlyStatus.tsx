@@ -45,9 +45,23 @@ export default function CurrentlyStatus({
         }}
         variants={LOOP_VARIANTS}
       >
-        {CURRENTLY_ABOUT.map((phrase) => (
-          <span key={phrase}>{phrase}</span>
-        ))}
+        {CURRENTLY_ABOUT.map(
+          ({ lead, software, logo, needsLightTile }) => (
+            <span key={software}>
+              {lead}{" "}
+              <span className="currentlySoftware">
+                {software}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className={`currentlySoftwareLogo${needsLightTile ? " is-on-light" : ""}`}
+                  src={logo}
+                  alt=""
+                  decoding="async"
+                />
+              </span>
+            </span>
+          ),
+        )}
       </TextLoop>
     </p>
   );
