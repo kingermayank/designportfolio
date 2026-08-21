@@ -6135,6 +6135,15 @@ button.aboutCard:focus-visible {
 
   .siteFooter {
     flex: none;
+    justify-content: center;
+  }
+
+  .siteFooterCopy {
+    text-align: center;
+  }
+
+  .aboutPageRoot .siteFooter {
+    padding-right: 24px;
   }
 
   .workFit {
