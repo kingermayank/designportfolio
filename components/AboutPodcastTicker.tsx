@@ -91,7 +91,16 @@ export default function AboutPodcastTicker() {
               <span className="aboutPodArt">
                 {pod.src ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={pod.src} alt="" draggable={false} />
+                  <img
+                    src={pod.src}
+                    alt=""
+                    width={pod.size}
+                    height={pod.size}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
+                    draggable={false}
+                  />
                 ) : (
                   <span className="aboutPodFill" />
                 )}

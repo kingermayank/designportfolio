@@ -49,47 +49,60 @@ export const ABOUT_ORIGIN = {
   ],
 };
 
-/** Square covers from `public/podcast`. */
-export const ABOUT_PODCASTS: { id: string; src?: string; label: string }[] = [
+/** Display-sized square covers; full-resolution originals remain in `public/podcast`. */
+export const ABOUT_PODCASTS: {
+  id: string;
+  src?: string;
+  label: string;
+  size: number;
+}[] = [
   {
     id: "lennys-podcast",
-    src: "/podcast/3a35cda2-e0cd-4d94-87f0-cce699c3a853_2048x2048.png",
+    src: "/podcast/optimized/lennys-podcast.webp",
     label: "Lenny's Podcast",
+    size: 512,
   },
   {
     id: "the-general",
-    src: "/podcast/images.png",
+    src: "/podcast/optimized/the-general.webp",
     label: "The General Podcast",
+    size: 447,
   },
   {
     id: "first-of-kind",
-    src: "/podcast/ab6765630000ba8ab87bf9320ea274bbd5958bbd.jpeg",
+    src: "/podcast/optimized/first-of-kind.webp",
     label: "First of Kind",
+    size: 512,
   },
   {
     id: "double-diamond",
-    src: "/podcast/af07669d-2871-4382-9739-120f22f176cd_2304x2304.png",
+    src: "/podcast/optimized/double-diamond.webp",
     label: "Double Diamond",
+    size: 512,
   },
   {
     id: "dive-club",
-    src: "/podcast/channels4_profile.jpg",
+    src: "/podcast/optimized/dive-club.webp",
     label: "Dive Club",
+    size: 512,
   },
   {
     id: "state-of-play",
-    src: "/podcast/de3857cb8ebb9754b4e43d21b48254a6.jpg",
+    src: "/podcast/optimized/state-of-play.webp",
     label: "State of Play",
+    size: 512,
   },
   {
     id: "greg-isenberg",
-    src: "/podcast/ab67656300005f1f114e4d61a3ac146c8f4c1081.jpeg",
+    src: "/podcast/optimized/greg-isenberg.webp",
     label: "Greg Isenberg",
+    size: 300,
   },
   {
     id: "a16z-show",
-    src: "/podcast/a16z-Show-Podcast.jpg",
+    src: "/podcast/optimized/a16z-show.webp",
     label: "A16Z Show",
+    size: 512,
   },
 ];
 
