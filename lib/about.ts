@@ -164,43 +164,43 @@ export const ABOUT_PHILOSOPHY = {
   lede: "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. I feel that designers owe a certain amount of responsibility not just towards their work but also towards society and its people.",
   principles: [
       {
-        title: "Beauty is in the details.",
+        title: "Beauty is in the details",
         text: "I believe that great design is in the nuances, and I put in the extra effort to make sure every interaction feels just right. Over the years, I've developed a keen sense of taste that guides me in creating designs that are both refined and impactful.",
       },
       {
-        title: "Stay hungry. Stay foolish.",
+        title: "Stay hungry. Stay foolish",
         text: "I never shy away from being vulnerable, admitting mistakes and asking questions. I don't believe in pretending to be perfect. No one is.",
       },
       {
-        title: "Bruce Lee's 'Be Water' approach.",
+        title: "Bruce Lee's 'Be Water' approach",
         text: "I prioritize quality, but I know when a tent is better than a castle. Like water, I shape myself to fit tight timelines and constraints, staying flexible while maintaining my conviction. My experience across organizations of various sizes and maturity levels has taught me to unlearn, relearn, and find the most impactful ways to contribute.",
       },
       {
-        title: "Teamwork makes the dream work.",
+        title: "Teamwork makes the dream work",
         text: "I believe that the best products are built through strong collaboration. I like bringing engineers into the discovery process early and partnering closely with product managers to align on strategy. It's all about creating a shared vision and working together to make it a reality.",
       },
       {
-        title: "Feedback is a gift.",
+        title: "Feedback is a gift",
         text: "Whether it's giving or receiving, I believe that candid feedback is the fastest route to growth, both for myself and the products I work on.",
       },
       {
-        title: "Say what needs to be said.",
+        title: "Say what needs to be said",
         text: "I don't like beating around the bush and wasting the time of everyone involved. I'm not one to hold back my thoughts, if something needs to be said, I'll speak up.",
       },
       {
-        title: "Design without borders.",
+        title: "Design without borders",
         text: "I don't like to remain constrained by my job title. I bring my T-shaped skills and founder mentality to every project, understanding what it means to take full ownership. If something needs to be done, I'll step up, whether it's writing PRD's, troubleshooting with developers, or creating training materials, whatever helps the team succeed.",
       },
       {
-        title: "Ambiguity fuels creativity.",
+        title: "Ambiguity fuels creativity",
         text: "I believe that ambiguity is where the magic happens. The unknown doesn't intimidate me. It energizes and excites me. I embrace challenges, push through the initial overwhelm, and find clarity on the other side. I thrive when things are unclear. It's the challenge of finding a path forward that makes the process exciting and rewarding.",
       },
       {
-        title: "Commitment to giving back.",
+        title: "Commitment to giving back",
         text: "I'm passionate about helping others grow. I've been fortunate to receive help from countless people I could never fully repay, and I'm committed to giving back and supporting others to the best of my ability.",
       },
       {
-        title: "Leave room for play.",
+        title: "Leave room for play",
         text: "Not every interaction needs to be purely functional. Personality, surprise, and experimentation can make products feel human.",
       },
   ],
