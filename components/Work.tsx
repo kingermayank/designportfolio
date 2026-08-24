@@ -254,6 +254,7 @@ function WorkCard({
   // Video covers play from the path as authored — the old /grid/ rewrite only
   // ever applied to assets that already lived under /grid/ or /new/.
   const gridSrc = card.video ? card.media : undefined;
+  const deferVideo = card.slug === "rolipoli";
 
   const cardStyle = {
     aspectRatio: card.aspect,
@@ -271,8 +272,9 @@ function WorkCard({
             className="workCardMedia"
             src={gridSrc}
             poster={card.thumb}
-            activation="eager"
-            posterPriority={priority}
+            activation={deferVideo ? "visible" : "eager"}
+            loadMargin={deferVideo ? "160px 0px" : undefined}
+            posterPriority={priority && !deferVideo}
           />
         ) : card.thumb || card.media ? (
           // eslint-disable-next-line @next/next/no-img-element

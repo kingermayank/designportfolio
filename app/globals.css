@@ -933,7 +933,10 @@ body {
   letter-spacing: 0;
   text-transform: none;
   padding: 0 12px;
+  transform: scale(1);
+  transform-origin: center;
   transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 150ms ease,
     border-color 150ms ease,
     padding 200ms ease;
@@ -2034,282 +2037,88 @@ button.aboutCard:focus-visible {
   text-align: left;
 }
 
-.aboutEnvelopeStage {
+.aboutLetterPreviewStage {
   position: relative;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* Tall enough that the flap, once turned over, still clears the card title. */
   min-height: 352px;
-  padding: 44px 8px 8px;
+  padding: 40px 8px 8px;
 }
 
-.aboutEnvelope {
-  /* Geometry, as fractions of the envelope box. The three back panels tile the
-     rectangle exactly, so the only opening is the V notch above --env-junction;
-     the top flap reaches past it, the way a folded paper envelope overlaps. */
-  --env-junction: 44%;
-  --env-flap-h: 58%;
-  --env-open: -145deg; /* a real flap never lies perfectly flat */
-  --env-paper: #f0eadf;
-  --env-letter-top: #fbf8f1;
-  --env-letter-bottom: #e8dfd0;
-  --env-depth-top: #a49b8e;
-  --env-depth-mid: #bcb3a5;
-  --env-depth-bottom: #d2c8b8;
-  --env-fold-shadow: rgba(0, 0, 0, 0.16);
-  --env-fold-shadow-soft: rgba(0, 0, 0, 0.06);
-  --env-seal: #a52b2b;
-  --env-radius: 7px;
-  --env-ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-  /* Closed state. Every layer below reads these, so opening the envelope means
-     swapping this one block — see the two rules that follow. */
-  --env-flap: 0deg;
-  --env-letter: 0%;
-  --env-settle: 0%;
-  --env-inner: 0;
-  --env-shadow:
+.aboutLetterPreview {
+  position: relative;
+  width: min(68%, 310px);
+  aspect-ratio: 1;
+  container-type: inline-size;
+  box-sizing: border-box;
+  background-color: #171f19;
+  background-image: url("/about/hiring-letter-paper.jpg");
+  background-position: 50%;
+  background-size: cover;
+  box-shadow:
     0 18px 34px -18px rgba(0, 0, 0, 0.7),
     0 2px 6px rgba(0, 0, 0, 0.26);
-  --env-letter-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.45);
-  /* Closing runs in reverse: the letter drops back in first, then the flap
-     seals behind it. Transitions read their delay from the state being moved
-     to, so these two pairs choreograph both directions. */
-  --env-flap-delay: 150ms;
-  --env-letter-delay: 0ms;
-
-  position: relative;
-  width: min(72%, 286px);
-  aspect-ratio: 1.5;
-  container-type: inline-size;
-  perspective: 760px;
-  /* Settles down as the letter lifts out, keeping the open flap in frame. */
-  transform: translateY(var(--env-settle));
-  transform-style: preserve-3d;
-  transition: transform 420ms var(--env-ease);
+  color: #131914;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateY(0) rotate(-1.25deg);
+  transform-origin: center;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
-/* Open. Hover is the reveal; the click just hands the letter to the overlay,
-   and .is-envelope-open holds the envelope open underneath it. */
-.aboutCardLetter:focus-visible .aboutEnvelope,
-.aboutCardLetter.is-envelope-open .aboutEnvelope {
-  --env-flap: var(--env-open);
-  --env-letter: -56%;
-  --env-settle: 6%;
-  --env-inner: 1;
-  --env-shadow:
-    0 28px 46px -18px rgba(0, 0, 0, 0.76),
-    0 3px 8px rgba(0, 0, 0, 0.3);
-  --env-letter-shadow: 0 16px 28px -12px rgba(0, 0, 0, 0.6);
-  --env-flap-delay: 0ms;
-  --env-letter-delay: 150ms;
-}
-
-/* Gated, or a tap on a touch device can leave :hover stuck on afterwards. */
-@media (hover: hover) {
-  .aboutCardLetter:hover .aboutEnvelope {
-    --env-flap: var(--env-open);
-    --env-letter: -56%;
-    --env-settle: 6%;
-    --env-inner: 1;
-    --env-shadow:
-      0 28px 46px -18px rgba(0, 0, 0, 0.76),
-      0 3px 8px rgba(0, 0, 0, 0.3);
-    --env-flap-delay: 0ms;
-    --env-letter-delay: 150ms;
-  }
-}
-
-.aboutEnvelopeBack {
-  position: absolute;
-  inset: 0;
-  display: block;
-  border-radius: var(--env-radius);
-  /* The mouth of the envelope — dark, so the opening reads as depth. */
-  background: linear-gradient(
-    180deg,
-    var(--env-depth-top) 0%,
-    var(--env-depth-mid) 36%,
-    var(--env-depth-bottom) 100%
-  );
-  box-shadow: var(--env-shadow);
-  transform: translateZ(0);
-  transition: box-shadow 420ms var(--env-ease);
-}
-
-.aboutEnvelopeLetter {
-  position: absolute;
-  top: 15%;
-  left: 8%;
-  right: 8%;
+.aboutLetterPreviewContent {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  height: 78%;
-  padding: 7% 8% 0;
-  border-radius: 4px 4px 2px 2px;
-  background: linear-gradient(180deg, var(--env-letter-top) 0%, var(--env-letter-bottom) 100%);
-  box-shadow: var(--env-letter-shadow);
-  color: #121413;
-  overflow: hidden;
-  transform: translateZ(2px) translateY(var(--env-letter));
-  transition:
-    transform 440ms var(--env-ease) var(--env-letter-delay),
-    box-shadow 440ms var(--env-ease) var(--env-letter-delay);
-  will-change: transform;
+  gap: 3.75cqw;
+  min-height: 100%;
+  padding: 18.75cqw 12.5cqw;
+  box-sizing: border-box;
 }
 
-.aboutEnvelopeLetterTo {
-  font-family: var(--font-letter);
-  font-size: clamp(12px, 5.6cqw, 18px);
-  font-weight: 400;
-  line-height: 1.1;
-  color: #050505;
-}
-
-.aboutEnvelopeLetterRule {
-  display: block;
-  width: 84%;
-  height: 1px;
-  margin-top: 5.5%;
-  background: color-mix(in srgb, #121413 20%, transparent);
-}
-
-.aboutEnvelopeLetterRule.is-short {
-  width: 54%;
-}
-
-/* Wrapper keeps the clipped panels rounded to the envelope's corners and keeps
-   their drop-shadows from leaking into the parent's 3D sorting. */
-.aboutEnvelopePocket {
+.aboutLetterPreviewClip {
   position: absolute;
-  inset: 0;
-  border-radius: var(--env-radius);
-  overflow: hidden;
-  transform: translateZ(4px);
-}
-
-.aboutEnvelopePocketPanel {
-  position: absolute;
-  inset: 0;
-  display: block;
-  background-color: var(--env-paper);
-}
-
-/* Folded in first, so they sit under the bottom flap. */
-.aboutEnvelopePocketPanel.is-left {
-  clip-path: polygon(0 0, 50% var(--env-junction), 0 100%);
-  background-image: linear-gradient(
-    100deg,
-    var(--env-fold-shadow),
-    var(--env-fold-shadow-soft) 62%
-  );
-  filter: drop-shadow(1px 0 1px rgba(0, 0, 0, 0.2));
-}
-
-.aboutEnvelopePocketPanel.is-right {
-  clip-path: polygon(100% 0, 50% var(--env-junction), 100% 100%);
-  background-image: linear-gradient(
-    260deg,
-    var(--env-fold-shadow),
-    var(--env-fold-shadow-soft) 62%
-  );
-  filter: drop-shadow(-1px 0 1px rgba(0, 0, 0, 0.2));
-}
-
-.aboutEnvelopePocketPanel.is-bottom {
-  clip-path: polygon(0 100%, 50% var(--env-junction), 100% 100%);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(0, 0, 0, 0.03));
-  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.22));
-}
-
-/* The hinge carries nothing but the transform. clip-path (like filter/opacity)
-   flattens a layer out of the parent's 3D sort, which would drop the flap
-   behind everything — so the triangle is cut on the child instead. translateZ
-   sits inside the rotation, so a turned-over flap really does end up behind. */
-.aboutEnvelopeFlap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--env-flap-h);
-  transform: rotateX(var(--env-flap)) translateZ(6px);
-  transform-origin: top center;
-  transition: transform 460ms cubic-bezier(0.34, 1.16, 0.44, 1) var(--env-flap-delay);
-  will-change: transform;
-}
-
-.aboutEnvelopeFlap::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background: rgba(0, 0, 0, 0.18);
-}
-
-.aboutEnvelopeFlapFace {
-  position: absolute;
-  inset: 0;
-  display: block;
-  border-radius: var(--env-radius) var(--env-radius) 0 0;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background-color: var(--env-paper);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(0, 0, 0, 0.02));
-}
-
-/* The gummed underside, revealed once the flap has turned over. Its top edge is
-   the hinge once flipped, so the dark end sits against the envelope. */
-.aboutEnvelopeFlapFace::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.08));
-  opacity: var(--env-inner);
-  transition: opacity 240ms linear 180ms;
-}
-
-.aboutEnvelopeSeal {
-  position: absolute;
-  left: 50%;
-  top: 76%;
   z-index: 2;
+  top: -5.375cqw;
+  right: 6.25cqw;
+  width: 18.75cqw;
+  aspect-ratio: 22 / 27;
+  background-image: url("/about/hiring-letter-paperclip.webp");
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+.aboutLetterPreviewGreeting {
+  font-size: 5.0625cqw;
+  font-weight: 500;
+  line-height: 5.625cqw;
+}
+
+.aboutLetterPreviewBody {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(28px, 13cqw, 38px);
-  aspect-ratio: 1;
-  border: 1px solid rgba(86, 11, 11, 0.38);
-  border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%;
-  background: radial-gradient(
-    circle at 34% 28%,
-    #c94c47 0%,
-    var(--env-seal) 48%,
-    #741919 100%
-  );
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -2px 3px rgba(63, 3, 3, 0.34),
-    0 3px 5px rgba(0, 0, 0, 0.3);
-  color: #efc1a8;
-  font-family: var(--font-cesare), "Times New Roman", serif;
-  font-size: clamp(13px, 5cqw, 16px);
+  flex-direction: column;
+  gap: 2.7cqw;
+}
+
+.aboutLetterPreviewBody > span,
+.aboutLetterPreviewSignoff {
+  font-size: 2.25cqw;
   font-weight: 400;
-  line-height: 1;
-  transform: translate(-50%, -50%) translateZ(8px) rotate(-7deg);
+  line-height: 1.2;
+  text-align: left;
 }
 
-.aboutEnvelopeSeal::after {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border: 1px solid rgba(239, 193, 168, 0.4);
-  border-radius: inherit;
-}
-
-.aboutEnvelopeHint {
+.aboutLetterPreviewHint {
   margin-top: 22px;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -2323,20 +2132,40 @@ button.aboutCard:focus-visible {
   transition:
     color 167ms linear,
     opacity 167ms linear,
-    transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.aboutCardLetter:hover .aboutEnvelopeHint,
-.aboutCardLetter:focus-visible .aboutEnvelopeHint {
+.aboutCardLetter:focus-visible .aboutLetterPreview {
+  transform: translateY(-12px) rotate(-0.35deg) scale(1.015);
+  box-shadow:
+    0 30px 48px -20px rgba(0, 0, 0, 0.82),
+    0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+.aboutCardLetter:focus-visible .aboutLetterPreviewHint {
   color: var(--text);
   opacity: 1;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
-.aboutCardLetter.is-envelope-open .aboutEnvelopeHint,
-.aboutCardLetter.is-envelope-open:hover .aboutEnvelopeHint {
-  opacity: 0;
-  transform: translateY(4px);
+@media (hover: hover) {
+  .aboutCardLetter:hover .aboutLetterPreview {
+    transform: translateY(-12px) rotate(-0.35deg) scale(1.015);
+    box-shadow:
+      0 30px 48px -20px rgba(0, 0, 0, 0.82),
+      0 8px 16px rgba(0, 0, 0, 0.28);
+  }
+
+  .aboutCardLetter:hover .aboutLetterPreviewHint {
+    color: var(--text);
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.aboutCardLetter:active .aboutLetterPreview {
+  transform: translateY(-6px) rotate(-0.35deg) scale(0.99);
+  transition-duration: 90ms;
 }
 
 .letterNote:hover {
@@ -2663,7 +2492,10 @@ button.aboutCard:focus-visible {
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  transition: color 167ms linear, background-color 167ms linear;
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 167ms linear, background-color 167ms linear;
 }
 
 .aboutTmArrow svg {
@@ -2968,7 +2800,7 @@ button.aboutCard:focus-visible {
     flex: none;
   }
 
-  .aboutEnvelopeStage {
+  .aboutLetterPreviewStage {
     flex: none;
   }
 }
@@ -2980,10 +2812,12 @@ button.aboutCard:focus-visible {
 }
 
 @media (max-width: 430px) {
-  /* The envelope has scaled down by here, so it needs less flap headroom —
-     without this the card carries a lot of dead space under it. */
-  .aboutEnvelopeStage {
+  .aboutLetterPreviewStage {
     min-height: 310px;
+  }
+
+  .aboutLetterPreview {
+    width: min(82%, 300px);
   }
 }
 
@@ -3878,7 +3712,10 @@ button.aboutCard:focus-visible {
   cursor: pointer;
   pointer-events: auto;
   opacity: 0;
+  transform: scale(1);
+  transform-origin: center;
   transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity var(--sys-hover-ms) linear 80ms,
     background-color var(--sys-hover-ms) linear;
 }
@@ -4096,7 +3933,8 @@ button.aboutCard:focus-visible {
 .sysOverlayFigureNav {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(1);
+  transform-origin: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4109,7 +3947,8 @@ button.aboutCard:focus-visible {
   color: #ffffff;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background-color 167ms linear;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 167ms linear;
 }
 
 .sysOverlayFigureNav svg {
@@ -4163,6 +4002,20 @@ button.aboutCard:focus-visible {
     opacity: 0.72;
     transform: translateX(-12px);
   }
+}
+
+.csBack:active,
+.aboutTmArrow:active,
+.sysOverlayClose:active,
+.engModalClose:active,
+.chBack:active {
+  transform: scale(0.92);
+  transition-duration: 90ms;
+}
+
+.sysOverlayFigureNav:active {
+  transform: translateY(-50%) scale(0.92);
+  transition-duration: 90ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4503,7 +4356,10 @@ button.aboutCard:focus-visible {
   color: var(--color-muted);
   line-height: 1;
   cursor: pointer;
-  transition: color 167ms linear;
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 167ms linear;
 }
 
 .engModalClose svg {
@@ -5386,13 +5242,15 @@ button.aboutCard:focus-visible {
     transition: none;
   }
 
-  .aboutEnvelope,
-  .aboutEnvelopeBack,
-  .aboutEnvelopeLetter,
-  .aboutEnvelopeFlap,
-  .aboutEnvelopeFlapFace::after,
-  .aboutEnvelopeHint {
+  .aboutLetterPreview,
+  .aboutLetterPreviewHint {
     transition: none;
+  }
+
+  .aboutCardLetter:hover .aboutLetterPreview,
+  .aboutCardLetter:focus-visible .aboutLetterPreview,
+  .aboutCardLetter:active .aboutLetterPreview {
+    transform: rotate(-1.25deg);
   }
 }
 
@@ -5561,7 +5419,8 @@ button.aboutCard:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 48px;
+  overflow: auto;
   background: color-mix(in srgb, #000 72%, transparent);
   cursor: pointer;
   animation: letterScrimIn 220ms linear both;
@@ -5583,87 +5442,83 @@ button.aboutCard:focus-visible {
 
 .letterNote {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  width: min(646px, 100%);
-  padding: 40px 40px 4px;
-  border-radius: 12px;
+  width: min(720px, calc(100vw - 96px), calc(100dvh - 96px));
+  aspect-ratio: 1;
+  container-type: inline-size;
+  border-radius: 0;
   /* Rests on a slight tilt and straightens toward the cursor. The open/close
      flight sets an inline transform, then hands control back here. */
   transform: rotate(-2deg);
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
   cursor: default;
-  background: linear-gradient(180deg, #f0efeb 0%, #d4d3c7 100%);
-  box-shadow: 2px 4px 4px rgba(171, 171, 171, 0.25);
-  color: #121413;
-  cursor: default;
+  background-color: #171f19;
+  background-image: url("/about/hiring-letter-paper.jpg");
+  background-position: 50%;
+  background-size: cover;
+  box-shadow: 32px 100px 150px #00000026;
+  color: #131914;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.letterContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3.75cqw;
+  min-height: 100%;
+  padding: 18.75cqw 12.5cqw;
+  box-sizing: border-box;
+}
+
+.letterPaperclip {
+  position: absolute;
+  z-index: 2;
+  top: -5.375cqw;
+  right: 6.25cqw;
+  width: 18.75cqw;
+  aspect-ratio: 22 / 27;
+  background-image: url("/about/hiring-letter-paperclip.webp");
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
 }
 
 .letterGreeting {
-  margin: 0 0 16px;
-  font-family: var(--font-letter), "Segoe Print", "Comic Sans MS", cursive;
-  font-size: 36px;
-  font-weight: 400;
-  line-height: 0.9;
-  color: #050505;
+  margin: 0;
+  font-family: inherit;
+  font-size: 5.0625cqw;
+  font-weight: 500;
+  line-height: 5.625cqw;
+  color: #131914;
 }
 
 .letterBody {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 2.7cqw;
 }
 
 .letterBody p {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: 16px;
+  font-family: inherit;
+  font-size: 2.25cqw;
   font-weight: 400;
-  line-height: 1.5;
-  color: #121413;
+  line-height: 1.2;
+  color: #131914;
   text-wrap: pretty;
 }
 
 .letterSignoff {
-  margin: 16px 0 0;
-  font-family: var(--font-letter);
-  font-size: 36px;
+  margin: 0;
+  font-family: inherit;
+  font-size: 2.25cqw;
   font-weight: 400;
-  line-height: calc(0.9em - 4px);
-  color: #050505;
-}
-
-.letterCopyBtn {
-  align-self: flex-end;
-  margin-top: 24px;
-  background: #121413;
-  border: 1px solid #121413;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.letterCopyBtn:hover {
-  background: #2a2a2a;
-  border-color: #2a2a2a;
-  filter: none;
-}
-
-.letterCopyBtn:focus-visible {
-  outline: 2px solid #121413;
-  outline-offset: 2px;
-}
-
-.letterHint {
-  margin: 20px 0 0;
-  padding: 0 0 4px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-align: center;
-  color: color-mix(in srgb, #121413 42%, transparent);
+  line-height: 1.2;
+  color: #131914;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5677,13 +5532,41 @@ button.aboutCard:focus-visible {
 }
 
 @media (max-width: 720px) {
-  .letterNote {
-    padding: 28px 22px 4px;
+  .letterScrim {
+    align-items: flex-start;
+    padding: 40px 16px 24px;
   }
 
-  .letterGreeting,
+  .letterNote {
+    width: min(100%, 480px);
+    aspect-ratio: auto;
+    min-height: calc(100dvh - 64px);
+  }
+
+  .letterContent {
+    gap: 24px;
+    padding: 72px 28px 40px;
+  }
+
+  .letterPaperclip {
+    top: -28px;
+    right: 18px;
+    width: 98px;
+  }
+
+  .letterGreeting {
+    font-size: 30px;
+    line-height: 34px;
+  }
+
+  .letterBody {
+    gap: 20px;
+  }
+
+  .letterBody p,
   .letterSignoff {
-    font-size: 28px;
+    font-size: 15px;
+    line-height: 1.35;
   }
 }
 
@@ -6786,7 +6669,10 @@ button.aboutCard:focus-visible {
   cursor: pointer;
   opacity: 1;
   text-decoration: none;
-  transition: background-color var(--sys-hover-ms) linear;
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color var(--sys-hover-ms) linear;
 }
 
 .chBack svg {
@@ -6808,6 +6694,49 @@ button.aboutCard:focus-visible {
 .chBack:focus-visible {
   outline: 1px solid var(--color-border);
   outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .csBack:hover,
+  .aboutTmArrow:hover,
+  .sysOverlayClose:hover,
+  .engModalClose:hover,
+  .chBack:hover {
+    transform: scale(0.98);
+  }
+
+  .sysOverlayFigureNav:hover {
+    transform: translateY(-50%) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .csBack,
+  .aboutTmArrow,
+  .sysOverlayClose,
+  .sysOverlayFigureNav,
+  .engModalClose,
+  .chBack {
+    transition-duration: 0s;
+  }
+
+  .csBack:hover,
+  .aboutTmArrow:hover,
+  .sysOverlayClose:hover,
+  .engModalClose:hover,
+  .chBack:hover,
+  .csBack:active,
+  .aboutTmArrow:active,
+  .sysOverlayClose:active,
+  .engModalClose:active,
+  .chBack:active {
+    transform: scale(1);
+  }
+
+  .sysOverlayFigureNav:hover,
+  .sysOverlayFigureNav:active {
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 /* ---------- ContentCard — unboxed, centered over the cover ---------- */

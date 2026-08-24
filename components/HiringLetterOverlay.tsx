@@ -2,8 +2,8 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { crimsonPro } from "@/app/fonts";
 import { HIRING_LETTER } from "@/lib/letter";
-import CopyEmailButton from "@/components/CopyEmailButton";
 
 type Props = {
   onClose: () => void;
@@ -132,34 +132,29 @@ export default function HiringLetterOverlay({ onClose, origin }: Props) {
     >
       <div
         ref={noteRef}
-        className="letterNote"
+        className={`letterNote ${crimsonPro.className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
-        <p id={titleId} className="letterGreeting">
-          {HIRING_LETTER.greeting}
-        </p>
-        <div className="letterBody">
-          {HIRING_LETTER.body.map((p) => (
-            <p key={p.slice(0, 24)}>{p}</p>
-          ))}
+        <span className="letterPaperclip" aria-hidden />
+        <div className="letterContent">
+          <p id={titleId} className="letterGreeting">
+            {HIRING_LETTER.greeting}
+          </p>
+          <div className="letterBody">
+            {HIRING_LETTER.body.map((p) => (
+              <p key={p.slice(0, 24)}>{p}</p>
+            ))}
+          </div>
+          <p className="letterSignoff">
+            {HIRING_LETTER.signoff}
+            <br />
+            {HIRING_LETTER.signature}
+          </p>
         </div>
-        <p className="letterSignoff">
-          {HIRING_LETTER.signoff}
-          <br />
-          {HIRING_LETTER.signature}
-        </p>
-        <CopyEmailButton
-          email={HIRING_LETTER.email}
-          label="Let's chat"
-          copiedLabel="Email copied"
-          showIcon={false}
-          className="workFitBtn workFitBtnSolid letterCopyBtn"
-        />
-        <p className="letterHint">{HIRING_LETTER.dismissHint}</p>
       </div>
     </div>,
     document.body,

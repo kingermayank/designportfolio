@@ -16,12 +16,26 @@ type DeferredVideoProps = {
   style?: CSSProperties;
   playbackRate?: number;
   posterPriority?: boolean;
+  loadMargin?: string;
   /**
    * `eager` starts loading immediately, while the poster remains visible until
    * playback. `visible` starts shortly before the media scrolls into view.
    */
   activation?: "eager" | "visible";
 };
+
+function nearestScrollParent(element: HTMLElement) {
+  let parent = element.parentElement;
+
+  while (parent) {
+    const { overflowY } = window.getComputedStyle(parent);
+    const scrollable = /(auto|scroll|overlay)/.test(overflowY);
+    if (scrollable) return parent;
+    parent = parent.parentElement;
+  }
+
+  return null;
+}
 
 /**
  * Poster-first decorative video. The source is immediate only for explicitly
@@ -34,6 +48,7 @@ export default function DeferredVideo({
   style,
   playbackRate = 1,
   posterPriority = false,
+  loadMargin = "240px 0px",
   activation = "visible",
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -45,17 +60,18 @@ export default function DeferredVideo({
     if (activation !== "visible" || reducedMotion) return;
     const video = videoRef.current;
     if (!video) return;
+    const scrollRoot = nearestScrollParent(video);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         setVisible(entry.isIntersecting);
         if (entry.isIntersecting) setRequested(true);
       },
-      { rootMargin: "240px 0px", threshold: 0.01 },
+      { root: scrollRoot, rootMargin: loadMargin, threshold: 0.01 },
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [activation, reducedMotion]);
+  }, [activation, loadMargin, reducedMotion]);
 
   useEffect(() => {
     const video = videoRef.current;

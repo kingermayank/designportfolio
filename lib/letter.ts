@@ -1,4 +1,4 @@
-/** Hiring-manager letter — scraped from kingermayank.com note overlay. */
+/** Hiring-manager letter content used by the Paper-inspired envelope overlay. */
 export const HIRING_LETTER = {
   greeting: "Dear future hiring manager,",
   body: [
@@ -8,9 +8,6 @@ export const HIRING_LETTER = {
   ],
   signoff: "Talk soon,",
   signature: "Mayank",
-  cta: "Get in touch",
-  email: "kingermayank@gmail.com",
-  dismissHint: "[Tap outside to dismiss]",
 };
 
 export const WORK_FIT_CTA = {
