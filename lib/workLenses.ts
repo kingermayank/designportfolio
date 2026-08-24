@@ -1,6 +1,6 @@
 /**
  * Work content lenses — each category switches the right-column view.
- * Visual Craft keeps the project grid; Product Thinking and Design Engineering use
+ * Visual Craft keeps the project grid; Product Strategy and Design Engineering use
  * curated lists / DE cards. About lives on its own `/about` page.
  */
 
@@ -17,7 +17,7 @@ export type WorkLens = {
 
 export const WORK_LENSES: WorkLens[] = [
   { id: "visual", label: "Visual Craft", anchor: "visual-craft", path: "/" },
-  { id: "systems", label: "Product Thinking", anchor: "product-thinking", path: "/product-thinking" },
+  { id: "systems", label: "Product Strategy", anchor: "product-strategy", path: "/product-strategy" },
   { id: "engineering", label: "Design Engineering", anchor: "design-engineering", path: "/design-engineering" },
 ];
 
@@ -30,9 +30,9 @@ export type WorkListItem = {
   body: string;
   thumb?: string;
   shade: string;
-  /** Category chips on the Product Thinking card. */
+  /** Category chips on the Product Strategy card. */
   badges?: string[];
-  /** Ordered media shown in the Product Thinking detail carousel. */
+  /** Ordered media shown in the Product Strategy detail carousel. */
   gallery?: Array<{
     src: string;
     caption: string;
@@ -40,7 +40,7 @@ export type WorkListItem = {
   year?: number;
 };
 
-/** Product Thinking — the Ikon Technologies product-lead studies. */
+/** Product Strategy — the Ikon Technologies product-lead studies. */
 export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "ikon-data-dictionary",

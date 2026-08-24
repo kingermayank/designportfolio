@@ -206,7 +206,7 @@ const THUMB_SRCSET: Partial<Record<string, string>> = {
 };
 
 // Visual Craft shows project work only — studies flagged `inWorkGrid: false`
-// (the Ikon PM systems artifacts) live under Product Thinking instead.
+// (the Ikon PM systems artifacts) live under Product Strategy instead.
 const PROJECTS: Card[] = CASE_STUDIES.filter(
   (s) => s.inWorkGrid !== false,
 ).map((s, i) => {
@@ -513,12 +513,13 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
     rootRef.current?.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
-  // Deep link — /product-thinking or legacy /#product-thinking opens that lens.
+  // Deep link — /product-strategy or legacy /#product-thinking opens that lens.
   useEffect(() => {
     if (initialLens) return;
     const hash = window.location.hash.slice(1);
     if (!hash) return;
-    const match = WORK_LENSES.find((l) => l.anchor === hash);
+    const normalizedHash = hash === "product-thinking" ? "product-strategy" : hash;
+    const match = WORK_LENSES.find((l) => l.anchor === normalizedHash);
     if (!match || match.id === "visual") return;
     setLensDir(LENS_INDEX[match.id] - LENS_INDEX.visual || 1);
     setLens(match.id);
@@ -571,7 +572,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
               setHoverIdx(-1);
               setSystemsActive(item);
               const slug = item.slug ?? item.id;
-              window.history.pushState(null, "", `/product-thinking/${slug}`);
+              window.history.pushState(null, "", `/product-strategy/${slug}`);
               pushedOverlayUrl.current = true;
             }}
           />
@@ -768,7 +769,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
               pushedOverlayUrl.current = false;
               window.history.back();
             } else {
-              window.history.replaceState(null, "", "/product-thinking");
+              window.history.replaceState(null, "", "/product-strategy");
             }
           }}
         />

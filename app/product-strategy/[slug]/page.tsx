@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return createMetadata({
     title: item.title,
     description: item.body,
-    path: `/product-thinking/${item.slug ?? item.id}`,
+    path: `/product-strategy/${item.slug ?? item.id}`,
   });
 }
 
-export default async function ProductThinkingItemPage({ params }: Props) {
+export default async function ProductStrategyItemPage({ params }: Props) {
   const { slug } = await params;
   const item = SYSTEMS_LIST.find((s) => s.slug === slug || s.id === slug);
   if (!item) notFound();
