@@ -7,15 +7,13 @@ const [engSource, styles] = await Promise.all([
   readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
 ]);
 
-test("the mobile Design Engineering modal contains a fitted 4:3 preview", () => {
+test("Design Engineering previews fill a viewport-capped, scrollable frame", () => {
   assert.match(engSource, /className="engModalFrameViewport"/);
+  assert.match(engSource, /const FRAME_W = 1440;/);
+  assert.match(engSource, /const FRAME_H = 1440;/);
   assert.match(
     engSource,
-    /const mobileViewport = window\.matchMedia\("\(max-width: 720px\)"\)\.matches;/,
-  );
-  assert.match(
-    engSource,
-    /mobileViewport\s*\?\s*Math\.min\(w \/ FRAME_W, h \/ FRAME_H\)\s*:\s*Math\.max\(w \/ FRAME_W, h \/ FRAME_H\)/s,
+    /const \{ clientWidth: width, clientHeight: height \} = el;[\s\S]*const scale = width \/ FRAME_W;[\s\S]*setFrameScale\(scale\);[\s\S]*setFrameHeight\(height \/ scale\);/,
   );
 
   assert.match(
@@ -24,15 +22,15 @@ test("the mobile Design Engineering modal contains a fitted 4:3 preview", () => 
   );
   assert.match(
     styles,
-    /@media \(max-width: 720px\)\s*\{[\s\S]*?\.engModalBody\s*\{[^}]*gap:\s*var\(--space-3\);[^}]*overflow-y:\s*auto;/,
+    /\.engModalBody\s*\{[^}]*overflow-x:\s*hidden;[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
   );
   assert.match(
     styles,
-    /@media \(max-width: 720px\)\s*\{[\s\S]*?\.engModalStageWrap\s*\{[^}]*flex:\s*0 0 auto;/,
+    /\.engModalStageWrap\s*\{[^}]*flex:\s*0 0 auto;/s,
   );
   assert.match(
     styles,
-    /@media \(max-width: 720px\)\s*\{[\s\S]*?\.engModalStage\s*\{[^}]*aspect-ratio:\s*4 \/ 3;[^}]*height:\s*auto;/,
+    /\.engModalStage\s*\{[^}]*flex:\s*none;[^}]*width:\s*100%;[^}]*aspect-ratio:\s*1;[^}]*max-height:\s*calc\(100dvh - 13rem\);/s,
   );
   assert.match(
     styles,
@@ -40,11 +38,11 @@ test("the mobile Design Engineering modal contains a fitted 4:3 preview", () => 
   );
   assert.match(
     styles,
-    /@media \(max-width: 720px\)\s*\{[\s\S]*?\.engModalFrameViewport\s*\{[^}]*align-items:\s*center;/,
+    /\.engModalFrame\s*\{[^}]*flex:\s*0 0 var\(--eng-frame-w, 1440px\);[^}]*width:\s*var\(--eng-frame-w, 1440px\);[^}]*height:\s*var\(--eng-frame-h, 1440px\);/s,
   );
   assert.match(
     styles,
-    /@media \(max-width: 720px\)\s*\{[\s\S]*?\.engModalFrame\s*\{[^}]*transform-origin:\s*center;/,
+    /@media \(max-width: 720px\)\s*\{[\s\S]*?\.engModalStage\s*\{[^}]*aspect-ratio:\s*1;[^}]*height:\s*auto;/,
   );
 });
 

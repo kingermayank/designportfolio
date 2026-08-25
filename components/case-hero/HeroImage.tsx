@@ -20,6 +20,8 @@ export type HeroImageProps = {
   scrim?: boolean | number | string;
   rounded?: boolean;
   className?: string;
+  /** Show the editorial cursor-following play/pause control. */
+  interactiveVideo?: boolean;
 };
 
 /**
@@ -37,6 +39,7 @@ export default function HeroImage({
   scrim,
   rounded,
   className,
+  interactiveVideo = false,
 }: HeroImageProps) {
   const style: CSSProperties & Record<string, string | undefined> = {};
   if (ratio) style["--ch-hero-ratio"] = String(ratio);
@@ -72,6 +75,7 @@ export default function HeroImage({
             poster={poster}
             activation="visible"
             posterPriority
+            floatingControls={interactiveVideo}
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element

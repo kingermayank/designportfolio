@@ -46,6 +46,23 @@ test("mobile work lenses stay in one horizontally scrollable row", () => {
   assert.match(mobileRules, /\.workLens\s*\{[^}]*white-space:\s*nowrap/s);
 });
 
+test("work lenses expose comfortable touch targets without changing label spacing", () => {
+  assert.match(styles, /\.workLens\s*\{[^}]*min-height:\s*44px/s);
+  assert.match(
+    styles,
+    /\.workLens\s*\{[^}]*margin-block:\s*calc\(\(1\.2em - 44px\) \/ 2\)/s,
+  );
+  assert.match(styles, /\.workLens\s*\{[^}]*margin-inline:\s*-8px/s);
+  assert.match(styles, /\.workLens\s*\{[^}]*padding:\s*0 8px/s);
+  assert.match(styles, /\.workLens\s*\{[^}]*touch-action:\s*manipulation/s);
+
+  const mobileRules = mediaRules("max-width: 720px", ".workLenses");
+  const phoneRules = mediaRules("max-width: 400px", ".workLenses");
+
+  assert.match(mobileRules, /\.workLens\s*\{[^}]*padding-inline:\s*4px/s);
+  assert.match(phoneRules, /\.workLens\s*\{[^}]*padding-inline:\s*3px/s);
+});
+
 test("mobile work lenses match the 15px intro copy and use the requested spacing", () => {
   const narrowRules = mediaRules("max-width: 560px", ".workLenses");
   const phoneRules = mediaRules("max-width: 400px", ".workLenses");

@@ -2,11 +2,13 @@
 
 import {
   Fragment,
+  useCallback,
   useEffect,
   useRef,
   useState,
   type CSSProperties,
 } from "react";
+import { createPortal } from "react-dom";
 import { useReducedMotion } from "framer-motion";
 
 type DeferredVideoProps = {
@@ -22,6 +24,10 @@ type DeferredVideoProps = {
    * playback. `visible` starts shortly before the media scrolls into view.
    */
   activation?: "eager" | "visible";
+  /** Koto-style cursor-following play/pause control for editorial media. */
+  floatingControls?: boolean;
+  /** Anchor controls to the surrounding case-study frame instead of the video. */
+  floatingControlPlacement?: "media" | "container";
 };
 
 function nearestScrollParent(element: HTMLElement) {
@@ -50,14 +56,35 @@ export default function DeferredVideo({
   posterPriority = false,
   loadMargin = "240px 0px",
   activation = "visible",
+  floatingControls = false,
+  floatingControlPlacement = "media",
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = useReducedMotion();
   const [requested, setRequested] = useState(activation === "eager");
   const [visible, setVisible] = useState(activation === "eager");
+  const [playbackIntent, setPlaybackIntent] = useState<
+    "auto" | "playing" | "paused"
+  >("auto");
+  const [playing, setPlaying] = useState(false);
+  const [controlHost, setControlHost] = useState<HTMLElement | null>(null);
+
+  const setVideoNode = useCallback(
+    (video: HTMLVideoElement | null) => {
+      videoRef.current = video;
+      setControlHost(
+        floatingControls && floatingControlPlacement === "container"
+          ? (video?.closest<HTMLElement>(".csMediaHoverWrap") ??
+              video?.closest<HTMLElement>(".csMedia") ??
+              null)
+          : null,
+      );
+    },
+    [floatingControlPlacement, floatingControls],
+  );
 
   useEffect(() => {
-    if (activation !== "visible" || reducedMotion) return;
+    if (activation !== "visible") return;
     const video = videoRef.current;
     if (!video) return;
     const scrollRoot = nearestScrollParent(video);
@@ -71,16 +98,66 @@ export default function DeferredVideo({
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [activation, loadMargin, reducedMotion]);
+  }, [activation, loadMargin]);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !requested || reducedMotion) return;
+    if (!video || !requested) return;
     video.playbackRate = playbackRate;
 
-    if (visible) void video.play().catch(() => {});
-    else video.pause();
-  }, [playbackRate, reducedMotion, requested, visible]);
+    const shouldPlay =
+      visible &&
+      (playbackIntent === "playing" ||
+        (playbackIntent === "auto" && !reducedMotion));
+
+    if (shouldPlay) {
+      void video.play().catch(() => {
+        setPlaying(false);
+        setPlaybackIntent("paused");
+      });
+    } else {
+      video.pause();
+    }
+  }, [playbackIntent, playbackRate, reducedMotion, requested, visible]);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (!video.paused && !video.ended) {
+      setPlaybackIntent("paused");
+      video.pause();
+      return;
+    }
+
+    setRequested(true);
+    setPlaybackIntent("playing");
+  };
+
+  const floatingControl = floatingControls ? (
+    <button
+      className="floatingVideoControl"
+      type="button"
+      aria-label={playing ? "Pause video" : "Play video"}
+      data-playing={playing ? "true" : "false"}
+      onClick={togglePlayback}
+    >
+      <span className="floatingVideoControlDisc" aria-hidden="true">
+        <svg
+          className="floatingVideoControlIcon floatingVideoControlPause"
+          viewBox="0 0 24 24"
+        >
+          <path d="M7.5 5.5h3v13h-3zM13.5 5.5h3v13h-3z" />
+        </svg>
+        <svg
+          className="floatingVideoControlIcon floatingVideoControlPlay"
+          viewBox="0 0 24 24"
+        >
+          <path d="m8.25 5.25 10.5 6.75-10.5 6.75z" />
+        </svg>
+      </span>
+    </button>
+  ) : null;
 
   return (
     <Fragment>
@@ -88,7 +165,7 @@ export default function DeferredVideo({
         <link rel="preload" as="image" href={poster} />
       ) : null}
       <video
-        ref={videoRef}
+        ref={setVideoNode}
         className={className}
         style={style}
         src={requested && !reducedMotion ? src : undefined}
@@ -98,7 +175,14 @@ export default function DeferredVideo({
         playsInline
         autoPlay={activation === "eager" && !reducedMotion}
         preload={requested ? "auto" : "none"}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
       />
+      {floatingControlPlacement === "container" && controlHost
+        ? createPortal(floatingControl, controlHost)
+        : floatingControlPlacement === "media"
+          ? floatingControl
+          : null}
     </Fragment>
   );
 }

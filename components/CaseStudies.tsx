@@ -42,7 +42,13 @@ function youtubeEmbedSrc(src: string): string | undefined {
 }
 
 // Fills its (positioned, overflow-hidden) parent with the real asset, if any.
-function MediaFill({ media }: { media?: CaseMedia }) {
+function MediaFill({
+  media,
+  interactiveVideo = false,
+}: {
+  media?: CaseMedia;
+  interactiveVideo?: boolean;
+}) {
   if (!media?.src) return null;
   if (media.youtube) {
     const embed = youtubeEmbedSrc(media.src);
@@ -76,6 +82,8 @@ function MediaFill({ media }: { media?: CaseMedia }) {
       poster={posterFor(media.src)}
       playbackRate={media.playbackRate}
       activation="visible"
+      floatingControls={interactiveVideo}
+      floatingControlPlacement={contain ? "container" : "media"}
     />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
@@ -206,12 +214,14 @@ function MediaTile({
   media,
   fill,
   bleed,
+  interactiveVideo = false,
 }: {
   media: CaseMedia;
   /** Stretch to fill a split-cell instead of locking aspect-ratio. */
   fill?: boolean;
   /** Edge-to-edge — breaks out of the editorial content max-width. */
   bleed?: boolean;
+  interactiveVideo?: boolean;
 }) {
   const caption = media.caption?.trim();
   return (
@@ -227,17 +237,17 @@ function MediaTile({
           ...(caption ? undefined : { background: media.shade }),
           ...(fill ? undefined : { aspectRatio: media.ar ?? 16 / 9 }),
         }}
-        tabIndex={caption ? 0 : undefined}
+        tabIndex={caption && !media.video ? 0 : undefined}
       >
         {caption ? (
           <div
             className="csMediaHoverWrap"
             style={{ background: media.shade }}
           >
-            <MediaFill media={media} />
+            <MediaFill media={media} interactiveVideo={interactiveVideo} />
           </div>
         ) : (
-          <MediaFill media={media} />
+          <MediaFill media={media} interactiveVideo={interactiveVideo} />
         )}
         {caption ? <CaseCaptionTicker text={caption} /> : null}
       </RevealedMediaFrame>
@@ -283,14 +293,21 @@ function MediaEmbed({ embed }: { embed: MediaBlock & { type: "embed" } }) {
 function MediaBlocks({
   blocks,
   bare,
+  interactiveVideo = false,
 }: {
   blocks: MediaBlock[];
   /** Render tiles without an outer stack wrapper (parent supplies the gap). */
   bare?: boolean;
+  interactiveVideo?: boolean;
 }) {
   const items = blocks.map((block, i) =>
     block.type === "full" ? (
-      <MediaTile key={i} media={block.media} bleed={block.bleed} />
+      <MediaTile
+        key={i}
+        media={block.media}
+        bleed={block.bleed}
+        interactiveVideo={interactiveVideo}
+      />
     ) : block.type === "embed" ? (
       <MediaEmbed key={i} embed={block} />
     ) : block.type === "row" ? (
@@ -302,7 +319,11 @@ function MediaBlocks({
         }}
       >
         {block.media.map((media, j) => (
-          <MediaTile key={j} media={media} />
+          <MediaTile
+            key={j}
+            media={media}
+            interactiveVideo={interactiveVideo}
+          />
         ))}
       </div>
     ) : (
@@ -319,10 +340,14 @@ function MediaBlocks({
             : undefined
         }
       >
-        <MediaTile media={block.left} fill={block.fillLeft !== false} />
+        <MediaTile
+          media={block.left}
+          fill={block.fillLeft !== false}
+          interactiveVideo={interactiveVideo}
+        />
         <div className="csMediaSplitRight">
           {block.right.map((m, j) => (
-            <MediaTile key={j} media={m} />
+            <MediaTile key={j} media={m} interactiveVideo={interactiveVideo} />
           ))}
         </div>
       </div>
@@ -339,15 +364,21 @@ function MediaBlocks({
 function EditorialMediaFlow({
   blocks,
   fallback,
+  interactiveVideo = false,
 }: {
   blocks?: MediaBlock[];
   fallback: CaseMedia[];
+  interactiveVideo?: boolean;
 }) {
   if (!blocks?.length) {
     return (
       <div className="csEditorialMedia">
         {fallback.map((media, i) => (
-          <MediaTile key={i} media={media} />
+          <MediaTile
+            key={i}
+            media={media}
+            interactiveVideo={interactiveVideo}
+          />
         ))}
       </div>
     );
@@ -380,11 +411,19 @@ function EditorialMediaFlow({
       {segments.map((seg) =>
         seg.kind === "bleed" ? (
           <div key={seg.key} className="csEditorialBleed">
-            <MediaTile media={seg.media} bleed />
+            <MediaTile
+              media={seg.media}
+              bleed
+              interactiveVideo={interactiveVideo}
+            />
           </div>
         ) : (
           <div key={seg.key} className="csEditorialMedia">
-            <MediaBlocks blocks={seg.blocks} bare />
+            <MediaBlocks
+              blocks={seg.blocks}
+              bare
+              interactiveVideo={interactiveVideo}
+            />
           </div>
         ),
       )}
@@ -761,6 +800,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 <div ref={heroRef}>
                   <CaseHero
                     {...heroOnly}
+                    media={{
+                      ...heroOnly.media,
+                      interactiveVideo: isVisualCraft(study),
+                    }}
                     accent={overviewAccent}
                     className="csCaseHero"
                     back={{ label: "Back", onClick: startClose }}
@@ -799,6 +842,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   <EditorialMediaFlow
                     blocks={study.mediaBlocks}
                     fallback={study.sections.flatMap((sec) => sec.media)}
+                    interactiveVideo={isVisualCraft(study)}
                   />
                 </div>
 

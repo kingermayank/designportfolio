@@ -876,6 +876,88 @@ body {
   pointer-events: auto;
 }
 
+/* Koto-style editorial video control: the full media surface toggles playback,
+   while the visible disc stays inset from the cropped frame's bottom-right. */
+.floatingVideoControl {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.floatingVideoControlDisc {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 26px;
+  height: 26px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  background: rgba(14, 14, 14, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.88);
+  transition:
+    opacity 167ms linear,
+    transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.floatingVideoControl:hover .floatingVideoControlDisc,
+.floatingVideoControl:focus-visible .floatingVideoControlDisc {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.floatingVideoControlIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition:
+    opacity 133ms linear,
+    transform 167ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.floatingVideoControlPause,
+.floatingVideoControl[data-playing="false"] .floatingVideoControlPlay {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.floatingVideoControlPlay,
+.floatingVideoControl[data-playing="false"] .floatingVideoControlPause {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+.floatingVideoControl:focus {
+  outline: none;
+}
+
+.floatingVideoControl:focus-visible .floatingVideoControlDisc {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.78);
+}
+
+.chHero:has(.floatingVideoControl) .chCard {
+  z-index: 3;
+}
+
 /* Detail */
 
 .csDetailPanel {
@@ -1366,7 +1448,8 @@ button.csNavItem {
 }
 
 .csMediaHover:hover .csMediaHoverWrap,
-.csMediaHover:focus-visible .csMediaHoverWrap {
+.csMediaHover:focus-visible .csMediaHoverWrap,
+.csMediaHover:focus-within .csMediaHoverWrap {
   bottom: 24px;
 }
 
@@ -1415,7 +1498,8 @@ button.csNavItem {
 }
 
 .csMediaHover:hover .csMediaHoverWrap > .csMediaStage,
-.csMediaHover:focus-visible .csMediaHoverWrap > .csMediaStage {
+.csMediaHover:focus-visible .csMediaHoverWrap > .csMediaStage,
+.csMediaHover:focus-within .csMediaHoverWrap > .csMediaStage {
   /* Wrap lost 24px; pull bottom inset back by 24px so stage height stays put */
   bottom: calc(var(--cs-media-pad-bottom, 0px) - 24px);
 }
@@ -1465,7 +1549,8 @@ button.csNavItem {
 }
 
 .csMediaHover:hover .csMediaHoverCaption,
-.csMediaHover:focus-visible .csMediaHoverCaption {
+.csMediaHover:focus-visible .csMediaHoverCaption,
+.csMediaHover:focus-within .csMediaHoverCaption {
   opacity: 1;
   transition-delay: 167ms;
 }
@@ -3121,8 +3206,11 @@ button.aboutCard:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin: 0;
-  padding: 0;
+  min-height: 44px;
+  /* Keep a 44px hit box without making the nav row visually taller. */
+  margin-block: calc((1.2em - 44px) / 2);
+  margin-inline: -8px;
+  padding: 0 8px;
   border: 0;
   background: transparent;
   font-family: var(--font-body);
@@ -3131,6 +3219,7 @@ button.aboutCard:focus-visible {
   line-height: 1.2;
   color: var(--faint);
   cursor: pointer;
+  touch-action: manipulation;
   transition: color 167ms linear;
 }
 
@@ -4309,6 +4398,7 @@ button.aboutCard:focus-visible {
 
 .engModalHead {
   display: flex;
+  flex: 0 0 auto;
   align-items: flex-start;
   gap: var(--space-4);
   /* No bottom padding — the body's own top padding sets the gap to the stage. */
@@ -4384,13 +4474,18 @@ button.aboutCard:focus-visible {
   padding: var(--space-5);
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .engModalStage {
   position: relative;
-  flex: 1 1 auto;
+  flex: none;
   width: 100%;
+  aspect-ratio: 1;
+  max-height: calc(100dvh - 13rem);
   min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-md);
@@ -4400,7 +4495,7 @@ button.aboutCard:focus-visible {
 .engModalStageWrap {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
   min-height: 0;
 }
@@ -4446,8 +4541,8 @@ button.aboutCard:focus-visible {
   border: 0;
 }
 
-/* Every embed renders at one logical desktop viewport, then scales to fit —
-   so a site, a playground, and a video all read at the same proportions. */
+/* Every embed scales from the stage width. Its logical height mirrors the
+   viewport-capped stage, so the iframe owns the project's vertical scrolling. */
 .engModalFrameViewport {
   position: absolute;
   inset: 0;
@@ -4459,15 +4554,16 @@ button.aboutCard:focus-visible {
 
 .engModalFrame {
   position: relative;
+  flex: 0 0 var(--eng-frame-w, 1440px);
   width: var(--eng-frame-w, 1440px);
-  height: var(--eng-frame-h, 900px);
+  height: var(--eng-frame-h, 1440px);
   border: 0;
   transform-origin: top center;
   transform: scale(var(--eng-frame-scale, 1));
 }
 
 .engModalMedia {
-  object-fit: contain;
+  object-fit: cover;
   pointer-events: none;
 }
 
@@ -4763,6 +4859,8 @@ button.aboutCard:focus-visible {
 
   .workLens {
     flex: 0 0 auto;
+    margin-inline: -4px;
+    padding-inline: 4px;
     white-space: nowrap;
   }
 
@@ -4803,16 +4901,16 @@ button.aboutCard:focus-visible {
 
   .engModalStage {
     flex: 0 0 auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1;
     height: auto;
   }
 
   .engModalFrameViewport {
-    align-items: center;
+    align-items: flex-start;
   }
 
   .engModalFrame {
-    transform-origin: center;
+    transform-origin: top center;
   }
 
   .engModalTitle {
@@ -5273,6 +5371,9 @@ button.aboutCard:focus-visible {
 }
 
 .workFitBtn {
+  --work-cta-hover-duration: 250ms;
+  --work-cta-press-duration: 80ms;
+  --work-cta-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -5291,17 +5392,22 @@ button.aboutCard:focus-visible {
   cursor: pointer;
   user-select: none;
   touch-action: manipulation;
-  transform: scale(1);
+  transform: translateY(0) scale(1);
   transform-origin: center;
-  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 167ms linear, border-color 167ms linear,
-    background-color 167ms linear, color 167ms linear;
+  transition: transform var(--work-cta-hover-duration) var(--work-cta-motion-ease),
+    filter 150ms ease-in-out, border-color 150ms ease-in-out,
+    background-color 150ms ease-in-out, color 150ms ease-in-out;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .workFitBtn:hover {
     transform: scale(0.98);
   }
+}
+
+.workFitBtn:active {
+  transform: scale(0.97);
+  transition-duration: var(--work-cta-press-duration);
 }
 
 /* Interior copy-button — active labels size naturally; icons share one cell. */
@@ -5527,6 +5633,10 @@ button.aboutCard:focus-visible {
   }
 
   .workFitBtn:hover {
+    transform: none;
+  }
+
+  .workFitBtn:active {
     transform: none;
   }
 }
@@ -6308,11 +6418,22 @@ button.aboutCard:focus-visible {
   .workLens {
     font-size: 15px;
     gap: 3px;
+    margin-inline: -3px;
+    padding-inline: 3px;
   }
 }
 
 /* Touch / no-hover: keep project captions readable without hover */
 @media (hover: none) {
+  .floatingVideoControl {
+    cursor: pointer;
+  }
+
+  .floatingVideoControlDisc {
+    opacity: 1;
+    transform: scale(1);
+  }
+
   .workCard .workCardCaption {
     opacity: 1;
   }
@@ -6368,6 +6489,11 @@ button.aboutCard:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .floatingVideoControlDisc,
+  .floatingVideoControlIcon {
+    transition: none;
+  }
+
   .csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
     animation: none;
     will-change: auto;

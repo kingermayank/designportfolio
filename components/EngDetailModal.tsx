@@ -39,9 +39,9 @@ function StageMedia({ item }: { item: EngComponent }) {
   return <div className="engModalMediaEmpty" style={{ background: item.shade }} />;
 }
 
-/** One logical viewport for every embed — sites and playgrounds alike. */
+/** Desktop-width logical viewport; its height follows the visible preview cap. */
 const FRAME_W = 1440;
-const FRAME_H = 900;
+const FRAME_H = 1440;
 const OPEN_MS = 260;
 const CLOSE_MS = 100;
 
@@ -53,6 +53,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
   const [frameScale, setFrameScale] = useState(1);
+  const [frameHeight, setFrameHeight] = useState(FRAME_H);
   const [mounted, setMounted] = useState(false);
   const [closing, setClosing] = useState(false);
   const isWebsite = Boolean(item.href);
@@ -94,22 +95,18 @@ export default function EngDetailModal({ item, onClose }: Props) {
     };
   }, [mounted, requestClose]);
 
-  // The stage is whatever height the fixed shell leaves over, so the embed's
-  // scale is measured rather than declared.
+  // Width remains authoritative, so the project always reaches both side
+  // edges. Its logical height mirrors the capped stage, making the iframe—not
+  // the modal—the scroll owner for the project's remaining content.
   useEffect(() => {
     const el = stageRef.current;
     if (!el || !hasEmbed) return;
     const measure = () => {
-      const { clientWidth: w, clientHeight: h } = el;
-      if (!w || !h) return;
-      const mobileViewport = window.matchMedia("(max-width: 720px)").matches;
-      // Mobile previews show the complete logical viewport. Larger layouts
-      // retain the existing edge-to-edge crop for a more immersive preview.
-      setFrameScale(
-        mobileViewport
-          ? Math.min(w / FRAME_W, h / FRAME_H)
-          : Math.max(w / FRAME_W, h / FRAME_H),
-      );
+      const { clientWidth: width, clientHeight: height } = el;
+      if (!width || !height) return;
+      const scale = width / FRAME_W;
+      setFrameScale(scale);
+      setFrameHeight(height / scale);
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -210,7 +207,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
                 {
                   background: hasEmbed ? "#111111" : item.shade,
                   "--eng-frame-w": `${FRAME_W}px`,
-                  "--eng-frame-h": `${FRAME_H}px`,
+                  "--eng-frame-h": `${frameHeight}px`,
                   "--eng-frame-scale": frameScale,
                 } as CSSProperties
               }

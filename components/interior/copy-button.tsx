@@ -5,13 +5,12 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
-const EXIT_EASE = [0.7, 0, 0.84, 0] as const;
-const WIDTH_EASE = [0.65, 0, 0.35, 1] as const;
-const WIDTH_EXPAND = { duration: 0.38, ease: WIDTH_EASE } as const;
-const WIDTH_CONTRACT = { duration: 0.34, ease: WIDTH_EASE } as const;
-const ICON_CROSSFADE = { duration: 0.1, ease: WIDTH_EASE } as const;
-const CONTENT_ENTER = { duration: 0.12, ease: EASE } as const;
-const CONTENT_EXIT = { duration: 0.07, ease: EXIT_EASE } as const;
+const SWAP_EASE = [0.42, 0, 0.58, 1] as const;
+const WIDTH_EXPAND = { duration: 0.25, ease: EASE } as const;
+const WIDTH_CONTRACT = { duration: 0.25, ease: EASE } as const;
+const ICON_CROSSFADE = { duration: 0.25, ease: SWAP_EASE } as const;
+const CONTENT_ENTER = { duration: 0.15, ease: SWAP_EASE } as const;
+const CONTENT_EXIT = { duration: 0.15, ease: SWAP_EASE } as const;
 const INSTANT = { duration: 0 } as const;
 
 type CopyStatus = "idle" | "copied" | "error";
@@ -70,12 +69,7 @@ export function CopyButton({
           ? "copy"
           : "email";
 
-  const contentExit = reduced
-    ? INSTANT
-    : {
-        ...CONTENT_EXIT,
-        delay: status === "idle" ? 0 : 0.12,
-      };
+  const contentExit = reduced ? INSTANT : CONTENT_EXIT;
   const iconEnter =
     reduced ? INSTANT : status === "idle" ? ICON_CROSSFADE : CONTENT_ENTER;
   const iconExit =
@@ -169,7 +163,6 @@ export function CopyButton({
       }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      whileTap={disabled || reduced ? undefined : { y: 1 }}
       initial={false}
       animate={widths ? { width: widths[status] } : undefined}
       transition={{
@@ -200,11 +193,16 @@ export function CopyButton({
               strokeWidth={1.5}
               strokeLinecap="round"
               strokeLinejoin="round"
-              initial={reduced ? false : { opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={
+                reduced
+                  ? false
+                  : { opacity: 0, scale: 0.25, filter: "blur(2px)" }
+              }
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               exit={{
                 opacity: 0,
-                scale: 0.96,
+                scale: 0.25,
+                filter: "blur(2px)",
                 transition: iconExit,
               }}
               transition={iconEnter}
@@ -219,10 +217,16 @@ export function CopyButton({
         <AnimatePresence initial={false} mode="wait">
           <motion.span
             key={activeLabel}
-            initial={reduced ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={
+              reduced
+                ? false
+                : { opacity: 0, y: 4, filter: "blur(2px)" }
+            }
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{
               opacity: 0,
+              y: -4,
+              filter: "blur(2px)",
               transition: contentExit,
             }}
             transition={reduced ? INSTANT : CONTENT_ENTER}
