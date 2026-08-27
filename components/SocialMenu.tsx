@@ -1,7 +1,59 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { ABOUT_INTRO } from "@/lib/about";
+
+/* ─────────────────────────────────────────────────────────
+ * ANIMATION STORYBOARD
+ *
+ * Read top-to-bottom. Each value is ms after the menu trigger.
+ *
+ *   0ms   separate menu panel flows out beneath the circular trigger
+ *  80ms   social links fade and rise in (staggered 40ms)
+ * ───────────────────────────────────────────────────────── */
+
+const TIMING = {
+  panelFlow: 0, // full-size panel starts revealing downward
+  linksReveal: 80, // link sequence begins
+};
+
+const MENU_SHELL = {
+  closedClip: "inset(0 0 88% 82% round 8px)", // reveal begins at top-right
+  openClip: "inset(0 0 0% 0 round 8px)", // reveal the full-size panel
+  pressScale: 0.97, // tactile feedback without vertical movement
+  openTransition: {
+    duration: 0.3,
+    ease: [0.16, 1, 0.3, 1] as const,
+  },
+  closeTransition: {
+    duration: 0.15,
+    ease: [0.22, 1, 0.36, 1] as const,
+  },
+};
+
+const MENU_LINKS = {
+  offsetY: -4, // compact text-reveal distance
+  initialScale: 0.98,
+  stagger: 0.04, // seconds between rows
+  enter: {
+    duration: 0.15,
+    ease: [0.22, 1, 0.36, 1] as const,
+  },
+  exit: {
+    duration: 0.1,
+    ease: [0.32, 0, 0.67, 0] as const,
+  },
+};
+
+const MENU_GLYPH = {
+  hiddenScale: 0.72,
+  hiddenRotation: 45,
+  transition: {
+    duration: 0.25,
+    ease: "easeInOut" as const,
+  },
+};
 
 function IconX() {
   return (
@@ -80,17 +132,28 @@ const ICONS: Record<string, () => ReactNode> = {
 };
 
 export default function SocialMenu() {
-  const [open, setOpen] = useState(false);
+  const [stage, setStage] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
+  const reduceMotion = useReducedMotion();
+  const open = stage > 0;
+
+  useEffect(() => {
+    if (stage !== 1 || reduceMotion) return;
+    const revealTimer = window.setTimeout(
+      () => setStage(2),
+      TIMING.linksReveal - TIMING.panelFlow,
+    );
+    return () => window.clearTimeout(revealTimer);
+  }, [reduceMotion, stage]);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") setStage(0);
     };
     const onPointer = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!rootRef.current?.contains(e.target as Node)) setStage(0);
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener("pointerdown", onPointer);
@@ -100,61 +163,129 @@ export default function SocialMenu() {
     };
   }, [open]);
 
+  const toggleMenu = () => {
+    if (open) {
+      setStage(0);
+      return;
+    }
+    setStage(reduceMotion ? 2 : 1);
+  };
+
+  const shellTransition = reduceMotion
+    ? { duration: 0 }
+    : open
+      ? MENU_SHELL.openTransition
+      : MENU_SHELL.closeTransition;
+
+  const glyphTransition = reduceMotion
+    ? { duration: 0 }
+    : MENU_GLYPH.transition;
+
   return (
-    <div className="socialMenu" ref={rootRef}>
-      <button
+    <div className="socialMenu" ref={rootRef} data-open={open ? "true" : "false"}>
+      <motion.nav
+        id={panelId}
+        className="socialMenuPanel"
+        aria-label="Social links"
+        aria-hidden={!open}
+        initial={false}
+        animate={{
+          opacity: open ? 1 : 0,
+          clipPath: open ? MENU_SHELL.openClip : MENU_SHELL.closedClip,
+        }}
+        transition={shellTransition}
+      >
+        {ABOUT_INTRO.links.map((link, index) => {
+          const Icon = ICONS[link.label];
+          const linksVisible = stage >= 2;
+          const linkTransition = reduceMotion
+            ? { duration: 0 }
+            : linksVisible
+              ? {
+                  ...MENU_LINKS.enter,
+                  delay: index * MENU_LINKS.stagger,
+                }
+              : {
+                  ...MENU_LINKS.exit,
+                  delay:
+                    (ABOUT_INTRO.links.length - index - 1) *
+                    (MENU_LINKS.stagger / 2),
+                };
+
+          return (
+            <motion.a
+              key={link.label}
+              className="socialMenuLink"
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={open ? 0 : -1}
+              initial={false}
+              animate={{
+                opacity: linksVisible ? 1 : 0,
+                y: linksVisible ? 0 : MENU_LINKS.offsetY,
+                scale: linksVisible ? 1 : MENU_LINKS.initialScale,
+              }}
+              transition={linkTransition}
+              onClick={() => setStage(0)}
+            >
+              <span className="socialMenuIcon">
+                {Icon ? <Icon /> : null}
+              </span>
+              {link.label}
+            </motion.a>
+          );
+        })}
+      </motion.nav>
+
+      <motion.button
         type="button"
         className={"socialMenuBtn" + (open ? " on" : "")}
         aria-label={open ? "Close social links" : "Open social links"}
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggleMenu}
+        whileTap={reduceMotion ? undefined : { scale: MENU_SHELL.pressScale }}
       >
         <span className="socialMenuGlyph" aria-hidden="true">
-          {open ? (
-            <svg viewBox="0 0 16 16">
-              <path
-                d="M3 3l10 10M13 3 3 13"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 16 16">
-              <path
-                d="M2.5 4.25h11M2.5 8h11M2.5 11.75h11"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          )}
+          <motion.svg
+            viewBox="0 0 16 16"
+            initial={false}
+            animate={{
+              opacity: open ? 0 : 1,
+              rotate: open ? -MENU_GLYPH.hiddenRotation : 0,
+              scale: open ? MENU_GLYPH.hiddenScale : 1,
+            }}
+            transition={glyphTransition}
+          >
+            <path
+              d="M2.5 4.25h11M2.5 8h11M2.5 11.75h11"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </motion.svg>
+          <motion.svg
+            viewBox="0 0 16 16"
+            initial={false}
+            animate={{
+              opacity: open ? 1 : 0,
+              rotate: open ? 0 : MENU_GLYPH.hiddenRotation,
+              scale: open ? 1 : MENU_GLYPH.hiddenScale,
+            }}
+            transition={glyphTransition}
+          >
+            <path
+              d="M3 3l10 10M13 3 3 13"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </motion.svg>
         </span>
-      </button>
-      {open ? (
-        <nav id={panelId} className="socialMenuPanel" aria-label="Social links">
-          {ABOUT_INTRO.links.map((link) => {
-            const Icon = ICONS[link.label];
-            return (
-              <a
-                key={link.label}
-                className="socialMenuLink"
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="socialMenuIcon">
-                  {Icon ? <Icon /> : null}
-                </span>
-                {link.label}
-              </a>
-            );
-          })}
-        </nav>
-      ) : null}
+      </motion.button>
     </div>
   );
 }
