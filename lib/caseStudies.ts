@@ -1112,15 +1112,6 @@ const bigbasket: CaseStudy = {
     {
       type: "full",
       media: bb(
-        "/bigbasket/big_10.png",
-        3840 / 2160,
-        false,
-        "A shared dialog pattern scaled across refunds, permissions, delivery errors, and account actions.",
-      ),
-    },
-    {
-      type: "full",
-      media: bb(
         "/bigbasket/big_13.png",
         2816 / 1584,
         false,
