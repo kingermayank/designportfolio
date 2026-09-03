@@ -1169,7 +1169,7 @@ const bigbasket: CaseStudy = {
         {
           ...bb("/bigbasket/Artboard.png", 4 / 3),
           shade: "#F5F5F5",
-          fit: "fill",
+          fit: "cover",
           caption: "A repeatable template for component anatomy, usage, and behavior.",
         },
         {
