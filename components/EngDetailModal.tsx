@@ -42,8 +42,8 @@ function StageMedia({ item }: { item: EngComponent }) {
 /** Desktop-width logical viewport; its height follows the visible preview cap. */
 const FRAME_W = 1440;
 const FRAME_H = 1440;
-const OPEN_MS = 260;
-const CLOSE_MS = 100;
+const OPEN_MS = 500;
+const CLOSE_MS = 500;
 
 export default function EngDetailModal({ item, onClose }: Props) {
   const titleId = useId();
@@ -56,6 +56,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
   const [frameHeight, setFrameHeight] = useState(FRAME_H);
   const [mounted, setMounted] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [open, setOpen] = useState(false);
   const isWebsite = Boolean(item.href);
   const hasEmbed = Boolean(item.embedUrl);
   const embedIsExternal = Boolean(item.embedUrl?.startsWith("http"));
@@ -79,6 +80,18 @@ export default function EngDetailModal({ item, onClose }: Props) {
 
   useEffect(() => {
     if (!mounted) return;
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => setOpen(true));
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
     const prev = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
 
@@ -89,8 +102,11 @@ export default function EngDetailModal({ item, onClose }: Props) {
       }
     };
     window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
       prev?.focus?.();
     };
   }, [mounted, requestClose]);
@@ -136,52 +152,52 @@ export default function EngDetailModal({ item, onClose }: Props) {
 
   return createPortal(
     <div
-      className={"engModalRoot" + (closing ? " is-closing" : "")}
+      className={"sysOverlay engDetailOverlay" + (open && !closing ? " is-open" : "")}
       role="presentation"
       style={
         {
-          "--eng-open-ms": `${OPEN_MS}ms`,
-          "--eng-close-ms": `${CLOSE_MS}ms`,
+          "--sys-dur": `${OPEN_MS}ms`,
+          "--sys-ease": "cubic-bezier(0.15, 0, 0.3, 1)",
         } as CSSProperties
       }
     >
       <button
         type="button"
-        className="engModalScrim"
+        className="sysOverlayScrim"
         aria-label="Close dialog"
         onClick={requestClose}
       />
       <div
-        className="engModal"
+        className="sysOverlayStage"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         onKeyDown={onDialogKeyDown}
       >
+          <button
+            ref={closeRef}
+            type="button"
+            className="sysOverlayClose engDetailClose"
+            onClick={requestClose}
+            aria-label="Close"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M1.5 1.5l9 9M10.5 1.5l-9 9" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </button>
+        <div className="sysOverlaySheet engModal engDetailSheet">
         <header className="engModalHead">
           <div className="engModalHeadText">
             <p className="engModalKind">{item.kind}</p>
             <h2 id={titleId} className="engModalTitle">
               {item.title}
             </h2>
+            {item.stack && item.stack.length > 0 ? (
+              <ul className="sysOverlayTags engModalStack" aria-label="Stack">
+                {item.stack.map((tech) => <li key={tech}>{tech}</li>)}
+              </ul>
+            ) : null}
           </div>
-          <button
-            ref={closeRef}
-            type="button"
-            className="engModalClose"
-            onClick={requestClose}
-            aria-label="Close"
-          >
-            <svg viewBox="0 0 20 20" aria-hidden>
-              <path
-                d="M4.5 4.5 15.5 15.5M15.5 4.5 4.5 15.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
         </header>
 
         <div className="engModalBody">
@@ -246,13 +262,6 @@ export default function EngDetailModal({ item, onClose }: Props) {
                 <StageMedia item={item} />
               )}
 
-              {item.stack && item.stack.length > 0 ? (
-                <ul className="engModalStack" aria-label="Stack">
-                  {item.stack.map((tech) => (
-                    <li key={tech}>{tech}</li>
-                  ))}
-                </ul>
-              ) : null}
             </div>
           </div>
 
@@ -283,6 +292,31 @@ export default function EngDetailModal({ item, onClose }: Props) {
               </a>
             ) : null}
           </div>
+          {item.content?.map((block) => (
+            <section className="engModalContentSection" key={block.id}>
+              {block.title ? (
+                <div className="engModalContentHead">
+                  <h3 className="engModalContentTitle">{block.title}</h3>
+                  {block.type === "embed" && block.href ? (
+                    <a className="engModalContentLink" href={block.href} target="_blank" rel="noopener noreferrer">
+                      {block.linkLabel || "Open preview ↗"}
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
+              {block.type === "text" ? (
+                <p className="engModalContentText">{block.body}</p>
+              ) : block.type === "video" ? (
+                <figure className="engModalContentFigure">
+                  <video className="engModalContentVideo" src={block.src} poster={block.poster} controls playsInline preload="metadata" />
+                  {block.caption ? <figcaption className="engModalNote">{block.caption}</figcaption> : null}
+                </figure>
+              ) : (
+                <iframe className="engModalContentFrame" src={block.src} title={`${item.title} — ${block.title}`} width="100%" height="600" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+              )}
+            </section>
+          ))}
+        </div>
         </div>
       </div>
     </div>,

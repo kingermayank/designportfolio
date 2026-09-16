@@ -163,6 +163,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      // Recorder extensions may inject root attributes before React hydrates.
+      // Suppression is shallow: page content still receives hydration checks.
+      suppressHydrationWarning
       className={`${azeret.variable} ${azeretMono.variable} ${cesare.variable} ${palmerLakePrint.variable} ${palmerLakeScript.variable} ${gothamNarrow.variable}`}
     >
       <body>

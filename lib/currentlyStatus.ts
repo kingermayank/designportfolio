@@ -47,7 +47,7 @@ export const CURRENTLY_ABOUT = [
   {
     lead: "sketching out new ideas in",
     software: "Paper",
-    logo: "/all-logos/paper.png",
+    logo: "/all-logos/paper-2.jpg",
     needsLightTile: false,
   },
   {
@@ -77,7 +77,7 @@ export const CURRENTLY_ABOUT = [
   {
     lead: "wiring up the stack with",
     software: "npm",
-    logo: "/all-logos/npm.png",
+    logo: "/all-logos/npm.png?v=cf01fda6",
     needsLightTile: false,
   },
   {

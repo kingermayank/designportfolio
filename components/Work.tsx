@@ -444,7 +444,24 @@ function EngCard({
     >
       <EngCardPreview item={item} />
       <span className="engCardBar">
-        <span className="engCardName">{item.title}</span>
+        <span className="engCardTitleRow">
+          <span className="engCardName">{item.title}</span>
+          {item.tools?.length ? (
+            <span className="engCardTools" role="img" style={{ "--tool-count": item.tools.length } as CSSProperties} aria-label={`Tools used: ${item.tools.map((tool) => tool.name).join(", ")}`}>
+              {item.tools.map((tool, index) => (
+                <span
+                  className="engCardTool"
+                  key={tool.name}
+                  title={tool.name}
+                  style={{ "--tool-index": index, zIndex: index + 1 } as CSSProperties}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={tool.logo} alt="" width="16" height="16" />
+                </span>
+              ))}
+            </span>
+          ) : null}
+        </span>
         <span className="engCardKind">{item.kind}</span>
       </span>
     </div>

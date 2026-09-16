@@ -136,6 +136,11 @@ export type EngKind =
 
 
 
+export type EngContentBlock =
+  | { id: string; type: "text"; title?: string; body: string }
+  | { id: string; type: "video"; title?: string; src: string; poster?: string; caption?: string }
+  | { id: string; type: "embed"; title: string; src: string; href?: string; linkLabel?: string };
+
 export type EngComponent = {
   id: string;
   title: string;
@@ -149,8 +154,12 @@ export type EngComponent = {
   href?: string;
   /** Same-origin (or absolute) URL loaded in the modal iframe playground. */
   embedUrl?: string;
+  /** Optional ordered text, video, and embed sections below the project summary. */
+  content?: EngContentBlock[];
   /** Tech stack shown under the stage. */
   stack?: string[];
+  /** Process tools displayed beside the thumbnail title. */
+  tools?: { name: string; logo: string }[];
   /** Short note on how it was built. */
   note?: string;
   /** Exportable source snippet — copy to clipboard in the modal. */
@@ -172,6 +181,10 @@ export type EngComponent = {
 export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "ds",
+    tools: [
+      { name: "npm", logo: "/all-logos/npm.png?v=cf01fda6" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+    ],
     title: "Shift Design System",
     kind: "npm package",
     body: "Tokens, components, and patterns wired for both humans and LLM-aware workflows.",
@@ -184,6 +197,10 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "shift-playground",
+    tools: [
+      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "Mobbin", logo: "/all-logos/mobbin.png" },
+    ],
     title: "Shift Playground",
     kind: "Prototyping Environment",
     body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
@@ -199,6 +216,10 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "walkity-site",
+    tools: [
+      { name: "Lottie", logo: "/all-logos/lottie.jpg" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+    ],
     title: "walkity.com",
     kind: "Marketing Landing Page",
     body: "Brand strategy and landing page from scratch, with accessibility at the center, shipped as a live marketing site.",
@@ -214,6 +235,12 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "warpbnb-site",
+    tools: [
+      { name: "MagicPath", logo: "/all-logos/magicpath.png" },
+      { name: "Higgsfield", logo: "/all-logos/higgsfield.png" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "ElevenLabs", logo: "/all-logos/elevenlabs.png" },
+    ],
     title: "warpbnb.com",
     kind: "Playful Side Project",
     body: "Full-stack fictional product site covering design, code, motion, and commercial.",
@@ -228,6 +255,10 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "agave-site",
+    tools: [
+      { name: "Paper", logo: "/all-logos/paper-2.jpg" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+    ],
     title: "Agave Landing Page",
     kind: "B2B SaaS tool",
     body: "A connected financial operations workspace for approvals, exceptions, expenses, and ERP sync.",
@@ -236,12 +267,24 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/agave/thumbs/dashboard-preview.jpg",
     href: "https://agave-kappa.vercel.app/",
     embedUrl: "https://agave-kappa.vercel.app/",
+    content: [
+      {
+        id: "paper-board",
+        type: "embed",
+        title: "AI-Assisted Prototyping in Paper",
+        src: "https://app.paper.design/file/01KYASAGY134T3WXWFBZRYXGEM/2-0",
+      },
+    ],
     frame: "site",
     matte: "#D8F0DC",
     stack: ["Next.js", "Vercel"],
   },
   {
     id: "f1-sim",
+    tools: [
+      { name: "Claude", logo: "/all-logos/claude.webp" },
+      { name: "Sketchfab", logo: "/all-logos/sketchfab.png" },
+    ],
     title: "APEX F1 Sim",
     kind: "3D Simulation",
     body: "Shanghai 2026 race simulation. Watch the Chinese Grand Prix unfold, then ask why every decision happened.",
@@ -256,6 +299,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "keytag-3d",
+    tools: [{ name: "Claude", logo: "/all-logos/claude.webp" }],
     title: "Key Tracker 3D",
     kind: "3D Model",
     body: "Interactive 3D model of Ikon's key tracker tag. Rotate, zoom, and edit the tag ID live.",
@@ -270,6 +314,10 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "retell-benchmark",
+    tools: [
+      { name: "Paper", logo: "/all-logos/paper-2.jpg" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+    ],
     title: "Retell Model Benchmark",
     kind: "Website",
     body: "Compare leading AI models across response quality, speed, and cost, built for voice-agent tradeoffs.",
