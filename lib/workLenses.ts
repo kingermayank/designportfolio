@@ -191,6 +191,15 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Shift Design System",
+    content: [
+      {
+        id: "shift-system-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "I published Shift as an npm package, and it now powers all of our internal tools at Ikon Technologies. I’m also building a starter kit repository so engineers can use the system for design and development, while product teams can use it for rapid zero-to-one experimentation and exploring new ideas.",
+      },
+    ],
     kind: "npm package",
     body: "Tokens, components, and patterns wired for both humans and LLM-aware workflows.",
     src: "/toolbox/grid/shift-design-system.mp4",
@@ -207,6 +216,15 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Mobbin MCP", logo: "/all-logos/mobbin.png", href: "https://mobbin.com/mcp" },
     ],
     title: "Shift Playground",
+    content: [
+      {
+        id: "shift-playground-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "Shift Playground is where I try out new interactions and components in a live prototyping environment. I experiment with different ideas and refine the ones that feel right. When I commit to a component, I push it into the Shift Design System package so it can be reused across our internal tools.",
+      },
+    ],
     kind: "Design Sandbox",
     body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
     shade: "#282828",
@@ -226,6 +244,15 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Walkity",
+    content: [
+      {
+        id: "walkity-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "I designed Walkity’s marketing website in Figma, then created the hero animation in Lottie. Using Cursor, I translated the design into a live website, bringing the layout and motion together.",
+      },
+    ],
     kind: "Marketing Landing Page",
     body: "Brand strategy and landing page from scratch, with accessibility at the center, shipped as a live marketing site.",
     shade: "#1a1a1a",
@@ -305,6 +332,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
     tools: [
       { name: "Claude Code", logo: "/all-logos/claude.webp", href: "https://claude.com/product/claude-code" },
       { name: "Sketchfab", logo: "/all-logos/sketchfab.png", href: "https://sketchfab.com/" },
+      { name: "Grok Bot", logo: "/all-logos/grokbot.webp", href: "https://grok.com/" },
     ],
     title: "APEX F1 Sim",
     kind: "3D Simulation",
@@ -365,6 +393,15 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Retell Model Benchmark",
+    content: [
+      {
+        id: "retell-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "I used the design system in Figma as a reference and explored different iterations in Paper. After refining the direction, I used Cursor to turn the design into the live model benchmark website.",
+      },
+    ],
     kind: "Website",
     body: "Compare leading AI models across response quality, speed, and cost, built for voice-agent tradeoffs.",
     shade: "#0E1626",

@@ -67,6 +67,8 @@ const CLOSE_MS = 500;
 export default function EngDetailModal({ item, onClose }: Props) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const interactedRef = useRef(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const closingRef = useRef(false);
   const onCloseRef = useRef(onClose);
@@ -81,6 +83,14 @@ export default function EngDetailModal({ item, onClose }: Props) {
   const embedIsExternal = Boolean(item.embedUrl?.startsWith("http"));
   const visitHref = item.href;
   const visitLabel = item.title.replace(/\.com$/i, "");
+
+  const preserveOpeningPosition = () => {
+    // Embedded apps can autofocus during startup and scroll their dialog.
+    // Stop restoring the opening position once the visitor interacts.
+    if (interactedRef.current) return;
+    closeRef.current?.focus({ preventScroll: true });
+    if (sheetRef.current) sheetRef.current.scrollTop = 0;
+  };
 
   const requestClose = useCallback(() => {
     if (closingRef.current) return;
@@ -112,7 +122,8 @@ export default function EngDetailModal({ item, onClose }: Props) {
   useEffect(() => {
     if (!mounted) return;
     const prev = document.activeElement as HTMLElement | null;
-    closeRef.current?.focus();
+    closeRef.current?.focus({ preventScroll: true });
+    if (sheetRef.current) sheetRef.current.scrollTop = 0;
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -126,7 +137,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = previousOverflow;
-      prev?.focus?.();
+      prev?.focus?.({ preventScroll: true });
     };
   }, [mounted, requestClose]);
 
@@ -204,7 +215,14 @@ export default function EngDetailModal({ item, onClose }: Props) {
               <path d="M1.5 1.5l9 9M10.5 1.5l-9 9" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
             </svg>
           </button>
-        <div className="sysOverlaySheet engModal engDetailSheet">
+        <div
+          ref={sheetRef}
+          className="sysOverlaySheet engModal engDetailSheet"
+          onPointerDownCapture={() => { interactedRef.current = true; }}
+          onTouchStartCapture={() => { interactedRef.current = true; }}
+          onWheelCapture={() => { interactedRef.current = true; }}
+          onKeyDownCapture={() => { interactedRef.current = true; }}
+        >
         <header className="engModalHead">
           <div className="engModalHeadText">
             <p className="engModalKind">{item.kind}</p>
@@ -289,6 +307,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
                         : `${item.title} playground`
                     }
                     loading="lazy"
+                    onLoad={preserveOpeningPosition}
                     referrerPolicy="strict-origin-when-cross-origin"
                     {...(embedIsExternal
                       ? {}
@@ -359,7 +378,17 @@ export default function EngDetailModal({ item, onClose }: Props) {
                     {block.caption ? <MediaCaption text={block.caption} /> : null}
                   </figure>
                 ) : (
-                  <iframe className="engModalContentFrame" src={block.src} title={`${item.title} — ${block.title}`} width="100%" height="600" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+                  <iframe
+                    className="engModalContentFrame"
+                    src={block.src}
+                    title={`${item.title} — ${block.title}`}
+                    width="100%"
+                    height="600"
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                    onLoad={preserveOpeningPosition}
+                  />
                 )
               )}
               {block.type === "embed" && block.id === "paper-board" ? (
