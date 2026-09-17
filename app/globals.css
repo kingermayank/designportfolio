@@ -4356,6 +4356,15 @@ button.aboutCard:focus-visible {
   object-fit: contain;
 }
 
+.engCardTool img[src$="rive.png"],
+.engCardTool img[src$="storybook.png"],
+.engModalToolIcon[src$="rive.png"],
+.engModalToolIcon[src$="storybook.png"] {
+  box-sizing: border-box;
+  background: #ffffff;
+  padding: 2px;
+}
+
 .engCardTool:has(img[src$="cursor-2.png"]) {
   top: -0.5px;
   left: -0.5px;
@@ -5397,8 +5406,9 @@ button.aboutCard:focus-visible {
   }
 
   .engModalCta {
-    align-self: stretch;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    padding-inline: 12px;
   }
 }
 
@@ -5492,7 +5502,7 @@ button.aboutCard:focus-visible {
 .workUniform .workSubtitle {
   max-width: none;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 26px;
 }
 
 .workSubtitle strong {

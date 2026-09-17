@@ -254,8 +254,11 @@ export const ENG_COMPONENTS: EngComponent[] = [
     ],
     tools: [
       { name: "MagicPath", logo: "/all-logos/magicpath.png", href: "https://www.magicpath.ai/" },
-      { name: "Higgsfield", logo: "/all-logos/higgsfield.png", href: "https://higgsfield.ai/" },
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
+      { name: "Reve", logo: "/all-logos/reve-2.png", href: "https://www.reve.com/" },
+      { name: "Rive", logo: "/all-logos/rive.png", href: "https://rive.app/" },
+      { name: "Higgsfield", logo: "/all-logos/higgsfield.png", href: "https://higgsfield.ai/" },
+      { name: "Storybook", logo: "/all-logos/storybook.png", href: "https://storybook.js.org/" },
     ],
     title: "Warpbnb",
     kind: "Playful Side Project",
