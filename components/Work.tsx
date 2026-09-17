@@ -626,8 +626,8 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
           </div>
           <p className="workSubtitle">
             I&apos;m a <strong>product designer</strong>{" "}
-            and high agency builder with a founder&apos;s mindset who ships
-            experiences with speed, taste, and judgement.
+            and high agency builder with a founder&apos;s mindset currently
+            shipping agentic experiences for automotive dealerships at Ikon Technologies.
           </p>
 
           <div className="workFit">
