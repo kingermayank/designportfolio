@@ -5093,6 +5093,13 @@ button.aboutCard:focus-visible {
     transform: none;
   }
 
+  .engDetailOverlay .engDetailClose:hover,
+  .engDetailOverlay .engDetailClose:active,
+  .strategyDetailOverlay .sysOverlayClose:hover,
+  .strategyDetailOverlay .sysOverlayClose:active {
+    transform: none;
+  }
+
   .engDetailOverlay .engModalHead {
     padding-right: var(--space-5);
   }
@@ -6842,10 +6849,11 @@ button.aboutCard:focus-visible {
 
   .sysOverlayClose {
     display: inline-flex;
-    top: auto;
-    bottom: max(20px, env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
+    top: 32px;
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    transform: none;
     width: 44px;
     min-width: 44px;
     height: 44px;
