@@ -130,7 +130,7 @@ export type EngKind =
   | "Marketing Landing Page"
   | "B2B SaaS tool"
   | "3D Model"
-  | "Prototyping Environment"
+  | "Design Sandbox"
   | "Playful Side Project"
   | "3D Simulation";
 
@@ -202,7 +202,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Mobbin", logo: "/all-logos/mobbin.png" },
     ],
     title: "Shift Playground",
-    kind: "Prototyping Environment",
+    kind: "Design Sandbox",
     body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
     shade: "#282828",
     thumb: "/shift-playground/thumbs/work-cover.jpg",
@@ -220,7 +220,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Lottie", logo: "/all-logos/lottie.jpg" },
       { name: "Cursor", logo: "/all-logos/cursor-2.png" },
     ],
-    title: "walkity.com",
+    title: "Walkity",
     kind: "Marketing Landing Page",
     body: "Brand strategy and landing page from scratch, with accessibility at the center, shipped as a live marketing site.",
     shade: "#1a1a1a",
@@ -239,9 +239,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "MagicPath", logo: "/all-logos/magicpath.png" },
       { name: "Higgsfield", logo: "/all-logos/higgsfield.png" },
       { name: "Cursor", logo: "/all-logos/cursor-2.png" },
-      { name: "ElevenLabs", logo: "/all-logos/elevenlabs.png" },
     ],
-    title: "warpbnb.com",
+    title: "Warpbnb",
     kind: "Playful Side Project",
     body: "Full-stack fictional product site covering design, code, motion, and commercial.",
     shade: "#2b2b2b",

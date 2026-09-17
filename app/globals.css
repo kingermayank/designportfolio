@@ -4314,9 +4314,9 @@ button.aboutCard:focus-visible {
 .engCardTools {
   position: relative;
   display: block;
-  flex: 0 0 calc(var(--tool-count) * 24px);
-  width: calc(var(--tool-count) * 24px);
-  height: 20px;
+  flex: 0 0 calc(var(--tool-count) * 20px);
+  width: calc(var(--tool-count) * 20px);
+  height: 16px;
 }
 
 .engCardTool {
@@ -4326,12 +4326,12 @@ button.aboutCard:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 5px;
   background: transparent;
   box-shadow: 0 1px 2px rgb(0 0 0 / 24%), 0 3px 6px rgb(0 0 0 / 20%);
-  transform: translateX(calc(var(--tool-index) * 18px));
+  transform: translateX(calc(var(--tool-index) * 14px));
   transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 200ms ease;
 }
@@ -4347,8 +4347,8 @@ button.aboutCard:focus-visible {
 .engCardTool:has(img[src$="cursor-2.png"]) {
   top: -0.5px;
   left: -0.5px;
-  width: 21px;
-  height: 21px;
+  width: 17px;
+  height: 17px;
 }
 
 .engCardTool:has(img[src$="sketchfab.png"]) {
@@ -4386,21 +4386,21 @@ button.aboutCard:focus-visible {
 
 @media (hover: hover) and (pointer: fine) {
   .engCard:hover .engCardTool {
-    transform: translateX(calc(4px + var(--tool-index) * 24px));
+    transform: translateX(calc(4px + var(--tool-index) * 20px));
     box-shadow: 0 2px 3px rgb(0 0 0 / 28%),
       0 5px 9px rgb(0 0 0 / 24%), 0 0 7px rgb(255 255 255 / 8%);
   }
 }
 
 .engCard:focus-visible .engCardTool {
-  transform: translateX(calc(4px + var(--tool-index) * 24px));
+  transform: translateX(calc(4px + var(--tool-index) * 20px));
   box-shadow: 0 2px 3px rgb(0 0 0 / 28%),
     0 5px 9px rgb(0 0 0 / 24%), 0 0 7px rgb(255 255 255 / 8%);
 }
 
 @media (hover: none) {
   .engCardTool {
-    transform: translateX(calc(2px + var(--tool-index) * 24px));
+    transform: translateX(calc(2px + var(--tool-index) * 20px));
   }
 }
 
