@@ -136,10 +136,12 @@ export type EngKind =
 
 
 
-export type EngContentBlock =
+export type EngContentBlock = { monoTitle?: boolean; plainMedia?: boolean; caption?: string } & (
   | { id: string; type: "text"; title?: string; body: string }
   | { id: string; type: "video"; title?: string; src: string; poster?: string; caption?: string }
-  | { id: string; type: "embed"; title: string; src: string; href?: string; linkLabel?: string };
+  | { id: string; type: "image"; title?: string; src: string; alt: string }
+  | { id: string; type: "embed"; title: string; body?: string; src: string; href?: string; linkLabel?: string }
+);
 
 export type EngComponent = {
   id: string;
@@ -152,6 +154,9 @@ export type EngComponent = {
   shade: string;
   /** Live site — websites use this as the primary outbound action. */
   href?: string;
+  /** Optional secondary outbound action for design explorations. */
+  explorationsHref?: string;
+  explorationsLabel?: string;
   /** Same-origin (or absolute) URL loaded in the modal iframe playground. */
   embedUrl?: string;
   /** Optional ordered text, video, and embed sections below the project summary. */
@@ -159,7 +164,7 @@ export type EngComponent = {
   /** Tech stack shown under the stage. */
   stack?: string[];
   /** Process tools displayed beside the thumbnail title. */
-  tools?: { name: string; logo: string }[];
+  tools?: { name: string; logo: string; href: string }[];
   /** Short note on how it was built. */
   note?: string;
   /** Exportable source snippet — copy to clipboard in the modal. */
@@ -182,8 +187,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "ds",
     tools: [
-      { name: "npm", logo: "/all-logos/npm.png?v=cf01fda6" },
-      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "npm", logo: "/all-logos/npm.png?v=cf01fda6", href: "https://www.npmjs.com/" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Shift Design System",
     kind: "npm package",
@@ -198,8 +203,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "shift-playground",
     tools: [
-      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
-      { name: "Mobbin", logo: "/all-logos/mobbin.png" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
+      { name: "Mobbin MCP", logo: "/all-logos/mobbin.png", href: "https://mobbin.com/mcp" },
     ],
     title: "Shift Playground",
     kind: "Design Sandbox",
@@ -217,8 +222,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "walkity-site",
     tools: [
-      { name: "Lottie", logo: "/all-logos/lottie.jpg" },
-      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "Lottie", logo: "/all-logos/lottie.jpg", href: "https://lottiefiles.com/" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Walkity",
     kind: "Marketing Landing Page",
@@ -235,10 +240,22 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "warpbnb-site",
+    explorationsHref: "https://nextgendesigner.substack.com/p/reimagining-airbnb-for-time-travel",
+    explorationsLabel: "View process breakdown",
+    content: [
+      { id: "warp-process", type: "text", monoTitle: true, title: "Process breakdown", body: "I took Warpbnb from Figma to code with Magicpath and Cursor, using Storybook to refine components and Claude Code to shape the copy. Nano Banana and Luma powered the imagery; Higgsfield and ElevenLabs brought the commercial to life. Built solo in two weeks, with hands-on curation guiding every step.", },
+      { id: "warp-storybook", type: "video", plainMedia: true, src: "/warpbnb/archive/storybook.mp4", poster: "/warpbnb/archive/thumbs/storybook.jpg", caption: "Every component in isolation, all variants, all states." },
+      { id: "warp-figma", type: "video", plainMedia: true, src: "/warpbnb/archive/figma-screens.mp4", poster: "/warpbnb/archive/thumbs/figma-screens.jpg", caption: "Screens drawn out the traditional way before pushing to MagicPath." },
+      { id: "warp-icons", type: "image", plainMedia: true, src: "/warpbnb/archive/icons.png", alt: "Warpbnb icon explorations", caption: "The better-icons skill helped me match 64+ amenities to the right icons without a single manual instruction." },
+      { id: "warp-prompts", type: "image", plainMedia: true, src: "/warpbnb/archive/prompt-arch.png", alt: "Prompt architecture for Warpbnb", caption: "The prompt architecture I drafted for each listing before touching any image generation tool." },
+      { id: "warp-automation", type: "image", plainMedia: true, src: "/warpbnb/archive/automation-fail.png", alt: "An automation failure during the build", caption: "What happens when you try to automate image generation without oversight and setting guardrails." },
+      { id: "warp-voiceover", type: "image", plainMedia: true, src: "/warpbnb/archive/voiceover.png", alt: "Voiceover workflow for Warpbnb", caption: "The voiceover script in ElevenLabs, with phonetic spelling and emphasis marks included." },
+      { id: "warp-commercial", type: "image", plainMedia: true, src: "/warpbnb/archive/commercial.png", alt: "Commercial explorations in Higgsfield", caption: "The full commercial pipeline in Higgsfield, showing all the video generations that went into the final cut." },
+    ],
     tools: [
-      { name: "MagicPath", logo: "/all-logos/magicpath.png" },
-      { name: "Higgsfield", logo: "/all-logos/higgsfield.png" },
-      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "MagicPath", logo: "/all-logos/magicpath.png", href: "https://www.magicpath.ai/" },
+      { name: "Higgsfield", logo: "/all-logos/higgsfield.png", href: "https://higgsfield.ai/" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Warpbnb",
     kind: "Playful Side Project",
@@ -254,9 +271,10 @@ export const ENG_COMPONENTS: EngComponent[] = [
   },
   {
     id: "agave-site",
+    explorationsHref: "https://app.paper.design/file/01KYASAGY134T3WXWFBZRYXGEM/2-0",
     tools: [
-      { name: "Paper", logo: "/all-logos/paper-2.jpg" },
-      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "Paper", logo: "/all-logos/paper-2.jpg", href: "https://paper.design/" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Agave Landing Page",
     kind: "B2B SaaS tool",
@@ -270,7 +288,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
       {
         id: "paper-board",
         type: "embed",
-        title: "AI-Assisted Prototyping in Paper",
+        title: "Process breakdown",
+        body: "As part of my prompt-driven workflow to generate multiple iterations, I used a mix of Paper and Claude. I generated a design.md file from Agave’s website and used it with Claude to guide explorations in Paper, refining different directions into this prototype in a couple of hours.",
         src: "https://app.paper.design/file/01KYASAGY134T3WXWFBZRYXGEM/2-0",
       },
     ],
@@ -281,8 +300,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "f1-sim",
     tools: [
-      { name: "Claude", logo: "/all-logos/claude.webp" },
-      { name: "Sketchfab", logo: "/all-logos/sketchfab.png" },
+      { name: "Claude Code", logo: "/all-logos/claude.webp", href: "https://claude.com/product/claude-code" },
+      { name: "Sketchfab", logo: "/all-logos/sketchfab.png", href: "https://sketchfab.com/" },
     ],
     title: "APEX F1 Sim",
     kind: "3D Simulation",
@@ -293,12 +312,21 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     href: "https://f1-sim-nine.vercel.app/",
     embedUrl: "https://f1-sim-nine.vercel.app/",
+    content: [
+      {
+        id: "apex-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "Apex F1 started with licensed Sketchfab models of the Shanghai circuit and seven F1 cars, compressed with gltf-transform from ~600 MB to 23 MB for the web. With Claude Code, I generated a script to fit the racing line to the model’s painted boundaries and validated it against the real 5451 m lap length, landing within 2%. Claude Code handled the deterministic simulation in Three.js / React Three Fiber and the OpenF1 integration, while I directed the design of circuits, drivers, a quiz, predictions, and Explain Mode for newcomers. I verified the implementation with Vitest and Playwright, then tested it in the browser to catch the bugs automated checks missed.",
+      },
+    ],
     frame: "cover",
     stack: ["Next.js", "Vercel", "Simulation"],
   },
   {
     id: "keytag-3d",
-    tools: [{ name: "Claude", logo: "/all-logos/claude.webp" }],
+    tools: [{ name: "Claude Code", logo: "/all-logos/claude.webp", href: "https://claude.com/product/claude-code" }],
     title: "Key Tracker 3D",
     kind: "3D Model",
     body: "Interactive 3D model of Ikon's key tracker tag. Rotate, zoom, and edit the tag ID live.",
@@ -307,6 +335,22 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/keytag/thumbnail.mp4",
     video: true,
     embedUrl: "/keytag/embed.html",
+    content: [
+      {
+        id: "keytag-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "This key tag began as a 2D illustration, translated into real 3D geometry with physically based materials in three.js. I guided the proportions, materials, and interactions, with Claude Code generating the measurement scripts, model, and custom QR encoder. I validated the proportions against the illustration and verified the QR by scanning it. Editing the ID updates the serial, QR, and URL from one value. The AI-generated implementation is bundled into a single self-contained HTML file that runs hosted, off disk, or in an iframe.",
+      },
+      {
+        id: "keytag-tools",
+        type: "text",
+        monoTitle: true,
+        title: "Tools",
+        body: "three.js, Canvas 2D, a custom QR encoder, Node for the build, Python and OpenCV for measurement and scan verification.",
+      },
+    ],
     frame: "cover",
     stack: ["Three.js", "WebGL", "QR generation"],
     note: "A constantly rotating 3D key tracker tag with live QR code updates.",
@@ -314,8 +358,8 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "retell-benchmark",
     tools: [
-      { name: "Paper", logo: "/all-logos/paper-2.jpg" },
-      { name: "Cursor", logo: "/all-logos/cursor-2.png" },
+      { name: "Paper", logo: "/all-logos/paper-2.jpg", href: "https://paper.design/" },
+      { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Retell Model Benchmark",
     kind: "Website",

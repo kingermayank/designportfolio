@@ -559,6 +559,10 @@ body {
   white-space: nowrap;
 }
 
+.csEditorialImpactVisual > p strong {
+  font-weight: inherit;
+}
+
 .csEditorialImpact > p {
   margin: 0;
   max-width: 60%;
@@ -1316,6 +1320,14 @@ button.csNavItem {
 
 .csMediaRow .csMedia {
   margin-top: 0;
+}
+
+/* Match the navigation tile's height without enlarging the login artwork.
+   Its dark mat extends below the original image. */
+.csMediaRow .csFill[src="/toolbox/project/tool2_1.png"] {
+  height: auto;
+  bottom: auto;
+  object-fit: contain;
 }
 
 /*
@@ -4331,7 +4343,7 @@ button.aboutCard:focus-visible {
   border-radius: 5px;
   background: transparent;
   box-shadow: 0 1px 2px rgb(0 0 0 / 24%), 0 3px 6px rgb(0 0 0 / 20%);
-  transform: translateX(calc(var(--tool-index) * 14px));
+  transform: translateX(calc(var(--tool-index) * 15px));
   transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 200ms ease;
 }
@@ -4520,6 +4532,71 @@ button.aboutCard:focus-visible {
   min-width: 0;
 }
 
+.engModalStack li {
+  padding: 0;
+}
+
+.engModalStack a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7.5px 12px 6.5px;
+  border-radius: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+.engModalStack a:hover {
+  background: #3b3b3b;
+}
+
+.engModalStack a:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.engModalToolIcon {
+  display: block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.engModalToolIcon[src$="cursor-2.png"] {
+  width: 17px;
+  height: 17px;
+}
+
+.engModalToolIcon[src$="sketchfab.png"] {
+  background: #1aaad9;
+}
+
+.engModalTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.engModalTitleRow .engModalTitle {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.engModalTitleRow .engModalCta {
+  align-self: center;
+}
+
+.engModalActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .engModalKind {
   margin: 0 0 var(--space-1);
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
@@ -4672,6 +4749,33 @@ button.aboutCard:focus-visible {
   transform: scale(var(--eng-frame-scale, 1));
 }
 
+/* Only small-screen previews reflow; preserve the scaled desktop viewport. */
+@media (max-width: 900px) {
+  .engModalFrameViewport > .engModalFrame {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    transform: none;
+  }
+}
+
+.engModalMobileBoardLink {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .engModalMobileBoardLink {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    min-height: 44px;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    text-underline-offset: 4px;
+  }
+}
+
 .engModalMedia {
   object-fit: cover;
   pointer-events: none;
@@ -4706,6 +4810,8 @@ button.aboutCard:focus-visible {
   align-items: flex-end;
   justify-content: space-between;
   gap: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .engModalMetaCopy {
@@ -4718,7 +4824,7 @@ button.aboutCard:focus-visible {
 
 .engModalLead {
   margin: 0;
-  max-width: 46ch;
+  max-width: none;
   font-family: var(--font-body);
   font-size: 20px;
   font-weight: 400;
@@ -4726,16 +4832,6 @@ button.aboutCard:focus-visible {
   letter-spacing: -0.01em;
   color: var(--text);
   text-wrap: pretty;
-}
-
-.engModalMeta:not(:has(.engModalCta)) .engModalLead {
-  max-width: none;
-}
-
-@media (min-width: 901px) {
-  .engModalLead {
-    max-width: calc(46ch + 40px);
-  }
 }
 
 .engModalSection {
@@ -4752,6 +4848,26 @@ button.aboutCard:focus-visible {
   gap: var(--space-4);
   padding-top: var(--space-5);
   border-top: 1px solid var(--color-border);
+}
+
+.engModalMeta + .engModalContentSection {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.engModalProcessSection {
+  gap: 8px;
+}
+
+.engModalProcessSection .engModalContentFrame {
+  margin-top: 16px;
+}
+
+.engModalContentImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
 }
 
 .engModalContentHead {
@@ -4790,7 +4906,104 @@ button.aboutCard:focus-visible {
 }
 
 .engModalContentFigure {
+  position: relative;
   margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.engMediaHover {
+  overflow: visible;
+}
+
+.engMediaHover .engMediaCrop {
+  position: relative;
+  z-index: 1;
+  clip-path: inset(0 0 0 0 round var(--radius-md));
+  transition: clip-path 167ms linear;
+}
+
+.engMediaCaption {
+  position: absolute;
+  inset: auto 0 0;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--muted);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 167ms linear;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .engMediaHover:hover .engMediaCrop {
+    clip-path: inset(0 0 var(--eng-caption-height, 24px) 0 round var(--radius-md));
+  }
+
+  .engMediaHover:hover .engMediaCaption {
+    opacity: 1;
+    transition-delay: 167ms;
+  }
+}
+
+.engMediaHover:focus-visible .engMediaCrop,
+.engMediaHover:focus-within .engMediaCrop {
+  clip-path: inset(0 0 var(--eng-caption-height, 24px) 0 round var(--radius-md));
+}
+
+.engMediaHover:focus-visible .engMediaCaption,
+.engMediaHover:focus-within .engMediaCaption {
+  opacity: 1;
+}
+
+.engMediaHover:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 4px;
+}
+
+@media (max-width: 900px), (hover: none) {
+  .engMediaHover .engMediaCaption {
+    position: relative;
+    opacity: 1;
+    font-size: 12px;
+    line-height: 20px;
+    padding-top: 4px;
+  }
+
+  .engMediaHover .engMediaCrop {
+    clip-path: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .engMediaHover .engMediaCrop,
+  .engMediaHover .engMediaCaption {
+    transition: none;
+  }
+}
+
+.engModalContentSection.engModalMediaSection {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.engModalBody:has(> .engModalMediaSection) {
+  gap: 8px;
+}
+
+.engModalBody:has(> .engModalMediaSection) > .engModalStageWrap,
+.engModalBody:has(> .engModalMediaSection) > .engModalMeta {
+  margin-bottom: 16px;
+}
+
+.engModalProcessSection + .engModalMediaSection {
+  margin-top: 16px;
 }
 
 .engModalContentVideo,
@@ -4836,11 +5049,22 @@ button.aboutCard:focus-visible {
 .engDetailOverlay .engDetailSheet {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border-radius: 12px 12px 0 0;
   background: var(--sys-off-black);
   animation: none;
   will-change: auto;
+}
+
+.engDetailOverlay .engModalBody {
+  flex: none;
+  height: auto;
+  overflow: visible;
+  scrollbar-gutter: auto;
 }
 
 @media (min-width: 901px) {
@@ -4878,9 +5102,30 @@ button.aboutCard:focus-visible {
   margin: 12px 0 0;
 }
 
+.engInteractiveChip {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
 .engInteractiveChip li {
-  background: #ffffff;
-  color: #121413;
+  padding: 7.5px 12px 6.5px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-label), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  background: #2b2b2b;
+  color: #fafafa;
 }
 
 .engModalNote {
@@ -4947,18 +5192,20 @@ button.aboutCard:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 44px;
+  gap: 6px;
+  height: 36px;
   margin: 0;
-  padding: 0 28px;
+  padding: 0 20px;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: var(--radius-pill);
   background: #ffffff;
   color: #121413;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  letter-spacing: 0;
   line-height: 1;
+  box-sizing: border-box;
   text-decoration: none;
   cursor: pointer;
   transition: opacity 167ms linear, transform 167ms ease-out;
@@ -4966,6 +5213,16 @@ button.aboutCard:focus-visible {
 
 .engModalCta:hover {
   opacity: 0.88;
+}
+
+.engModalCtaSecondary {
+  background: #353535;
+  color: #fafafa;
+}
+
+.engModalCtaSecondary:hover {
+  background: #4a4a4a;
+  opacity: 1;
 }
 
 .engModalCta:active {
@@ -6524,6 +6781,10 @@ button.aboutCard:focus-visible {
   }
 
   .workFitBtn {
+    min-height: 44px;
+  }
+
+  .engModalCta {
     min-height: 44px;
   }
 

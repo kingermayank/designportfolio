@@ -12,7 +12,6 @@ import {
 } from "@/lib/about";
 import AboutPodcastTicker from "@/components/AboutPodcastTicker";
 import AboutTestimonials from "@/components/AboutTestimonials";
-import CurrentlyStatus from "@/components/CurrentlyStatus";
 import HiringLetterOverlay from "@/components/HiringLetterOverlay";
 import { HIRING_LETTER } from "@/lib/letter";
 
@@ -102,7 +101,7 @@ function PhilosophyAccordion({
 }
 
 /**
- * About page body — currently line, hero, info cards, then story sections.
+ * About page body — hero, info cards, then story sections.
  */
 export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
@@ -125,7 +124,6 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
   return (
     <div className="aboutFlow">
       <div className="aboutLedeSection">
-        <CurrentlyStatus />
         <figure className="aboutLedePortrait">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

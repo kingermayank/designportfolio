@@ -32,7 +32,7 @@ const HERO_META: Record<string, HeroMeta> = {
     ],
     tags: {
       label: "Industry",
-      values: split("Automotive, IoT Hardware, RevOps"),
+      values: split("Automotive, IoT Hardware, Telematics, RevOps, Marketing Automation"),
     },
   },
 

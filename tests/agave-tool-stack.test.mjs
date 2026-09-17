@@ -21,7 +21,7 @@ test("Agave displays Paper and Cursor process tool logos", async () => {
 });
 
 test("tool logos expand with a four-pixel gap and subtle hover elevation", () => {
-  assert.match(styles, /width: 16px;[\s\S]*?var\(--tool-index\) \* 14px/);
+  assert.match(styles, /width: 16px;[\s\S]*?var\(--tool-index\) \* 15px/);
   assert.match(styles, /\.engCardTitleRow\s*\{[^}]*gap: 6px/);
   assert.match(source, /zIndex: index \+ 1/);
   assert.match(styles, /\.engCard:hover \.engCardTool\s*\{[^}]*transform: translateX\(calc\(4px \+ var\(--tool-index\) \* 20px\)\)/);

@@ -167,10 +167,10 @@ const toolbox: CaseStudy = {
     "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion.",
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
-    "I led everything design-related for Toolbox as we onboarded dealerships from legacy to the new NextGen platform: 450 dealerships onboarded, and 40 directions across 450 relationships migrated from legacy. Showcasing the product at NADA 2026 drove 132 more dealership signups.",
+    "As the solo product designer, I partnered cross-functionally across research, strategy, product design, and design engineering to turn fragmented legacy tools into a unified platform for dealership teams. We migrated 450 dealerships, and our NADA showcase drove 132 new dealership signups.",
   workCaption: "Solo design lead → AI-native platform.",
   workSummary:
-    "Led Toolbox end to end—from product design into design engineering—helping move 450 dealerships onto the next-generation platform.",
+    "Led Toolbox end to end, from product design into design engineering, helping move 450 dealerships onto the next-generation platform.",
   year: 2025,
   category: "Design Engineering",
   shade: "#282828",
@@ -217,7 +217,7 @@ const toolbox: CaseStudy = {
       media: [
         tbShot(
           "/toolbox/project/tool2_1.png",
-          1878 / 2322,
+          1858 / 2323,
           "#222627",
           // Row tiles are half-width — captions are one clipped line, keep short.
           "The login card, on the shared component foundation.",
@@ -286,7 +286,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool6.png",
         3836 / 2722,
         "#222627",
-        "Operational health at a glance — pairing rates, inventory mix, and off-lot exposure in one view.",
+        "Operational health at a glance, with pairing rates, inventory mix, and off-lot exposure in one view.",
       ),
     },
     {
@@ -413,7 +413,7 @@ const toolbox: CaseStudy = {
     "Pre-launch drove a **33% surge** in dealership sign-ups, securing **134 new dealerships** before public release.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
-    { label: "Industry", value: "Automotive, IoT Hardware, RevOps" },
+    { label: "Industry", value: "Automotive, IoT Hardware, Telematics, RevOps, Marketing Automation" },
     { label: "Role", value: "Lead Product Designer, Design Engineer" },
   ],
   sections: [
@@ -453,7 +453,7 @@ const warpbnb: CaseStudy = {
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
   workCaption: "Two weeks. Solo. Zero to shipped.",
   workSummary:
-    "Designed, coded, populated, animated, and marketed a fictional product solo in two weeks—using AI without giving up taste or craft.",
+    "Designed, coded, populated, animated, and marketed a fictional product solo in two weeks, using AI without giving up taste or craft.",
   year: 2025,
   category: "Full-Stack AI Build",
   shade: "#2b2b2b",
@@ -543,7 +543,7 @@ const warpbnb: CaseStudy = {
     },
   ],
   impact:
-    "A full product — design system, frontend, backend, content, and a video commercial — shipped solo in **two weeks**, earning widespread positive reactions across the design and tech community.",
+    "A full product with a design system, frontend, backend, content, and a video commercial, shipped solo in **two weeks**, earning widespread positive reactions across the design and tech community.",
   credits: [
     {
       label: "Tools",
@@ -939,7 +939,7 @@ const walkity: CaseStudy = {
       right: [wk("/walkity/walk4-2.png", 2515 / 2515, false, "App icon sitting on the home screen.")],
     },
     { type: "full", media: wk("/walkity/walk5.png", 6000 / 4000, false, "Live navigation with turn-by-turn haptic guidance.") },
-    { type: "full", media: wk("/walkity/walk6.png", 6000 / 4500, false, "Business card design — front and back.") },
+    { type: "full", media: wk("/walkity/walk6.png", 6000 / 4500, false, "Business card design, front and back.") },
     { type: "full", media: wk("/walkity/walk7.png", 6000 / 4000, false, "Branded tote bag with the tagline: Let your steps lead.") },
     { type: "full", media: wk("/walkity/walk8.mp4", 3 / 2, true, "The full landing page in motion.") },
     {

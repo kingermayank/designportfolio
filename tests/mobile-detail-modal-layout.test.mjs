@@ -56,3 +56,9 @@ test("the mobile Product Thinking sheet scrolls and uses a 4px smaller title", (
     /@media \(max-width: 900px\)\s*\{[\s\S]*?\.sysOverlayHeadline\s*\{[^}]*font-size:\s*28px;[^}]*line-height:\s*32px;/,
   );
 });
+
+test("small-screen live previews reflow without changing desktop scaling", () => {
+  assert.match(styles, /@media \(max-width: 900px\)\s*\{\s*\.engModalFrameViewport > \.engModalFrame\s*\{[^}]*width: 100%;[^}]*height: 100%;[^}]*transform: none;/);
+  assert.match(styles, /\.engModalFrame\s*\{[^}]*transform: scale\(var\(--eng-frame-scale, 1\)\);/);
+  assert.match(engSource, /className="engModalMobileBoardLink"[^>]*target="_blank"/);
+});

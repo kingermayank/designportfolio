@@ -10,12 +10,31 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import DeferredVideo from "@/components/DeferredVideo";
 import type { EngComponent } from "@/lib/workLenses";
 
 type Props = {
   item: EngComponent;
   onClose: () => void;
 };
+
+function MediaCaption({ text }: { text: string }) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const caption = ref.current;
+    if (!caption) return;
+    const measure = () => caption.parentElement?.style.setProperty(
+      "--eng-caption-height", `${Math.max(24, caption.offsetHeight)}px`,
+    );
+    const observer = new ResizeObserver(measure);
+    observer.observe(caption);
+    measure();
+    return () => observer.disconnect();
+  }, [text]);
+
+  return <figcaption ref={ref} className="engMediaCaption">{text}</figcaption>;
+}
 
 function StageMedia({ item }: { item: EngComponent }) {
   if (item.video && item.src) {
@@ -189,12 +208,43 @@ export default function EngDetailModal({ item, onClose }: Props) {
         <header className="engModalHead">
           <div className="engModalHeadText">
             <p className="engModalKind">{item.kind}</p>
-            <h2 id={titleId} className="engModalTitle">
-              {item.title}
-            </h2>
-            {item.stack && item.stack.length > 0 ? (
-              <ul className="sysOverlayTags engModalStack" aria-label="Stack">
-                {item.stack.map((tech) => <li key={tech}>{tech}</li>)}
+            <div className="engModalTitleRow">
+              <h2 id={titleId} className="engModalTitle">
+                {item.title}
+              </h2>
+              <div className="engModalActions">
+              {item.explorationsHref ? (
+                <a className="engModalCta engModalCtaSecondary" href={item.explorationsHref} target="_blank" rel="noopener noreferrer">
+                  {item.explorationsLabel || "View explorations"}
+                </a>
+              ) : null}
+              {visitHref ? (
+                <a
+                  className="engModalCta"
+                  href={visitHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${visitLabel} website`}
+                >
+                  View website
+                  <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              ) : null}
+              </div>
+            </div>
+            {item.tools && item.tools.length > 0 ? (
+              <ul className="sysOverlayTags engModalStack" aria-label="Tools used">
+                {item.tools.map((tool) => (
+                  <li key={tool.name}>
+                    <a href={tool.href} target="_blank" rel="noopener noreferrer" aria-label={`${tool.name} website (opens in a new tab)`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img className="engModalToolIcon" src={tool.logo} alt="" width="16" height="16" />
+                    {tool.name}
+                    </a>
+                  </li>
+                ))}
               </ul>
             ) : null}
           </div>
@@ -270,33 +320,12 @@ export default function EngDetailModal({ item, onClose }: Props) {
               {item.body ? <p className="engModalLead">{item.body}</p> : null}
             </div>
 
-            {visitHref ? (
-              <a
-                className="engModalCta"
-                href={visitHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`View ${visitLabel} website`}
-              >
-                View website
-                <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true">
-                  <path
-                    d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            ) : null}
           </div>
           {item.content?.map((block) => (
-            <section className="engModalContentSection" key={block.id}>
+            <section className={"engModalContentSection" + (block.monoTitle || block.id === "paper-board" ? " engModalProcessSection" : "") + (block.plainMedia ? " engModalMediaSection" : "")} key={block.id}>
               {block.title ? (
                 <div className="engModalContentHead">
-                  <h3 className="engModalContentTitle">{block.title}</h3>
+                  <h3 className={block.monoTitle || block.id === "paper-board" ? "sysOverlaySectionLabel" : "engModalContentTitle"}>{block.title}</h3>
                   {block.type === "embed" && block.href ? (
                     <a className="engModalContentLink" href={block.href} target="_blank" rel="noopener noreferrer">
                       {block.linkLabel || "Open preview ↗"}
@@ -304,16 +333,40 @@ export default function EngDetailModal({ item, onClose }: Props) {
                   ) : null}
                 </div>
               ) : null}
+              {block.type === "embed" && block.body ? (
+                <p className="sysOverlaySectionBody">{block.body}</p>
+              ) : null}
               {block.type === "text" ? (
-                <p className="engModalContentText">{block.body}</p>
+                <p className={block.monoTitle ? "sysOverlaySectionBody" : "engModalContentText"}>{block.body}</p>
               ) : block.type === "video" ? (
-                <figure className="engModalContentFigure">
-                  <video className="engModalContentVideo" src={block.src} poster={block.poster} controls playsInline preload="metadata" />
-                  {block.caption ? <figcaption className="engModalNote">{block.caption}</figcaption> : null}
+                <figure className={"engModalContentFigure" + (block.plainMedia && block.caption ? " engMediaHover" : "")}>
+                  <div className="engMediaCrop">
+                  {block.plainMedia ? (
+                    <DeferredVideo className="engModalContentVideo" src={block.src} poster={block.poster} activation="eager" floatingControls />
+                  ) : (
+                    <video className="engModalContentVideo" src={block.src} poster={block.poster} controls playsInline preload="metadata" />
+                  )}
+                  </div>
+                  {block.caption ? (block.plainMedia ? <MediaCaption text={block.caption} /> : <figcaption className="engModalNote">{block.caption}</figcaption>) : null}
                 </figure>
               ) : (
-                <iframe className="engModalContentFrame" src={block.src} title={`${item.title} — ${block.title}`} width="100%" height="600" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+                block.type === "image" ? (
+                  <figure className={"engModalContentFigure" + (block.plainMedia && block.caption ? " engMediaHover" : "")} tabIndex={block.caption ? 0 : undefined}>
+                    <div className="engMediaCrop">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img className="engModalContentImage" src={block.src} alt={block.alt} loading="lazy" />
+                    </div>
+                    {block.caption ? <MediaCaption text={block.caption} /> : null}
+                  </figure>
+                ) : (
+                  <iframe className="engModalContentFrame" src={block.src} title={`${item.title} — ${block.title}`} width="100%" height="600" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+                )
               )}
+              {block.type === "embed" && block.id === "paper-board" ? (
+                <a className="engModalMobileBoardLink" href={block.src} target="_blank" rel="noopener noreferrer">
+                  Open board in Paper ↗
+                </a>
+              ) : null}
             </section>
           ))}
         </div>
