@@ -194,7 +194,7 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
 
   return createPortal(
     <div
-      className={"sysOverlay" + (open ? " is-open" : "")}
+      className={"sysOverlay strategyDetailOverlay" + (open ? " is-open" : "")}
       role="presentation"
       style={
         {

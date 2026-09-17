@@ -5083,15 +5083,57 @@ button.aboutCard:focus-visible {
 }
 
 @media (max-width: 900px) {
-  .engDetailOverlay .engDetailClose {
+  .engDetailOverlay .engDetailClose,
+  .strategyDetailOverlay .sysOverlayClose {
     display: inline-flex;
     left: auto;
     right: 16px;
     top: 32px;
+    bottom: auto;
+    transform: none;
   }
 
   .engDetailOverlay .engModalHead {
-    padding-right: 76px;
+    padding-right: var(--space-5);
+  }
+
+  .engDetailOverlay .engModalHeadText {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .engDetailOverlay .engModalTitleRow {
+    display: contents;
+  }
+
+  .engDetailOverlay .engModalKind,
+  .engDetailOverlay .engModalTitle {
+    padding-right: 60px;
+  }
+
+  .engDetailOverlay .engModalTitle {
+    flex: none;
+  }
+
+  .engDetailOverlay .engModalStack {
+    order: 1;
+  }
+
+  .engDetailOverlay .engModalActions {
+    order: 2;
+    margin-top: 12px;
+  }
+
+  .strategyDetailOverlay .sysOverlayHandle {
+    display: none;
+  }
+
+  .strategyDetailOverlay .sysOverlayBody {
+    padding: var(--space-5);
+  }
+
+  .strategyDetailOverlay .sysOverlayHeadline {
+    padding-right: 60px;
   }
 }
 
