@@ -167,7 +167,7 @@ const toolbox: CaseStudy = {
     "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion.",
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
-    "As the solo product designer, I partnered cross-functionally across research, strategy, product design, and design engineering to turn fragmented legacy tools into a unified platform for dealership teams. We migrated 450 dealerships, and our NADA showcase drove 132 new dealership signups.",
+    "As the solo product designer, I partnered cross-functionally across research, strategy, product design, and design engineering to turn fragmented legacy tools into a unified platform for dealership teams. We migrated 450 dealerships, and our NADA 2026 showcase drove 134 new dealership signups.",
   workCaption: "Solo design lead → AI-native platform.",
   workSummary:
     "Led Toolbox end to end, from product design into design engineering, helping move 450 dealerships onto the next-generation platform.",
@@ -187,7 +187,7 @@ const toolbox: CaseStudy = {
     },
     {
       label: "Outcome",
-      body: "Pre-launch drove a 33% surge in dealership signups and secured 134 new dealerships before public release, with Toolbox showcased at NADA 2025.",
+      body: "Pre-launch drove a 33% surge in dealership signups and secured 134 dealership signups before public release, with Toolbox showcased at NADA 2026.",
     },
   ],
   // Work card thumbnail video; case hero keeps the live-site hero reel.
@@ -410,7 +410,7 @@ const toolbox: CaseStudy = {
     },
   ],
   impact:
-    "Pre-launch drove a **33% surge** in dealership sign-ups, securing **134 new dealerships** before public release.",
+    "Pre-launch drove a **33% surge** in dealership signups, securing **134 dealership signups** before public release.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
     { label: "Industry", value: "Automotive, IoT Hardware, Telematics, RevOps, Marketing Automation" },
@@ -1024,9 +1024,9 @@ const bigbasket: CaseStudy = {
     "Creating a Design System for India's largest grocery delivery app",
   description:
     "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
-  workCaption: "Adopted by 200+ engineers.",
+  workCaption: "Adopted by 200+ product and engineering members.",
   workSummary:
-    "Built a design system adopted by 200+ engineers, improving design-to-development handoff by ~35%.",
+    "Built a design system adopted by 200+ product and engineering members, improving design-to-development handoff by ~35%.",
   year: 2021,
   category: "Design Systems",
   shade: "#242424",
@@ -1044,7 +1044,7 @@ const bigbasket: CaseStudy = {
     },
     {
       label: "Outcome",
-      body: "Adopted org-wide by 200+ engineers and product teams, improving design-to-dev handoff efficiency by ~35% and giving teams a common language for shipping cohesive grocery experiences.",
+      body: "Adopted org-wide by 200+ product and engineering members, improving design-to-dev handoff efficiency by ~35% and giving teams a common language for shipping cohesive grocery experiences.",
     },
   ],
   hero: {
@@ -1199,7 +1199,7 @@ const bigbasket: CaseStudy = {
     },
   ],
   impact:
-    "Adopted by **200+** product and engineering team members, improving design-to-dev handoff efficiency by **~35%** across **250+** audited components.",
+    "Adopted by **200+** product and engineering members, improving design-to-dev handoff efficiency by **~35%** across **250+** audited components.",
   credits: [
     {
       label: "My Contribution",
