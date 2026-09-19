@@ -5964,6 +5964,8 @@ button.aboutCard:focus-visible {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
 }
 
 .workFitBtn {
