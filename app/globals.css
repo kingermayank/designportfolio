@@ -5609,6 +5609,38 @@ button.aboutCard:focus-visible {
   font-weight: 600;
 }
 
+.workBioEmphasis {
+  --bio-swap-duration: 150ms;
+  display: inline-grid;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.workBioEmphasisRegular,
+.workBioEmphasisStrong {
+  grid-area: 1 / 1;
+  transition: opacity var(--bio-swap-duration) ease-in-out;
+}
+
+.workBioEmphasisStrong {
+  opacity: 0;
+}
+
+.workBioEmphasis[data-emphasized="true"] .workBioEmphasisRegular {
+  opacity: 0;
+}
+
+.workBioEmphasis[data-emphasized="true"] .workBioEmphasisStrong {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workBioEmphasisRegular,
+  .workBioEmphasisStrong {
+    transition: none;
+  }
+}
+
 /* “Currently …” status loop */
 .workCurrently,
 .aboutCurrently {

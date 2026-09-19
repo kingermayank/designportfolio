@@ -34,6 +34,16 @@ import {
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
 
+function BioEmphasis({ text, emphasized }: { text: string; emphasized: boolean }) {
+  return (
+    <span className="workBioEmphasis" data-emphasized={emphasized}>
+      <span className="srOnly">{emphasized ? <strong>{text}</strong> : text}</span>
+      <span className="workBioEmphasisRegular" aria-hidden="true">{text}</span>
+      <strong className="workBioEmphasisStrong" aria-hidden="true">{text}</strong>
+    </span>
+  );
+}
+
 const LENS_INDEX: Record<WorkLensId, number> = {
   visual: 0,
   systems: 1,
@@ -625,8 +635,9 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
             <SocialMenu />
           </div>
           <p className="workSubtitle">
-            I&apos;m a <strong>product designer</strong>{" "}
-            and high agency builder with a founder&apos;s mindset currently
+            I&apos;m a <BioEmphasis text="product designer" emphasized={lens !== "engineering"} />{" "}
+            and <BioEmphasis text="high agency builder" emphasized={lens === "engineering"} />{" "}
+            with a founder&apos;s mindset currently
             shipping agentic experiences for automotive dealerships at Ikon Technologies.
           </p>
 
