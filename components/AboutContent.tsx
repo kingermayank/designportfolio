@@ -13,6 +13,7 @@ import {
 import AboutPodcastTicker from "@/components/AboutPodcastTicker";
 import AboutTestimonials from "@/components/AboutTestimonials";
 import HiringLetterOverlay from "@/components/HiringLetterOverlay";
+import DeferredImage from "@/components/DeferredImage";
 import { HIRING_LETTER } from "@/lib/letter";
 
 type AboutContentProps = {
@@ -129,6 +130,11 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           <img
             src={ABOUT_INTRO.hero.src}
             alt={ABOUT_INTRO.hero.alt}
+            width={1000}
+            height={572}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
           />
         </figure>
@@ -290,11 +296,11 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
                   >
                     <div className="aboutPtoInner">
                       <div className="aboutPtoMediaWrap">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <DeferredImage
                           className="aboutPtoMedia"
                           src={photo.src}
                           alt={photo.alt}
+                          fetchPriority="low"
                         />
                       </div>
                       {caption ? (

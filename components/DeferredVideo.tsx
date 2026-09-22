@@ -24,6 +24,8 @@ type DeferredVideoProps = {
    * playback. `visible` starts shortly before the media scrolls into view.
    */
   activation?: "eager" | "visible";
+  /** Keep autoplay enabled for essential preview media when reduced motion is on. */
+  respectReducedMotion?: boolean;
   /** Koto-style cursor-following play/pause control for editorial media. */
   floatingControls?: boolean;
   /** Anchor controls to the surrounding case-study frame instead of the video. */
@@ -56,18 +58,23 @@ export default function DeferredVideo({
   posterPriority = false,
   loadMargin = "240px 0px",
   activation = "visible",
+  respectReducedMotion = true,
   floatingControls = false,
   floatingControlPlacement = "media",
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = useReducedMotion();
   const [requested, setRequested] = useState(activation === "eager");
+  const [posterRequested, setPosterRequested] = useState(
+    activation === "eager" || posterPriority,
+  );
   const [visible, setVisible] = useState(activation === "eager");
   const [playbackIntent, setPlaybackIntent] = useState<
     "auto" | "playing" | "paused"
   >("auto");
   const [playing, setPlaying] = useState(false);
   const [controlHost, setControlHost] = useState<HTMLElement | null>(null);
+  const motionAllowed = !respectReducedMotion || !reducedMotion;
 
   const setVideoNode = useCallback(
     (video: HTMLVideoElement | null) => {
@@ -92,7 +99,10 @@ export default function DeferredVideo({
     const observer = new IntersectionObserver(
       ([entry]) => {
         setVisible(entry.isIntersecting);
-        if (entry.isIntersecting) setRequested(true);
+        if (entry.isIntersecting) {
+          setPosterRequested(true);
+          setRequested(true);
+        }
       },
       { root: scrollRoot, rootMargin: loadMargin, threshold: 0.01 },
     );
@@ -100,25 +110,31 @@ export default function DeferredVideo({
     return () => observer.disconnect();
   }, [activation, loadMargin]);
 
+  const syncPlayback = useCallback(
+    (video: HTMLVideoElement) => {
+      video.playbackRate = playbackRate;
+
+      const shouldPlay =
+        visible &&
+        motionAllowed &&
+        (playbackIntent === "playing" || playbackIntent === "auto");
+
+      if (shouldPlay) {
+        // Loading and hydration can briefly make play() reject. Keep the
+        // original intent so onCanPlay can retry instead of freezing on poster.
+        void video.play().catch(() => setPlaying(false));
+      } else {
+        video.pause();
+      }
+    },
+    [motionAllowed, playbackIntent, playbackRate, visible],
+  );
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !requested) return;
-    video.playbackRate = playbackRate;
-
-    const shouldPlay =
-      visible &&
-      (playbackIntent === "playing" ||
-        (playbackIntent === "auto" && !reducedMotion));
-
-    if (shouldPlay) {
-      void video.play().catch(() => {
-        setPlaying(false);
-        setPlaybackIntent("paused");
-      });
-    } else {
-      video.pause();
-    }
-  }, [playbackIntent, playbackRate, reducedMotion, requested, visible]);
+    syncPlayback(video);
+  }, [requested, syncPlayback]);
 
   const togglePlayback = () => {
     const video = videoRef.current;
@@ -168,13 +184,14 @@ export default function DeferredVideo({
         ref={setVideoNode}
         className={className}
         style={style}
-        src={requested && !reducedMotion ? src : undefined}
-        poster={poster}
+        src={requested && motionAllowed ? src : undefined}
+        poster={posterRequested ? poster : undefined}
         muted
         loop
         playsInline
-        autoPlay={activation === "eager" && !reducedMotion}
+        autoPlay={activation === "eager" && motionAllowed}
         preload={requested ? "auto" : "none"}
+        onCanPlay={(event) => syncPlayback(event.currentTarget)}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       />

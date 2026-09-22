@@ -13,6 +13,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
 import DeferredVideo from "@/components/DeferredVideo";
+import DeferredImage from "@/components/DeferredImage";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
 import SiteFooter from "@/components/SiteFooter";
@@ -208,11 +209,11 @@ function OverflowTicker({ text }: { text: string }) {
 /** Responsive stills for work covers that ship 1x + 2x files. */
 const THUMB_SRCSET: Partial<Record<string, string>> = {
   pathai:
-    "/pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
+    "/pathai/thumbs/work-cover-800.webp 800w, /pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
   walkity:
-    "/walkity/thumbs/work-cover-1200.jpg?v=1 1200w, /walkity/thumbs/work-cover.jpg?v=1 2400w",
+    "/walkity/thumbs/work-cover-800.webp 800w, /walkity/thumbs/work-cover-1200.jpg?v=1 1200w, /walkity/thumbs/work-cover.jpg?v=1 2400w",
   bigbasket:
-    "/bigbasket/thumbs/work-cover-1200.jpg?v=5 1200w, /bigbasket/thumbs/work-cover.jpg?v=5 2400w",
+    "/bigbasket/thumbs/work-cover-800.webp 800w, /bigbasket/thumbs/work-cover-1200.jpg?v=5 1200w, /bigbasket/thumbs/work-cover.jpg?v=5 2400w",
 };
 
 // Visual Craft shows project work only — studies flagged `inWorkGrid: false`
@@ -264,7 +265,6 @@ function WorkCard({
   // Video covers play from the path as authored — the old /grid/ rewrite only
   // ever applied to assets that already lived under /grid/ or /new/.
   const gridSrc = card.video ? card.media : undefined;
-  const deferVideo = card.slug === "rolipoli";
 
   const cardStyle = {
     aspectRatio: card.aspect,
@@ -282,13 +282,12 @@ function WorkCard({
             className="workCardMedia"
             src={gridSrc}
             poster={card.thumb}
-            activation={deferVideo ? "visible" : "eager"}
-            loadMargin={deferVideo ? "160px 0px" : undefined}
-            posterPriority={priority && !deferVideo}
+            activation="eager"
+            respectReducedMotion={false}
+            posterPriority={priority}
           />
         ) : card.thumb || card.media ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <DeferredImage
             className="workCardMedia"
             src={card.thumb || card.media}
             srcSet={card.thumbSrcSet}
@@ -298,9 +297,8 @@ function WorkCard({
                 : undefined
             }
             alt=""
-            loading={priority ? "eager" : "lazy"}
+            eager={priority}
             fetchPriority={priority ? "high" : "auto"}
-            decoding="async"
           />
         ) : (
           <span className="workCardPlaceholder">{card.title}</span>

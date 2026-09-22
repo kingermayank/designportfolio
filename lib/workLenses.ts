@@ -132,7 +132,7 @@ export type EngKind =
   | "3D Model"
   | "Design Sandbox"
   | "Playful Side Project"
-  | "3D Simulation";
+  | "3D Game";
 
 
 
@@ -276,7 +276,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { id: "warp-icons", type: "image", plainMedia: true, src: "/warpbnb/archive/icons.png", alt: "Warpbnb icon explorations", caption: "The better-icons skill helped me match 64+ amenities to the right icons without a single manual instruction." },
       { id: "warp-rive", type: "video", plainMedia: true, src: "/warpbnb/archive/rive.mp4", caption: "Warpbnb’s logo animation, built in Rive, with eyes that follow the cursor." },
       { id: "warp-prompts", type: "image", plainMedia: true, src: "/warpbnb/archive/prompt-arch.png", alt: "Prompt architecture for Warpbnb", caption: "The prompt architecture I drafted for each listing before touching any image generation tool." },
-      { id: "warp-automation", type: "image", plainMedia: true, src: "/warpbnb/archive/automation-fail.png", alt: "An automation failure during the build", caption: "What happens when you try to automate image generation without oversight and setting guardrails." },
+      { id: "warp-automation", type: "image", plainMedia: true, src: "/warpbnb/archive/automation-fail.webp", alt: "An automation failure during the build", caption: "What happens when you try to automate image generation without oversight and setting guardrails." },
       { id: "warp-voiceover", type: "image", plainMedia: true, src: "/warpbnb/archive/voiceover.png", alt: "Voiceover workflow for Warpbnb", caption: "The voiceover script in ElevenLabs, with phonetic spelling and emphasis marks included." },
       { id: "warp-commercial", type: "image", plainMedia: true, src: "/warpbnb/archive/commercial.png", alt: "Commercial explorations in Higgsfield", caption: "The full commercial pipeline in Higgsfield, showing all the video generations that went into the final cut." },
     ],
@@ -335,9 +335,9 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Sketchfab", logo: "/all-logos/sketchfab.png", href: "https://sketchfab.com/" },
       { name: "Grok Bot", logo: "/all-logos/grokbot.webp", href: "https://grok.com/" },
     ],
-    title: "APEX F1 Sim",
-    kind: "3D Simulation",
-    body: "Shanghai 2026 race simulation. Watch the Chinese Grand Prix unfold, then ask why every decision happened.",
+    title: "Apex F1",
+    kind: "3D Game",
+    body: "Play the 2026 Chinese Grand Prix in Shanghai, make race decisions, and ask why each one mattered.",
     shade: "#141414",
     thumb: "/f1-sim/thumbs/race-preview.jpg",
     src: "/f1-sim/thumbs/race-preview.mp4",
@@ -350,11 +350,11 @@ export const ENG_COMPONENTS: EngComponent[] = [
         type: "text",
         monoTitle: true,
         title: "Process breakdown",
-        body: "Apex F1 started with licensed Sketchfab models of the Shanghai circuit and seven F1 cars, compressed with gltf-transform from ~600 MB to 23 MB for the web. With Claude Code, I generated a script to fit the racing line to the model’s painted boundaries and validated it against the real 5451 m lap length, landing within 2%. Claude Code handled the deterministic simulation in Three.js / React Three Fiber and the OpenF1 integration, while I directed the design of circuits, drivers, a quiz, predictions, and Explain Mode for newcomers. I verified the implementation with Vitest and Playwright, then tested it in the browser to catch the bugs automated checks missed.",
+        body: "Apex F1 started with licensed Sketchfab models of the Shanghai circuit and seven F1 cars, compressed with gltf-transform from ~600 MB to 23 MB for the web. With Claude Code, I generated a script to fit the racing line to the model’s painted boundaries and validated it against the real 5451 m lap length, landing within 2%. Claude Code handled the deterministic race engine in Three.js / React Three Fiber and the OpenF1 integration, while I directed the playable circuits and drivers, race decisions, quiz, predictions, and Explain Mode for newcomers. I verified the implementation with Vitest and Playwright, then tested it in the browser to catch the bugs automated checks missed.",
       },
     ],
     frame: "cover",
-    stack: ["Next.js", "Vercel", "Simulation"],
+    stack: ["Next.js", "Vercel", "3D Game"],
   },
   {
     id: "keytag-3d",

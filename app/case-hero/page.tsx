@@ -38,7 +38,7 @@ const SAMPLE = {
   description:
     "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
   media: {
-    src: "/warpbnb/cover.png",
+    src: "/warpbnb/cover.webp",
     shade: "#2b2b2b",
     alt: "Warpbnb browse screen",
   },

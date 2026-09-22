@@ -61,6 +61,7 @@ const palmerLakePrint = localFont({
   style: "normal",
   variable: "--font-palmer-print",
   display: "swap",
+  preload: false,
 });
 
 const palmerLakeScript = localFont({
@@ -69,6 +70,7 @@ const palmerLakeScript = localFont({
   style: "normal",
   variable: "--font-palmer-script",
   display: "swap",
+  preload: false,
 });
 
 // PathAI Region Comments UI — Figma uses Gotham Narrow Book (325) / Medium (350, 500)
@@ -92,6 +94,7 @@ const gothamNarrow = localFont({
   ],
   variable: "--font-gotham-narrow",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const SITE_URL = new URL("https://www.kingermayank.com");
 export const SITE_NAME = "Mayank Kinger — Portfolio";
-export const DEFAULT_TITLE = "Mayank Kinger";
+export const DEFAULT_TITLE = "Mayank Kinger — Product Designer & Design Engineer";
 export const DEFAULT_DESCRIPTION =
   "Mayank Kinger is a product designer and high-agency builder crafting thoughtful digital products, scalable systems, and polished interactive experiences.";
 
@@ -17,16 +17,26 @@ type SeoOptions = {
   title?: string;
   description?: string;
   path?: string;
+  image?: {
+    url: string;
+    alt: string;
+    width?: number;
+    height?: number;
+  };
+  type?: "website" | "article";
 };
 
 export function createMetadata({
   title,
   description = DEFAULT_DESCRIPTION,
   path = "/",
+  image,
+  type = "website",
 }: SeoOptions = {}): Metadata {
   const resolvedTitle = title
     ? `${title} — Mayank Kinger Portfolio`
     : DEFAULT_TITLE;
+  const socialImage = image ?? SOCIAL_IMAGE;
 
   return {
     title: resolvedTitle,
@@ -40,15 +50,15 @@ export function createMetadata({
       url: path,
       siteName: SITE_NAME,
       locale: "en_US",
-      type: "website",
-      images: [SOCIAL_IMAGE],
+      type,
+      images: [socialImage],
     },
     twitter: {
       card: "summary_large_image",
       title: resolvedTitle,
       description,
       creator: "@kingermayank",
-      images: [SOCIAL_IMAGE],
+      images: [socialImage],
     },
   };
 }

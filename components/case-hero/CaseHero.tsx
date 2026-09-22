@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import CaseBack, { type CaseHeroBack } from "./CaseBack";
 import ContentCard from "./ContentCard";
 import HeroImage, { type HeroImageProps } from "./HeroImage";
@@ -30,6 +30,8 @@ export type CaseHeroProps = {
   tone?: CaseHeroTone;
   /** Minimal back control fixed to the top-left of the viewport. */
   back?: CaseHeroBack;
+  /** Optional companion action fixed to the top-right of the viewport. */
+  headerAction?: ReactNode;
   className?: string;
 };
 
@@ -90,6 +92,7 @@ export default function CaseHero({
   accent,
   tone = "neutral",
   back,
+  headerAction,
   className,
 }: CaseHeroProps) {
   const style: CSSProperties & Record<string, string | undefined> = {};
@@ -107,6 +110,9 @@ export default function CaseHero({
   return (
     <section className={"chHero" + TONE_CLASS[tone] + (className ? ` ${className}` : "")} style={style}>
       {back ? <CaseBack {...back} /> : null}
+      {headerAction ? (
+        <div className="chHeaderAction">{headerAction}</div>
+      ) : null}
 
       <HeroImage {...media} />
 

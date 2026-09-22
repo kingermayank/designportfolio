@@ -205,7 +205,7 @@ const toolbox: CaseStudy = {
     {
       type: "full",
       media: tbShot(
-        "/toolbox/project/tool1.png",
+        "/toolbox/project/tool1.webp",
         3840 / 2160,
         "#222627",
         "Setting the tone at the front door with a sign-in that reads as software a dealer group can trust.",
@@ -366,7 +366,7 @@ const toolbox: CaseStudy = {
     {
       type: "full",
       media: tbShot(
-        "/toolbox/project/tool_5.png",
+        "/toolbox/project/tool_5.webp",
         6000 / 4500,
         "#222627",
         "Scanning and pairing devices in the field with the mobile companion app.",
@@ -377,7 +377,7 @@ const toolbox: CaseStudy = {
       columns: 2,
       media: [
         tbShot(
-          "/toolbox/project/tool_6_1.png",
+          "/toolbox/project/tool_6_1.webp",
           1888 / 2367,
           "#222627",
           "QR and barcode scanning for device pairing.",
@@ -393,7 +393,7 @@ const toolbox: CaseStudy = {
     {
       type: "full",
       media: tbShot(
-        "/toolbox/project/tool_map.png",
+        "/toolbox/project/tool_map.webp",
         2276 / 1280,
         "#222627",
         "Locating vehicles and keys on the lot from the mobile app.",
@@ -402,7 +402,7 @@ const toolbox: CaseStudy = {
     {
       type: "full",
       media: tbShot(
-        "/toolbox/project/tool_device.png",
+        "/toolbox/project/tool_device.webp",
         9104 / 5120,
         "#222627",
         "Surfacing pairing errors with clear status and next steps so dealers can self-resolve.",
@@ -479,13 +479,13 @@ const warpbnb: CaseStudy = {
   workPoster: "/warpbnb/thumbs/thumbnail.webp",
   hero: {
     shade: "#2b2b2b",
-    src: "/warpbnb/cover.png",
+    src: "/warpbnb/cover.webp",
     ar: 16 / 9,
     scrim: 0.6,
   },
   // Numbered stack: 3-1 / 3-2 sit side by side; the commercial closes it out.
   mediaBlocks: [
-    { type: "full", media: wb("/warpbnb/warp1.png", 3840 / 2160, false, "Mobile app close-up: navigation and the Warpbnb wordmark.") },
+    { type: "full", media: wb("/warpbnb/warp1.webp", 3840 / 2160, false, "Mobile app close-up: navigation and the Warpbnb wordmark.") },
     { type: "full", media: wb("/warpbnb/warp2.png", 2146 / 1138, false, "3D era icons generated with thiings.co for every category.") },
     {
       type: "split",
@@ -509,8 +509,8 @@ const warpbnb: CaseStudy = {
         },
       ],
     },
-    { type: "full", media: wb("/warpbnb/warp4.png", 4066 / 2285, false, "Desktop homepage with theme filters and listing cards.") },
-    { type: "full", media: wb("/warpbnb/warp5.png", 4074 / 2292, false, "Listing detail: Mars Colony Pod, Olympus Mons.") },
+    { type: "full", media: wb("/warpbnb/warp4.webp", 4066 / 2285, false, "Desktop homepage with theme filters and listing cards.") },
+    { type: "full", media: wb("/warpbnb/warp5.webp", 4074 / 2292, false, "Listing detail: Mars Colony Pod, Olympus Mons.") },
     { type: "full", media: wb("/warpbnb/warp6.mp4", 1922 / 1080, true, "Host reviews and booking flow in action.") },
     {
       type: "split",
@@ -601,7 +601,7 @@ const warpbnb: CaseStudy = {
       ],
       media: [
         { shade: G, src: "/warpbnb/archive/prompt-arch.png", ar: 1.78, caption: "The prompt architecture drafted for each listing." },
-        { shade: G, src: "/warpbnb/archive/automation-fail.png", ar: 1.78, caption: "What happens when you automate image generation without guardrails." },
+        { shade: G, src: "/warpbnb/archive/automation-fail.webp", ar: 1.78, caption: "What happens when you automate image generation without guardrails." },
         { shade: G, src: "/warpbnb/archive/topaz.mp4", video: true, ar: 1.78, caption: "Same image before and after Topaz Bloom. The difference is not subtle." },
       ],
     },
@@ -704,7 +704,7 @@ const pathai: CaseStudy = {
   // Cover drives Work 1 card + detail hero (~4:3 monitor shot).
   hero: {
     shade: "#0E0E0E",
-    src: "/pathai/cover.png",
+    src: "/pathai/cover.webp",
     ar: 16 / 9,
     scrim: "rgba(14,14,14,0.4)",
   },
@@ -723,7 +723,7 @@ const pathai: CaseStudy = {
       ),
       right: [
         pa(
-          "/pathai/path1-2.png",
+          "/pathai/path1-2.webp",
           5462 / 4096,
           false,
           "A pathologist reviewing a digital slide in the lab.",
@@ -742,7 +742,7 @@ const pathai: CaseStudy = {
     {
       type: "full",
       media: pa(
-        "/pathai/path3.png",
+        "/pathai/path3.webp",
         3288 / 2192,
         false,
         "The slide panel keeps discussion anchored to diagnostic context.",
@@ -768,7 +768,7 @@ const pathai: CaseStudy = {
     {
       type: "full",
       media: pa(
-        "/pathai/path9.png",
+        "/pathai/path9.webp",
         2720 / 1814,
         false,
         "The accession discussion panel gathers case-level collaboration.",
@@ -789,7 +789,7 @@ const pathai: CaseStudy = {
     {
       type: "full",
       media: pa(
-        "/pathai/path11.png",
+        "/pathai/path11.webp",
         2738 / 1542,
         false,
         "An email notifies a pathologist when they are tagged in a response.",
@@ -931,16 +931,16 @@ const walkity: CaseStudy = {
   // Numbered stack: 4 / 4-2 are the paired squares, side by side.
   mediaBlocks: [
     { type: "full", media: wk("/walkity/walk1.png", 4016 / 2241, false, "Footsteps plus haptic technology equals Walkity.") },
-    { type: "full", media: wk("/walkity/walk2.png", 3354 / 2514, false, "Brand guidelines: color palette, typography, and logo system.") },
-    { type: "full", media: wk("/walkity/walk3.png", 6000 / 4500, false, "Brand philosophy, stationery, and print collateral.") },
+    { type: "full", media: wk("/walkity/walk2.webp", 3354 / 2514, false, "Brand guidelines: color palette, typography, and logo system.") },
+    { type: "full", media: wk("/walkity/walk3.webp", 6000 / 4500, false, "Brand philosophy, stationery, and print collateral.") },
     {
       type: "split",
       left: wk("/walkity/walk4.png", 2515 / 2515, false, "Logo construction on a geometric grid."),
-      right: [wk("/walkity/walk4-2.png", 2515 / 2515, false, "App icon sitting on the home screen.")],
+      right: [wk("/walkity/walk4-2.webp", 2515 / 2515, false, "App icon sitting on the home screen.")],
     },
-    { type: "full", media: wk("/walkity/walk5.png", 6000 / 4000, false, "Live navigation with turn-by-turn haptic guidance.") },
-    { type: "full", media: wk("/walkity/walk6.png", 6000 / 4500, false, "Business card design, front and back.") },
-    { type: "full", media: wk("/walkity/walk7.png", 6000 / 4000, false, "Branded tote bag with the tagline: Let your steps lead.") },
+    { type: "full", media: wk("/walkity/walk5.webp", 6000 / 4000, false, "Live navigation with turn-by-turn haptic guidance.") },
+    { type: "full", media: wk("/walkity/walk6.webp", 6000 / 4500, false, "Business card design, front and back.") },
+    { type: "full", media: wk("/walkity/walk7.webp", 6000 / 4000, false, "Branded tote bag with the tagline: Let your steps lead.") },
     { type: "full", media: wk("/walkity/walk8.mp4", 3 / 2, true, "The full landing page in motion.") },
     {
       type: "full",
@@ -1058,7 +1058,7 @@ const bigbasket: CaseStudy = {
     {
       type: "full",
       media: bb(
-        "/bigbasket/chaos.png",
+        "/bigbasket/chaos.webp",
         3840 / 2160,
         false,
         "The visual audit exposed duplicated patterns, inconsistent screens, and design debt across the app.",
@@ -1499,7 +1499,7 @@ const rolipoli: CaseStudy = {
   category: "Product Design",
   shade: "#262626",
   workCover: "/rolipoli/thumbnail.mp4",
-  workPoster: "/rolipoli/thumbs/thumbnail.webp",
+  workPoster: "/rolipoli/thumbs/thumbnail-700.webp",
   linkable: false,
   externalUrl: "https://www.youtube.com/watch?v=u9v3gzVkyDk",
   sections: [
@@ -1532,4 +1532,6 @@ export function isVisualCraft(study: Pick<CaseStudy, "inWorkGrid">): boolean {
 export const VISUAL_CRAFT_STUDIES = CASE_STUDIES.filter(isVisualCraft);
 
 /** Case studies that open a detail page (excludes Work-grid-only teasers). */
-export const LINKABLE_CASE_STUDIES = CASE_STUDIES.filter(isCaseLinkable);
+export const LINKABLE_CASE_STUDIES = CASE_STUDIES.filter(
+  (study) => isCaseLinkable(study) && isVisualCraft(study),
+);

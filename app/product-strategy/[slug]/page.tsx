@@ -21,6 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: item.title,
     description: item.body,
     path: `/product-strategy/${item.slug ?? item.id}`,
+    image: item.thumb
+      ? { url: item.thumb, alt: `${item.title} by Mayank Kinger` }
+      : undefined,
+    type: "article",
   });
 }
 

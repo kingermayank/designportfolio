@@ -18,7 +18,7 @@ export const ABOUT_INTRO = {
   summary:
     "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   hero: {
-    src: "/about/hero.jpg",
+    src: "/about/hero-1000.webp",
     alt: "Mayank Kinger",
     ar: 1984 / 1134,
   } satisfies AboutPhoto,
@@ -58,49 +58,49 @@ export const ABOUT_PODCASTS: {
 }[] = [
   {
     id: "lennys-podcast",
-    src: "/podcast/optimized/lennys-podcast.webp",
+    src: "/podcast/thumbs/lennys-podcast.webp",
     label: "Lenny's Podcast",
     size: 512,
   },
   {
     id: "the-general",
-    src: "/podcast/optimized/the-general.webp",
+    src: "/podcast/thumbs/the-general.webp",
     label: "The General Podcast",
     size: 447,
   },
   {
     id: "first-of-kind",
-    src: "/podcast/optimized/first-of-kind.webp",
+    src: "/podcast/thumbs/first-of-kind.webp",
     label: "First of Kind",
     size: 512,
   },
   {
     id: "double-diamond",
-    src: "/podcast/optimized/double-diamond.webp",
+    src: "/podcast/thumbs/double-diamond.webp",
     label: "Double Diamond",
     size: 512,
   },
   {
     id: "dive-club",
-    src: "/podcast/optimized/dive-club.webp",
+    src: "/podcast/thumbs/dive-club.webp",
     label: "Dive Club",
     size: 512,
   },
   {
     id: "state-of-play",
-    src: "/podcast/optimized/state-of-play.webp",
+    src: "/podcast/thumbs/state-of-play.webp",
     label: "State of Play",
     size: 512,
   },
   {
     id: "greg-isenberg",
-    src: "/podcast/optimized/greg-isenberg.webp",
+    src: "/podcast/thumbs/greg-isenberg.webp",
     label: "Greg Isenberg",
     size: 300,
   },
   {
     id: "a16z-show",
-    src: "/podcast/optimized/a16z-show.webp",
+    src: "/podcast/thumbs/a16z-show.webp",
     label: "A16Z Show",
     size: 512,
   },
@@ -254,7 +254,7 @@ export const ABOUT_PTO: AboutPhoto[] = [
     ar: 1696 / 2560,
   },
   {
-    src: "/about/pto-4.png",
+    src: "/about/pto-4.webp",
     alt: "Graduated with a smile",
     ar: 1905 / 2267,
   },

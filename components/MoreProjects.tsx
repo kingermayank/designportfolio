@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import DeferredVideo from "@/components/DeferredVideo";
+import DeferredImage from "@/components/DeferredImage";
 import { usePageTransition } from "@/components/PageTransition";
 import {
   VISUAL_CRAFT_STUDIES,
@@ -13,11 +14,11 @@ const ASPECT = "3 / 2";
 
 const THUMB_SRCSET: Partial<Record<string, string>> = {
   pathai:
-    "/pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
+    "/pathai/thumbs/work-cover-800.webp 800w, /pathai/thumbs/work-cover-1200.jpg 1200w, /pathai/thumbs/work-cover.jpg 2400w",
   walkity:
-    "/walkity/thumbs/work-cover-1200.jpg?v=1 1200w, /walkity/thumbs/work-cover.jpg?v=1 2400w",
+    "/walkity/thumbs/work-cover-800.webp 800w, /walkity/thumbs/work-cover-1200.jpg?v=1 1200w, /walkity/thumbs/work-cover.jpg?v=1 2400w",
   bigbasket:
-    "/bigbasket/thumbs/work-cover-1200.jpg?v=5 1200w, /bigbasket/thumbs/work-cover.jpg?v=5 2400w",
+    "/bigbasket/thumbs/work-cover-800.webp 800w, /bigbasket/thumbs/work-cover-1200.jpg?v=5 1200w, /bigbasket/thumbs/work-cover.jpg?v=5 2400w",
 };
 
 function thumbFor(src?: string): string | undefined {
@@ -100,8 +101,7 @@ function MoreProjectCard({ card }: { card: Card }) {
             activation="visible"
           />
         ) : card.thumb || card.media ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <DeferredImage
             className="workCardMedia"
             src={card.thumb || card.media}
             srcSet={card.thumbSrcSet}
@@ -111,8 +111,6 @@ function MoreProjectCard({ card }: { card: Card }) {
                 : undefined
             }
             alt=""
-            loading="lazy"
-            decoding="async"
           />
         ) : (
           <span className="workCardPlaceholder">{card.title}</span>

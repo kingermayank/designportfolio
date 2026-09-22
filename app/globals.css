@@ -3229,14 +3229,14 @@ button.aboutCard:focus-visible {
   font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
-  color: var(--faint);
+  color: var(--muted);
   cursor: pointer;
   touch-action: manipulation;
   transition: color 167ms linear;
 }
 
 .workLens:hover {
-  color: var(--muted);
+  color: var(--text);
 }
 
 .workLens.on {
@@ -5419,7 +5419,7 @@ button.aboutCard:focus-visible {
 
   .workLens:not(.on),
   .workLens:not(.on):hover {
-    color: var(--faint);
+    color: var(--muted);
   }
 
   .workListRow {
@@ -7414,6 +7414,8 @@ button.aboutCard:focus-visible {
 }
 
 .chBack {
+  --ch-back-hover-duration: 250ms;
+  --ch-back-press-duration: 80ms;
   position: fixed;
   top: var(--ch-space-5, 24px);
   left: var(--ch-space-5, 24px);
@@ -7421,43 +7423,102 @@ button.aboutCard:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   box-sizing: border-box;
-  width: 44px;
-  height: 44px;
-  padding: 16px;
-  border: 0;
-  border-radius: var(--radius-circle);
-  background: var(--sys-glass-weak);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: var(--ch-back-color, #ffffff);
+  min-width: 44px;
+  height: 36px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: #353535;
+  color: #fafafa;
   cursor: pointer;
   opacity: 1;
   text-decoration: none;
   transform: scale(1);
   transform-origin: center;
-  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color var(--sys-hover-ms) linear;
+  transition:
+    transform var(--ch-back-hover-duration) cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 150ms ease-in-out;
 }
 
 .chBack svg {
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
 }
 
+.chBackLabel {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .chBack:hover {
-  background: var(--sys-glass);
+  background: #4a4a4a;
 }
 
 .chBack:active {
-  background: var(--sys-glass-weak);
-  transition-duration: var(--sys-press-ms);
+  background: #353535;
+  transform: scale(0.97);
+  transition-duration: var(--ch-back-press-duration);
 }
 
 .chBack:focus-visible {
   outline: 1px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.chHeaderAction {
+  position: fixed;
+  right: var(--ch-space-5, 24px);
+  bottom: var(--ch-space-5, 24px);
+  z-index: 50;
+}
+
+.chContactButton {
+  --ch-contact-hover-duration: 250ms;
+  --ch-contact-press-duration: 80ms;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  min-width: 44px;
+  height: 36px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  color: #121413;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  touch-action: manipulation;
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    transform var(--ch-contact-hover-duration) cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 150ms ease-in-out;
+}
+
+.chContactButton:hover {
+  background: #e0e0e0;
+}
+
+.chContactButton:active {
+  transform: scale(0.97);
+  transition-duration: var(--ch-contact-press-duration);
+}
+
+.chContactButton:focus-visible {
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 
@@ -7466,7 +7527,8 @@ button.aboutCard:focus-visible {
   .aboutTmArrow:hover,
   .sysOverlayClose:hover,
   .engModalClose:hover,
-  .chBack:hover {
+  .chBack:hover,
+  .chContactButton:hover {
     transform: scale(0.98);
   }
 
@@ -7481,7 +7543,8 @@ button.aboutCard:focus-visible {
   .sysOverlayClose,
   .sysOverlayFigureNav,
   .engModalClose,
-  .chBack {
+  .chBack,
+  .chContactButton {
     transition-duration: 0s;
   }
 
@@ -7490,11 +7553,13 @@ button.aboutCard:focus-visible {
   .sysOverlayClose:hover,
   .engModalClose:hover,
   .chBack:hover,
+  .chContactButton:hover,
   .csBack:active,
   .aboutTmArrow:active,
   .sysOverlayClose:active,
   .engModalClose:active,
-  .chBack:active {
+  .chBack:active,
+  .chContactButton:active {
     transform: scale(1);
   }
 
@@ -7818,6 +7883,14 @@ button.aboutCard:focus-visible {
   }
 }
 
+@media (max-width: 720px) {
+  .chBack,
+  .chContactButton {
+    height: 44px;
+  }
+
+}
+
 @media (max-width: 560px) {
   .chHero {
     --ch-gutter: 1rem;
@@ -7826,6 +7899,11 @@ button.aboutCard:focus-visible {
   .chBack {
     top: var(--ch-space-3, 12px);
     left: var(--ch-space-3, 12px);
+  }
+
+  .chHeaderAction {
+    right: var(--ch-space-3, 12px);
+    bottom: max(var(--ch-space-3, 12px), env(safe-area-inset-bottom));
   }
 
   .chActions {

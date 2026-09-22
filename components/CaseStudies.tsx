@@ -24,8 +24,11 @@ import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCas
 import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
 import DeferredVideo from "@/components/DeferredVideo";
+import DeferredImage from "@/components/DeferredImage";
 import Rise from "@/components/Rise";
 import SiteFooter from "@/components/SiteFooter";
+import CopyEmailButton from "@/components/CopyEmailButton";
+import { WORK_FIT_CTA } from "@/lib/letter";
 
 // /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg
 // /warpbnb/archive/topaz.mp4 -> /warpbnb/archive/thumbs/topaz.jpg
@@ -86,14 +89,11 @@ function MediaFill({
       floatingControlPlacement={contain ? "container" : "media"}
     />
   ) : (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <DeferredImage
       className={fillClass}
       style={frameStyle}
       src={media.src}
       alt=""
-      loading="lazy"
-      decoding="async"
     />
   );
 
@@ -807,6 +807,16 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     accent={overviewAccent}
                     className="csCaseHero"
                     back={{ label: "Back", onClick: startClose }}
+                    headerAction={
+                      isVisualCraft(study) ? (
+                        <CopyEmailButton
+                          email={WORK_FIT_CTA.email}
+                          label={WORK_FIT_CTA.contactLabel}
+                          copiedLabel="Email copied"
+                          className="chContactButton"
+                        />
+                      ) : undefined
+                    }
                   />
                 </div>
 
