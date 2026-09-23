@@ -131,7 +131,7 @@ export type EngKind =
   | "B2B SaaS tool"
   | "3D Model"
   | "Design Sandbox"
-  | "Playful Side Project"
+  | "Side Project"
   | "3D Game";
 
 
@@ -271,7 +271,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
   {
     id: "warpbnb-site",
     explorationsHref: "https://nextgendesigner.substack.com/p/reimagining-airbnb-for-time-travel",
-    explorationsLabel: "View process breakdown",
+    explorationsLabel: "View Process Breakdown",
     content: [
       { id: "warp-process", type: "text", monoTitle: true, title: "Process breakdown", body: "I took Warpbnb from Figma to code with Magicpath and Cursor, using Storybook to refine components and Claude Code to shape the copy. Nano Banana and Luma powered the imagery; Higgsfield and ElevenLabs brought the commercial to life. Built solo in two weeks, with hands-on curation guiding every step.", },
       { id: "warp-storybook", type: "video", plainMedia: true, src: "/warpbnb/archive/storybook.mp4", poster: "/warpbnb/archive/thumbs/storybook.jpg", caption: "Every component in isolation, all variants, all states." },
@@ -293,7 +293,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Higgsfield", logo: "/all-logos/higgsfield.png", href: "https://higgsfield.ai/" },
     ],
     title: "Warpbnb",
-    kind: "Playful Side Project",
+    kind: "Side Project",
     body: "Full-stack fictional product site covering design, code, motion, and commercial.",
     shade: "#2b2b2b",
     thumb: "/warpbnb/thumbs/site-desktop.jpg?v=2",
