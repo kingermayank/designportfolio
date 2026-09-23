@@ -4357,15 +4357,18 @@ button.aboutCard:focus-visible {
 }
 
 .engCardTool img[src$="rive.png"],
+.engCardTool img[src$="threejs.webp"],
 .engCardTool img[src$="storybook.png"],
 .engModalToolIcon[src$="rive.png"],
+.engModalToolIcon[src$="threejs.webp"],
 .engModalToolIcon[src$="storybook.png"] {
   box-sizing: border-box;
   background: #ffffff;
   padding: 2px;
 }
 
-.engCardTool:has(img[src$="cursor-2.png"]) {
+.engCardTool:has(img[src$="cursor-2.png"]),
+.engCardTool:has(img[src$="rive.jpeg"]) {
   top: -0.5px;
   left: -0.5px;
   width: 17px;
@@ -4573,7 +4576,8 @@ button.aboutCard:focus-visible {
   border-radius: 4px;
 }
 
-.engModalToolIcon[src$="cursor-2.png"] {
+.engModalToolIcon[src$="cursor-2.png"],
+.engModalToolIcon[src$="rive.jpeg"] {
   width: 17px;
   height: 17px;
 }
