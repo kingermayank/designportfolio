@@ -154,6 +154,8 @@ export type EngComponent = {
   shade: string;
   /** Live site — websites use this as the primary outbound action. */
   href?: string;
+  /** Optional label for the primary outbound action. */
+  hrefLabel?: string;
   /** Optional secondary outbound action for design explorations. */
   explorationsHref?: string;
   explorationsLabel?: string;
@@ -232,6 +234,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/shift-playground/playground.mp4",
     video: true,
     href: "https://design-playground-virid.vercel.app/",
+    hrefLabel: "View Playground",
     embedUrl: "https://design-playground-virid.vercel.app/",
     frame: "cover",
     stack: ["React", "Design tokens", "Component lab"],
@@ -345,6 +348,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
     src: "/f1-sim/thumbs/apex-preview.mp4",
     video: true,
     href: "https://f1-sim-nine.vercel.app/",
+    hrefLabel: "Play Game",
     embedUrl: "https://f1-sim-nine.vercel.app/",
     content: [
       {
