@@ -190,6 +190,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
     id: "ds",
     tools: [
       { name: "npm", logo: "/all-logos/npm.png?v=cf01fda6", href: "https://www.npmjs.com/" },
+      { name: "shadcn/ui", logo: "/all-logos/shadcn.png", href: "https://ui.shadcn.com/" },
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Shift Design System",

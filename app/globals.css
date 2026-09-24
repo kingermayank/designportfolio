@@ -4367,6 +4367,12 @@ button.aboutCard:focus-visible {
   padding: 2px;
 }
 
+.engCardTool img[src$="shadcn.png"],
+.engModalToolIcon[src$="shadcn.png"] {
+  box-sizing: border-box;
+  border: 2px solid #ffffff;
+}
+
 .engCardTool:has(img[src$="cursor-2.png"]),
 .engCardTool:has(img[src$="rive.jpeg"]) {
   top: -0.5px;
