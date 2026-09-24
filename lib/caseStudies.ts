@@ -103,6 +103,8 @@ export type CaseStudy = {
   impact?: string;
   /** Live product link shown as a CTA on the detail left rail. */
   websiteUrl?: string;
+  /** Optional commercial link shown beside the primary website CTA. */
+  commercialUrl?: string;
   /** Brand accent for highlight labels (and website CTA). */
   accent?: string;
   /**
@@ -167,7 +169,7 @@ const toolbox: CaseStudy = {
     "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion.",
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
-    "As the solo product designer, I partnered cross-functionally across research, strategy, product design, and design engineering to turn fragmented legacy tools into a unified platform for dealership teams. We migrated 450 dealerships, and our NADA 2026 showcase drove 134 new dealership signups.",
+    "As the solo product designer, I led the redesign end to end, partnering cross-functionally across research, strategy, product design, and design engineering to turn fragmented legacy tools into an AI-native unified platform for dealership teams.",
   workCaption: "Solo design lead → AI-native platform.",
   workSummary:
     "Led Toolbox end to end, from product design into design engineering, helping move 450 dealerships onto the next-generation platform.",
@@ -410,10 +412,10 @@ const toolbox: CaseStudy = {
     },
   ],
   impact:
-    "Pre-launch drove a **33% surge** in dealership signups, securing **134 dealership signups** before public release.",
+    "We migrated 450 existing dealerships, and our NADA 2026 showcase drove 134 new dealership signups.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
-    { label: "Industry", value: "Automotive, IoT Hardware, Telematics, RevOps, Marketing Automation" },
+    { label: "Industry", value: "Automotive Retail, IoT Hardware, Telematics, RevOps, AdTech, Customer Intelligence" },
     { label: "Role", value: "Lead Product Designer, Design Engineer" },
   ],
   sections: [
@@ -450,7 +452,7 @@ const warpbnb: CaseStudy = {
   detailTitle: "Reimagining Airbnb for time travel across eras.",
   tagline: "Reimagining Airbnb for time travel across eras.",
   description:
-    "A process breakdown of a fictional side project done end to end: design, code, images, content, and a video commercial, all using AI. Two weeks, solo, zero to shipped.",
+    "I conceptualized, designed, and shipped Warpbnb, a fictional travel platform that imagines booking stays across time. I applied AI across design, code, imagery, content, motion, and marketing to take the project from idea to launch solo in under two weeks.",
   workCaption: "Two weeks. Solo. Zero to shipped.",
   workSummary:
     "Designed, coded, populated, animated, and marketed a fictional product solo in two weeks, using AI without giving up taste or craft.",
@@ -458,6 +460,7 @@ const warpbnb: CaseStudy = {
   category: "Full-Stack AI Build",
   shade: "#2b2b2b",
   websiteUrl: "https://www.warpbnb.com/",
+  commercialUrl: "https://www.youtube.com/watch?v=2JfVbt3C4Q8",
   accent: "#FF0459",
   mediaOnly: true,
   highlights: [
@@ -543,12 +546,12 @@ const warpbnb: CaseStudy = {
     },
   ],
   impact:
-    "A full product with a design system, frontend, backend, content, and a video commercial, shipped solo in **two weeks**, earning widespread positive reactions across the design and tech community.",
+    "Went viral on X, earned more than **15K impressions**, and received an overwhelmingly positive response from people who loved the concept.",
   credits: [
     {
       label: "Tools",
       value:
-        "Figma, Magicpath, Cursor, Storybook, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
+        "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
     },
     { label: "Timeline", value: "~2 weeks, mostly at night" },
     { label: "Role", value: "Everything: design, code, content, motion, film" },
@@ -678,7 +681,7 @@ const pathai: CaseStudy = {
   detailTitle: "Empowering pathologists to diagnose with speed and confidence.",
   tagline: "Empowering pathologists to diagnose with speed and confidence.",
   description:
-    "I designed and shipped Region Comments, a collaboration tool on PathAI's Patient Diagnostics platform. It cut second-opinion turnaround times by ~45% and noticeably increased the number of cases pathologists sign out daily.",
+    "I designed and shipped Region Comments, a collaboration tool for pathologists on PathAI's Patient Diagnostics platform.",
   workCaption: "~45% faster second opinions.",
   workSummary:
     "Designed and shipped Region Comments, cutting second-opinion turnaround time by ~45%.",
@@ -814,15 +817,15 @@ const pathai: CaseStudy = {
     },
   ],
   impact:
-    "Region Comments cut second-opinion turnaround by **~45%**, and adoption spread beyond consults into QA, tumor boards, teaching, and research.",
+    "Region Comments cut second-opinion turnaround time by **~45%**, and adoption spread beyond consults into QA, tumor boards, teaching, and research, resulting in improved patient outcomes.",
   credits: [
     {
       label: "My Contribution",
       value:
         "User research, stakeholder alignment, interaction design, rapid prototyping, user testing, handoff",
     },
-    { label: "Team", value: "Me, Sandy Zhu, Riley Hunter, Jamie Harisiades, 5× SWE" },
     { label: "Company", value: "PathAI" },
+    { label: "Role", value: "Product Designer, Slide Viewer Squad" },
   ],
   sections: [
     {
@@ -1023,7 +1026,7 @@ const bigbasket: CaseStudy = {
   tagline:
     "Creating a Design System for India's largest grocery delivery app",
   description:
-    "Design system for India's largest grocery delivery app, building shared standards across a sprawling e-commerce product.",
+    "I co-led the zero-to-one development of a unified Design system for India's largest grocery delivery app, building shared standards & patterns across a sprawling e-commerce product.",
   workCaption: "Adopted by 200+ product and engineering members.",
   workSummary:
     "Built a design system adopted by 200+ product and engineering members, improving design-to-development handoff by ~35%.",
@@ -1199,11 +1202,11 @@ const bigbasket: CaseStudy = {
     },
   ],
   impact:
-    "Adopted by **200+** product and engineering members, improving design-to-dev handoff efficiency by **~35%** across **250+** audited components.",
+    "Adopted by **200+** product and engineering members, improving design-to-dev handoff efficiency by **~35%** across **300+** audited components.",
   credits: [
     {
-      label: "My Contribution",
-      value: "Design system foundations, components, documentation, and cross-platform patterns",
+      label: "My Role",
+      value: "Product Designer, Design Systems",
     },
     { label: "Company", value: "BigBasket" },
     { label: "Year", value: "2021" },

@@ -32,20 +32,20 @@ const HERO_META: Record<string, HeroMeta> = {
     ],
     tags: {
       label: "Industry",
-      values: split("Automotive, IoT Hardware, Telematics, RevOps, Marketing Automation"),
+      values: split("Automotive Retail, IoT Hardware, Telematics, RevOps, AdTech, Customer Intelligence"),
     },
   },
 
   warpbnb: {
     titleAccent: "Airbnb for time travel",
     items: [
-      { label: "Company", value: "Warpbnb" },
+      { label: "Project", value: "Warpbnb" },
       { label: "Role", value: "Everything: design, code, content, motion, film" },
     ],
     tags: {
       label: "Tools",
       values: split(
-        "Figma, Magicpath, Cursor, Storybook, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
+        "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
       ),
     },
   },
@@ -54,7 +54,7 @@ const HERO_META: Record<string, HeroMeta> = {
     titleAccent: "speed and confidence.",
     items: [
       { label: "Company", value: "PathAI" },
-      { label: "Team", value: "Me, Sandy Zhu, Riley Hunter, Jamie Harisiades, 5× SWE" },
+      { label: "Role", value: "Product Designer, Slide Viewer Squad" },
     ],
     tags: {
       label: "Focus area",
@@ -80,11 +80,12 @@ const HERO_META: Record<string, HeroMeta> = {
     titleAccent: "Design System for India's largest grocery delivery app",
     items: [
       { label: "Company", value: "BigBasket" },
+      { label: "My Role", value: "Product Designer, Design Systems" },
     ],
     tags: {
       label: "Focus area",
       values: split(
-        "Design System Foundations, Components, Documentation, Cross-Platform Patterns",
+        "Landscape Analysis, UI Auditing, Visual Design, Documentation & Guidelines, Workshop Facilitation, DesignOps",
       ),
     },
   },

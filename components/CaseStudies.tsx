@@ -698,6 +698,32 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     </section>
   ) : null;
 
+  const impactSection = study.impact ? (
+    <section
+      className={
+        "csEditorialImpact csFade" +
+        (isVisualCraft(study) ? " csEditorialImpactVisual" : "") +
+        (contentIn ? " in" : "")
+      }
+      style={
+        overviewAccent
+          ? ({ ["--ch-accent"]: overviewAccent } as CSSProperties)
+          : undefined
+      }
+    >
+      <span>Impact</span>
+      <p>
+        {boldRuns(study.impact).map((run, i) =>
+          run.bold ? (
+            <strong key={i}>{run.text}</strong>
+          ) : (
+            <span key={i}>{run.text}</span>
+          ),
+        )}
+      </p>
+    </section>
+  ) : null;
+
   return (
     <div
       ref={rootRef}
@@ -835,11 +861,20 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   <div className="csEditorialOverview">
                     <span>Overview</span>
                     <p>{overview}</p>
+                    {isVisualCraft(study) ? impactSection : null}
                     {overviewCtaHref ? (
                       <div className="csEditorialCta" style={overviewCtaStyle}>
                         <PrimaryButton href={overviewCtaHref}>
                           {overviewCtaLabel ?? "View Website"}
                         </PrimaryButton>
+                        {study.commercialUrl ? (
+                          <PrimaryButton
+                            href={study.commercialUrl}
+                            className="csEditorialCtaSecondary"
+                          >
+                            Watch Commercial
+                          </PrimaryButton>
+                        ) : null}
                       </div>
                     ) : null}
                   </div>
@@ -858,31 +893,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
                 {highlightsAfterMedia ? highlightsSection : null}
 
-                {study.impact ? (
-                  <section
-                    className={
-                      "csEditorialImpact csFade" +
-                      (isVisualCraft(study) ? " csEditorialImpactVisual" : "") +
-                      (contentIn ? " in" : "")
-                    }
-                    style={
-                      overviewAccent
-                        ? ({ ["--ch-accent"]: overviewAccent } as CSSProperties)
-                        : undefined
-                    }
-                  >
-                    <span>Impact</span>
-                    <p>
-                      {boldRuns(study.impact).map((run, i) =>
-                        run.bold ? (
-                          <strong key={i}>{run.text}</strong>
-                        ) : (
-                          <span key={i}>{run.text}</span>
-                        ),
-                      )}
-                    </p>
-                  </section>
-                ) : null}
+                {!isVisualCraft(study) ? impactSection : null}
 
                 {isVisualCraft(study) ? (
                   <div className={"csFade" + (contentIn ? " in" : "")}>

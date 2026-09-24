@@ -518,8 +518,8 @@ body {
   font-family: var(--font-body);
   font-size: 24px;
   font-weight: 400;
-  line-height: 30px;
-  letter-spacing: -0.03em;
+  line-height: 32px;
+  letter-spacing: -0.02em;
 }
 
 /* Context / Approach / Outcome — the written spine of the case study, sitting
@@ -561,6 +561,20 @@ body {
 
 .csEditorialImpactVisual > p strong {
   font-weight: inherit;
+}
+
+.csEditorialOverview > .csEditorialImpactVisual {
+  width: 100%;
+  margin: 24px 0 0;
+}
+
+.csEditorialOverview > .csEditorialImpactVisual > p {
+  width: 100%;
+  max-width: none;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
 }
 
 .csEditorialImpact > p {
@@ -660,7 +674,33 @@ body {
   --ch-text: #ffffff;
   --ch-border: rgba(255, 255, 255, 0.14);
   --ch-muted: #d4d4d4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
   margin-top: var(--space-6);
+}
+
+.csEditorialCta .chBtn {
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 20px;
+}
+
+.csEditorialCta .csEditorialCtaSecondary {
+  background: #ffffff;
+  color: #111111;
+}
+
+.csEditorialCta .csEditorialCtaSecondary:hover {
+  background: #e0e0e0;
+  filter: none;
+}
+
+@media (max-width: 720px) {
+  .csEditorialCta .chBtn {
+    min-height: 44px;
+    padding-inline: 12px;
+  }
 }
 
 .csEditorialMediaFlow {
@@ -6658,7 +6698,12 @@ button.aboutCard:focus-visible {
 
   .csEditorialIntroVisual .csEditorialOverview p {
     font-size: 16px;
-    line-height: 22px;
+    line-height: 24px;
+  }
+
+  .csEditorialIntroVisual .csEditorialOverview > .csEditorialImpactVisual > p {
+    font-size: 16px;
+    line-height: 24px;
   }
 
   .csMediaHoverCaption {
@@ -7704,7 +7749,7 @@ button.aboutCard:focus-visible {
   min-height: 0;
   padding: 14px;
   border: 1px solid transparent;
-  border-radius: 2px;
+  border-radius: var(--radius-pill);
   background: var(--ch-accent);
   color: var(--ch-on-accent);
   font-family: var(--font-body);
@@ -7863,6 +7908,11 @@ button.aboutCard:focus-visible {
   line-height: 1.55;
   text-align: left;
   text-wrap: pretty;
+}
+
+.csEditorialIntro .chMetaValue,
+.csEditorialIntro .chMetaTagsList {
+  font-size: 18px;
 }
 
 /* ---------- Responsive ---------- */
