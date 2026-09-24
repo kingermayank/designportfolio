@@ -549,7 +549,7 @@ const warpbnb: CaseStudy = {
     "Went viral on X, earned more than **15K impressions**, and received an overwhelmingly positive response from people who loved the concept.",
   credits: [
     {
-      label: "Tools",
+      label: "Build Stack",
       value:
         "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
     },

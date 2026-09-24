@@ -43,7 +43,7 @@ const HERO_META: Record<string, HeroMeta> = {
       { label: "Role", value: "Everything: design, code, content, motion, film" },
     ],
     tags: {
-      label: "Tools",
+      label: "Build Stack",
       values: split(
         "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
       ),
