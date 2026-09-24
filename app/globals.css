@@ -7864,6 +7864,7 @@ button.aboutCard:focus-visible {
   color: #ffffff;
   font-size: calc(var(--ch-text-body) - 1px);
   line-height: 1.5;
+  white-space: pre-line;
 }
 
 /* Trailing full-width tag row (e.g. Focus area, Tools). */

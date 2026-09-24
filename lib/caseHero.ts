@@ -28,7 +28,7 @@ const HERO_META: Record<string, HeroMeta> = {
     titleAccent: "unlock Ikon's largest customer expansion.",
     items: [
       { label: "Company", value: "Ikon Technologies" },
-      { label: "Role", value: "Lead Product Designer, Design Engineer" },
+      { label: "Role", value: "Lead Product Designer, B2B Vertical\nDesign Engineer" },
     ],
     tags: {
       label: "Industry",
@@ -80,7 +80,7 @@ const HERO_META: Record<string, HeroMeta> = {
     titleAccent: "Design System for India's largest grocery delivery app",
     items: [
       { label: "Company", value: "BigBasket" },
-      { label: "My Role", value: "Product Designer, Design Systems" },
+      { label: "Role", value: "Product Designer, Design Systems" },
     ],
     tags: {
       label: "Focus area",

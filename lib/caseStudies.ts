@@ -169,7 +169,7 @@ const toolbox: CaseStudy = {
     "Redesigning Toolbox into an enterprise-ready platform that helped unlock Ikon's largest customer expansion.",
   tagline: "An enterprise-ready platform for dealership operations.",
   description:
-    "As the solo product designer, I led the redesign end to end, partnering cross-functionally across research, strategy, product design, and design engineering to turn fragmented legacy tools into an AI-native unified platform for dealership teams.",
+    "As the solo product designer, I led the end-to-end redesign of fragmented legacy tools into an AI-native unified platform for dealership teams, spanning research, strategy, product design, and design engineering.",
   workCaption: "Solo design lead → AI-native platform.",
   workSummary:
     "Led Toolbox end to end, from product design into design engineering, helping move 450 dealerships onto the next-generation platform.",
@@ -412,11 +412,11 @@ const toolbox: CaseStudy = {
     },
   ],
   impact:
-    "We migrated 450 existing dealerships, and our NADA 2026 showcase drove 134 new dealership signups.",
+    "Migrated 450 existing dealerships and drove **139 new signups** at NADA 2026 (~33% of the business and **~$20M+ ARR**), helping unlock the company's largest enterprise deal.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
     { label: "Industry", value: "Automotive Retail, IoT Hardware, Telematics, RevOps, AdTech, Customer Intelligence" },
-    { label: "Role", value: "Lead Product Designer, Design Engineer" },
+    { label: "Role", value: "Lead Product Designer, B2B Vertical\nDesign Engineer" },
   ],
   sections: [
     {
@@ -1205,7 +1205,7 @@ const bigbasket: CaseStudy = {
     "Adopted by **200+** product and engineering members, improving design-to-dev handoff efficiency by **~35%** across **300+** audited components.",
   credits: [
     {
-      label: "My Role",
+      label: "Role",
       value: "Product Designer, Design Systems",
     },
     { label: "Company", value: "BigBasket" },

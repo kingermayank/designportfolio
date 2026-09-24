@@ -132,7 +132,7 @@ export type EngKind =
   | "3D Model"
   | "Design Sandbox"
   | "Side Project"
-  | "3D Game";
+  | "3D Racing Game";
 
 
 
@@ -342,7 +342,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Three.js", logo: "/all-logos/threejs.webp", href: "https://threejs.org/" },
     ],
     title: "Apex F1",
-    kind: "3D Game",
+    kind: "3D Racing Game",
     body: "Play the 2026 Chinese Grand Prix in Shanghai, make race decisions, and ask why each one mattered.",
     shade: "#141414",
     thumb: "/f1-sim/thumbs/apex-preview.jpg",
@@ -361,7 +361,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
       },
     ],
     frame: "cover",
-    stack: ["Next.js", "Vercel", "3D Game"],
+    stack: ["Next.js", "Vercel", "3D Racing Game"],
   },
   {
     id: "keytag-3d",
