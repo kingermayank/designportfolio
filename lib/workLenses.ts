@@ -348,9 +348,9 @@ export const ENG_COMPONENTS: EngComponent[] = [
     thumb: "/f1-sim/thumbs/apex-preview.jpg",
     src: "/f1-sim/thumbs/apex-preview.mp4",
     video: true,
-    href: "https://f1-sim-nine.vercel.app/",
+    href: "https://f1-apex-simulator.vercel.app/",
     hrefLabel: "Play Game",
-    embedUrl: "https://f1-sim-nine.vercel.app/",
+    embedUrl: "https://f1-apex-simulator.vercel.app/",
     content: [
       {
         id: "apex-process",
