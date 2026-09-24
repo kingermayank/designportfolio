@@ -45,7 +45,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "ikon-data-dictionary",
     slug: "ikon-data-dictionary",
-    title: "One data dictionary, ~$6K/month of redundant spend cut",
+    title: "Unified company data and uncovered ~$72K in annual savings",
     meta: "Ikon Technologies · Data Dictionary · 2024",
     body: "Catalogued internal, first-party, and third-party data with definitions aligned across teams, ending cross-team ambiguity and surfacing duplicate vendor payments worth roughly $6,000 a month.",
     thumb: "/ikon/thumbs/dictionary.jpg?v=3",
@@ -66,7 +66,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "ikon-blueprint",
     slug: "ikon-service-blueprint",
-    title: "One operational source of truth across disconnected ops",
+    title: "Created the operational blueprint that accelerated warehouse transformation",
     meta: "Ikon Technologies · Service Blueprint · 2024",
     body: "Mapped the device lifecycle end to end across accounting, operations, warehouse, and dealership, providing the blueprint NetSuite consultants used to start the warehouse management system project.",
     thumb: "/systems%20thinking/flow.png",
@@ -87,7 +87,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "ikon-analytics",
     slug: "ikon-analytics",
-    title: "A shared HEART framework replacing four conflicting scorecards",
+    title: "Aligned 4 teams around one definition of product success",
     meta: "Ikon Technologies · Product Analytics · 2024",
     body: "Sales, ops, leadership, and product each tracked different metrics. Mapped every web and mobile workflow to HEART goals and instrumented them, giving Toolbox one shared definition of success.",
     thumb: "/systems%20thinking/Slide%2016_9%20-%2060.png",
@@ -108,7 +108,7 @@ export const SYSTEMS_LIST: WorkListItem[] = [
   {
     id: "ikon-agentic",
     slug: "ikon-agentic-outreach",
-    title: "Service appointments booked by an agent, not an operator",
+    title: "Deployed conversational AI to automate bookings and cut operating costs",
     meta: "Ikon Technologies · AI/ML Integration · 2025",
     body: "Automated dealership service outreach end to end with Stella AI, identifying customers, running the call, checking live availability, and booking autonomously, with humans on exceptions only.",
     thumb: "/systems%20thinking/Slide%2016_9%20-%2061.png",

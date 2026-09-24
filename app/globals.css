@@ -3632,11 +3632,13 @@ button.aboutCard:focus-visible {
   left: 50%;
   top: 79%;
   width: clamp(54px, 12.8cqw, 74px);
+  overflow: visible;
   border-color: #d1d1d1;
   background: #fff;
   box-shadow:
     0 4px 0 #dedede,
     0 5px 10px rgba(20, 20, 20, 0.1);
+  animation: data-dictionary-hub-glow 3.6s ease-out infinite;
 }
 
 .dataDictionaryHub::before {
@@ -3645,6 +3647,58 @@ button.aboutCard:focus-visible {
   content: "";
   border: 1px solid #d6d6d6;
   border-radius: 50%;
+}
+
+.dataDictionaryHub::after {
+  position: absolute;
+  inset: -1px;
+  content: "";
+  border: 2px solid var(--data-dictionary-accent);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  animation: data-dictionary-hub-ring 3.6s ease-out infinite;
+}
+
+@keyframes data-dictionary-hub-glow {
+  0%,
+  20%,
+  100% {
+    box-shadow:
+      0 4px 0 #dedede,
+      0 5px 10px rgba(20, 20, 20, 0.1);
+  }
+
+  7% {
+    box-shadow:
+      0 4px 0 #dedede,
+      0 5px 12px rgba(20, 20, 20, 0.12),
+      0 0 18px rgba(3, 169, 111, 0.28);
+  }
+}
+
+@keyframes data-dictionary-hub-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  5% {
+    opacity: 0.46;
+  }
+
+  20%,
+  100% {
+    opacity: 0;
+    transform: scale(1.48);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dataDictionaryHub,
+  .dataDictionaryHub::after {
+    animation: none;
+  }
 }
 
 .dataDictionaryDatabaseIcon {
@@ -3658,7 +3712,7 @@ button.aboutCard:focus-visible {
 .sysCardCopy {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   min-width: 0;
   padding: 0;
   border-radius: 0;
