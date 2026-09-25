@@ -148,7 +148,7 @@ export default function PathAICaseStudy() {
         </div>
       </Section>
 
-      <Section label="Impact" title="Reduced diagnostic turnaround time by 45%.">
+      <Section label="Impact" title="Reduced diagnostic turnaround time by 45%">
         <p>
           Region Comments became the foundation for collaborative review across PathAI&apos;s diagnostic product suite. After the Q4 2022 beta launch, the team noticed:
         </p>
