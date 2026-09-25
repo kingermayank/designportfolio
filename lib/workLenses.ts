@@ -130,7 +130,7 @@ export type EngKind =
   | "Marketing Landing Page"
   | "B2B SaaS tool"
   | "3D Model"
-  | "Design Sandbox"
+  | "Prototyping Sandbox"
   | "Side Project"
   | "3D Racing Game";
 
@@ -228,7 +228,7 @@ export const ENG_COMPONENTS: EngComponent[] = [
         body: "Shift Playground is where I try out new interactions and components in a live prototyping environment. I experiment with different ideas and refine the ones that feel right. When I commit to a component, I push it into the Shift Design System package so it can be reused across our internal tools.",
       },
     ],
-    kind: "Design Sandbox",
+    kind: "Prototyping Sandbox",
     body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
     shade: "#282828",
     thumb: "/shift-playground/thumbs/work-cover.jpg",
