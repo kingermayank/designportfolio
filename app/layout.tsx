@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Azeret_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import ClarityAnalytics from "@/components/Clarity";
 import PageTransition from "@/components/PageTransition";
 import {
   createMetadata,
@@ -180,6 +181,7 @@ export default function RootLayout({
         />
         <PageTransition>{children}</PageTransition>
         <Analytics />
+        <ClarityAnalytics />
       </body>
     </html>
   );
