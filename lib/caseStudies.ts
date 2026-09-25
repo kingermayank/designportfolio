@@ -105,6 +105,8 @@ export type CaseStudy = {
   websiteUrl?: string;
   /** Optional commercial link shown beside the primary website CTA. */
   commercialUrl?: string;
+  /** Optional process breakdown link shown beside the commercial CTA. */
+  processUrl?: string;
   /** Brand accent for highlight labels (and website CTA). */
   accent?: string;
   /**
@@ -461,6 +463,7 @@ const warpbnb: CaseStudy = {
   shade: "#2b2b2b",
   websiteUrl: "https://www.warpbnb.com/",
   commercialUrl: "https://www.youtube.com/watch?v=2JfVbt3C4Q8",
+  processUrl: "https://nextgendesigner.substack.com/p/reimagining-airbnb-for-time-travel",
   accent: "#FF0459",
   mediaOnly: true,
   highlights: [
@@ -546,7 +549,7 @@ const warpbnb: CaseStudy = {
     },
   ],
   impact:
-    "Went viral on X, earned more than **15K impressions**, and received an overwhelmingly positive response from people who loved the concept.",
+    "Went viral on X, earned more than **15K impressions**, and received an overwhelmingly positive response from people who loved and shared the concept. That momentum led to invitations to workshops where I demoed the project and walked through my AI-native process for education and enablement.",
   credits: [
     {
       label: "Build Stack",

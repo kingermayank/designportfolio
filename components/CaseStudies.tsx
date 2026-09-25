@@ -650,6 +650,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
   const study = LINKABLE_CASE_STUDIES[detailIdx];
   const pathaiHasCaseStudy = study.slug === "pathai" && layout === "editorial";
+  const walkityMovesCta = study.slug === "walkity" && layout === "editorial";
+  const metadataCta = layout === "editorial" && (walkityMovesCta || Boolean(study.commercialUrl));
   const next = LINKABLE_CASE_STUDIES[(detailIdx + 1) % LINKABLE_CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
@@ -868,7 +870,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     <span>Overview</span>
                     <p>{overview}</p>
                     {isVisualCraft(study) ? impactSection : null}
-                    {overviewCtaHref ? (
+                    {overviewCtaHref && !metadataCta ? (
                       <div className="csEditorialCta" style={overviewCtaStyle}>
                         <PrimaryButton href={overviewCtaHref}>
                           {overviewCtaLabel ?? "View Website"}
@@ -887,6 +889,39 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   {heroMeta?.length || heroMetaTags?.values.length ? (
                     <div className="csEditorialMetadata">
                       <MetadataList items={heroMeta ?? []} tags={heroMetaTags} />
+                      {metadataCta && overviewCtaHref ? (
+                        <div
+                          className={
+                            "csEditorialCta csEditorialMetadataCta" +
+                            (study.slug === "warpbnb" ? " csWarpbnbMetadataCta" : "")
+                          }
+                          style={overviewCtaStyle}
+                        >
+                          <PrimaryButton href={overviewCtaHref}>
+                            {overviewCtaLabel ?? "View Website"}
+                          </PrimaryButton>
+                          {study.commercialUrl || study.processUrl ? (
+                            <div className="csEditorialMetadataCtaSecondary">
+                              {study.commercialUrl ? (
+                                <PrimaryButton
+                                  href={study.commercialUrl}
+                                  className="csEditorialCtaSecondary"
+                                >
+                                  Watch Commercial
+                                </PrimaryButton>
+                              ) : null}
+                              {study.processUrl ? (
+                                <PrimaryButton
+                                  href={study.processUrl}
+                                  className="csEditorialCtaSecondary"
+                                >
+                                  View Process
+                                </PrimaryButton>
+                              ) : null}
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
                       {pathaiHasCaseStudy ? (
                         <>
                           <button

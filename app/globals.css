@@ -696,6 +696,39 @@ body {
   filter: none;
 }
 
+.csEditorialMetadataCta {
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.csEditorialMetadataCta .chBtn {
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+}
+
+.csEditorialMetadataCtaSecondary {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.csEditorialMetadataCtaSecondary > .chBtn {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.csWarpbnbMetadataCta .csEditorialCtaSecondary {
+  background: #353535;
+  color: #fafafa;
+}
+
+.csWarpbnbMetadataCta .csEditorialCtaSecondary:hover {
+  background: #4a4a4a;
+  filter: none;
+}
+
 @media (max-width: 720px) {
   .csEditorialCta .chBtn {
     min-height: 44px;
@@ -5454,7 +5487,7 @@ button.aboutCard:focus-visible {
 
 .engInteractiveChip li {
   padding: 7.5px 12px 6.5px;
-  border-radius: var(--radius-pill);
+  border-radius: 6px;
   font-family: var(--font-label), ui-monospace, monospace;
   font-size: 11px;
   font-weight: 500;
