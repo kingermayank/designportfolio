@@ -74,7 +74,7 @@ export default function PathAICaseStudy() {
         <p>
           As patterns began to emerge from the interviews, it became clear that collaboration is a fundamental part of a pathologist&apos;s workflow, much like how we as designers seek feedback on our work. As I dug deeper, I was able to identify a few key insights in collaboration that directly informed design requirements for the solution.
         </p>
-        <Figure src={`${caseStudyAssets}/research.png`} alt="PathAI research and user interview exploration" caption="" />
+        <Figure src={`${caseStudyAssets}/research.png?v=2`} alt="PathAI research and user interview exploration" caption="" />
         <h3 className="pathaiStorySubhead">Key research insights.</h3>
         <Figure src={`${caseStudyAssets}/insights.png?v=3`} alt="Key research insights from pathologist interviews" caption="" />
         <p>These findings laid the foundation for the design direction and directly informed the trade-offs and product decisions that followed.</p>
