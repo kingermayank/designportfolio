@@ -4780,7 +4780,7 @@ button.aboutCard:focus-visible {
   letter-spacing: var(--tracking-label);
   line-height: 20px;
   text-transform: uppercase;
-  color: var(--faint);
+  color: #a9a9a9;
 }
 
 /* Detail modal — DESIGN.md tokens, flat surfaces, no shadows */
