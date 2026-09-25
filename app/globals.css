@@ -4177,6 +4177,10 @@ button.aboutCard:focus-visible {
   .sysOverlayBody {
     padding: 32px 28px 24px;
   }
+
+  .strategyDetailOverlay .sysOverlayBody {
+    padding-top: 24px;
+  }
 }
 
 /* Sans headline — same voice as the Design Engineering modal title. */
