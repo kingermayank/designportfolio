@@ -31,7 +31,7 @@ const THUMB_H = Math.round((THUMB_W * 9) / 16); // 225
 const STRIP_SCALE = 0.7;
 const STRIP_SCALE_ACTIVE = 1.14;
 const STRIP_GAP = 56;
-const STRIP_SLOT_W = Math.ceil(THUMB_W * STRIP_SCALE * STRIP_SCALE_ACTIVE) + 12;
+const STRIP_SLOT_W = 420;
 const STRIP_SLOT_H = Math.ceil(THUMB_H * STRIP_SCALE * STRIP_SCALE_ACTIVE) + 12;
 const STRIP_LABEL_H = 84;
 const STRIP_BOTTOM = 36;
@@ -49,10 +49,10 @@ const STRIP_TRANSITION =
   "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), filter 300ms ease, opacity 300ms cubic-bezier(0.22, 1, 0.36, 1)";
 const STRIP_INACTIVE_OPACITY = 0.75;
 const STRIP_INACTIVE_GRAYSCALE = 0.42;
-const STRIP_LABEL_SIZE = 16;
+const STRIP_LABEL_SIZE = 20;
 const STRIP_LABEL_LETTER_SPACING = 0.6;
-const STRIP_LABEL_ACTIVE = "#2C3548";
-const STRIP_LABEL_INACTIVE = "#5E6A87";
+const STRIP_LABEL_ACTIVE = "#8C8694";
+const STRIP_LABEL_INACTIVE = "#8C8694";
 
 /** Subtle playhead — same treatment as the comment-card strip. */
 const PROGRESS_MUTE = "rgba(188, 194, 206, 0.16)";
@@ -393,7 +393,7 @@ export default function RegionEdgeCases() {
                       letterSpacing: STRIP_LABEL_LETTER_SPACING,
                       textTransform: "uppercase",
                       color: active ? STRIP_LABEL_ACTIVE : STRIP_LABEL_INACTIVE,
-                      opacity: active ? 1 : 0.68,
+                      opacity: 1,
                       transition:
                         "opacity 300ms cubic-bezier(0.22, 1, 0.36, 1), color 300ms cubic-bezier(0.22, 1, 0.36, 1)",
                       textAlign: "center",

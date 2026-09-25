@@ -88,10 +88,10 @@ const HERO_CENTER_Y = STAGE_H / 2 - 100;
 const STRIP_SCALE = 0.64;
 const STRIP_SCALE_ACTIVE = 1.14;
 const STRIP_GAP = 40;
-const STRIP_BOTTOM = 76;
-const STRIP_LABEL_SIZE = 18;
-const STRIP_LABEL_ACTIVE = "#2C3548";
-const STRIP_LABEL_INACTIVE = "#5E6A87";
+const STRIP_BOTTOM = 100;
+const STRIP_LABEL_SIZE = 22;
+const STRIP_LABEL_ACTIVE = "#8C8694";
+const STRIP_LABEL_INACTIVE = "#8C8694";
 /** Soft mute — same family as inactive cards; ~½ prior strong contrast. */
 const PROGRESS_MUTE = "rgba(188, 194, 206, 0.16)";
 /** Soft white-forward fill with a faint blue lift at the playhead. */
@@ -841,7 +841,7 @@ function Stage({
                   letterSpacing: 0.8,
                   textTransform: "uppercase",
                   color: active ? STRIP_LABEL_ACTIVE : STRIP_LABEL_INACTIVE,
-                  opacity: active ? 1 : 0.68,
+                  opacity: 1,
                   transition:
                     "opacity 300ms cubic-bezier(0.22, 1, 0.36, 1), color 300ms cubic-bezier(0.22, 1, 0.36, 1)",
                   textAlign: "center",
