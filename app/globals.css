@@ -459,7 +459,7 @@ body {
   margin: 0 0 var(--space-6);
   padding: 0 var(--space-3);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
+  border-radius: 8px;
   background: transparent;
   color: var(--text);
   cursor: pointer;
@@ -737,6 +737,153 @@ body {
 .csEditorialBleed .csMediaBleed {
   margin-top: 0;
   border-radius: 0;
+}
+
+.csEditorialMetadata { min-width: 0; }
+.csCaseStudyOpen {
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: 28px;
+  padding: 0 20px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  font: 500 14px/1 var(--font-body);
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+.csCaseStudyOpen:hover { background: #f2f2f2; transform: scale(0.98); }
+.csCaseStudyOpen:active { transform: scale(0.97); }
+.csCaseStudyOpen:focus-visible { outline: 2px solid #d18bff; outline-offset: 3px; }
+.csPressReleaseOpen {
+  margin-top: 8px;
+  border: 1px solid #353535;
+  background: #353535;
+  color: #fafafa;
+  text-decoration: none;
+}
+.csPressReleaseOpen:hover { background: #4a4a4a; }
+
+.pathaiCaseOverlay {
+  --sys-dur: 500ms;
+  --sys-ease: cubic-bezier(0.15, 0, 0.3, 1);
+  --pathai-accent: #d18bff;
+}
+.sysOverlay.pathaiCaseOverlay .sysOverlayStage { transform: translate3d(100%, 0, 0); }
+.sysOverlay.pathaiCaseOverlay.is-open .sysOverlayStage { transform: translate3d(0, 0, 0); }
+.pathaiCaseOverlay .sysOverlaySheet { background: #171717; }
+.pathaiCasePanelContent { padding: 32px 28px 80px; }
+.pathaiCaseOverlay .pathaiStory { width: 100%; padding-bottom: 0; }
+.pathaiCaseOverlay .pathaiStorySection:first-child { padding-top: 0; border-top: 0; }
+@media (max-width: 900px) {
+  .sysOverlay.pathaiCaseOverlay .sysOverlayStage { transform: translate3d(0, 100%, 0); }
+  .sysOverlay.pathaiCaseOverlay.is-open .sysOverlayStage { transform: translate3d(0, 0, 0); }
+  .pathaiCasePanelContent { padding: 24px 20px 88px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pathaiCaseOverlay .sysOverlayScrim,
+  .pathaiCaseOverlay .sysOverlayStage { transition: none !important; }
+  .csCaseStudyOpen { transition: none; }
+}
+
+.pathaiStory {
+  --pathai-accent: #d18bff;
+  width: calc(100% - (var(--cs-editorial-inset) * 2));
+  margin: 0 auto;
+  padding-bottom: clamp(3.5rem, 8vw, 8rem);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+.pathaiStorySection {
+  padding: 40px 0 44px;
+  border-top: 1px solid #383838;
+}
+
+.pathaiStorySectionBody { margin-top: 16px; }
+.pathaiStoryIndex {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-faint);
+  font: 500 12px/15px var(--font-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+.pathaiStorySectionHead h2 {
+  margin: 0;
+  font: 400 1.25rem/1.5rem var(--font-body);
+  letter-spacing: -0.045em;
+}
+.pathaiStorySectionBody > p {
+  margin: 0 0 calc(1.2em - 6px);
+  color: #cecece;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.015em;
+}
+.pathaiStorySectionBody > p strong { color: var(--color-text); font-weight: 700; }
+.pathaiStorySectionBody h3 {
+  margin: 3.5rem 0 1rem;
+  font: 400 1.25rem/1.5rem var(--font-body);
+  letter-spacing: -0.045em;
+}
+.pathaiStorySectionBody .pathaiStorySubhead {
+  margin: 2.5rem 0 0;
+  color: var(--color-text);
+  font: 400 1.25rem/1.5rem var(--font-body);
+  letter-spacing: -0.045em;
+}
+.pathaiStoryFigure + p { margin-top: 1.5rem; }
+.pathaiStoryFigure { min-width: 0; margin: 2rem 0 0; }
+.pathaiStoryFrame {
+  overflow: hidden;
+  border-radius: 6px;
+  background: transparent;
+}
+.pathaiStoryAsset { display: block; width: 100%; height: auto; }
+.pathaiCaseOverlay .pathaiStoryFigure figcaption {
+  margin: 0;
+  padding-top: 4px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: balance;
+}
+.pathaiStoryPair { display: block; }
+.pathaiStoryDecision { margin: 1.5rem 0 1rem; }
+.pathaiStoryDecision > h3 {
+  display: block;
+  margin: 0 0 12px;
+  color: var(--color-text);
+  font: 400 1.25rem/1.5rem var(--font-body);
+  letter-spacing: -0.045em;
+}
+.pathaiStoryDecision p { width: 100%; max-width: none; margin: 0; color: #cecece; font-size: 1rem; line-height: 1.5rem; }
+.pathaiStoryDecision p + p { margin-top: 8px; }
+.pathaiStoryDecision p strong { color: var(--color-text); font-weight: 700; }
+.pathaiStoryOutcomes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 3rem; }
+.pathaiStoryOutcomes div {
+  padding: 20px;
+  border-radius: 4px;
+  background: #292929;
+}
+.pathaiStoryOutcomes strong { display: block; margin-bottom: 8px; font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 400; letter-spacing: -0.04em; }
+.pathaiStoryOutcomes span { color: #aaa; font-size: 13px; line-height: 1.4; }
+
+@media (max-width: 900px) {
+  .pathaiStoryOutcomes { grid-template-columns: 1fr; gap: 16px; }
+}
+
+@media (max-width: 560px) {
+  .pathaiStorySection { padding: 0; }
 }
 
 .csPanel {
@@ -3743,10 +3890,10 @@ button.aboutCard:focus-visible {
   border-radius: 4px;
   background: #2b2b2b;
   font-family: var(--font-label), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 1.2;
+  line-height: 15px;
   text-transform: uppercase;
   color: #fafafa;
 }
@@ -4035,7 +4182,7 @@ button.aboutCard:focus-visible {
   border-radius: 4px;
   background: #2b2b2b;
   font-family: var(--font-label), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 1.2;
@@ -4234,9 +4381,9 @@ button.aboutCard:focus-visible {
 .sysOverlaySectionLabel {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 15px;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--muted);
@@ -4536,10 +4683,10 @@ button.aboutCard:focus-visible {
 
 .engCardKind {
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 1;
+  line-height: 15px;
   text-transform: uppercase;
   color: var(--faint);
 }
@@ -4740,10 +4887,10 @@ button.aboutCard:focus-visible {
 .engModalKind {
   margin: 0 0 var(--space-1);
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 1.5;
+  line-height: 15px;
   text-transform: uppercase;
   color: var(--color-faint);
 }
@@ -4848,9 +4995,10 @@ button.aboutCard:focus-visible {
 
 .engModalSiteChromeLabel {
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
+  line-height: 15px;
   text-transform: uppercase;
   color: var(--color-faint);
 }
@@ -5278,10 +5426,10 @@ button.aboutCard:focus-visible {
 .engModalLabel {
   margin: 0;
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 1.5;
+  line-height: 15px;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -5386,7 +5534,7 @@ button.aboutCard:focus-visible {
   margin: 0;
   padding: 0 20px;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: 8px;
   background: #ffffff;
   color: #121413;
   font-family: var(--font-body);
@@ -6114,7 +6262,7 @@ button.aboutCard:focus-visible {
   gap: 6px;
   height: 36px;
   padding: 0 20px;
-  border-radius: 999px;
+  border-radius: 8px;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
@@ -7538,7 +7686,7 @@ button.aboutCard:focus-visible {
   height: 36px;
   padding: 0 20px;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: 8px;
   background: #353535;
   color: #fafafa;
   cursor: pointer;
@@ -7600,7 +7748,7 @@ button.aboutCard:focus-visible {
   height: 36px;
   padding: 0 20px;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: 8px;
   background: #ffffff;
   color: #121413;
   cursor: pointer;
@@ -7803,7 +7951,7 @@ button.aboutCard:focus-visible {
   min-height: 0;
   padding: 14px;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  border-radius: 8px;
   background: var(--ch-accent);
   color: var(--ch-on-accent);
   font-family: var(--font-body);

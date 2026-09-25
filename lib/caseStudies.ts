@@ -681,7 +681,7 @@ const pathai: CaseStudy = {
   detailTitle: "Empowering pathologists to diagnose with speed and confidence.",
   tagline: "Empowering pathologists to diagnose with speed and confidence.",
   description:
-    "I designed and shipped Region Comments, a collaboration tool for pathologists on PathAI's Patient Diagnostics platform.",
+    "I designed and shipped a new collaboration tool called Region Comments on our Patient Diagnostics platform which significantly reduced diagnosis turnaround times, leading to a noticeable increase in the number of cases signed out daily by pathologists.",
   workCaption: "~45% faster second opinions.",
   workSummary:
     "Designed and shipped Region Comments, cutting second-opinion turnaround time by ~45%.",
@@ -693,15 +693,15 @@ const pathai: CaseStudy = {
   highlights: [
     {
       label: "Problem",
-      body: "Pathologists had no fast, reliable way to get second opinions, falling back on screenshots and email that delayed critical diagnostic decisions.",
+      body: "Pathologists currently lack an efficient, reliable way to collaborate when they need a second opinion, especially on complex cases.",
     },
     {
       label: "Approach",
-      body: "Researched curbside consults with pathologists, then designed Region Comments as a contextual collaboration layer directly on digital slides.",
+      body: "I began with organizational research and aligned with my PM on the problem scope, focusing on informal (curbside) consultations.",
     },
     {
       label: "Outcome",
-      body: "Shipped in Q4 2022 and cut second-opinion turnaround by ~45%, with adoption expanding into QA, tumor boards, teaching, and research.",
+      body: "After the Q4 2022 beta launch, consult and second-opinion turnaround time dropped by ~45%, with adoption expanding into QA, tumor boards, teaching, and research.",
     },
   ],
   // Cover drives Work 1 card + detail hero (~4:3 monitor shot).
@@ -822,7 +822,7 @@ const pathai: CaseStudy = {
     {
       label: "My Contribution",
       value:
-        "User research, stakeholder alignment, interaction design, rapid prototyping, user testing, handoff",
+        "User Research, Stakeholder Alignment, Interaction Design, Rapid Prototyping, User Testing, Handoff",
     },
     { label: "Company", value: "PathAI" },
     { label: "Role", value: "Product Designer, Slide Viewer Squad" },
@@ -848,7 +848,7 @@ const pathai: CaseStudy = {
     },
     {
       nav: "Solution",
-      heading: "Region Comments: fast, traceable, contextual collaboration.",
+      heading: "Region Comments: fast, traceable, & contextual collaboration at slide level.",
       body: [
         "A contextual, traceable collaboration layer directly on digital slides. Pathologists draw a region, leave a note, and start a discussion, all inside the viewer. For the sender, quick markups replace lengthy emails; for the receiver, clicking a comment zooms to the exact tissue region.",
       ],

@@ -21,6 +21,7 @@ import { boldRuns } from "@/lib/richText";
 import { CaseHero, MetadataList, PrimaryButton, onAccent } from "@/components/case-hero";
 import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
+import PathAICaseStudyPanel from "@/components/pathai/PathAICaseStudyPanel";
 import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
 import DeferredVideo from "@/components/DeferredVideo";
@@ -488,6 +489,9 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const [contentIn, setContentIn] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
   const [footerProgress, setFooterProgress] = useState(0);
+  const [casePanelOpen, setCasePanelOpen] = useState(false);
+  const casePanelOpenRef = useRef(false);
+  casePanelOpenRef.current = casePanelOpen;
 
   const viewRef = useRef(view);
   viewRef.current = view;
@@ -510,6 +514,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     setFooterProgress(0);
     setListFade(false);
     setContentIn(true);
+    setCasePanelOpen(false);
     requestAnimationFrame(() => detailScrollRef.current?.scrollTo(0, 0));
   }, []);
 
@@ -595,7 +600,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") startCloseRef.current();
+      if (e.key === "Escape" && !casePanelOpenRef.current) startCloseRef.current();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -644,6 +649,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   }, []);
 
   const study = LINKABLE_CASE_STUDIES[detailIdx];
+  const pathaiHasCaseStudy = study.slug === "pathai" && layout === "editorial";
   const next = LINKABLE_CASE_STUDIES[(detailIdx + 1) % LINKABLE_CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
@@ -879,7 +885,57 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     ) : null}
                   </div>
                   {heroMeta?.length || heroMetaTags?.values.length ? (
-                    <MetadataList items={heroMeta ?? []} tags={heroMetaTags} />
+                    <div className="csEditorialMetadata">
+                      <MetadataList items={heroMeta ?? []} tags={heroMetaTags} />
+                      {pathaiHasCaseStudy ? (
+                        <>
+                          <button
+                            type="button"
+                            className="csCaseStudyOpen"
+                            aria-haspopup="dialog"
+                            onClick={() => setCasePanelOpen(true)}
+                          >
+                            Read Case Study
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-2H2z" />
+                              <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
+                            </svg>
+                          </button>
+                          <a
+                            className="csCaseStudyOpen csPressReleaseOpen"
+                            href="https://www.pathai.com/news/pathai-launches-new-pathologist-centric-features-on-aisight-to-enable-efficient-case-review-through-intelligent-case-prioritization-and-real-time-multi-institut"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Press Release
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M7 17 17 7" />
+                              <path d="M7 7h10v10" />
+                            </svg>
+                          </a>
+                        </>
+                      ) : null}
+                    </div>
                   ) : null}
                 </section>
 
@@ -1152,6 +1208,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
           </div>
         </div>
       )}
+
+      {view === "detail" && pathaiHasCaseStudy && casePanelOpen && !closing ? (
+        <PathAICaseStudyPanel onClose={() => setCasePanelOpen(false)} />
+      ) : null}
 
       <div ref={chipRef} className="csCursorChip mono">
         ↗ VIEW CASE
