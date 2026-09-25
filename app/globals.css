@@ -3,9 +3,11 @@
   --color-canvas: #0e0e0e;
   --color-surface: #242424;
   --color-border: #303030;
-  --color-faint: #595959;
-  --color-muted: #989898;
-  --color-body: #b4b4b4;
+  --color-secondary: #c8c8c8;
+  --color-secondary-on-light: #c8c8c8;
+  --color-faint: var(--color-secondary);
+  --color-muted: var(--color-secondary);
+  --color-body: var(--color-secondary);
   --color-text: #ffffff;
   --color-accent: #ffe800;
   --color-accent-orange: #ff6a1f;
@@ -482,8 +484,8 @@ body {
   --ch-line-label: 20px;
   --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
   --ch-tracking-label: var(--tracking-label);
-  --ch-muted: #d4d4d4;
-  --ch-faint: #c8c8c8;
+  --ch-muted: var(--color-secondary);
+  --ch-faint: var(--color-secondary);
   display: grid;
   grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
   align-items: start;
@@ -502,7 +504,7 @@ body {
   display: block;
   margin: 0 0 var(--space-2);
   padding: 0;
-  color: var(--ch-accent, #c8c8c8);
+  color: var(--ch-accent, var(--color-secondary));
   font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
   font-weight: 500;
@@ -549,7 +551,7 @@ body {
   display: block;
   margin: 0 0 var(--space-2);
   padding: 0;
-  color: var(--ch-accent, #c8c8c8);
+  color: var(--ch-accent, var(--color-secondary));
   font-family: var(--font-label);
   font-size: 13px;
   font-weight: 500;
@@ -645,9 +647,9 @@ body {
 .csEditorialHighlightLabel {
   display: block;
   margin: 0 0 var(--space-3);
-  color: #c8c8c8;
+  color: var(--color-secondary);
   font-family: var(--font-label);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 20px;
@@ -657,7 +659,7 @@ body {
 .csEditorialHighlight p {
   margin: 0;
   max-width: 46ch;
-  color: #d4d4d4;
+  color: var(--color-secondary);
   font-size: clamp(0.95rem, 1.1vw, 1.05rem);
   line-height: 1.55;
   letter-spacing: -0.01em;
@@ -673,7 +675,7 @@ body {
   --ch-on-accent: #111111;
   --ch-text: #ffffff;
   --ch-border: rgba(255, 255, 255, 0.14);
-  --ch-muted: #d4d4d4;
+  --ch-muted: var(--color-secondary);
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
@@ -898,7 +900,7 @@ body {
   display: block;
   margin-bottom: 6px;
   color: var(--color-faint);
-  font: 500 12px/15px var(--font-label);
+  font: 500 13px/20px var(--font-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
@@ -909,12 +911,12 @@ body {
 }
 .pathaiStorySectionBody > p {
   margin: 0 0 calc(1.2em - 6px);
-  color: #cecece;
+  color: var(--color-secondary);
   font-size: 1rem;
   line-height: 1.5rem;
   letter-spacing: -0.015em;
 }
-.pathaiStorySectionBody > p strong { color: var(--color-text); font-weight: 700; }
+.pathaiStory p strong { color: #ffffff; font-weight: 700; }
 .pathaiStorySectionBody h3 {
   margin: 3.5rem 0 1rem;
   font: 400 1.25rem/1.5rem var(--font-body);
@@ -952,9 +954,8 @@ body {
   font: 400 1.25rem/1.5rem var(--font-body);
   letter-spacing: -0.045em;
 }
-.pathaiStoryDecision p { width: 100%; max-width: none; margin: 0; color: #cecece; font-size: 1rem; line-height: 1.5rem; }
+.pathaiStoryDecision p { width: 100%; max-width: none; margin: 0; color: var(--color-secondary); font-size: 1rem; line-height: 1.5rem; }
 .pathaiStoryDecision p + p { margin-top: 8px; }
-.pathaiStoryDecision p strong { color: var(--color-text); font-weight: 700; }
 .pathaiStoryOutcomes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 3rem; }
 .pathaiStoryOutcomes div {
   padding: 20px;
@@ -962,7 +963,7 @@ body {
   background: #292929;
 }
 .pathaiStoryOutcomes strong { display: block; margin-bottom: 8px; font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 400; letter-spacing: -0.04em; }
-.pathaiStoryOutcomes span { color: #aaa; font-size: 13px; line-height: 1.4; }
+.pathaiStoryOutcomes span { color: var(--color-secondary); font-size: 13px; line-height: 1.4; }
 
 @media (max-width: 900px) {
   .pathaiStoryOutcomes { grid-template-columns: 1fr; gap: 16px; }
@@ -3638,9 +3639,10 @@ button.aboutCard:focus-visible {
 
 .workListMeta {
   font-family: var(--font-label);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
+  line-height: 20px;
   text-transform: uppercase;
   color: var(--faint);
 }
@@ -4471,9 +4473,9 @@ button.aboutCard:focus-visible {
 .sysOverlaySectionLabel {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 15px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--muted);
@@ -4773,10 +4775,10 @@ button.aboutCard:focus-visible {
 
 .engCardKind {
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 15px;
+  line-height: 20px;
   text-transform: uppercase;
   color: var(--faint);
 }
@@ -4977,10 +4979,10 @@ button.aboutCard:focus-visible {
 .engModalKind {
   margin: 0 0 var(--space-1);
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 15px;
+  line-height: 20px;
   text-transform: uppercase;
   color: var(--color-faint);
 }
@@ -5085,10 +5087,10 @@ button.aboutCard:focus-visible {
 
 .engModalSiteChromeLabel {
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 15px;
+  line-height: 20px;
   text-transform: uppercase;
   color: var(--color-faint);
 }
@@ -5516,10 +5518,10 @@ button.aboutCard:focus-visible {
 .engModalLabel {
   margin: 0;
   font-family: var(--font-label), ui-sans-serif, system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
-  line-height: 15px;
+  line-height: 20px;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -7571,7 +7573,7 @@ button.aboutCard:focus-visible {
   gap: var(--space-4);
   color: var(--color-text);
   font-family: var(--font-label);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking-label);
   line-height: 20px;
@@ -7625,7 +7627,7 @@ button.aboutCard:focus-visible {
   /* — Typography — */
   --ch-font-display: var(--font-cesare), "Times New Roman", serif;
   --ch-font-body: var(--font-body);
-  --ch-text-eyebrow: 15px;
+  --ch-text-eyebrow: 13px;
   --ch-line-label: 20px;
   --ch-text-title: clamp(calc(2.5rem + 8px), calc(5.2vw + 8px), calc(4rem + 8px));
   --ch-text-body: clamp(0.95rem, 1.1vw, 1.05rem);
@@ -7640,10 +7642,9 @@ button.aboutCard:focus-visible {
   /* — Neutral foreground (default) — */
   --ch-surface: #0e0e0e;
   --ch-text: #ffffff;
-  /* Secondary ramp: light gray on dark art — clearly readable, still
-     subordinate to the title. Contrast on #0e0e0e: muted ~11:1, faint ~6:1. */
-  --ch-muted: #d4d4d4;
-  --ch-faint: #a0a0a0;
+  /* One secondary text gray per surface theme keeps hierarchy consistent. */
+  --ch-muted: var(--color-secondary);
+  --ch-faint: var(--color-secondary);
   --ch-border: rgba(255, 255, 255, 0.14);
   --ch-back-color: #ffffff;
 
@@ -7666,8 +7667,8 @@ button.aboutCard:focus-visible {
 .chHero.chToneDark {
   --ch-surface: #0d0d0d;
   --ch-text: #ffffff;
-  --ch-muted: #d4d4d4;
-  --ch-faint: #a0a0a0;
+  --ch-muted: var(--color-secondary);
+  --ch-faint: var(--color-secondary);
   --ch-border: rgba(255, 255, 255, 0.1);
   --ch-on-accent: #0d0d0d;
 }
@@ -7675,8 +7676,8 @@ button.aboutCard:focus-visible {
 .chHero.chToneLight {
   --ch-surface: #fbfbfa;
   --ch-text: #131313;
-  --ch-muted: #3f3f3f;
-  --ch-faint: #6b6b6b;
+  --ch-muted: var(--color-secondary-on-light);
+  --ch-faint: var(--color-secondary-on-light);
   --ch-border: rgba(0, 0, 0, 0.14);
   --ch-accent: #131313;
   --ch-on-accent: #ffffff;
@@ -7969,7 +7970,7 @@ button.aboutCard:focus-visible {
 
 .chEyebrow {
   margin: 0 0 var(--ch-space-4);
-  color: #c8c8c8;
+  color: var(--ch-faint);
   font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
   font-weight: 500;
@@ -8142,7 +8143,7 @@ button.aboutCard:focus-visible {
 }
 
 .chMetaLabel {
-  color: var(--ch-accent, #c8c8c8);
+  color: var(--ch-accent, var(--color-secondary));
   font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
   font-weight: 500;
@@ -8183,7 +8184,7 @@ button.aboutCard:focus-visible {
   display: block;
   width: 100%;
   margin: 0;
-  color: var(--ch-accent, #c8c8c8);
+  color: var(--ch-accent, var(--color-secondary));
   font-family: var(--font-label);
   font-size: var(--ch-text-eyebrow);
   font-weight: 500;
