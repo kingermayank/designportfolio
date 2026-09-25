@@ -26,6 +26,7 @@ const split = (value: string): string[] =>
 const HERO_META: Record<string, HeroMeta> = {
   toolbox: {
     titleAccent: "unlock Ikon's largest customer expansion.",
+    ctaLabel: "View Prototyping Playground",
     items: [
       { label: "Company", value: "Ikon Technologies" },
       { label: "Role", value: "Lead Product Designer, B2B Vertical\nDesign Engineer" },

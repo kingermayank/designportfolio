@@ -177,6 +177,7 @@ const toolbox: CaseStudy = {
     "Led Toolbox end to end, from product design into design engineering, helping move 450 dealerships onto the next-generation platform.",
   year: 2025,
   category: "Design Engineering",
+  websiteUrl: "https://design-playground-virid.vercel.app/",
   shade: "#282828",
   mediaOnly: true,
   accent: "#03BB7D", // Ikon brand green

@@ -18,12 +18,12 @@ function isExternal(href: string) {
 }
 
 const ArrowIcon = () => (
-  <svg width="10" height="10" viewBox="0 0 16 16" aria-hidden="true">
+  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
     <path
-      d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5"
+      d="M7 17 17 7M7 7h10v10"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
     />

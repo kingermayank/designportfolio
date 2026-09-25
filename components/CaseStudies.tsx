@@ -9,7 +9,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   LINKABLE_CASE_STUDIES,
   isVisualCraft,
@@ -463,6 +463,7 @@ function indexForSlug(slug: string): number {
 }
 
 export default function CaseStudies({ externalEntry = null, layout = "standard" }: Props) {
+  const reduceMotion = useReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const chipRef = useRef<HTMLDivElement | null>(null);
   const listScrollRef = useRef<HTMLDivElement | null>(null);
@@ -490,6 +491,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const [activeSection, setActiveSection] = useState(0);
   const [footerProgress, setFooterProgress] = useState(0);
   const [casePanelOpen, setCasePanelOpen] = useState(false);
+  const [toolboxDemoHovered, setToolboxDemoHovered] = useState(false);
+  const [toolboxDemoJiggling, setToolboxDemoJiggling] = useState(false);
   const casePanelOpenRef = useRef(false);
   casePanelOpenRef.current = casePanelOpen;
 
@@ -515,6 +518,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     setListFade(false);
     setContentIn(true);
     setCasePanelOpen(false);
+    setToolboxDemoHovered(false);
+    setToolboxDemoJiggling(false);
     requestAnimationFrame(() => detailScrollRef.current?.scrollTo(0, 0));
   }, []);
 
@@ -651,7 +656,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const study = LINKABLE_CASE_STUDIES[detailIdx];
   const pathaiHasCaseStudy = study.slug === "pathai" && layout === "editorial";
   const walkityMovesCta = study.slug === "walkity" && layout === "editorial";
-  const metadataCta = layout === "editorial" && (walkityMovesCta || Boolean(study.commercialUrl));
+  const toolboxMovesCta = study.slug === "toolbox" && layout === "editorial";
+  const metadataCta = layout === "editorial" && (walkityMovesCta || toolboxMovesCta || Boolean(study.commercialUrl));
   const next = LINKABLE_CASE_STUDIES[(detailIdx + 1) % LINKABLE_CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
@@ -893,10 +899,117 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                         <div
                           className={
                             "csEditorialCta csEditorialMetadataCta" +
-                            (study.slug === "warpbnb" ? " csWarpbnbMetadataCta" : "")
+                            (study.slug === "warpbnb" ? " csWarpbnbMetadataCta" : "") +
+                            (toolboxMovesCta ? " csToolboxMetadataCta" : "")
                           }
                           style={overviewCtaStyle}
                         >
+                          {toolboxMovesCta ? (
+                            <button
+                              type="button"
+                              className="chBtn csToolboxDemoCta"
+                              onClick={() => {
+                                setToolboxDemoJiggling(true);
+                                window.setTimeout(() => setToolboxDemoJiggling(false), 720);
+                              }}
+                              onMouseEnter={() => setToolboxDemoHovered(true)}
+                              onMouseLeave={() => {
+                                setToolboxDemoHovered(false);
+                                setToolboxDemoJiggling(false);
+                              }}
+                            >
+                              <span className="csToolboxDemoLabel" aria-hidden="true">
+                                <AnimatePresence initial={false} mode="wait">
+                                  <motion.span
+                                    key={toolboxDemoHovered ? "hovered" : "default"}
+                                    initial={
+                                      reduceMotion
+                                        ? false
+                                        : {
+                                            opacity: 0,
+                                            y: 4,
+                                            x: toolboxDemoHovered ? 0 : -4,
+                                            filter: "blur(2px)",
+                                          }
+                                    }
+                                    animate={{
+                                      opacity: 1,
+                                      y: 0,
+                                      x: toolboxDemoHovered ? 0 : -4,
+                                      filter: "blur(0px)",
+                                    }}
+                                    exit={
+                                      reduceMotion
+                                        ? undefined
+                                        : { opacity: 0, y: -4, filter: "blur(2px)" }
+                                    }
+                                    transition={
+                                      reduceMotion
+                                        ? { duration: 0 }
+                                        : { duration: 0.15, ease: [0.42, 0, 0.58, 1] }
+                                    }
+                                  >
+                                    {toolboxDemoHovered ? "Reach out for access" : "View Product Demo"}
+                                  </motion.span>
+                                </AnimatePresence>
+                              </span>
+                              <span className="csToolboxDemoIcon" aria-hidden="true">
+                                <AnimatePresence initial={false} mode="sync">
+                                  <motion.svg
+                                    key={
+                                      toolboxDemoHovered ? "lock" : "arrow"
+                                    }
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={1.8}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    initial={
+                                      reduceMotion
+                                        ? false
+                                        : { opacity: 0, scale: 0.25, filter: "blur(2px)" }
+                                    }
+                                    animate={{
+                                      opacity: 1,
+                                      scale: 1,
+                                      filter: "blur(0px)",
+                                      rotate: toolboxDemoJiggling
+                                        ? [0, -14, 14, -14, 14, -12, 12, -10, 10, -7, 7, 0]
+                                        : 0,
+                                    }}
+                                    exit={
+                                      reduceMotion
+                                        ? undefined
+                                        : {
+                                            opacity: 0,
+                                            scale: 0.25,
+                                            filter: "blur(2px)",
+                                          }
+                                    }
+                                    transition={
+                                      reduceMotion
+                                        ? { duration: 0 }
+                                        : toolboxDemoJiggling
+                                          ? { duration: 0.72, ease: "easeInOut" }
+                                          : { duration: 0.25, ease: [0.42, 0, 0.58, 1] }
+                                    }
+                                  >
+                                    {toolboxDemoHovered ? (
+                                      <>
+                                        <rect x="5" y="10" width="14" height="11" rx="2" />
+                                        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                                      </>
+                                    ) : (
+                                      <path d="M7 17 17 7M7 7h10v10" />
+                                    )}
+                                  </motion.svg>
+                                </AnimatePresence>
+                              </span>
+                            </button>
+                          ) : null}
                           <PrimaryButton href={overviewCtaHref}>
                             {overviewCtaLabel ?? "View Website"}
                           </PrimaryButton>
@@ -1092,16 +1205,16 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     >
                       View Website
                       <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 16 16"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
                         aria-hidden="true"
                       >
                         <path
-                          d="M4.5 11.5 11.5 4.5M6.5 4.5h5v5"
+                          d="M7 17 17 7M7 7h10v10"
                           fill="none"
                           stroke="currentColor"
-                          strokeWidth="1.6"
+                          strokeWidth="1.8"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
