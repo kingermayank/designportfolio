@@ -76,7 +76,7 @@ export default function PathAICaseStudy() {
         </p>
         <Figure src={`${caseStudyAssets}/research.png?v=2`} alt="PathAI research and user interview exploration" caption="" />
         <h3 className="pathaiStorySubhead">Key research insights.</h3>
-        <Figure src={`${caseStudyAssets}/insights.png?v=3`} alt="Key research insights from pathologist interviews" caption="" />
+        <Figure src={`${caseStudyAssets}/insights.png?v=4`} alt="Key research insights from pathologist interviews" caption="" />
         <p>These findings laid the foundation for the design direction and directly informed the trade-offs and product decisions that followed.</p>
       </Section>
 
