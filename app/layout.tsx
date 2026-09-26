@@ -4,6 +4,7 @@ import { Azeret_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import ClarityAnalytics from "@/components/Clarity";
 import PageTransition from "@/components/PageTransition";
+import ClickSounds from "@/components/ClickSounds";
 import {
   createMetadata,
   DEFAULT_DESCRIPTION,
@@ -180,6 +181,7 @@ export default function RootLayout({
           }}
         />
         <PageTransition>{children}</PageTransition>
+        <ClickSounds />
         <Analytics />
         <ClarityAnalytics />
       </body>

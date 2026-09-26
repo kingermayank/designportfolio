@@ -446,7 +446,7 @@ function EngCard({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onOpen();
+          e.currentTarget.click();
         }
       }}
     >

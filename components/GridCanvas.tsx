@@ -316,6 +316,7 @@ export default function GridCanvas({
                           <motion.div
                             key={uid}
                             data-tid={uid}
+                            data-click-sound="on"
                             ref={(el) => {
                               if (el) tileEls.current.set(uid, el);
                               else tileEls.current.delete(uid);
