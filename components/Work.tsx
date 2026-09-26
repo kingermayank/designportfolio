@@ -16,7 +16,6 @@ import DeferredVideo from "@/components/DeferredVideo";
 import DeferredImage from "@/components/DeferredImage";
 import EngCardPreview from "@/components/EngCardPreview";
 import EngDetailModal from "@/components/EngDetailModal";
-import SiteFooter from "@/components/SiteFooter";
 import SocialMenu from "@/components/SocialMenu";
 import SystemsDetailOverlay from "@/components/SystemsDetailOverlay";
 import { usePageTransition } from "@/components/PageTransition";
@@ -774,7 +773,6 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
         </AnimatePresence>
       </div>
 
-      <SiteFooter />
 
       {engActive ? (
         <EngDetailModal item={engActive} onClose={() => {

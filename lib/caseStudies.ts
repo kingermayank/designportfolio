@@ -37,6 +37,11 @@ export type MediaEmbedId =
 /** Full-width row, or left tile + right column (one or more stacked). */
 export type MediaBlock =
   | {
+      type: "heading";
+      subtitle: string;
+      title: string;
+    }
+  | {
       type: "full";
       media: CaseMedia;
       /** Edge-to-edge — breaks out of the editorial content max-width. */
@@ -208,6 +213,11 @@ const toolbox: CaseStudy = {
   mediaBlocks: [
     /* Craft stills — /toolbox/project, in the order the screens are read. */
     {
+      type: "heading",
+      subtitle: "Onboarding & Navigation",
+      title: "Giving dealership teams a clear starting point, from signing in to finding their way around Toolbox.",
+    },
+    {
       type: "full",
       media: tbShot(
         "/toolbox/project/tool1.webp",
@@ -234,6 +244,11 @@ const toolbox: CaseStudy = {
           "One navigation spine for every dealer workflow.",
         ),
       ],
+    },
+    {
+      type: "heading",
+      subtitle: "Toolbox Intelligence",
+      title: "Giving dealers a conversational way to understand inventory, customers, service opportunities, and operational risks.",
     },
     {
       type: "full",
@@ -279,6 +294,11 @@ const toolbox: CaseStudy = {
       ),
     },
     {
+      type: "heading",
+      subtitle: "Dashboard & Reporting",
+      title: "Helping dealers monitor operational health and catch issues before they become costly problems.",
+    },
+    {
       type: "full",
       media: tbDesktop(
         "/toolbox/invoices.mp4", // Dashboard
@@ -293,6 +313,11 @@ const toolbox: CaseStudy = {
         "#222627",
         "Operational health at a glance, with pairing rates, inventory mix, and off-lot exposure in one view.",
       ),
+    },
+    {
+      type: "heading",
+      subtitle: "Inventory Map View",
+      title: "Helping sales teams find vehicles and keys faster so customers are not left waiting during test drives.",
     },
     {
       type: "full",
@@ -320,10 +345,20 @@ const toolbox: CaseStudy = {
       ],
     },
     {
+      type: "heading",
+      subtitle: "Configurations",
+      title: "Giving dealers control over sell-first rules and battery thresholds so they can prioritize the right vehicles before problems happen.",
+    },
+    {
       type: "embed",
       embed: "toolbox-lot-age-range",
       shade: "#222627",
       ar: 16 / 9,
+    },
+    {
+      type: "heading",
+      subtitle: "Invoices",
+      title: "Reducing billing confusion by bringing invoice visibility and dispute resolution into the dealer's portal.",
     },
     {
       type: "full",
@@ -353,6 +388,11 @@ const toolbox: CaseStudy = {
     /* Product walkthroughs. Filenames on disk are out of sync with content —
      * map by what's in the frame. */
     {
+      type: "heading",
+      subtitle: "Gateway Management",
+      title: "Bringing key-tracking infrastructure in-house to improve location accuracy and reduce operational costs.",
+    },
+    {
       type: "full",
       media: tbDesktop(
         "/toolbox/gateways.mp4",
@@ -367,6 +407,11 @@ const toolbox: CaseStudy = {
         "#FFFFFF",
         "Draw, lasso, and pan tools for carving a geofence straight out of the lot.",
       ),
+    },
+    {
+      type: "heading",
+      subtitle: "Mobile Device Pairing",
+      title: "Making the pairing process reliable and frustration-free to prevent returning perfectly good hardware.",
     },
     {
       type: "full",

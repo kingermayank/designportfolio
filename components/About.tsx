@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import AboutContent from "@/components/AboutContent";
 import CaseBack from "@/components/case-hero/CaseBack";
 import Rise from "@/components/Rise";
-import SiteFooter from "@/components/SiteFooter";
 
 type AboutProps = {
   onClose?: () => void;
@@ -44,7 +43,6 @@ export default function About({ onClose }: AboutProps) {
           </div>
         </div>
 
-        <SiteFooter />
       </div>
     </div>
   );

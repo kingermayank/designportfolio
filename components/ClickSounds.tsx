@@ -1,26 +1,15 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect } from "react";
 
 const STORAGE_KEY = "portfolio-sound-enabled";
-const CHANGE_EVENT = "portfolio-sound-change";
-let enabledInMemory = true;
 
 function soundEnabled() {
   try {
     return localStorage.getItem(STORAGE_KEY) !== "false";
   } catch {
-    return enabledInMemory;
+    return true;
   }
-}
-
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  window.addEventListener(CHANGE_EVENT, callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(CHANGE_EVENT, callback);
-  };
 }
 
 const CONTROLS = [
@@ -57,10 +46,8 @@ export default function ClickSounds() {
     // Capture before a control navigates, unmounts, or stops propagation.
     // Native keyboard activation also emits click, so it plays exactly once.
     document.addEventListener("click", handleClick, true);
-    window.addEventListener(CHANGE_EVENT, play);
     return () => {
       document.removeEventListener("click", handleClick, true);
-      window.removeEventListener(CHANGE_EVENT, play);
       audio.pause();
       audio.removeAttribute("src");
       audio.load();
@@ -68,29 +55,4 @@ export default function ClickSounds() {
   }, []);
 
   return null;
-}
-
-export function SoundToggle() {
-  const enabled = useSyncExternalStore(subscribe, soundEnabled, () => true);
-
-  return (
-    <button
-      type="button"
-      className="soundToggle"
-      aria-label="Interface sounds"
-      aria-pressed={enabled}
-      data-click-sound="off"
-      onClick={() => {
-        enabledInMemory = !enabled;
-        try {
-          localStorage.setItem(STORAGE_KEY, String(enabledInMemory));
-        } catch {
-          // Keep the preference for this session when storage is unavailable.
-        }
-        window.dispatchEvent(new Event(CHANGE_EVENT));
-      }}
-    >
-      Sound {enabled ? "on" : "off"}
-    </button>
-  );
 }

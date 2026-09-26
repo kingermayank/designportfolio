@@ -27,7 +27,6 @@ import MoreProjects from "@/components/MoreProjects";
 import DeferredVideo from "@/components/DeferredVideo";
 import DeferredImage from "@/components/DeferredImage";
 import Rise from "@/components/Rise";
-import SiteFooter from "@/components/SiteFooter";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import { WORK_FIT_CTA } from "@/lib/letter";
 
@@ -302,7 +301,12 @@ function MediaBlocks({
   interactiveVideo?: boolean;
 }) {
   const items = blocks.map((block, i) =>
-    block.type === "full" ? (
+    block.type === "heading" ? (
+      <header key={i} className="csFeatureHeading">
+        <p>{block.subtitle}</p>
+        <h2>{block.title}</h2>
+      </header>
+    ) : block.type === "full" ? (
       <MediaTile
         key={i}
         media={block.media}
@@ -490,6 +494,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const [contentIn, setContentIn] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
   const [footerProgress, setFooterProgress] = useState(0);
+  const [contactVisible, setContactVisible] = useState(false);
   const [casePanelOpen, setCasePanelOpen] = useState(false);
   const [toolboxDemoHovered, setToolboxDemoHovered] = useState(false);
   const [toolboxDemoJiggling, setToolboxDemoJiggling] = useState(false);
@@ -515,6 +520,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     setView("detail");
     setActiveSection(0);
     setFooterProgress(0);
+    setContactVisible(false);
     setListFade(false);
     setContentIn(true);
     setCasePanelOpen(false);
@@ -602,6 +608,25 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   useEffect(() => {
     detailScrollRef.current?.scrollTo(0, 0);
   }, [detailIdx]);
+
+  useEffect(() => {
+    const root = detailScrollRef.current;
+    const hero = heroRef.current;
+    if (view !== "detail" || layout !== "editorial" || !root || !hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Only reveal after the cover has passed above the scroll viewport.
+        setContactVisible(
+          !entry.isIntersecting &&
+            entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 0),
+        );
+      },
+      { root, threshold: 0 },
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, [view, detailIdx, layout]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -837,7 +862,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
           <div className={"csDetailInner" + (editorial ? " csEditorialDetail" : "")}>
             {editorial ? (
               <div className="csEditorialContent">
-                <div ref={heroRef}>
+                <div ref={heroRef} className="csCover">
                   <CaseHero
                     {...heroOnly}
                     media={{
@@ -849,15 +874,40 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     back={{ label: "Back", onClick: startClose }}
                     headerAction={
                       isVisualCraft(study) ? (
-                        <CopyEmailButton
-                          email={WORK_FIT_CTA.email}
-                          label={WORK_FIT_CTA.contactLabel}
-                          copiedLabel="Email copied"
-                          className="chContactButton"
-                        />
+                        <div
+                          className="csContactReveal"
+                          data-visible={contactVisible}
+                          inert={!contactVisible}
+                          aria-hidden={!contactVisible}
+                        >
+                          <CopyEmailButton
+                            email={WORK_FIT_CTA.email}
+                            label={WORK_FIT_CTA.contactLabel}
+                            copiedLabel="Email copied"
+                            className="chContactButton"
+                          />
+                        </div>
                       ) : undefined
                     }
                   />
+                  <button
+                    type="button"
+                    className="csCoverScroll"
+                    aria-label="Scroll to project overview"
+                    onClick={() => {
+                      const scroller = detailScrollRef.current;
+                      const cover = heroRef.current;
+                      if (!scroller || !cover) return;
+                      scroller.scrollTo({
+                        top: scroller.scrollTop + cover.getBoundingClientRect().bottom - scroller.getBoundingClientRect().top + 1,
+                        behavior: reduceMotion ? "instant" : "smooth",
+                      });
+                    }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
                 </div>
 
                 <section
@@ -1105,7 +1155,6 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   </div>
                 ) : null}
 
-                <SiteFooter />
               </div>
             ) : <>
             <div className="csPanel csDetailPanel" style={{ height: rootH }}>

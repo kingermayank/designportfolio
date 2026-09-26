@@ -217,53 +217,6 @@ body {
   padding: 0 var(--space-4);
 }
 
-.siteFooter {
-  position: relative;
-  z-index: 1;
-  flex: 1 1 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 8px 24px max(8px, env(safe-area-inset-bottom));
-}
-
-.siteFooterCopy {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-faint);
-  text-align: right;
-}
-
-.soundToggle {
-  flex-shrink: 0;
-  min-height: 44px;
-  margin: -12px 16px -12px 0;
-  padding: 0 4px;
-  border: 0;
-  background: transparent;
-  color: var(--color-faint);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.soundToggle:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.aboutPageRoot .siteFooter {
-  /* Sit just left of the fixed grid toggle. */
-  padding-right: calc(var(--space-4) + 44px + var(--space-3));
-}
-
 /* Work / grid switch — bottom right, no label and no icon. */
 .modeToggle {
   position: absolute;
@@ -828,6 +781,35 @@ body {
 .csEditorialMedia .csMediaSplit,
 .csEditorialMedia .csMediaSplitRight {
   gap: 8px;
+}
+
+.csFeatureHeading {
+  margin-top: clamp(2rem, 4vw, 4rem);
+  border-top: 1px solid var(--color-border);
+  padding: 64px 0 40px;
+}
+
+.csFeatureHeading > p {
+  margin: 0 0 8px;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.csFeatureHeading > h2 {
+  width: 100%;
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-wrap: wrap;
 }
 
 .csEditorialMedia .csMedia {
@@ -4287,6 +4269,11 @@ button.aboutCard:focus-visible {
   list-style: none;
 }
 
+.strategyDetailOverlay .sysOverlayTags {
+  /* Add 4px above and 8px below the original 12px / 24px spacing. */
+  margin: -8px 0 8px;
+}
+
 .sysOverlayTags li {
   /* Same caps nudge as the eng modal chips. */
   padding: 7.5px 12px 6.5px;
@@ -4481,6 +4468,11 @@ button.aboutCard:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.strategyDetailOverlay .sysOverlayHighlights {
+  /* Add 8px to the body's 24px gap after the project figure. */
+  margin-top: 8px;
 }
 
 .sysOverlaySection {
@@ -7270,19 +7262,6 @@ button.aboutCard:focus-visible {
     display: none;
   }
 
-  .siteFooter {
-    flex: none;
-    justify-content: center;
-  }
-
-  .siteFooterCopy {
-    text-align: center;
-  }
-
-  .aboutPageRoot .siteFooter {
-    padding-right: 24px;
-  }
-
   .workFit {
     max-width: none;
   }
@@ -7844,6 +7823,81 @@ button.aboutCard:focus-visible {
   right: var(--ch-space-5, 24px);
   bottom: var(--ch-space-5, 24px);
   z-index: 50;
+}
+
+.csCover {
+  position: relative;
+}
+
+.csCoverScroll {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #b4b4b4;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.csCoverScroll svg {
+  opacity: 0.75;
+}
+
+.csCoverScroll:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .csCoverScroll:hover {
+    color: #ffffff;
+  }
+}
+
+.csContactReveal {
+  --contact-enter: 700ms;
+  --contact-exit: 250ms;
+  --contact-distance: 12px;
+  --contact-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(var(--contact-distance));
+  filter: blur(4px);
+  transition:
+    opacity var(--contact-exit) var(--contact-ease),
+    transform var(--contact-exit) var(--contact-ease),
+    filter var(--contact-exit) var(--contact-ease),
+    visibility 0s var(--contact-exit);
+}
+
+.csContactReveal[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity var(--contact-enter) var(--contact-ease),
+    transform var(--contact-enter) var(--contact-ease),
+    filter var(--contact-enter) var(--contact-ease),
+    visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .csContactReveal[data-visible] {
+    transition: none;
+    transform: none;
+    filter: none;
+  }
 }
 
 .chContactButton {
