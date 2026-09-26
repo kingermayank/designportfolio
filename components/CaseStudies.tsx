@@ -22,6 +22,8 @@ import { CaseHero, MetadataList, PrimaryButton, onAccent } from "@/components/ca
 import CommentFieldStates from "@/components/pathai/CommentFieldStates";
 import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCases";
 import PathAICaseStudyPanel from "@/components/pathai/PathAICaseStudyPanel";
+import CaseStudyPanel from "@/components/CaseStudyPanel";
+import BigBasketCaseStudy from "@/components/bigbasket/BigBasketCaseStudy";
 import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
 import DeferredVideo from "@/components/DeferredVideo";
@@ -680,6 +682,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
   const study = LINKABLE_CASE_STUDIES[detailIdx];
   const pathaiHasCaseStudy = study.slug === "pathai" && layout === "editorial";
+  const bigbasketHasCaseStudy = study.slug === "bigbasket" && layout === "editorial";
   const walkityMovesCta = study.slug === "walkity" && layout === "editorial";
   const toolboxMovesCta = study.slug === "toolbox" && layout === "editorial";
   const metadataCta = layout === "editorial" && (walkityMovesCta || toolboxMovesCta || Boolean(study.commercialUrl));
@@ -1085,7 +1088,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                           ) : null}
                         </div>
                       ) : null}
-                      {pathaiHasCaseStudy ? (
+                      {pathaiHasCaseStudy || bigbasketHasCaseStudy ? (
                         <>
                           <button
                             type="button"
@@ -1109,7 +1112,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
                             </svg>
                           </button>
-                          <a
+                          {pathaiHasCaseStudy ? <a
                             className="csCaseStudyOpen csPressReleaseOpen"
                             href="https://www.pathai.com/news/pathai-launches-new-pathologist-centric-features-on-aisight-to-enable-efficient-case-review-through-intelligent-case-prioritization-and-real-time-multi-institut"
                             target="_blank"
@@ -1130,7 +1133,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               <path d="M7 17 17 7" />
                               <path d="M7 7h10v10" />
                             </svg>
-                          </a>
+                          </a> : null}
                         </>
                       ) : null}
                     </div>
@@ -1408,6 +1411,11 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
       {view === "detail" && pathaiHasCaseStudy && casePanelOpen && !closing ? (
         <PathAICaseStudyPanel onClose={() => setCasePanelOpen(false)} />
+      ) : null}
+      {view === "detail" && bigbasketHasCaseStudy && casePanelOpen && !closing ? (
+        <CaseStudyPanel title="BigBasket case study" onClose={() => setCasePanelOpen(false)}>
+          <BigBasketCaseStudy />
+        </CaseStudyPanel>
       ) : null}
 
       <div ref={chipRef} className="csCursorChip mono">

@@ -917,7 +917,23 @@ body {
   line-height: 1.5rem;
   letter-spacing: -0.015em;
 }
+
+.bigbasketStoryList {
+  margin: 1rem 0 1.5rem;
+  padding-left: 1.25rem;
+  color: var(--color-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.bigbasketStoryList li + li {
+  margin-top: 8px;
+}
 .pathaiStory p strong { color: #ffffff; font-weight: 700; }
+.bigbasketStory .pathaiStorySectionBody strong {
+  color: #ffffff;
+  font-weight: 500;
+}
 .pathaiStorySectionBody h3 {
   margin: 3.5rem 0 1rem;
   font: 400 1.25rem/1.5rem var(--font-body);
