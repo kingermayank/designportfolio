@@ -513,7 +513,6 @@ const warpbnb: CaseStudy = {
   category: "Full-Stack AI Build",
   shade: "#2b2b2b",
   websiteUrl: "https://www.warpbnb.com/",
-  commercialUrl: "https://www.youtube.com/watch?v=2JfVbt3C4Q8",
   processUrl: "https://nextgendesigner.substack.com/p/reimagining-airbnb-for-time-travel",
   accent: "#FF0459",
   mediaOnly: true,
@@ -988,7 +987,7 @@ const walkity: CaseStudy = {
   },
   // Numbered stack: 4 / 4-2 are the paired squares, side by side.
   mediaBlocks: [
-    { type: "full", media: wk("/walkity/walk1.png", 4016 / 2241, false, "Footsteps plus haptic technology equals Walkity.") },
+    { type: "full", media: wk("/walkity/walk1.png", 4016 / 2241, false, "Footsteps and haptic technology became the Walkity symbol.") },
     { type: "full", media: wk("/walkity/walk2.webp", 3354 / 2514, false, "Brand guidelines: color palette, typography, and logo system.") },
     { type: "full", media: wk("/walkity/walk3.webp", 6000 / 4500, false, "Brand philosophy, stationery, and print collateral.") },
     {

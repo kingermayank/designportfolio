@@ -342,7 +342,7 @@ export default function EngDetailModal({ item, onClose }: Props) {
 
           </div>
           {item.content?.map((block) => (
-            <section className={"engModalContentSection" + (block.monoTitle || block.id === "paper-board" ? " engModalProcessSection" : "") + (block.plainMedia ? " engModalMediaSection" : "")} key={block.id}>
+            <section id={block.id} className={"engModalContentSection" + (block.monoTitle || block.id === "paper-board" ? " engModalProcessSection" : "") + (block.plainMedia ? " engModalMediaSection" : "")} key={block.id}>
               {block.title ? (
                 <div className="engModalContentHead">
                   <h3 className={block.monoTitle || block.id === "paper-board" ? "sysOverlaySectionLabel" : "engModalContentTitle"}>{block.title}</h3>

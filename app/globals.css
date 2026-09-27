@@ -682,6 +682,24 @@ body {
   min-height: 44px;
 }
 
+.csEditorialCta .chBtn,
+.csEditorialMetadataCta .chBtn {
+  transition:
+    background-color 180ms ease,
+    filter 167ms linear,
+    transform 180ms ease;
+}
+
+.csEditorialCta .chBtn:hover,
+.csEditorialMetadataCta .chBtn:hover {
+  transform: scale(0.98);
+}
+
+.csEditorialCta .chBtn:active,
+.csEditorialMetadataCta .chBtn:active {
+  transform: scale(0.97);
+}
+
 .csEditorialMetadataCtaSecondary {
   display: flex;
   gap: 8px;
@@ -694,12 +712,12 @@ body {
 }
 
 .csWarpbnbMetadataCta .csEditorialCtaSecondary {
-  background: #353535;
-  color: #fafafa;
+  background: #ffffff;
+  color: #111111;
 }
 
 .csWarpbnbMetadataCta .csEditorialCtaSecondary:hover {
-  background: #4a4a4a;
+  background: #e0e0e0;
   filter: none;
 }
 
@@ -857,7 +875,8 @@ body {
   color: #fafafa;
   text-decoration: none;
 }
-.csPressReleaseOpen:hover { background: #4a4a4a; }
+.csPressReleaseOpen:hover { background: #4a4a4a; transform: scale(0.98); }
+.csPressReleaseOpen:active { transform: scale(0.97); }
 
 .pathaiCaseOverlay {
   --sys-dur: 500ms;
@@ -879,7 +898,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .pathaiCaseOverlay .sysOverlayScrim,
   .pathaiCaseOverlay .sysOverlayStage { transition: none !important; }
-  .csCaseStudyOpen { transition: none; }
+  .csCaseStudyOpen,
+  .csEditorialCta .chBtn,
+  .csEditorialMetadataCta .chBtn,
+  .csToolboxMetadataCta .csToolboxDemoCta { transition: none; }
 }
 
 .pathaiStory {
@@ -3276,7 +3298,12 @@ button.aboutCard:focus-visible {
   }
 
   .aboutPageTitle {
-    font-size: clamp(3rem, calc(9vw + 24px), 4.75rem);
+    font-size: clamp(2rem, 7vw, 2.75rem);
+  }
+
+  .csHeading.aboutHeading {
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+    line-height: 1.15;
   }
 
   .aboutPtoGrid,
@@ -4256,8 +4283,8 @@ button.aboutCard:focus-visible {
   height: 44px;
   padding: 16px;
   border: 0;
-  border-radius: var(--radius-circle);
-  background: var(--sys-glass-weak);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   color: var(--text);
@@ -4277,11 +4304,11 @@ button.aboutCard:focus-visible {
 }
 
 .sysOverlayClose:hover {
-  background: var(--sys-glass);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .sysOverlayClose:active {
-  background: var(--sys-glass-weak);
+  background: rgba(0, 0, 0, 0.38);
   transition-duration: var(--sys-hover-ms), var(--sys-press-ms);
 }
 
@@ -4503,7 +4530,7 @@ button.aboutCard:focus-visible {
   height: 44px;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-circle);
+  border-radius: 8px;
   background: rgba(20, 20, 20, 0.55);
   color: #ffffff;
   cursor: pointer;
@@ -5367,6 +5394,11 @@ button.aboutCard:focus-visible {
   border-top: 0;
 }
 
+.engModalProcessSection + .engModalProcessSection {
+  border-top: 0;
+  padding-top: 0;
+}
+
 .engModalProcessSection {
   gap: 8px;
 }
@@ -5929,6 +5961,10 @@ button.aboutCard:focus-visible {
     -webkit-overflow-scrolling: touch;
   }
 
+  .engModalMeta + .engModalContentSection {
+    padding-top: var(--space-3);
+  }
+
   .engModalStageWrap {
     flex: 0 0 auto;
   }
@@ -6213,6 +6249,37 @@ button.aboutCard:focus-visible {
   display: block;
 }
 
+.workSocialSwap {
+  display: inline-grid;
+  overflow: hidden;
+  height: 1.2em;
+}
+
+.workSocialSwapRow {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: transform 180ms ease;
+}
+
+.workSocialSwapRow:nth-child(2) {
+  transform: translateY(100%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .workSocial:hover .workSocialSwapRow:nth-child(1),
+  .workSocial:focus-visible .workSocialSwapRow:nth-child(1) {
+    transform: translateY(-100%);
+  }
+
+  .workSocial:hover .workSocialSwapRow:nth-child(2),
+  .workSocial:focus-visible .workSocialSwapRow:nth-child(2) {
+    transform: translateY(0);
+  }
+}
+
 .workSocial:hover,
 .workSocial:focus-visible {
   color: #ffffff;
@@ -6237,7 +6304,7 @@ button.aboutCard:focus-visible {
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-circle);
+  border-radius: 8px;
   background: var(--sys-glass-weak);
   color: var(--text);
   cursor: pointer;
@@ -7279,7 +7346,7 @@ button.aboutCard:focus-visible {
 
   .workBrand {
     flex: 1;
-    font-size: clamp(3rem, calc(9vw + 24px), 4.75rem);
+    font-size: clamp(3.25rem, calc(7vw + 24px), 3.75rem);
     padding-top: 6px;
     text-wrap: unset;
     white-space: nowrap;
@@ -7410,7 +7477,7 @@ button.aboutCard:focus-visible {
     min-width: 44px;
     height: 44px;
     padding: 0;
-    border-radius: var(--radius-circle);
+    border-radius: 8px;
     gap: 0;
   }
 
@@ -7594,6 +7661,17 @@ button.aboutCard:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .socialMenuPanel {
     will-change: auto;
+  }
+
+  .workSocialSwapRow,
+  .workSocial:hover .workSocialSwapRow,
+  .workSocial:focus-visible .workSocialSwapRow {
+    transition: none;
+    transform: none;
+  }
+
+  .workSocialSwapRow:nth-child(2) {
+    visibility: hidden;
   }
 
   .floatingVideoControlDisc,
@@ -8411,13 +8489,18 @@ button.aboutCard:focus-visible {
     gap: var(--space-7);
   }
 
+  .csEditorialIntro .chMetaValue,
+  .csEditorialIntro .chMetaTagsList {
+    font-size: 14px;
+  }
+
   .csEditorialHighlights {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-7);
   }
 
   .chHero {
-    --ch-text-title: clamp(calc(2.25rem + 8px), calc(7vw + 8px), calc(3.25rem + 8px));
+    --ch-text-title: clamp(calc(1.75rem + 8px), calc(4.6vw + 8px), calc(2.5rem + 8px));
   }
 
   .chCardGrid {
@@ -8437,6 +8520,24 @@ button.aboutCard:focus-visible {
     height: 44px;
   }
 
+  .chHero {
+    --ch-text-title: calc(1.75rem + 8px);
+  }
+
+  .csFeatureHeading {
+    margin-top: 1.5rem;
+    padding: 32px 0 20px;
+  }
+
+  .csFeatureHeading > p {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .csFeatureHeading > h2 {
+    font-size: 1.375rem;
+    line-height: 1.35;
+  }
 }
 
 @media (max-width: 560px) {

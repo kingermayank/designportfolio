@@ -199,8 +199,15 @@ export const ENG_COMPONENTS: EngComponent[] = [
         id: "shift-system-process",
         type: "text",
         monoTitle: true,
-        title: "Process breakdown",
-        body: "I published Shift as an npm package, and it now powers all of our internal tools at Ikon Technologies. I’m also building a starter kit repository so engineers can use the system for design and development, while product teams can use it for rapid zero-to-one experimentation and exploring new ideas.",
+        title: "Overview",
+        body: "I used Cursor and the shadcn MCP to spin up our own Zeroheight-themed site in a few days. Shift is now hosted as an npm package on our GitHub.",
+      },
+      {
+        id: "shift-system-impact",
+        type: "text",
+        monoTitle: true,
+        title: "Impact",
+        body: "Product managers and the rest of the product team use it for rapid experimentation, prototyping, and zero-to-one ideas. Engineers use it for agentic development, so it is adopted across the company. It is built for people and for models: human-friendly, LLM-friendly, and agent-readable. It is more than a component library. Agentic skills in the system power the harness behind our creative workflow.",
       },
     ],
     kind: "npm package",
@@ -375,13 +382,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
     video: true,
     embedUrl: "/keytag/embed.html",
     content: [
-      {
-        id: "keytag-process",
-        type: "text",
-        monoTitle: true,
-        title: "Process breakdown",
-        body: "This key tag began as a 2D illustration, translated into real 3D geometry with physically based materials in three.js. I guided the proportions, materials, and interactions, with Claude Code generating the measurement scripts, model, and custom QR encoder. I validated the proportions against the illustration and verified the QR by scanning it. Editing the ID updates the serial, QR, and URL from one value. The AI-generated implementation is bundled into a single self-contained HTML file that runs hosted, off disk, or in an iframe.",
-      },
       {
         id: "keytag-tools",
         type: "text",

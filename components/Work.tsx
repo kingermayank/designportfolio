@@ -670,21 +670,31 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {link.label}
-                <svg
-                  className="workSocialArrow"
-                  viewBox="0 0 12 12"
-                  aria-hidden
-                >
-                  <path
-                    d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.25"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <span className="workSocialSwap">
+                  {[0, 1].map((copy) => (
+                    <span
+                      key={copy}
+                      className="workSocialSwapRow"
+                      aria-hidden={copy === 1 ? true : undefined}
+                    >
+                      {link.label}
+                      <svg
+                        className="workSocialArrow"
+                        viewBox="0 0 12 12"
+                        aria-hidden
+                      >
+                        <path
+                          d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.25"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  ))}
+                </span>
               </a>
             ))}
           </div>

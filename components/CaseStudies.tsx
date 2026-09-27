@@ -691,7 +691,12 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const bigbasketHasCaseStudy = study.slug === "bigbasket" && layout === "editorial";
   const walkityMovesCta = study.slug === "walkity" && layout === "editorial";
   const toolboxMovesCta = study.slug === "toolbox" && layout === "editorial";
-  const metadataCta = layout === "editorial" && (walkityMovesCta || toolboxMovesCta || Boolean(study.commercialUrl));
+  const metadataCta =
+    layout === "editorial" &&
+    (walkityMovesCta ||
+      toolboxMovesCta ||
+      Boolean(study.commercialUrl) ||
+      Boolean(study.processUrl));
   const next = LINKABLE_CASE_STUDIES[(detailIdx + 1) % LINKABLE_CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
@@ -1086,8 +1091,23 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                                 <PrimaryButton
                                   href={study.processUrl}
                                   className="csEditorialCtaSecondary"
+                                  icon={
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="1.8"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-2H2z" />
+                                      <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
+                                    </svg>
+                                  }
                                 >
-                                  View Process
+                                  Read Process Breakdown
                                 </PrimaryButton>
                               ) : null}
                             </div>
