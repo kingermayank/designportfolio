@@ -10,6 +10,7 @@ import {
   type CSSProperties,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import posthog from "posthog-js";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
 import DeferredVideo from "@/components/DeferredVideo";
@@ -342,6 +343,13 @@ function WorkCard({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`${card.title} (opens in a new tab)`}
+        onClick={() => {
+          posthog.capture("portfolio_item_opened", {
+            item_id: card.slug,
+            portfolio_section: "visual",
+            destination: "external",
+          });
+        }}
         {...hoverProps}
       >
         {inner}
@@ -370,6 +378,11 @@ function WorkCard({
       style={cardStyle}
       onNavigate={(e) => {
         e.preventDefault();
+        posthog.capture("portfolio_item_opened", {
+          item_id: card.slug,
+          portfolio_section: "visual",
+          destination: "case_study",
+        });
         open(`/work/${card.slug}`, {
           title: card.title,
           subtitle: `${card.category}, ${card.year}`,
@@ -599,6 +612,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
   const selectLens = (id: WorkLensId) => {
     if (id === lens) return;
     const next = WORK_LENSES.find((l) => l.id === id);
+    posthog.capture("work_lens_selected", { lens_id: id });
     setLensDir(LENS_INDEX[id] - LENS_INDEX[lens] || 1);
     setLens(id);
     setEngActive(null);
@@ -664,6 +678,11 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
             key={item.id}
             item={item}
             onOpen={() => {
+              posthog.capture("portfolio_item_opened", {
+                item_id: item.id,
+                portfolio_section: "systems",
+                destination: "detail_overlay",
+              });
               setHoverIdx(-1);
               setSystemsActive(item);
               const slug = item.slug ?? item.id;
@@ -680,6 +699,11 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
             key={item.id}
             item={item}
             onOpen={() => {
+              posthog.capture("portfolio_item_opened", {
+                item_id: item.id,
+                portfolio_section: "engineering",
+                destination: "detail_overlay",
+              });
               setEngActive(item);
               window.history.pushState(null, "", `/design-engineering/${item.id}`);
               pushedOverlayUrl.current = true;
@@ -738,6 +762,11 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  posthog.capture("social_link_opened", {
+                    social_network: link.label,
+                  });
+                }}
               >
                 <span className="workSocialSwap">
                   {[0, 1].map((copy) => (

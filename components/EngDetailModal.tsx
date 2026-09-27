@@ -335,12 +335,15 @@ export default function EngDetailModal({ item, onClose }: Props) {
             </div>
           </div>
 
-          <div className="engModalMeta">
-            <div className="engModalMetaCopy">
-              {item.body ? <p className="engModalLead">{item.body}</p> : null}
+          {item.body ? (
+            <div className={"engModalMeta" + (item.content?.length ? "" : " is-last")}>
+              {item.body ? (
+                <div className="engModalMetaCopy">
+                  <p className="engModalLead">{item.body}</p>
+                </div>
+              ) : null}
             </div>
-
-          </div>
+          ) : null}
           {item.content?.map((block) => (
             <section id={block.id} className={"engModalContentSection" + (block.monoTitle || block.id === "paper-board" ? " engModalProcessSection" : "") + (block.plainMedia ? " engModalMediaSection" : "")} key={block.id}>
               {block.title ? (

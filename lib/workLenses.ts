@@ -226,15 +226,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Mobbin MCP", logo: "/all-logos/mobbin.png", href: "https://mobbin.com/mcp" },
     ],
     title: "Shift Playground",
-    content: [
-      {
-        id: "shift-playground-process",
-        type: "text",
-        monoTitle: true,
-        title: "Process breakdown",
-        body: "Shift Playground is where I try out new interactions and components in a live prototyping environment. I experiment with different ideas and refine the ones that feel right. When I commit to a component, I push it into the Shift Design System package so it can be reused across our internal tools.",
-      },
-    ],
     kind: "Prototyping Sandbox",
     body: "A live component lab for the Shift Design System. Tweak tabs, buttons, sliders, and more across dark and light modes.",
     shade: "#282828",
@@ -255,15 +246,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Walkity",
-    content: [
-      {
-        id: "walkity-process",
-        type: "text",
-        monoTitle: true,
-        title: "Process breakdown",
-        body: "I designed Walkity’s marketing website in Figma, then created the hero animation in Lottie. Using Cursor, I translated the design into a live website, bringing the layout and motion together.",
-      },
-    ],
     kind: "Marketing Landing Page",
     body: "Brand strategy and landing page from scratch, with accessibility at the center, shipped as a live marketing site.",
     shade: "#1a1a1a",
@@ -401,15 +383,6 @@ export const ENG_COMPONENTS: EngComponent[] = [
       { name: "Cursor", logo: "/all-logos/cursor-2.png", href: "https://cursor.com/" },
     ],
     title: "Retell Model Benchmark",
-    content: [
-      {
-        id: "retell-process",
-        type: "text",
-        monoTitle: true,
-        title: "Process breakdown",
-        body: "I used the design system in Figma as a reference and explored different iterations in Paper. After refining the direction, I used Cursor to turn the design into the live model benchmark website.",
-      },
-    ],
     kind: "Website",
     body: "Compare leading AI models across response quality, speed, and cost, built for voice-agent tradeoffs.",
     shade: "#0E1626",

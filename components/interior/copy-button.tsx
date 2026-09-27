@@ -2,6 +2,7 @@
 
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import posthog from "posthog-js";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
@@ -44,7 +45,14 @@ export function CopyButton({
   idleIcon = "copy",
   className = "",
 }: CopyButtonProps) {
-  const { copy, status } = useCopyToClipboard({ timeout, onCopy, onError });
+  const { copy, status } = useCopyToClipboard({
+    timeout,
+    onCopy: (copiedValue) => {
+      posthog.capture("contact_email_copied");
+      onCopy?.(copiedValue);
+    },
+    onError,
+  });
   const reduced = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
   const [widths, setWidths] = useState<Record<CopyStatus, number> | null>(null);

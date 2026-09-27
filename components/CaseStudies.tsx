@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import posthog from "posthog-js";
 import {
   LINKABLE_CASE_STUDIES,
   isVisualCraft,
@@ -539,6 +540,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
 
   const openCase = useCallback(
     (idx: number, _el?: HTMLElement) => {
+      posthog.capture("case_study_opened", {
+        case_study_slug: LINKABLE_CASE_STUDIES[idx].slug,
+        source: "case_study_gallery",
+      });
       showDetail(idx);
     },
     [showDetail],

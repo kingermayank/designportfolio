@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import posthog from "posthog-js";
 import { ABOUT_INTRO } from "@/lib/about";
 
 /* ─────────────────────────────────────────────────────────
@@ -227,7 +228,12 @@ export default function SocialMenu() {
                 scale: linksVisible ? 1 : MENU_LINKS.initialScale,
               }}
               transition={linkTransition}
-              onClick={() => setStage(0)}
+              onClick={() => {
+                posthog.capture("social_link_opened", {
+                  social_network: link.label,
+                });
+                setStage(0);
+              }}
             >
               <span className="socialMenuIcon">
                 {Icon ? <Icon /> : null}

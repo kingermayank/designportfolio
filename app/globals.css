@@ -5353,6 +5353,11 @@ button.aboutCard:focus-visible {
   border-bottom: 1px solid var(--color-border);
 }
 
+.engModalMeta.is-last {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
 .engModalMetaCopy {
   flex: 1;
   min-width: 0;

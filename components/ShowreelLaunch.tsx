@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 
 type ShowreelLaunchProps = {
   src: string;
@@ -76,10 +77,14 @@ export default function ShowreelLaunch({ src, poster }: ShowreelLaunchProps) {
     if (!video) return;
 
     if (!video.paused && !video.ended) {
+      posthog.capture("showreel_playback_toggled", { action: "pause" });
       video.pause();
       return;
     }
 
+    posthog.capture("showreel_playback_toggled", {
+      action: video.ended ? "replay" : "play",
+    });
     parked.current = false;
     if (video.ended || video.currentTime < START_SECONDS) {
       video.currentTime = START_SECONDS;
