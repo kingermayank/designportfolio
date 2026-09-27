@@ -19,6 +19,11 @@ export type CaseMedia = {
    */
   scrim?: boolean | number | string;
   caption?: string;
+  /**
+   * In-frame showreel. Rests paused with a Play label; click plays the file
+   * with sound instead of embedding a third-party player.
+   */
+  launchPlayer?: boolean;
 };
 
 export type CaseSection = {
@@ -587,10 +592,11 @@ const warpbnb: CaseStudy = {
     {
       type: "full",
       media: {
-        shade: "#2b2b2b",
-        src: "https://www.youtube.com/watch?v=2JfVbt3C4Q8",
-        youtube: true,
-        ar: 16 / 9,
+        shade: "#111111",
+        src: "/warpbnb/shoereel.mp4",
+        video: true,
+        ar: 1934 / 1080,
+        launchPlayer: true,
       },
     },
   ],

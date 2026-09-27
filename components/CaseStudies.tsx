@@ -27,6 +27,7 @@ import BigBasketCaseStudy from "@/components/bigbasket/BigBasketCaseStudy";
 import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
 import DeferredVideo from "@/components/DeferredVideo";
+import ShowreelLaunch from "@/components/ShowreelLaunch";
 import DeferredImage from "@/components/DeferredImage";
 import Rise from "@/components/Rise";
 import CopyEmailButton from "@/components/CopyEmailButton";
@@ -55,6 +56,11 @@ function MediaFill({
   interactiveVideo?: boolean;
 }) {
   if (!media?.src) return null;
+  if (media.launchPlayer) {
+    return (
+      <ShowreelLaunch src={media.src} poster={posterFor(media.src)} />
+    );
+  }
   if (media.youtube) {
     const embed = youtubeEmbedSrc(media.src);
     if (!embed) return null;

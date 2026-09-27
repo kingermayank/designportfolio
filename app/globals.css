@@ -1171,6 +1171,111 @@ body {
   pointer-events: auto;
 }
 
+/* Showreel stays in the frame. It rests at 2 seconds; click plays it with
+   sound. The icon and Play/Pause label stay visible. */
+.showreelLaunch {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #111111;
+  color: #ffffff;
+  cursor: pointer;
+  container-type: size;
+  overflow: hidden;
+  font-family: var(--font-azeret), sans-serif;
+  font-weight: 500;
+}
+
+.showreelPreview {
+  pointer-events: none;
+  width: 102%;
+  height: 102%;
+  max-width: none;
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.showreelScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  transition: opacity 180ms linear;
+}
+
+.showreelLaunch[data-playing="true"] .showreelScrim {
+  opacity: 0;
+}
+
+.showreelPlay {
+  position: absolute;
+  left: 8%;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: calc(0.42em - 8px);
+  transform: translateY(-50%);
+  font-family: var(--font-azeret), sans-serif;
+  font-size: clamp(32px, 7cqi, 56px);
+  font-weight: 500;
+  font-synthesis: none;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  transition:
+    opacity 180ms linear,
+    filter 180ms linear;
+}
+
+.showreelLaunch:hover .showreelPlay,
+.showreelLaunch:focus-visible .showreelPlay {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.285))
+    drop-shadow(0 0 20px rgba(255, 255, 255, 0.135));
+}
+
+.showreelLaunch[data-playing="true"][data-controls="hidden"] .showreelPlay {
+  opacity: 0;
+}
+
+.showreelLaunch[data-playing="true"]:focus-visible .showreelPlay {
+  opacity: 1;
+}
+
+.showreelPlayIcon {
+  width: 0.72em;
+  height: 0.72em;
+  fill: currentColor;
+}
+
+.showreelPlayLabel {
+  font-size: calc(1em - 8px);
+}
+
+.showreelLaunch:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showreelScrim,
+  .showreelPlay {
+    transition: none;
+  }
+}
+
 /* Koto-style editorial video control: the full media surface toggles playback,
    while the visible disc stays inset from the cropped frame's bottom-right. */
 .floatingVideoControl {
