@@ -6045,8 +6045,8 @@ button.aboutCard:focus-visible {
   display: inline-block;
   transform-origin: 50% 85%;
   animation:
-    work-brand-dot-bounce 840ms linear 250ms both,
-    work-brand-dot-impact 840ms ease-in-out 250ms both;
+    work-brand-dot-bounce 1260ms linear 250ms both,
+    work-brand-dot-impact 1260ms ease-in-out 250ms both;
 }
 
 /* Quadratic flight curves: gravity accelerates falls and slows each rise.
@@ -6061,46 +6061,74 @@ button.aboutCard:focus-visible {
     translate: 0 -1.1em;
     animation-timing-function: cubic-bezier(0.333333, 0, 0.666667, 0.333333);
   }
-  31% {
+  21% {
     translate: 0 0;
   }
-  34% {
+  23% {
     translate: 0 0;
     animation-timing-function: cubic-bezier(0.333333, 0.666667, 0.666667, 1);
   }
-  52% {
+  38% {
     translate: 0 -0.45em;
     animation-timing-function: cubic-bezier(0.333333, 0, 0.666667, 0.333333);
   }
-  70% {
+  53% {
     translate: 0 0;
   }
-  72% {
+  55% {
     translate: 0 0;
     animation-timing-function: cubic-bezier(0.333333, 0.666667, 0.666667, 1);
   }
-  83% {
-    translate: 0 -0.17em;
+  64.5% {
+    translate: 0 -0.2em;
     animation-timing-function: cubic-bezier(0.333333, 0, 0.666667, 0.333333);
   }
-  94%, 100% {
+  74% {
+    translate: 0 0;
+  }
+  76% {
+    translate: 0 0;
+    animation-timing-function: cubic-bezier(0.333333, 0.666667, 0.666667, 1);
+  }
+  82% {
+    translate: 0 -0.09em;
+    animation-timing-function: cubic-bezier(0.333333, 0, 0.666667, 0.333333);
+  }
+  88% {
+    translate: 0 0;
+  }
+  90% {
+    translate: 0 0;
+    animation-timing-function: cubic-bezier(0.333333, 0.666667, 0.666667, 1);
+  }
+  93% {
+    translate: 0 -0.04em;
+    animation-timing-function: cubic-bezier(0.333333, 0, 0.666667, 0.333333);
+  }
+  96%, 100% {
     translate: 0 0;
   }
 }
 
 /* Keep the ball round in flight; squash only during brief ground contacts. */
 @keyframes work-brand-dot-impact {
-  0%, 31%, 34%, 70%, 72%, 94%, 98%, 100% {
+  0%, 21%, 23%, 53%, 55%, 74%, 76%, 88%, 90%, 96%, 98%, 100% {
     transform: scale(1);
   }
-  32.5% {
+  22% {
     transform: scale(1.12, 0.88);
   }
-  71% {
+  54% {
     transform: scale(1.08, 0.92);
   }
-  95.5% {
+  75% {
     transform: scale(1.04, 0.96);
+  }
+  89% {
+    transform: scale(1.025, 0.975);
+  }
+  97% {
+    transform: scale(1.012, 0.988);
   }
 }
 
