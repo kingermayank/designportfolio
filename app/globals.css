@@ -1012,11 +1012,11 @@ body {
 }
 
 .toolboxJourneyIntro > div {
-  max-width: 70ch;
   margin-top: 16px;
 }
 
 .toolboxJourneyIntro p {
+  max-width: 70ch;
   margin: 0;
   color: var(--color-secondary);
   font-size: 1rem;
@@ -1213,7 +1213,7 @@ body {
 }
 
 @media (max-width: 560px) {
-  .pathaiStorySection { padding: 0; }
+  .pathaiStorySection { padding: var(--space-6) 0; }
 }
 
 .csPanel {
