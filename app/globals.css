@@ -618,9 +618,18 @@ body {
     padding: 32px 0;
   }
 
+  .csStudyCloserCopy {
+    width: 100%;
+    min-width: 0;
+  }
+
   .csStudyCloserCopy > h2 {
+    width: 100%;
+    max-width: none;
     font-size: 24px;
     line-height: 32px;
+    text-wrap: wrap;
+    overflow-wrap: break-word;
   }
 
   .csStudyCloser > .csCaseStudyOpen {
@@ -8749,7 +8758,7 @@ button.aboutCard:focus-visible {
   }
 
   .chHero {
-    --ch-text-title: calc(1.75rem + 12px);
+    --ch-text-title: calc(1.75rem + 20px);
   }
 
   .csFeatureHeading {
