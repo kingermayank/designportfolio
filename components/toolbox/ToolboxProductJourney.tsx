@@ -70,7 +70,7 @@ export default function ToolboxProductJourney() {
               if (block.kind === "list") {
                 return (
                   <ul key={index} className="bigbasketStoryList toolboxJourneyList">
-                    {block.items.map((item) => <li key={item}>{item}</li>)}
+                    {block.items.map((item) => <li key={item}>{emphasizedText(item)}</li>)}
                   </ul>
                 );
               }

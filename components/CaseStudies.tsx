@@ -978,7 +978,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               aria-haspopup="dialog"
                               onClick={() => setCasePanelOpen(true)}
                             >
-                              Read Project Background
+                              Read how I shaped Toolbox
                               <svg
                                 width="16"
                                 height="16"

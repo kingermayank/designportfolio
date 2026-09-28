@@ -49,7 +49,7 @@ export const toolboxJourney: {
         kind: "image",
         src: "/toolbox/toolbox%20cases/legacy.png",
         alt: "Ikon's Legacy dealership map interface",
-        caption: "Legacy unified critical dealership workflows but could not scale.",
+        caption: "Ikon's legacy dealer portal, which had a lot of severe usability issues.",
       },
       {
         kind: "text",
@@ -72,7 +72,7 @@ export const toolboxJourney: {
         kind: "image",
         src: "/toolbox/toolbox%20cases/nextgen.png",
         alt: "Unified Toolbox experience across web and mobile",
-        caption: "NextGen unified the core experience across web and mobile.",
+        caption: "The NextGen platform unified the core experience across the web and mobile.",
       },
     ],
   },
@@ -82,11 +82,11 @@ export const toolboxJourney: {
     blocks: [
       {
         kind: "text",
-        text: "NextGen was still being built when performance issues led to changes across product and design leadership. I had joined as a designer supporting development, but the transition created gaps in ownership at the same time that Legacy still demanded daily attention.",
+        text: "When NextGen launched in beta, we piloted it with one dealership. The release exposed slow performance, unreliable data, and deeper technical issues across the platform. The poor response triggered a leadership reset across product, design, and engineering, followed by a major refactor from microservices to a monolith. With new engineering leadership focused on stabilizing the platform, net-new product work paused and my design role narrowed to development support.",
       },
       {
         kind: "text",
-        text: "I volunteered to step into a more strategic role. I kept NextGen moving while helping manage the operational chaos around Legacy, translating urgent requests into clear priorities, writing tickets and pull requests, coordinating across engineering, operations, sales, and leadership, and managing expectations around what the team could deliver.",
+        text: "Rather than wait for design work to return, I stepped into the gaps. I took on a hybrid product and design role, working with engineering and data to triage urgent issues, translate ambiguity into priorities, write tickets and pull requests, coordinate across operations, sales, and leadership, and keep Legacy running while NextGen was rebuilt.",
       },
       {
         kind: "image",
@@ -96,11 +96,20 @@ export const toolboxJourney: {
       },
       {
         kind: "text",
-        text: "The work was often less about producing another polished screen and more about creating enough clarity for the organization to move. I used data to challenge assumptions, helped define success metrics, supported migration planning, and balanced immediate customer commitments with the long-term direction of the platform.",
+        text: "During this phase, I worked wherever the business had gaps:",
+      },
+      {
+        kind: "list",
+        items: [
+          "Unified company data across teams and uncovered roughly $72K in annual savings by identifying duplicate vendor spend.",
+          "Mapped the device lifecycle across accounting, operations, the warehouse, and dealerships, creating the blueprint consultants used to begin our warehouse transformation.",
+          "Aligned sales, operations, leadership, and product around one definition of success by mapping and instrumenting web and mobile workflows against shared HEART goals.",
+          "Partnered with Stella AI to automate service outreach from customer identification through live scheduling and booking, with people handling only the exceptions.",
+        ],
       },
       {
         kind: "text",
-        text: "This period taught me how to work through ambiguity, communicate with executives, coordinate teams with different incentives, and protect confidence in the product while the organization changed around it. **I was still a designer, but I had become someone the business could rely on to keep the product moving.**",
+        text: "This work expanded my understanding of Ikon beyond its users and product into the technical architecture, data ecosystem, and the way internal teams operated across the business. I increasingly worked as a business analyst, connecting systems, processes, people, and priorities to uncover gaps and opportunities. That perspective earned me influence beyond design. I managed stakeholders and executive expectations, created clarity across teams, and protected the team from organizational noise so it could keep delivering.",
       },
     ],
   },
@@ -110,7 +119,15 @@ export const toolboxJourney: {
     blocks: [
       {
         kind: "text",
-        text: "After operating as a product management and design hybrid, I moved back toward an individual contributor role with a much broader view of the business. I am now helping evolve Toolbox from software that reports what is happening into an AI-native operating system that understands dealership activity, recommends what to do next, and can increasingly act on those insights.",
+        text: "Six months later, the refactor was complete and NextGen relaunched. With a stable platform in market, the conversation shifted from recovery to what came next: which features to build, which opportunities to pursue, and how the product should evolve.",
+      },
+      {
+        kind: "text",
+        text: "We also brought in dedicated product leadership. By then, the organizational knowledge and credibility I had earned gave me the leverage to transition back into a product designer and builder role, partnering with the new leadership to shape the next phase of Toolbox.",
+      },
+      {
+        kind: "text",
+        text: "At the same time, AI models were becoming far more capable, and vibe coding had become part of my daily practice. That combination led me to take on Ikon's research and innovation initiatives, using AI to prototype new workflows and explore how Toolbox could move from reporting what was happening to recommending and eventually taking the next action.",
       },
       {
         kind: "image",
@@ -120,7 +137,7 @@ export const toolboxJourney: {
       },
       {
         kind: "text",
-        text: "The Ask AI feature brings that model into daily dealership operations. It uses telematics and operational data to surface the vehicles, customers, and revenue opportunities that need attention first.",
+        text: "One of the biggest new initiatives I led started with a simple question: Ikon already collected valuable vehicle data, but how could we use it to power data-driven marketing, improve customer retention, and generate service revenue for dealers?",
       },
       {
         kind: "image",
@@ -130,7 +147,7 @@ export const toolboxJourney: {
       },
       {
         kind: "text",
-        text: "The service customer retention tool uses deterministic location signals to identify meaningful customer behavior, then helps dealerships send targeted outreach campaigns that bring customers back and recover service revenue.",
+        text: "We combined deterministic location signals from Ikon's hardware with operational data and AI to surface the customers and revenue opportunities that needed attention, then help dealerships send targeted outreach designed to bring them back for service.",
       },
       {
         kind: "text",
@@ -159,7 +176,25 @@ export const toolboxJourney: {
       },
       {
         kind: "text",
-        text: "I returned to design as a stronger individual contributor, one who can understand the strategy, shape the experience, and help ship it.",
+        text: "I continue to build internal tools and the underlying infrastructure that help teams do their best work.",
+      },
+    ],
+  },
+  {
+    label: "Learnings",
+    title: "The culture is built in the details.",
+    blocks: [
+      {
+        kind: "text",
+        text: "My path at Ikon has been unconventional and nonlinear. I have introduced rituals, workflows, and processes, then learned when to evolve or let them go. I have worn different hats and worked with different leaders through every stage of the company, taking whatever steps were needed to create meaningful business impact. The experience has made me a stronger designer and builder.",
+      },
+      {
+        kind: "list",
+        items: [
+          "**Know when to push:** Build the judgment and resilience to keep important work moving through uncertainty.",
+          "**Lead and build at the same time:** Keep product direction grounded while staying close to execution and holding the bar for craft.",
+          "**Vibe coding as a strategy alignment tool:** Build quick proofs of concept that give ideas visual conviction, then use tight feedback loops to pressure-test, rapidly iterate, and improve the product.",
+        ],
       },
     ],
   },
