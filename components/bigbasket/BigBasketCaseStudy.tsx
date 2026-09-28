@@ -1,5 +1,4 @@
-import DeferredImage from "@/components/DeferredImage";
-import DeferredVideo from "@/components/DeferredVideo";
+import CaseStudyLightboxMedia from "@/components/CaseStudyLightboxMedia";
 import { bigbasketStory } from "@/lib/bigbasketStory";
 import { boldRuns } from "@/lib/richText";
 
@@ -27,11 +26,12 @@ export default function BigBasketCaseStudy() {
               return (
                 <figure key={index} className="pathaiStoryFigure">
                   <div className="pathaiStoryFrame">
-                    {block.kind === "video" ? (
-                      <DeferredVideo src={block.src} activation="visible" className="pathaiStoryAsset" />
-                    ) : (
-                      <DeferredImage src={block.src} alt={block.alt} className="pathaiStoryAsset" />
-                    )}
+                    <CaseStudyLightboxMedia
+                      src={block.src}
+                      alt={block.alt}
+                      video={block.kind === "video"}
+                      className="pathaiStoryAsset"
+                    />
                   </div>
                   {block.caption ? <figcaption>{block.caption}</figcaption> : null}
                 </figure>

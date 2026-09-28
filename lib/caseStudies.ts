@@ -252,7 +252,7 @@ const toolbox: CaseStudy = {
     },
     {
       type: "heading",
-      subtitle: "Toolbox Intelligence",
+      subtitle: "Ask AI",
       title: "Giving dealers a conversational way to understand inventory, customers, service opportunities, and operational risks.",
     },
     {
@@ -465,7 +465,7 @@ const toolbox: CaseStudy = {
     },
   ],
   impact:
-    "Migrated 450 existing dealerships and drove **139 new signups** at NADA 2026 (~33% of the business and **~$20M+ ARR**), helping unlock the company's largest enterprise deal.",
+    "Migrated **450 dealerships** to Toolbox and helped sign **139 more** at NADA 2026, supporting a **$20M+ ARR expansion** and helping Ikon secure its largest enterprise customer to date.",
   credits: [
     { label: "Company", value: "Ikon Technologies" },
     { label: "Industry", value: "Automotive Retail, IoT Hardware, Telematics, RevOps, AdTech, Customer Intelligence" },

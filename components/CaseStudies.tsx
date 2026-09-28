@@ -9,7 +9,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import posthog from "posthog-js";
 import {
   LINKABLE_CASE_STUDIES,
@@ -25,6 +25,7 @@ import RegionEdgeCases from "@/components/pathai/region-edge-cases/RegionEdgeCas
 import PathAICaseStudyPanel from "@/components/pathai/PathAICaseStudyPanel";
 import CaseStudyPanel from "@/components/CaseStudyPanel";
 import BigBasketCaseStudy from "@/components/bigbasket/BigBasketCaseStudy";
+import ToolboxProductJourney from "@/components/toolbox/ToolboxProductJourney";
 import LotAgeRangeEmbed from "@/components/toolbox/LotAgeRangeEmbed";
 import MoreProjects from "@/components/MoreProjects";
 import DeferredVideo from "@/components/DeferredVideo";
@@ -505,8 +506,6 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const [footerProgress, setFooterProgress] = useState(0);
   const [contactVisible, setContactVisible] = useState(false);
   const [casePanelOpen, setCasePanelOpen] = useState(false);
-  const [toolboxDemoHovered, setToolboxDemoHovered] = useState(false);
-  const [toolboxDemoJiggling, setToolboxDemoJiggling] = useState(false);
   const casePanelOpenRef = useRef(false);
   casePanelOpenRef.current = casePanelOpen;
 
@@ -533,8 +532,6 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     setListFade(false);
     setContentIn(true);
     setCasePanelOpen(false);
-    setToolboxDemoHovered(false);
-    setToolboxDemoJiggling(false);
     requestAnimationFrame(() => detailScrollRef.current?.scrollTo(0, 0));
   }, []);
 
@@ -694,6 +691,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   const study = LINKABLE_CASE_STUDIES[detailIdx];
   const pathaiHasCaseStudy = study.slug === "pathai" && layout === "editorial";
   const bigbasketHasCaseStudy = study.slug === "bigbasket" && layout === "editorial";
+  const toolboxHasProductJourney = study.slug === "toolbox" && layout === "editorial";
   const walkityMovesCta = study.slug === "walkity" && layout === "editorial";
   const toolboxMovesCta = study.slug === "toolbox" && layout === "editorial";
   const metadataCta =
@@ -973,110 +971,28 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                           }
                           style={overviewCtaStyle}
                         >
-                          {toolboxMovesCta ? (
+                          {toolboxHasProductJourney ? (
                             <button
                               type="button"
-                              className="chBtn csToolboxDemoCta"
-                              onClick={() => {
-                                setToolboxDemoJiggling(true);
-                                window.setTimeout(() => setToolboxDemoJiggling(false), 720);
-                              }}
-                              onMouseEnter={() => setToolboxDemoHovered(true)}
-                              onMouseLeave={() => {
-                                setToolboxDemoHovered(false);
-                                setToolboxDemoJiggling(false);
-                              }}
+                              className="csCaseStudyOpen csCaseStudyOpenAccent"
+                              aria-haspopup="dialog"
+                              onClick={() => setCasePanelOpen(true)}
                             >
-                              <span className="csToolboxDemoLabel" aria-hidden="true">
-                                <AnimatePresence initial={false} mode="wait">
-                                  <motion.span
-                                    key={toolboxDemoHovered ? "hovered" : "default"}
-                                    initial={
-                                      reduceMotion
-                                        ? false
-                                        : {
-                                            opacity: 0,
-                                            y: 4,
-                                            x: toolboxDemoHovered ? 0 : -4,
-                                            filter: "blur(2px)",
-                                          }
-                                    }
-                                    animate={{
-                                      opacity: 1,
-                                      y: 0,
-                                      x: toolboxDemoHovered ? 0 : -4,
-                                      filter: "blur(0px)",
-                                    }}
-                                    exit={
-                                      reduceMotion
-                                        ? undefined
-                                        : { opacity: 0, y: -4, filter: "blur(2px)" }
-                                    }
-                                    transition={
-                                      reduceMotion
-                                        ? { duration: 0 }
-                                        : { duration: 0.15, ease: [0.42, 0, 0.58, 1] }
-                                    }
-                                  >
-                                    {toolboxDemoHovered ? "Reach out for access" : "View Product Demo"}
-                                  </motion.span>
-                                </AnimatePresence>
-                              </span>
-                              <span className="csToolboxDemoIcon" aria-hidden="true">
-                                <AnimatePresence initial={false} mode="sync">
-                                  <motion.svg
-                                    key={
-                                      toolboxDemoHovered ? "lock" : "arrow"
-                                    }
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth={1.8}
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    initial={
-                                      reduceMotion
-                                        ? false
-                                        : { opacity: 0, scale: 0.25, filter: "blur(2px)" }
-                                    }
-                                    animate={{
-                                      opacity: 1,
-                                      scale: 1,
-                                      filter: "blur(0px)",
-                                      rotate: toolboxDemoJiggling
-                                        ? [0, -14, 14, -14, 14, -12, 12, -10, 10, -7, 7, 0]
-                                        : 0,
-                                    }}
-                                    exit={
-                                      reduceMotion
-                                        ? undefined
-                                        : {
-                                            opacity: 0,
-                                            scale: 0.25,
-                                            filter: "blur(2px)",
-                                          }
-                                    }
-                                    transition={
-                                      reduceMotion
-                                        ? { duration: 0 }
-                                        : toolboxDemoJiggling
-                                          ? { duration: 0.72, ease: "easeInOut" }
-                                          : { duration: 0.25, ease: [0.42, 0, 0.58, 1] }
-                                    }
-                                  >
-                                    {toolboxDemoHovered ? (
-                                      <>
-                                        <rect x="5" y="10" width="14" height="11" rx="2" />
-                                        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                                      </>
-                                    ) : (
-                                      <path d="M7 17 17 7M7 7h10v10" />
-                                    )}
-                                  </motion.svg>
-                                </AnimatePresence>
-                              </span>
+                              Read Project Background
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                              >
+                                <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-2H2z" />
+                                <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
+                              </svg>
                             </button>
                           ) : null}
                           <PrimaryButton href={overviewCtaHref}>
@@ -1123,7 +1039,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                         <>
                           <button
                             type="button"
-                            className="csCaseStudyOpen"
+                            className="csCaseStudyOpen csCaseStudyOpenAccent"
                             aria-haspopup="dialog"
                             onClick={() => setCasePanelOpen(true)}
                           >
@@ -1446,6 +1362,11 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
       {view === "detail" && bigbasketHasCaseStudy && casePanelOpen && !closing ? (
         <CaseStudyPanel title="BigBasket case study" onClose={() => setCasePanelOpen(false)}>
           <BigBasketCaseStudy />
+        </CaseStudyPanel>
+      ) : null}
+      {view === "detail" && toolboxHasProductJourney && casePanelOpen && !closing ? (
+        <CaseStudyPanel title="Toolbox project background" onClose={() => setCasePanelOpen(false)}>
+          <ToolboxProductJourney />
         </CaseStudyPanel>
       ) : null}
 

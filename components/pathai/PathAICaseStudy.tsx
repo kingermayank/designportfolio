@@ -1,5 +1,4 @@
-import DeferredImage from "@/components/DeferredImage";
-import DeferredVideo from "@/components/DeferredVideo";
+import CaseStudyLightboxMedia from "@/components/CaseStudyLightboxMedia";
 import type { ReactNode } from "react";
 
 const archive = "/pathai/archive";
@@ -20,11 +19,12 @@ function Figure({
   return (
     <figure className="pathaiStoryFigure">
       <div className="pathaiStoryFrame">
-        {video ? (
-          <DeferredVideo src={assetSrc} activation="visible" className="pathaiStoryAsset" />
-        ) : (
-          <DeferredImage src={assetSrc} alt={alt} className="pathaiStoryAsset" />
-        )}
+        <CaseStudyLightboxMedia
+          src={assetSrc}
+          alt={alt}
+          video={video}
+          className="pathaiStoryAsset"
+        />
       </div>
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
@@ -164,7 +164,7 @@ export default function PathAICaseStudy() {
 
       <Section label="Reflections" title="What I learned in a complex, specialized domain.">
         <p>
-          In retrospect, my summer at PathAI was both challenging and fulfilling, preparing me for the "real world". My manager and mentor gave me the nudges I needed to continue moving forward while also giving me the autonomy to do my own research, iterations, prototyping, and design feature presentation. Here are some highlights:
+          In retrospect, my summer at PathAI was both challenging and fulfilling, preparing me for the &quot;real world&quot;. My manager and mentor gave me the nudges I needed to continue moving forward while also giving me the autonomy to do my own research, iterations, prototyping, and design feature presentation. Here are some highlights:
         </p>
         <p><strong>Be people productive</strong> - Wherever you go, you’ll find people eager to share knowledge, give feedback, and connect. Some of my most memorable moments at PathAI came from one-on-one interactions. Seek feedback, ask questions, and stay curious—it’s a great way to grow.</p>
         <p><strong>Embrace ambiguity</strong> - The most challenging project I worked on pushed me to adapt to constant changes in a fast-paced environment. It taught me how to thrive amidst uncertainty, honing my ability to navigate shifting demands.</p>
