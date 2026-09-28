@@ -1016,7 +1016,6 @@ body {
 }
 
 .toolboxJourneyIntro p {
-  max-width: 70ch;
   margin: 0;
   color: var(--color-secondary);
   font-size: 1rem;
