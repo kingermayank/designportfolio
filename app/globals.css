@@ -569,12 +569,64 @@ body {
   text-wrap: balance;
 }
 
+.csStudyCloser {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  width: calc(100% - (var(--cs-editorial-inset) * 2));
+  box-sizing: border-box;
+  margin: clamp(3.5rem, 8vw, 8rem) auto 0;
+  padding: 48px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.csStudyCloserCopy > h2 {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text);
+  font: 400 32px/40px var(--font-body);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.csStudyCloser > .csCaseStudyOpen {
+  width: auto;
+  min-width: 224px;
+  margin-top: 0;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.csStudyCloser > a.csCaseStudyOpen {
+  border-color: transparent;
+}
+
 /* Visual Craft case-study closer — same centered max-width as editorial media. */
 .moreProjects {
   width: calc(100% - (var(--cs-editorial-inset) * 2));
   box-sizing: border-box;
   margin: clamp(3.5rem, 8vw, 8rem) auto 0;
   padding: 0 0 var(--space-5);
+}
+
+@media (max-width: 720px) {
+  .csStudyCloser {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 32px 0;
+  }
+
+  .csStudyCloserCopy > h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .csStudyCloser > .csCaseStudyOpen {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 .moreProjectsTitle {

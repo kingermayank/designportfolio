@@ -176,21 +176,22 @@ export const toolboxJourney: {
       },
       {
         kind: "text",
-        text: "I continue to build internal tools and the underlying infrastructure that help teams do their best work.",
+        text: "Alongside designing new agentic experiences and continuing to evolve Toolbox into an AI-native operating system for dealerships, I build the internal tools and underlying infrastructure that help our teams do their best work.",
       },
     ],
   },
   {
     label: "Learnings",
-    title: "The culture is built in the details.",
+    title: "Staying adaptable, resilient, and curious.",
     blocks: [
       {
         kind: "text",
-        text: "My path at Ikon has been unconventional and nonlinear. I have introduced rituals, workflows, and processes, then learned when to evolve or let them go. I have worn different hats and worked with different leaders through every stage of the company, taking whatever steps were needed to create meaningful business impact. The experience has made me a stronger designer and builder.",
+        text: "My journey at Ikon has been unconventional in the best sense: multidisciplinary, hands-on, and shaped by what each stage of the company required. I have introduced rituals, workflows, and processes, then learned when to evolve or let them go. I have worn different hats and worked with different leaders through every stage of the company, taking whatever steps were needed to create meaningful business impact. The experience has made me a stronger designer and builder.",
       },
       {
         kind: "list",
         items: [
+          "**Be like water:** During my earliest days at Ikon, my first manager, Jordan Detota, shared Bruce Lee's advice to stay adaptable, a principle that has helped me thrive in the organization.",
           "**Know when to push:** Build the judgment and resilience to keep important work moving through uncertainty.",
           "**Lead and build at the same time:** Keep product direction grounded while staying close to execution and holding the bar for craft.",
           "**Vibe coding as a strategy alignment tool:** Build quick proofs of concept that give ideas visual conviction, then use tight feedback loops to pressure-test, rapidly iterate, and improve the product.",

@@ -700,6 +700,35 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
       toolboxMovesCta ||
       Boolean(study.commercialUrl) ||
       Boolean(study.processUrl));
+  const studyCloser: {
+    prompt: string;
+    label: string;
+    href?: string;
+  } | null = toolboxHasProductJourney
+    ? {
+        prompt: "Want to learn more about how I shaped Toolbox and helped Ikon evolve?",
+        label: "Read My Journey",
+      }
+    : pathaiHasCaseStudy
+      ? {
+          prompt:
+            "Learn how I navigated an unfamiliar clinical domain and shipped Region Comments.",
+          label: "Read Case Study",
+        }
+      : bigbasketHasCaseStudy
+        ? {
+            prompt:
+              "Read the thought process behind building the Melon design system.",
+            label: "Read Case Study",
+          }
+        : study.slug === "warpbnb" && layout === "editorial" && study.processUrl
+          ? {
+              prompt:
+                "Want to see how I used AI to take Warpbnb from an idea to a shipped product in under 2 weeks?",
+              label: "Read Process Breakdown",
+              href: study.processUrl,
+            }
+          : null;
   const next = LINKABLE_CASE_STUDIES[(detailIdx + 1) % LINKABLE_CASE_STUDIES.length];
 
   const fromWork = !!externalEntry;
@@ -978,7 +1007,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               aria-haspopup="dialog"
                               onClick={() => setCasePanelOpen(true)}
                             >
-                              Read how I shaped Toolbox
+                              Read My Journey
                               <svg
                                 width="16"
                                 height="16"
@@ -1098,6 +1127,65 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 {highlightsAfterMedia ? highlightsSection : null}
 
                 {!isVisualCraft(study) ? impactSection : null}
+
+                {studyCloser ? (
+                  <section
+                    className={"csStudyCloser csFade" + (contentIn ? " in" : "")}
+                    style={overviewCtaStyle}
+                    aria-labelledby="study-closer-heading"
+                  >
+                    <div className="csStudyCloserCopy">
+                      <h2 id="study-closer-heading">{studyCloser.prompt}</h2>
+                    </div>
+                    {studyCloser.href ? (
+                      <a
+                        className="csCaseStudyOpen"
+                        href={studyCloser.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {studyCloser.label}
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-2H2z" />
+                          <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
+                        </svg>
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className="csCaseStudyOpen csCaseStudyOpenAccent"
+                        aria-haspopup="dialog"
+                        onClick={() => setCasePanelOpen(true)}
+                      >
+                        {studyCloser.label}
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-2H2z" />
+                          <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
+                        </svg>
+                      </button>
+                    )}
+                  </section>
+                ) : null}
 
                 {isVisualCraft(study) ? (
                   <div className={"csFade" + (contentIn ? " in" : "")}>
