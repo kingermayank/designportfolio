@@ -38,6 +38,11 @@ type DeferredVideoProps = {
   floatingControlPlacement?: "media" | "container";
   onPlaybackStart?: () => void;
   onPlaybackError?: () => void;
+  /**
+   * Width / height of the file. Set before any bytes arrive so the player
+   * cannot stretch the picture into a default 300×150 box.
+   */
+  aspectRatio?: number;
 };
 
 function nearestScrollParent(element: HTMLElement) {
@@ -74,6 +79,7 @@ export default function DeferredVideo({
   floatingControlPlacement = "media",
   onPlaybackStart,
   onPlaybackError,
+  aspectRatio,
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const restPending = useRef(posterTime != null);
@@ -86,6 +92,7 @@ export default function DeferredVideo({
   const playbackIntentRef = useRef(playbackIntent);
   playbackIntentRef.current = playbackIntent;
   const [playing, setPlaying] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const [controlHost, setControlHost] = useState<HTMLElement | null>(null);
   const motionAllowed = !respectReducedMotion || !reducedMotion;
 
@@ -234,7 +241,12 @@ export default function DeferredVideo({
       <video
         ref={setVideoNode}
         className={className}
-        style={style}
+        width={aspectRatio ? 1600 : undefined}
+        height={aspectRatio ? Math.max(1, Math.round(1600 / aspectRatio)) : undefined}
+        style={{
+          ...style,
+          ...(aspectRatio ? { aspectRatio: String(aspectRatio) } : {}),
+        }}
         src={requested && motionAllowed ? videoAssetUrl(src) : undefined}
         poster={poster}
         muted
@@ -245,11 +257,33 @@ export default function DeferredVideo({
         onCanPlay={(event) => syncPlayback(event.currentTarget)}
         onPlay={() => {
           setPlaying(true);
+          setRevealed(true);
           onPlaybackStart?.();
         }}
         onPause={() => setPlaying(false)}
         onError={() => onPlaybackError?.()}
       />
+      {poster && !revealed ? (
+        // The video poster is stretched until the file header arrives. A real
+        // image keeps the still in the right shape for that whole wait.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          className={className}
+          src={poster}
+          alt=""
+          style={{
+            ...style,
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            maxWidth: "none",
+            maxHeight: "none",
+            zIndex: 1,
+            ...(aspectRatio ? { aspectRatio: String(aspectRatio) } : {}),
+          }}
+        />
+      ) : null}
       {floatingControlPlacement === "container" && controlHost
         ? createPortal(floatingControl, controlHost)
         : floatingControlPlacement === "media"

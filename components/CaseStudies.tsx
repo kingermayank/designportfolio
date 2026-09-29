@@ -87,8 +87,15 @@ function MediaFill({
     "csFill" +
     (contain ? " csFillContain" : "") +
     (stretch ? " csFillStretch" : "");
-  const frameStyle =
-    media.radius != null ? { borderRadius: `${media.radius}px` } : undefined;
+  const frameStyle: CSSProperties = {
+    ...(media.radius != null ? { borderRadius: `${media.radius}px` } : {}),
+    ...(media.zoom != null && media.zoom > 1
+      ? {
+          transform: `translate(${media.zoomShift?.x ?? 0}%, ${media.zoomShift?.y ?? 0}%) scale(${media.zoom})`,
+          transformOrigin: `${media.zoomOrigin?.x ?? 50}% ${media.zoomOrigin?.y ?? 50}%`,
+        }
+      : {}),
+  };
   const asset = media.video ? (
     <DeferredVideo
       className={fillClass}
@@ -98,6 +105,7 @@ function MediaFill({
       posterPriority={priority}
       playbackRate={media.playbackRate}
       activation="visible"
+      aspectRatio={media.ar}
       floatingControls={interactiveVideo}
       floatingControlPlacement={contain ? "container" : "media"}
     />
@@ -132,6 +140,20 @@ function MediaFill({
             "--cs-media-pad-right": padX(pad?.right),
           } as CSSProperties
         }
+      >
+        {asset}
+      </div>
+    );
+  }
+
+  // Cover stays cropped, but pulled in so the frame shade reads as white
+  // around the subject instead of the subject touching the edges.
+  if (media.inset != null && media.inset > 0) {
+    const inset = `${media.inset * 100}%`;
+    return (
+      <div
+        className="csMediaInset"
+        style={{ top: inset, right: inset, bottom: inset, left: inset }}
       >
         {asset}
       </div>

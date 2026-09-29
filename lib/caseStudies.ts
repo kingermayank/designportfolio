@@ -9,6 +9,19 @@ export type CaseMedia = {
   fit?: "cover" | "contain" | "fill";
   /** Inset the asset inside the frame (px). Use with `fit: "contain"` to pad into `shade`. */
   pad?: { top?: number; bottom?: number; left?: number; right?: number };
+  /**
+   * Shrink a cover-fit asset inside the frame so `shade` shows around it.
+   * `0.08` leaves 8% of the frame on every side.
+   */
+  inset?: number;
+  /**
+   * Scale a contained asset up inside the frame so less shade shows.
+   * `zoomOrigin` is the focus point in the frame, in percent.
+   * `zoomShift` recenters that point after scaling, in percent of the frame.
+   */
+  zoom?: number;
+  zoomOrigin?: { x: number; y: number };
+  zoomShift?: { x: number; y: number };
   /** Corner radius applied directly to the visible image/video frame. */
   radius?: number;
   /** HTML video playbackRate (1 = normal). */
@@ -547,12 +560,12 @@ const warpbnb: CaseStudy = {
     { type: "full", media: wb("/warpbnb/warp2.png", 2146 / 1138, false, "3D era icons generated with thiings.co for every category.") },
     {
       type: "split",
-      // Wide clips letterboxed into matching square frames (white bars top/bottom).
+      fillLeft: false,
       left: {
-        shade: "#FCFCFC",
+        shade: "#FDFDFD",
         src: "/warpbnb/warp3-1.mp4",
         video: true,
-        ar: 1,
+        ar: 4 / 5,
         fit: "contain",
         caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness.",
       },
@@ -561,8 +574,11 @@ const warpbnb: CaseStudy = {
           shade: "#FCFCFC",
           src: "/warpbnb/warp3-2.mp4",
           video: true,
-          ar: 1,
+          ar: 4 / 5,
           fit: "contain",
+          zoom: 1.38,
+          zoomOrigin: { x: 49.1, y: 50.4 },
+          zoomShift: { x: 0.9, y: -0.4 },
           caption: "Browsing a listing detail on mobile.",
         },
       ],
@@ -572,6 +588,7 @@ const warpbnb: CaseStudy = {
     { type: "full", media: wb("/warpbnb/warp6.mp4", 1922 / 1080, true, "Host reviews and booking flow in action.") },
     {
       type: "split",
+      fillLeft: false,
       left: {
         shade: "#F8E8EC",
         src: "/warpbnb/warp7.mp4",
@@ -581,11 +598,11 @@ const warpbnb: CaseStudy = {
       },
       right: [
         {
-          shade: "#FCFCFC",
+          shade: "#FFFFFF",
           src: "/warpbnb/warp8.mp4",
           video: true,
           ar: 4 / 5,
-          fit: "contain",
+          inset: 0.08,
           caption: "Transportation methods animated with Kling 3.0 for checkout.",
         },
       ],

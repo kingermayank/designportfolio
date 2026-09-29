@@ -1362,6 +1362,12 @@ body {
   border-radius: inherit;
 }
 
+/* Cover asset pulled in so the frame shade shows around the subject. */
+.csMediaInset {
+  position: absolute;
+  overflow: hidden;
+}
+
 /* Padded contain stage: insets the asset into the shade without cropping. */
 .csMediaStage {
   position: absolute;
