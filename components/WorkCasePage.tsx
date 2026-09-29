@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useTransition } from "react";
+import { useEffect } from "react";
 import CaseStudies from "@/components/CaseStudies";
 import { usePageTransition } from "@/components/PageTransition";
 import { LINKABLE_CASE_STUDIES } from "@/lib/caseStudies";
@@ -9,7 +9,6 @@ import { LINKABLE_CASE_STUDIES } from "@/lib/caseStudies";
 export default function WorkCasePage({ slug }: { slug: string }) {
   const router = useRouter();
   const { open } = usePageTransition();
-  const [returningHome, startReturnHome] = useTransition();
 
   useEffect(() => {
     router.prefetch("/");
@@ -22,8 +21,7 @@ export default function WorkCasePage({ slug }: { slug: string }) {
         externalEntry={{
           slug,
           onClose: () => {
-            if (returningHome) return;
-            startReturnHome(() => router.push("/"));
+            router.push("/");
           },
           onNavigate: (next) => {
             const study = LINKABLE_CASE_STUDIES.find((s) => s.slug === next);
@@ -35,14 +33,6 @@ export default function WorkCasePage({ slug }: { slug: string }) {
         }}
         layout="editorial"
       />
-      {returningHome && (
-        <div className="caseReturnStatus">
-          <span role="status">Opening Home…</span>
-          {/* A document navigation provides recovery if the client router stalls. */}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/">Reload Home</a>
-        </div>
-      )}
     </div>
   );
 }
