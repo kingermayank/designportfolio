@@ -111,6 +111,8 @@ export type CaseStudy = {
   highlights?: CaseHighlight[];
   /** Closing impact line rendered under the media stack on editorial studies. */
   impact?: string;
+  /** Optional label for the closing impact/takeaway statement. */
+  impactLabel?: string;
   /** Live product link shown as a CTA on the detail left rail. */
   websiteUrl?: string;
   /** Optional commercial link shown beside the primary website CTA. */
@@ -600,12 +602,13 @@ const warpbnb: CaseStudy = {
     },
   ],
   impact:
-    "Went viral on X, earned more than **15K impressions**, and received an overwhelmingly positive response from people who loved and shared the concept. That momentum led to invitations to workshops where I demoed the project and walked through my AI-native process for education and enablement.",
+    "Building something playful outside of work gave me room to explore new tools, experiment with different workflows, and grow more confident using AI across design, code, and storytelling. This project has been featured on [builtbydesigners.com](https://builtbydesigners.com/projects/warpbnb/).",
+  impactLabel: "Takeaways",
   credits: [
     {
       label: "Build Stack",
       value:
-        "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
+        "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Supabase, Vercel, Higgsfield, Topaz Bloom, ElevenLabs, Final Cut Pro",
     },
     { label: "Timeline", value: "~2 weeks, mostly at night" },
     { label: "Role", value: "Everything: design, code, content, motion, film" },

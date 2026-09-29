@@ -46,7 +46,7 @@ const HERO_META: Record<string, HeroMeta> = {
     tags: {
       label: "Build Stack",
       values: split(
-        "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Claude Code, Codex, Supabase, Vercel, Gemini, Luma Dream Machine, Higgsfield, Topaz Bloom, Replicate, ElevenLabs, Final Cut Pro",
+        "Figma, Magicpath, Cursor, Reve, Storybook, Rive, Supabase, Vercel, Higgsfield, Topaz Bloom, ElevenLabs, Final Cut Pro",
       ),
     },
   },

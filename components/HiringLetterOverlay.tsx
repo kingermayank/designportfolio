@@ -2,7 +2,6 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { crimsonPro } from "@/app/fonts";
 import { HIRING_LETTER } from "@/lib/letter";
 
 type Props = {
@@ -132,7 +131,7 @@ export default function HiringLetterOverlay({ onClose, origin }: Props) {
     >
       <div
         ref={noteRef}
-        className={`letterNote ${crimsonPro.className}`}
+        className="letterNote"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

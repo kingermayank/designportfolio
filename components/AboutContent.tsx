@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { crimsonPro } from "@/app/fonts";
 import {
   ABOUT_CAREER,
   ABOUT_INTRO,
@@ -232,7 +231,7 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             <div className="aboutLetterPreviewStage" aria-hidden>
               <div
                 ref={letterPreviewRef}
-                className={`aboutLetterPreview ${crimsonPro.className}`}
+                className="aboutLetterPreview"
               >
                 <span className="aboutLetterPreviewClip" />
                 <div className="aboutLetterPreviewContent">

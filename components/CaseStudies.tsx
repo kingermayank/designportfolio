@@ -482,6 +482,24 @@ function indexForSlug(slug: string): number {
   return idx >= 0 ? idx : 0;
 }
 
+/** Renders `[label](url)` inside an impact paragraph. */
+function ImpactCopy({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g).filter(Boolean);
+  return (
+    <>
+      {parts.map((part, i) => {
+        const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (!link) return <span key={i}>{part}</span>;
+        return (
+          <a key={i} href={link[2]} target="_blank" rel="noopener noreferrer">
+            {link[1]}
+          </a>
+        );
+      })}
+    </>
+  );
+}
+
 export default function CaseStudies({ externalEntry = null, layout = "standard" }: Props) {
   const reduceMotion = useReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -574,22 +592,18 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     showDetail(nextIdx);
   }, [detailIdx, showDetail]);
 
-  // Back to the list, koto-style: the detail page fades out fast, then the
-  // list fades in with a subtle rise, pre-scrolled so the case you were
-  // reading is centered. From Work, Back dismisses the overlay.
+  // Route navigation keeps the current page visible until its replacement
+  // mounts. Only the local gallery uses the fade back to its list.
   const closingRef = useRef(false);
   const startClose = useCallback(() => {
     if (viewRef.current !== "detail" || closingRef.current) return;
-    closingRef.current = true;
-    setClosing(true);
     const entry = externalRef.current;
     if (entry) {
-      window.setTimeout(() => {
-        entry.onClose();
-        closingRef.current = false;
-      }, 190);
+      entry.onClose();
       return;
     }
+    closingRef.current = true;
+    setClosing(true);
     pendingRef.current = { type: "close", idx: detailIdx };
     window.setTimeout(() => {
       setView("list");
@@ -802,13 +816,13 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
           : undefined
       }
     >
-      <span>Impact</span>
+      <span>{study.impactLabel ?? "Impact"}</span>
       <p>
         {boldRuns(study.impact).map((run, i) =>
           run.bold ? (
             <strong key={i}>{run.text}</strong>
           ) : (
-            <span key={i}>{run.text}</span>
+            <ImpactCopy key={i} text={run.text} />
           ),
         )}
       </p>

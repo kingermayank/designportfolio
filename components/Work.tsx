@@ -34,23 +34,6 @@ import {
 
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
-const SOUND_STORAGE_KEY = "portfolio-sound-enabled";
-const BRAND_DOT_IMPACTS = [
-  { at: 250, volume: 0.5, playbackRate: 0.98 },
-  { at: 653, volume: 0.34, playbackRate: 1.03 },
-  { at: 917, volume: 0.24, playbackRate: 1.07 },
-  { at: 1094, volume: 0.16, playbackRate: 1.11 },
-  { at: 1195, volume: 0.1, playbackRate: 1.14 },
-] as const;
-
-function portfolioSoundEnabled() {
-  try {
-    return localStorage.getItem(SOUND_STORAGE_KEY) !== "false";
-  } catch {
-    return true;
-  }
-}
-
 function BioEmphasis({ text, emphasized }: { text: string; emphasized: boolean }) {
   return (
     <span className="workBioEmphasis" data-emphasized={emphasized}>
@@ -521,64 +504,11 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
   );
   const pushedOverlayUrl = useRef(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const brandDotRef = useRef<HTMLSpanElement | null>(null);
   const { open } = usePageTransition();
   // The panel's hover rail belongs to the project grid — only while Visual Craft.
   const showingProjects = lens === "visual";
   const lensRef = useRef(lens);
   lensRef.current = lens;
-
-  useEffect(() => {
-    const dot = brandDotRef.current;
-    if (!dot || reduceMotion) return;
-
-    const sample = new Audio("/ball-bounce.wav");
-    sample.preload = "auto";
-    sample.load();
-
-    const timers = new Set<number>();
-    const sounds = new Set<HTMLAudioElement>();
-
-    const playImpact = (volume: number, playbackRate: number) => {
-      if (!portfolioSoundEnabled()) return;
-      const sound = sample.cloneNode() as HTMLAudioElement;
-      sound.volume = volume;
-      sound.playbackRate = playbackRate;
-      sounds.add(sound);
-      sound.addEventListener("ended", () => sounds.delete(sound), { once: true });
-      void sound.play().catch(() => {
-        sounds.delete(sound);
-        // Initial-load autoplay restrictions should not interrupt the intro.
-      });
-    };
-
-    const handleAnimationStart = (event: AnimationEvent) => {
-      if (
-        event.target !== dot ||
-        event.animationName !== "work-brand-dot-bounce"
-      ) {
-        return;
-      }
-
-      BRAND_DOT_IMPACTS.forEach(({ at, volume, playbackRate }) => {
-        const timer = window.setTimeout(() => {
-          timers.delete(timer);
-          playImpact(volume, playbackRate);
-        }, at);
-        timers.add(timer);
-      });
-    };
-
-    dot.addEventListener("animationstart", handleAnimationStart);
-    return () => {
-      dot.removeEventListener("animationstart", handleAnimationStart);
-      timers.forEach((timer) => window.clearTimeout(timer));
-      sounds.forEach((sound) => sound.pause());
-      sample.pause();
-      sample.removeAttribute("src");
-      sample.load();
-    };
-  }, [reduceMotion]);
 
   const cards = PROJECTS;
 
@@ -718,7 +648,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
           <div className="workBrandRow">
             <h1 className="workBrand">
               Mayank Kinger
-              <span ref={brandDotRef} className="workBrandDot workBrandDotBounce">.</span>
+              <span className="workBrandDot workBrandDotBounce">.</span>
             </h1>
             <SocialMenu />
           </div>

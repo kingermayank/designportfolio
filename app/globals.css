@@ -399,7 +399,32 @@ body {
   transform: translateY(16px);
 }
 
-/* Outgoing detail page fades out fast, koto-style */
+/* Keep navigation feedback available without covering the case study. */
+.caseReturnStatus {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 201;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  max-width: calc(100vw - 32px);
+  padding: 12px 16px;
+  border: 1px solid var(--color-text);
+  border-radius: 8px;
+  background: #111;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.caseReturnStatus a {
+  color: inherit;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* Outgoing detail page fades out fast when returning to the local gallery. */
 .csDetail.closing {
   opacity: 0;
   pointer-events: none;
@@ -567,6 +592,17 @@ body {
   line-height: 40px;
   letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+.csEditorialImpact > p a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.csEditorialImpact > p a:hover {
+  color: var(--ch-accent, var(--text));
 }
 
 .csStudyCloser {
@@ -2780,6 +2816,7 @@ button.aboutCard:focus-visible {
     0 18px 34px -18px rgba(0, 0, 0, 0.7),
     0 2px 6px rgba(0, 0, 0, 0.26);
   color: #131914;
+  font-family: var(--font-azeret), ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -6972,6 +7009,7 @@ button.aboutCard:focus-visible {
   background-size: cover;
   box-shadow: 32px 100px 150px #00000026;
   color: #131914;
+  font-family: var(--font-azeret), ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -7005,9 +7043,9 @@ button.aboutCard:focus-visible {
 .letterGreeting {
   margin: 0;
   font-family: inherit;
-  font-size: 5.0625cqw;
+  font-size: calc(5.0625cqw - 4px);
   font-weight: 500;
-  line-height: 5.625cqw;
+  line-height: calc(5.625cqw - 4px);
   color: #131914;
 }
 
@@ -7074,8 +7112,8 @@ button.aboutCard:focus-visible {
   }
 
   .letterGreeting {
-    font-size: 30px;
-    line-height: 34px;
+    font-size: 26px;
+    line-height: 30px;
   }
 
   .letterBody {
