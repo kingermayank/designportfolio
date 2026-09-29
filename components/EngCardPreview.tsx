@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { EngComponent } from "@/lib/workLenses";
 import DeferredVideo from "@/components/DeferredVideo";
 
@@ -11,6 +12,9 @@ export default function EngCardPreview({ item }: { item: EngComponent }) {
     "engCardMedia" +
     (frame === "site" ? " engCardMediaSite" : "") +
     (frame === "center" ? " engCardMediaCenter" : "");
+  const [live, setLive] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const showStill = Boolean(item.video && item.thumb) && (!live || failed);
 
   return (
     <span
@@ -20,11 +24,19 @@ export default function EngCardPreview({ item }: { item: EngComponent }) {
       }}
     >
       {item.video && item.src ? (
-        <DeferredVideo
-          src={item.src}
-          poster={item.thumb || item.src}
-          activation="visible"
-        />
+        <span className="engCardClip">
+          <DeferredVideo
+            src={item.src}
+            poster={item.thumb || item.src}
+            activation="visible"
+            onPlaybackStart={() => {
+              setLive(true);
+              setFailed(false);
+            }}
+            onPlaybackError={() => setFailed(true)}
+          />
+          {showStill ? <img src={item.thumb} alt="" /> : null}
+        </span>
       ) : hasMedia ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={item.thumb || item.src} alt="" />

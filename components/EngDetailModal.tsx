@@ -12,6 +12,7 @@ import {
 import { createPortal } from "react-dom";
 import DeferredVideo from "@/components/DeferredVideo";
 import type { EngComponent } from "@/lib/workLenses";
+import { videoAssetUrl } from "@/lib/videoAssetUrl";
 
 type Props = {
   item: EngComponent;
@@ -37,18 +38,33 @@ function MediaCaption({ text }: { text: string }) {
 }
 
 function StageMedia({ item }: { item: EngComponent }) {
+  const [live, setLive] = useState(false);
+  const [failed, setFailed] = useState(false);
+
   if (item.video && item.src) {
+    const showStill = Boolean(item.thumb) && (!live || failed);
     return (
-      <video
-        className="engModalMedia"
-        src={item.src}
-        poster={item.thumb}
-        muted
-        loop
-        playsInline
-        autoPlay
-        preload="metadata"
-      />
+      <>
+        <video
+          className="engModalMedia"
+          src={videoAssetUrl(item.src)}
+          poster={item.thumb}
+          muted
+          loop
+          playsInline
+          autoPlay
+          preload="metadata"
+          onPlay={() => {
+            setLive(true);
+            setFailed(false);
+          }}
+          onError={() => setFailed(true)}
+        />
+        {showStill ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="engModalMedia engModalPoster" src={item.thumb} alt="" />
+        ) : null}
+      </>
     );
   }
   if (item.thumb || item.src) {

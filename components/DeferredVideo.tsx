@@ -36,6 +36,8 @@ type DeferredVideoProps = {
   floatingControls?: boolean;
   /** Anchor controls to the surrounding case-study frame instead of the video. */
   floatingControlPlacement?: "media" | "container";
+  onPlaybackStart?: () => void;
+  onPlaybackError?: () => void;
 };
 
 function nearestScrollParent(element: HTMLElement) {
@@ -70,6 +72,8 @@ export default function DeferredVideo({
   respectReducedMotion = true,
   floatingControls = false,
   floatingControlPlacement = "media",
+  onPlaybackStart,
+  onPlaybackError,
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const restPending = useRef(posterTime != null);
@@ -239,8 +243,12 @@ export default function DeferredVideo({
         autoPlay={activation === "eager" && motionAllowed && !playOnHover}
         preload={requested ? "metadata" : "none"}
         onCanPlay={(event) => syncPlayback(event.currentTarget)}
-        onPlay={() => setPlaying(true)}
+        onPlay={() => {
+          setPlaying(true);
+          onPlaybackStart?.();
+        }}
         onPause={() => setPlaying(false)}
+        onError={() => onPlaybackError?.()}
       />
       {floatingControlPlacement === "container" && controlHost
         ? createPortal(floatingControl, controlHost)

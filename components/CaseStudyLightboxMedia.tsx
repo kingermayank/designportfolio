@@ -2,6 +2,7 @@
 
 import DeferredImage from "@/components/DeferredImage";
 import DeferredVideo from "@/components/DeferredVideo";
+import { videoAssetUrl } from "@/lib/videoAssetUrl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -96,7 +97,7 @@ export default function CaseStudyLightboxMedia({
       >
         <div className="caseStudyLightboxMedia">
           {video ? (
-            <video src={src} controls autoPlay muted loop playsInline />
+            <video src={videoAssetUrl(src)} controls autoPlay muted loop playsInline />
           ) : (
             <DeferredImage src={src} alt={alt} eager />
           )}
