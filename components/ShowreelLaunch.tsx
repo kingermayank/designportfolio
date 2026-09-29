@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import posthog from "posthog-js";
+import { videoAssetUrl } from "@/lib/videoAssetUrl";
 
 type ShowreelLaunchProps = {
   src: string;
@@ -120,10 +121,10 @@ export default function ShowreelLaunch({ src, poster }: ShowreelLaunchProps) {
       <video
         ref={setVideoNode}
         className="csFill showreelPreview"
-        src={requested ? src : undefined}
+        src={requested ? videoAssetUrl(src) : undefined}
         poster={poster}
         playsInline
-        preload={requested ? "auto" : "none"}
+        preload={requested ? "metadata" : "none"}
         onLoadedData={(event) => {
           const video = event.currentTarget;
           if (parked.current && video.paused) video.currentTime = START_SECONDS;

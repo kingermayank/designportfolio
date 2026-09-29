@@ -105,12 +105,9 @@ function MoreProjectCard({ card }: { card: Card }) {
             className="workCardMedia"
             src={card.thumb || card.media}
             srcSet={card.thumbSrcSet}
-            sizes={
-              card.thumbSrcSet
-                ? "(max-width: 720px) 100vw, 50vw"
-                : undefined
-            }
+            sizes="(max-width: 720px) 100vw, 50vw"
             alt=""
+            quality={75}
           />
         ) : (
           <span className="workCardPlaceholder">{card.title}</span>

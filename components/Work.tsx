@@ -298,7 +298,8 @@ function WorkCard({
             className="workCardMedia"
             src={gridSrc}
             poster={card.thumb}
-            activation="eager"
+            activation={priority ? "eager" : "visible"}
+            loadMargin="80px 0px"
             respectReducedMotion={false}
             posterPriority={priority}
           />
@@ -307,14 +308,11 @@ function WorkCard({
             className="workCardMedia"
             src={card.thumb || card.media}
             srcSet={card.thumbSrcSet}
-            sizes={
-              card.thumbSrcSet
-                ? "(max-width: 720px) 100vw, (max-width: 900px) 50vw, 36vw"
-                : undefined
-            }
+            sizes="(max-width: 720px) 100vw, (max-width: 900px) 50vw, 36vw"
             alt=""
             eager={priority}
             fetchPriority={priority ? "high" : "auto"}
+            quality={75}
           />
         ) : (
           <span className="workCardPlaceholder">{card.title}</span>

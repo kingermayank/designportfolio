@@ -11,10 +11,10 @@ const deferredVideo = await readFile(
   "utf8",
 );
 
-test("homepage project videos autoplay even when reduced motion is enabled", () => {
+test("only the first homepage video loads eagerly; other cards keep their posters", () => {
   assert.match(
     work,
-    /<DeferredVideo[\s\S]*?activation="eager"[\s\S]*?respectReducedMotion=\{false\}/,
+    /<DeferredVideo[\s\S]*?activation=\{priority \? "eager" : "visible"\}[\s\S]*?respectReducedMotion=\{false\}[\s\S]*?posterPriority=\{priority\}/,
   );
 });
 

@@ -53,9 +53,11 @@ function youtubeEmbedSrc(src: string): string | undefined {
 function MediaFill({
   media,
   interactiveVideo = false,
+  priority = false,
 }: {
   media?: CaseMedia;
   interactiveVideo?: boolean;
+  priority?: boolean;
 }) {
   if (!media?.src) return null;
   if (media.launchPlayer) {
@@ -93,6 +95,7 @@ function MediaFill({
       style={frameStyle}
       src={media.src}
       poster={posterFor(media.src)}
+      posterPriority={priority}
       playbackRate={media.playbackRate}
       activation="visible"
       floatingControls={interactiveVideo}
@@ -104,6 +107,9 @@ function MediaFill({
       style={frameStyle}
       src={media.src}
       alt=""
+      eager={priority}
+      fetchPriority={priority ? "high" : undefined}
+      sizes="(max-width: 720px) 100vw, (max-width: 1440px) 75vw, 1400px"
     />
   );
 
@@ -1322,7 +1328,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                       aspectRatio: study.hero?.ar ?? 16 / 9,
                     }}
                   >
-                    <MediaFill media={study.hero} />
+                    <MediaFill media={study.hero} priority />
                   </div>
                   {study.mediaBlocks?.length ? (
                     <MediaBlocks blocks={study.mediaBlocks} bare />
@@ -1360,7 +1366,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                       aspectRatio: study.hero?.ar ?? 16 / 9,
                     }}
                   >
-                    <MediaFill media={study.hero} />
+                    <MediaFill media={study.hero} priority />
                   </div>
                   <div className={"csFade" + (contentIn ? " in" : "")}>
                     {study.sections.map((sec, i) => (

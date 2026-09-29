@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import DeferredVideo from "@/components/DeferredVideo";
+import DeferredImage from "@/components/DeferredImage";
 
 export type HeroImageProps = {
   /** Image or video in /public, or an absolute URL. */
@@ -78,11 +79,12 @@ export default function HeroImage({
             floatingControls={interactiveVideo}
           />
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <DeferredImage
             className="chMediaFill"
             src={src}
             alt={alt}
+            sizes="100vw"
+            eager
             fetchPriority="high"
             decoding="async"
           />

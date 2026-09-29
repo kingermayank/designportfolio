@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    qualities: [75, 85],
+    // Local assets use these query strings to refresh cached image revisions.
+    localPatterns: [
+      { pathname: "/**", search: "" },
+      ...[1, 2, 3, 4, 5].map((version) => ({
+        pathname: "/**",
+        search: `?v=${version}`,
+      })),
+      { pathname: "/all-logos/npm.png", search: "?v=cf01fda6" },
+    ],
+  },
   async headers() {
     return [
       {

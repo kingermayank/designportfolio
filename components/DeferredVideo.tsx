@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useReducedMotion } from "framer-motion";
+import { videoAssetUrl } from "@/lib/videoAssetUrl";
 
 type DeferredVideoProps = {
   src: string;
@@ -65,9 +66,6 @@ export default function DeferredVideo({
   const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = useReducedMotion();
   const [requested, setRequested] = useState(activation === "eager");
-  const [posterRequested, setPosterRequested] = useState(
-    activation === "eager" || posterPriority,
-  );
   const [visible, setVisible] = useState(activation === "eager");
   const [playbackIntent, setPlaybackIntent] = useState<
     "auto" | "playing" | "paused"
@@ -100,7 +98,6 @@ export default function DeferredVideo({
       ([entry]) => {
         setVisible(entry.isIntersecting);
         if (entry.isIntersecting) {
-          setPosterRequested(true);
           setRequested(true);
         }
       },
@@ -184,13 +181,13 @@ export default function DeferredVideo({
         ref={setVideoNode}
         className={className}
         style={style}
-        src={requested && motionAllowed ? src : undefined}
-        poster={posterRequested ? poster : undefined}
+        src={requested && motionAllowed ? videoAssetUrl(src) : undefined}
+        poster={poster}
         muted
         loop
         playsInline
         autoPlay={activation === "eager" && motionAllowed}
-        preload={requested ? "auto" : "none"}
+        preload={requested ? "metadata" : "none"}
         onCanPlay={(event) => syncPlayback(event.currentTarget)}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
