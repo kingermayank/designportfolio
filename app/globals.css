@@ -7620,7 +7620,7 @@ button.aboutCard:focus-visible {
 
   .workBrand {
     flex: 1;
-    font-size: clamp(3.25rem, calc(7vw + 24px), 3.75rem);
+    font-size: clamp(calc(3.25rem + 8px), calc(7vw + 32px), calc(3.75rem + 8px));
     padding-top: 6px;
     text-wrap: unset;
     white-space: nowrap;
