@@ -251,6 +251,8 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
   };
 });
 
+const WARPBNB_REST_TIME = 10.45;
+
 function WorkCard({
   card,
   onHover,
@@ -261,6 +263,8 @@ function WorkCard({
   priority?: boolean;
 }) {
   const { open } = usePageTransition();
+  const [previewing, setPreviewing] = useState(false);
+  const playOnHover = card.slug === "warpbnb";
   // Video covers play from the path as authored — the old /grid/ rewrite only
   // ever applied to assets that already lived under /grid/ or /new/.
   const gridSrc = card.video ? card.media : undefined;
@@ -282,9 +286,12 @@ function WorkCard({
             src={gridSrc}
             poster={card.thumb}
             activation={priority ? "eager" : "visible"}
+            playOnHover={playOnHover}
+            hovered={previewing}
+            posterTime={playOnHover ? WARPBNB_REST_TIME : undefined}
             loadMargin="80px 0px"
             respectReducedMotion={false}
-            posterPriority={priority}
+            posterPriority={priority && !playOnHover}
           />
         ) : card.thumb || card.media ? (
           <DeferredImage
@@ -309,9 +316,16 @@ function WorkCard({
   );
 
   const hoverProps = {
-    onMouseEnter: () => onHover?.(card),
+    onMouseEnter: () => {
+      onHover?.(card);
+      setPreviewing(true);
+    },
+    onMouseLeave: () => setPreviewing(false),
     onFocus: () => onHover?.(card),
-    onBlur: () => onHover?.(null),
+    onBlur: () => {
+      onHover?.(null);
+      setPreviewing(false);
+    },
   };
 
   if (card.externalUrl) {

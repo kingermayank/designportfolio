@@ -25,6 +25,11 @@ type DeferredVideoProps = {
    * playback. `visible` starts shortly before the media scrolls into view.
    */
   activation?: "eager" | "visible";
+  /** Leave the poster in place and load the file only while the card is hovered. */
+  playOnHover?: boolean;
+  hovered?: boolean;
+  /** Seek here once before the first hover play. Later pauses resume in place. */
+  posterTime?: number;
   /** Keep autoplay enabled for essential preview media when reduced motion is on. */
   respectReducedMotion?: boolean;
   /** Koto-style cursor-following play/pause control for editorial media. */
@@ -59,17 +64,23 @@ export default function DeferredVideo({
   posterPriority = false,
   loadMargin = "240px 0px",
   activation = "visible",
+  playOnHover = false,
+  hovered = false,
+  posterTime,
   respectReducedMotion = true,
   floatingControls = false,
   floatingControlPlacement = "media",
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const restPending = useRef(posterTime != null);
   const reducedMotion = useReducedMotion();
-  const [requested, setRequested] = useState(activation === "eager");
+  const [requested, setRequested] = useState(activation === "eager" && !playOnHover);
   const [visible, setVisible] = useState(activation === "eager");
   const [playbackIntent, setPlaybackIntent] = useState<
     "auto" | "playing" | "paused"
-  >("auto");
+  >(playOnHover ? "paused" : "auto");
+  const playbackIntentRef = useRef(playbackIntent);
+  playbackIntentRef.current = playbackIntent;
   const [playing, setPlaying] = useState(false);
   const [controlHost, setControlHost] = useState<HTMLElement | null>(null);
   const motionAllowed = !respectReducedMotion || !reducedMotion;
@@ -89,7 +100,17 @@ export default function DeferredVideo({
   );
 
   useEffect(() => {
-    if (activation !== "visible") return;
+    if (!playOnHover) return;
+    if (hovered) {
+      setRequested(true);
+      setPlaybackIntent("playing");
+      return;
+    }
+    setPlaybackIntent("paused");
+  }, [hovered, playOnHover]);
+
+  useEffect(() => {
+    if (activation !== "visible" || playOnHover) return;
     const video = videoRef.current;
     if (!video) return;
     const scrollRoot = nearestScrollParent(video);
@@ -105,26 +126,55 @@ export default function DeferredVideo({
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [activation, loadMargin]);
+  }, [activation, loadMargin, playOnHover]);
 
   const syncPlayback = useCallback(
     (video: HTMLVideoElement) => {
       video.playbackRate = playbackRate;
 
       const shouldPlay =
-        visible &&
         motionAllowed &&
-        (playbackIntent === "playing" || playbackIntent === "auto");
+        (playbackIntent === "playing"
+          ? visible || playOnHover
+          : playbackIntent === "auto" && visible);
 
       if (shouldPlay) {
-        // Loading and hydration can briefly make play() reject. Keep the
-        // original intent so onCanPlay can retry instead of freezing on poster.
-        void video.play().catch(() => setPlaying(false));
+        const play = () => {
+          // Loading and hydration can briefly make play() reject. Keep the
+          // original intent so onCanPlay can retry instead of freezing on poster.
+          void video.play().catch(() => setPlaying(false));
+        };
+        if (playOnHover && posterTime != null && restPending.current) {
+          const startAtRest = () => {
+            if (!restPending.current) {
+              play();
+              return;
+            }
+            if (Math.abs(video.currentTime - posterTime) <= 0.03) {
+              restPending.current = false;
+              play();
+              return;
+            }
+            video.addEventListener(
+              "seeked",
+              () => {
+                restPending.current = false;
+                if (playbackIntentRef.current === "playing") play();
+              },
+              { once: true },
+            );
+            video.currentTime = posterTime;
+          };
+          if (video.readyState >= 1) startAtRest();
+          else video.addEventListener("loadedmetadata", startAtRest, { once: true });
+          return;
+        }
+        play();
       } else {
         video.pause();
       }
     },
-    [motionAllowed, playbackIntent, playbackRate, visible],
+    [motionAllowed, playOnHover, playbackIntent, playbackRate, posterTime, visible],
   );
 
   useEffect(() => {
@@ -186,7 +236,7 @@ export default function DeferredVideo({
         muted
         loop
         playsInline
-        autoPlay={activation === "eager" && motionAllowed}
+        autoPlay={activation === "eager" && motionAllowed && !playOnHover}
         preload={requested ? "metadata" : "none"}
         onCanPlay={(event) => syncPlayback(event.currentTarget)}
         onPlay={() => setPlaying(true)}

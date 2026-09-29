@@ -14,7 +14,7 @@ const deferredVideo = await readFile(
 test("only the first homepage video loads eagerly; other cards keep their posters", () => {
   assert.match(
     work,
-    /<DeferredVideo[\s\S]*?activation=\{priority \? "eager" : "visible"\}[\s\S]*?respectReducedMotion=\{false\}[\s\S]*?posterPriority=\{priority\}/,
+    /<DeferredVideo[\s\S]*?activation=\{priority \? "eager" : "visible"\}[\s\S]*?playOnHover=\{playOnHover\}[\s\S]*?respectReducedMotion=\{false\}[\s\S]*?posterPriority=\{priority && !playOnHover\}/,
   );
 });
 

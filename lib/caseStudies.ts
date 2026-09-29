@@ -534,7 +534,7 @@ const warpbnb: CaseStudy = {
   ],
   // Detail hero stays on warp11; Work 1 card uses warp12 from /warpbnb/new.
   workCover: "/warpbnb/thumbnail-optimized.mp4",
-  workPoster: "/warpbnb/thumbs/thumbnail.webp",
+  workPoster: "/warpbnb/thumbs/thumbnail.webp?v=1045",
   hero: {
     shade: "#2b2b2b",
     src: "/warpbnb/cover.webp",
