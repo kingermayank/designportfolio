@@ -251,7 +251,10 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
   };
 });
 
-const WARPBNB_REST_TIME = 10.45;
+const HOVER_REST_TIME: Partial<Record<string, number>> = {
+  warpbnb: 10.45,
+  rolipoli: 1,
+};
 
 function WorkCard({
   card,
@@ -264,7 +267,8 @@ function WorkCard({
 }) {
   const { open } = usePageTransition();
   const [previewing, setPreviewing] = useState(false);
-  const playOnHover = card.slug === "warpbnb";
+  const restTime = HOVER_REST_TIME[card.slug];
+  const playOnHover = restTime != null;
   // Video covers play from the path as authored — the old /grid/ rewrite only
   // ever applied to assets that already lived under /grid/ or /new/.
   const gridSrc = card.video ? card.media : undefined;
@@ -288,7 +292,8 @@ function WorkCard({
             activation={priority ? "eager" : "visible"}
             playOnHover={playOnHover}
             hovered={previewing}
-            posterTime={playOnHover ? WARPBNB_REST_TIME : undefined}
+            posterTime={restTime}
+            playbackRate={card.slug === "rolipoli" ? 0.7 : 1}
             loadMargin="80px 0px"
             respectReducedMotion={false}
             posterPriority={priority && !playOnHover}
@@ -795,10 +800,6 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                 onClick={() => selectLens(l.id)}
               >
                 {l.label}
-                <span
-                  className={"workLensDot" + (active ? " show" : "")}
-                  aria-hidden
-                />
               </button>
             );
           })}

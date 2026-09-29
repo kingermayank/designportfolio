@@ -3904,23 +3904,7 @@ button.aboutCard:focus-visible {
 
 .workLens.on {
   color: var(--text);
-}
-
-.workLensDot {
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--text);
-  opacity: 0;
-  transform: scale(0.6);
-  transition:
-    opacity 167ms linear,
-    transform 167ms linear;
-}
-
-.workLensDot.show {
-  opacity: 1;
-  transform: scale(1);
+  font-weight: 500;
 }
 
 .workLens:focus-visible {
@@ -6120,7 +6104,6 @@ button.aboutCard:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .workLens,
-  .workLensDot,
   .workListRow,
   .workListArrow,
   .engCard {

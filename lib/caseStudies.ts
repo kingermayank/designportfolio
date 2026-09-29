@@ -1559,7 +1559,7 @@ const rolipoli: CaseStudy = {
   category: "Product Design",
   shade: "#262626",
   workCover: "/rolipoli/thumbnail.mp4",
-  workPoster: "/rolipoli/thumbs/thumbnail-700.webp",
+  workPoster: "/rolipoli/thumbs/thumbnail-700.webp?v=tree",
   linkable: false,
   externalUrl: "https://www.youtube.com/watch?v=u9v3gzVkyDk",
   sections: [
