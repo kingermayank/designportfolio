@@ -141,10 +141,6 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
 
       <div className="aboutSplit">
         <div className="aboutSplitCol">
-          <section className="aboutCard">
-            <p className="aboutCardLede">{ABOUT_INTRO.summary.replace(/\.$/, "")}<span className="workBrandDot">.</span></p>
-          </section>
-
           <section className="aboutCard aboutCardPods">
             <h2 className="aboutCardTitle">Podcasts I&apos;m listening to<span className="workBrandDot">.</span></h2>
             <AboutPodcastTicker />

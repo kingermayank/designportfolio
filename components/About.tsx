@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AboutContent from "@/components/AboutContent";
 import CaseBack from "@/components/case-hero/CaseBack";
 import Rise from "@/components/Rise";
+import { ABOUT_INTRO } from "@/lib/about";
 
 type AboutProps = {
   onClose?: () => void;
@@ -35,6 +36,10 @@ export default function About({ onClose }: AboutProps) {
                 About me
                 <span className="workBrandDot">.</span>
               </h1>
+              <p className="aboutPageSummary">
+                {ABOUT_INTRO.summary.replace(/\.$/, "")}
+                <span className="workBrandDot">.</span>
+              </p>
             </Rise>
           </header>
 
