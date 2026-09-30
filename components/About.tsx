@@ -32,7 +32,7 @@ export default function About({ onClose }: AboutProps) {
           <header className="aboutPageHeader">
             <Rise show={contentIn} delay={40}>
               <h1 className="aboutPageTitle">
-                Hey there, I&apos;m Mayank
+                About me
                 <span className="workBrandDot">.</span>
               </h1>
             </Rise>
