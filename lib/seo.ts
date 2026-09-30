@@ -4,7 +4,7 @@ export const SITE_URL = new URL("https://www.kingermayank.com");
 export const SITE_NAME = "Mayank Kinger — Portfolio";
 export const DEFAULT_TITLE = "Mayank Kinger — Product Designer & Design Engineer";
 export const DEFAULT_DESCRIPTION =
-  "Mayank Kinger is a product designer and high-agency builder crafting thoughtful digital products, scalable systems, and polished interactive experiences.";
+  "I'm a systems-thinking product designer & builder with a high bar for craft, a bias for prototyping, an affinity with code, and a lot of care.";
 
 const SOCIAL_IMAGE = {
   url: "/social/mayank-kinger-portfolio.png",

@@ -3883,6 +3883,22 @@ button.aboutCard:focus-visible {
   color: var(--text);
 }
 
+/* Reserve both text weights so selection never moves adjacent labels. */
+.workLensLabel {
+  display: inline-grid;
+  text-align: left;
+}
+
+.workLensLabel > span {
+  grid-area: 1 / 1;
+  justify-self: start;
+}
+
+.workLensLabelSizer {
+  visibility: hidden;
+  font-weight: 500;
+}
+
 .workLens.on {
   color: var(--text);
   font-weight: 500;
@@ -6394,38 +6410,6 @@ button.aboutCard:focus-visible {
   font-weight: 600;
 }
 
-.workBioEmphasis {
-  --bio-swap-duration: 150ms;
-  display: inline-grid;
-  vertical-align: baseline;
-  white-space: nowrap;
-}
-
-.workBioEmphasisRegular,
-.workBioEmphasisStrong {
-  grid-area: 1 / 1;
-  transition: opacity var(--bio-swap-duration) ease-in-out;
-}
-
-.workBioEmphasisStrong {
-  opacity: 0;
-}
-
-.workBioEmphasis[data-emphasized="true"] .workBioEmphasisRegular {
-  opacity: 0;
-}
-
-.workBioEmphasis[data-emphasized="true"] .workBioEmphasisStrong {
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .workBioEmphasisRegular,
-  .workBioEmphasisStrong {
-    transition: none;
-  }
-}
-
 /* “Currently …” status loop */
 .workCurrently,
 .aboutCurrently {
@@ -8902,4 +8886,13 @@ button.aboutCard:focus-visible {
 .chDemo code {
   font-family: var(--font-body);
   font-size: 0.9em;
+}
+
+/* A single shape for site actions, including links styled as buttons.
+   Large clickable cards, media surfaces, and backdrop dismiss areas retain
+   their own geometry. */
+button:not([class*="Scrim"]):not([class*="Card"]):not([class*="Tile"]):not(.caseStudyLightboxTrigger):not(.showreelLaunch):not(.csCoverScroll),
+input:is([type="button"], [type="submit"], [type="reset"]),
+a:is([role="button"], [class*="Btn"], [class*="Button"], [class*="Cta"], [class*="CTA"], .chBack) {
+  border-radius: var(--radius-pill) !important;
 }
