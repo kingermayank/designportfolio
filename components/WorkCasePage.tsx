@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import CaseStudies from "@/components/CaseStudies";
 import { usePageTransition } from "@/components/PageTransition";
 import { LINKABLE_CASE_STUDIES } from "@/lib/caseStudies";
@@ -21,7 +21,11 @@ export default function WorkCasePage({ slug }: { slug: string }) {
         externalEntry={{
           slug,
           onClose: () => {
-            router.push("/");
+            open(
+              "/",
+              { title: "Visual Craft", subtitle: "Selected work" },
+              "back",
+            );
           },
           onNavigate: (next) => {
             const study = LINKABLE_CASE_STUDIES.find((s) => s.slug === next);

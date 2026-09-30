@@ -7989,71 +7989,15 @@ button.aboutCard:focus-visible {
   }
 }
 
-/* ---------- Page transition (koto overlay) ---------- */
+/* ---------- Page transition ---------- */
 
 #main {
   height: 100%;
 }
 
-/* Full-bleed black curtain. Idle state is clipped away to nothing at the
-   bottom edge; the cover beat wipes that clip open upward. */
-.txCurtain {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: #000;
-  clip-path: inset(100% 0% 0% 0%);
+#main[data-transition-busy="true"] {
   pointer-events: none;
-  will-change: clip-path, transform;
-}
-
-.txCurtain.on {
-  pointer-events: auto;
-}
-
-.txLabel {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  transform: translateY(-50%);
-  padding: 0 28px 0 32px;
-  overflow: hidden;
-}
-
-.txLabelInner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  color: var(--color-text);
-  font-family: var(--font-label);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: var(--tracking-label);
-  line-height: 20px;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.txTitle {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-
-.txSubtitle {
-  flex: none;
-  margin-left: auto;
-  opacity: 0.5;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .txCurtain {
-    display: none;
-  }
+  will-change: transform, opacity, filter;
 }
 
 /* ================================================================== *

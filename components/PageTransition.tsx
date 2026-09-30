@@ -12,39 +12,26 @@ import {
   useState,
 } from "react";
 
-/* Koto's overlay page transition (koto.com/work -> case study), rebuilt.
-   Two beats, both driven from the bottom edge of the screen:
-
-     cover   a black curtain wipes up from the bottom while the project label
-             rises 100px into place.
-     reveal  once the route is mounted behind it, curtain and page travel up
-             together — curtain to -100%, page from +1 viewport to 0 — so the
-             case study is pushed into view with no seam between the two.
-
-   Durations and easings are Koto's own; their GSAP timelines use CustomEase
-   "x1, y1, x2, y2" strings, which are plain cubic-beziers. SPEED scales the
-   whole sequence — 1 is Koto's pace, 2 is twice as fast. */
-const SPEED = 2;
-const COVER_DUR = 1 / SPEED;
-const COVER_EASE = [0.55, 0, 0.15, 1] as const;
-const LABEL_EASE = [0.4, 0, 0.2, 1] as const;
-const LABEL_RISE = 100; // px
-const HOLD = 0.283 / SPEED; // beat between cover and reveal
-const REVEAL_DUR = 1 / SPEED;
-const REVEAL_EASE = [0.65, 0, 0.45, 1] as const;
-const LOAD_TIMEOUT = 6000; // ms — never strand the curtain if a route stalls
-
-const HIDDEN = "inset(100% 0% 0% 0%)";
-const SHOWN = "inset(0% 0% 0% 0%)";
+const GLIDE_DUR = 0.25;
+const GLIDE_DISTANCE = 20;
+const GLIDE_EASE = [0.22, 1, 0.36, 1] as const;
+const LOAD_TIMEOUT = 6000;
 
 export type TransitionDetail = { title: string; subtitle?: string };
+export type TransitionDirection = "forward" | "back";
 
-type Target = { href: string; detail?: TransitionDetail };
-type Phase = "idle" | "cover" | "load";
+type Target = {
+  href: string;
+  direction: TransitionDirection;
+};
+type Phase = "idle" | "exit" | "load";
 
 type Ctx = {
-  /** Curtain up, load `href`, push it into view. No-op while one is running. */
-  open: (href: string, detail?: TransitionDetail) => void;
+  open: (
+    href: string,
+    detail?: TransitionDetail,
+    direction?: TransitionDirection,
+  ) => void;
   busy: boolean;
 };
 
@@ -70,92 +57,98 @@ export default function PageTransition({
   const [stalled, setStalled] = useState(false);
 
   const mainRef = useRef<HTMLDivElement | null>(null);
-  const curtainRef = useRef<HTMLDivElement | null>(null);
-  const labelRef = useRef<HTMLDivElement | null>(null);
+  const ran = useRef<"exit" | "enter" | null>(null);
 
-  // Beats are one-shot: StrictMode re-runs effects, so latch what has started.
-  const ran = useRef<"cover" | "reveal" | null>(null);
-
-  // The route is mounted behind the curtain (or gave up waiting) — time to lift.
   const arrived = phase === "load" && (stalled || pathname === target?.href);
 
   const open = useCallback(
-    (href: string, detail?: TransitionDetail) => {
+    (
+      href: string,
+      _detail?: TransitionDetail,
+      direction: TransitionDirection = "forward",
+    ) => {
       if (phase !== "idle") return;
       if (reduce) {
         router.push(href);
         return;
       }
-      setTarget({ href, detail });
-      setPhase("cover");
+
+      setTarget({ href, direction });
+      setPhase("exit");
     },
     [phase, reduce, router],
   );
 
-  // Beat 1 — wipe the curtain up over the page we're leaving.
+  // Glide the current route away from the direction of travel.
   useEffect(() => {
-    if (phase !== "cover" || ran.current === "cover") return;
-    ran.current = "cover";
+    if (phase !== "exit" || !target || ran.current === "exit") return;
+    ran.current = "exit";
 
-    const curtain = curtainRef.current;
-    const label = labelRef.current;
-    if (!curtain) return;
-
-    const plays = [
-      animate(curtain, { clipPath: [HIDDEN, SHOWN] }, { duration: COVER_DUR, ease: COVER_EASE }),
-    ];
-    if (label) {
-      plays.push(
-        animate(label, { y: [LABEL_RISE, 0] }, { duration: COVER_DUR, ease: LABEL_EASE }),
-      );
-    }
+    const main = mainRef.current;
+    if (!main) return;
+    const exitX = target.direction === "forward" ? -GLIDE_DISTANCE : GLIDE_DISTANCE;
+    const play = animate(
+      main,
+      {
+        x: [0, exitX],
+        opacity: [1, 0],
+        filter: ["blur(0px)", "blur(3px)"],
+      },
+      { duration: GLIDE_DUR, ease: GLIDE_EASE },
+    );
 
     let cancelled = false;
-    void Promise.all(plays.map((p) => p.finished)).then(() => {
-      if (cancelled) return;
-      setPhase("load");
+    void play.finished.then(() => {
+      if (!cancelled) setPhase("load");
     });
     return () => {
       cancelled = true;
     };
-  }, [phase]);
+  }, [phase, target]);
 
-  // Beat 2 — the screen is fully covered, so swap routes behind it. The
-  // incoming page is parked a full viewport below before the push lands, which
-  // is where the reveal will lift it from. The timer is a floor under a route
-  // that never resolves, so the curtain is never left stranded.
+  // Swap routes while the outgoing page is fully hidden.
   useEffect(() => {
     if (phase !== "load" || !target) return;
 
     const main = mainRef.current;
-    const travel = curtainRef.current?.offsetHeight ?? window.innerHeight;
-    if (main) main.style.transform = `translateY(${travel}px)`;
-    router.push(target.href);
+    const enterX = target.direction === "forward" ? GLIDE_DISTANCE : -GLIDE_DISTANCE;
+    if (main) {
+      main.style.transform = `translateX(${enterX}px)`;
+      main.style.opacity = "0";
+      main.style.filter = "blur(3px)";
+    }
 
-    const t = window.setTimeout(() => setStalled(true), LOAD_TIMEOUT);
-    return () => window.clearTimeout(t);
+    router.push(target.href);
+    const timeout = window.setTimeout(() => setStalled(true), LOAD_TIMEOUT);
+    return () => window.clearTimeout(timeout);
   }, [phase, target, router]);
 
-  // Beat 3 — curtain and page rise together, then hand control back.
+  // Bring the mounted route in from the opposite side. Back navigation uses
+  // the inverse direction so the spatial relationship remains consistent.
   useEffect(() => {
-    if (!arrived || ran.current === "reveal") return;
-    ran.current = "reveal";
+    if (!arrived || !target || ran.current === "enter") return;
+    ran.current = "enter";
 
-    const curtain = curtainRef.current;
     const main = mainRef.current;
-    if (!curtain) return;
-
-    const travel = curtain.offsetHeight;
-    const opts = { duration: REVEAL_DUR, delay: HOLD, ease: REVEAL_EASE } as const;
-    const plays = [animate(curtain, { y: [0, -travel] }, opts)];
-    if (main) plays.push(animate(main, { y: [travel, 0] }, opts));
+    if (!main) return;
+    const enterX = target.direction === "forward" ? GLIDE_DISTANCE : -GLIDE_DISTANCE;
+    const play = animate(
+      main,
+      {
+        x: [enterX, 0],
+        opacity: [0, 1],
+        filter: ["blur(3px)", "blur(0px)"],
+      },
+      { duration: GLIDE_DUR, ease: GLIDE_EASE },
+    );
 
     let cancelled = false;
-    void Promise.all(plays.map((p) => p.finished)).then(() => {
+    void play.finished.then(() => {
       if (cancelled) return;
-      curtain.style.transform = "";
-      curtain.style.clipPath = HIDDEN;
-      if (main) main.style.transform = "";
+
+      main.style.transform = "";
+      main.style.opacity = "";
+      main.style.filter = "";
       ran.current = null;
       setTarget(null);
       setStalled(false);
@@ -164,32 +157,15 @@ export default function PageTransition({
     return () => {
       cancelled = true;
     };
-  }, [arrived]);
+  }, [arrived, target]);
 
   const busy = phase !== "idle";
   const ctx = useMemo(() => ({ open, busy }), [open, busy]);
 
   return (
     <TransitionCtx.Provider value={ctx}>
-      <div id="main" ref={mainRef}>
+      <div id="main" ref={mainRef} data-transition-busy={busy || undefined}>
         {children}
-      </div>
-
-      <div
-        className={"txCurtain" + (busy ? " on" : "")}
-        ref={curtainRef}
-        aria-hidden={!busy}
-      >
-        {target?.detail && (
-          <div className="txLabel">
-            <div className="txLabelInner" ref={labelRef}>
-              <span className="txTitle">{target.detail.title}</span>
-              {target.detail.subtitle && (
-                <span className="txSubtitle">{target.detail.subtitle}</span>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </TransitionCtx.Provider>
   );
