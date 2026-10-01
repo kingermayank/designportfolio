@@ -663,7 +663,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
             <SocialMenu />
           </div>
           <p className="workSubtitle">
-            I&apos;m a <strong>systems-thinking product designer</strong> &amp; builder{" "}
+            I&apos;m a systems-thinking <strong>product designer</strong> &amp; builder{" "}
             with a high bar for craft, a bias for prototyping, an affinity with code,
             and a lot of care.
           </p>
