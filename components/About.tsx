@@ -49,7 +49,7 @@ export default function About({ onClose }: AboutProps) {
               <img
                 src={ABOUT_INTRO.hero.src}
                 alt={ABOUT_INTRO.hero.alt}
-                width={1536}
+                width={904}
                 height={1024}
                 loading="eager"
                 fetchPriority="high"

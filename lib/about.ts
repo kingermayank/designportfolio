@@ -20,7 +20,7 @@ export const ABOUT_INTRO = {
   hero: {
     src: "/dp.png",
     alt: "Mayank Kinger",
-    ar: 1536 / 1024,
+    ar: 904 / 1024,
   } satisfies AboutPhoto,
   links: [
     { label: "X/Twitter", href: "https://x.com/kingermayank" },
