@@ -2316,7 +2316,7 @@ button.csNavItem {
 .aboutPageIntro {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 32px;
+  gap: 48px;
   align-items: start;
   padding-top: 20px;
   margin-bottom: 80px;
