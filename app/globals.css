@@ -2443,7 +2443,7 @@ button.csNavItem {
 }
 
 .aboutPhilosophy .aboutPrincipleTitle {
-  font-size: clamp(20px, 2vw, 28px);
+  font-size: clamp(16px, calc(2vw - 8px), 20px);
   line-height: 1.2;
 }
 
