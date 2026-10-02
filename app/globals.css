@@ -2311,7 +2311,7 @@ button.csNavItem {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 120px;
   padding: clamp(1.5rem, 4vw, 3rem) var(--about-inset) var(--space-bar);
   box-sizing: border-box;
 }
@@ -2319,7 +2319,7 @@ button.csNavItem {
 .aboutPageContent > .csFade {
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 120px;
 }
 
 .aboutPageIntro {
@@ -2459,7 +2459,7 @@ button.csNavItem {
   max-width: none;
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 120px;
 }
 
 .aboutLedePortrait {
@@ -2473,14 +2473,6 @@ button.csNavItem {
   height: auto;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-}
-
-.aboutSplit {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 60px;
-  align-items: stretch;
-  width: 100%;
 }
 
 .aboutCard {

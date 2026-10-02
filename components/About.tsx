@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AboutContent from "@/components/AboutContent";
 import AboutPhilosophy from "@/components/AboutPhilosophy";
+import { AboutCareerCard, AboutLetter } from "@/components/AboutSections";
 import CaseBack from "@/components/case-hero/CaseBack";
 import Rise from "@/components/Rise";
 import { ABOUT_FOCUS, ABOUT_INTRO } from "@/lib/about";
@@ -62,6 +63,7 @@ export default function About({ onClose }: AboutProps) {
           </div>
 
           <div className={"csFade" + (contentIn ? " in" : "")}>
+            <AboutCareerCard />
             <section className="aboutFocus" aria-label="What I work on and product types">
               {ABOUT_FOCUS.map((group) => (
                 <div className="aboutFocusGroup" key={group.heading}>
@@ -74,6 +76,7 @@ export default function About({ onClose }: AboutProps) {
                 </div>
               ))}
             </section>
+            <AboutLetter />
             <AboutPhilosophy />
             <AboutContent />
           </div>
