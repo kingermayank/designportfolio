@@ -54,6 +54,22 @@ export const ABOUT_ORIGIN = {
   ],
 };
 
+export const ABOUT_FOCUS = [
+  {
+    heading: "What I work on",
+    items: [
+      "Product direction",
+      "Product design",
+      "0→1 products",
+      "Ambiguous & complex problems",
+    ],
+  },
+  {
+    heading: "Product types",
+    items: ["AI & automation", "Mobile apps", "Web apps", "Complex workflows"],
+  },
+] as const;
+
 /** Display-sized square covers; full-resolution originals remain in `public/podcast`. */
 export const ABOUT_PODCASTS: {
   id: string;
