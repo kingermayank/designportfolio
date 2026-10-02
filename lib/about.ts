@@ -20,7 +20,7 @@ export const ABOUT_INTRO = {
   currentWork:
     "I'm currently designing a customer retention platform for automotive dealerships that uses deterministic location data to run targeted outreach campaigns and win back customers for service revenue.",
   background:
-    "I thrive on tackling new challenges and navigating ambiguity in complex, dynamic environments, especially where the product itself is being rethought around agents rather than adding AI onto an existing workflow.",
+    "I thrive on tackling new challenges and navigating ambiguity in complex environments, especially when the product itself is being rethought around agents rather than adding AI onto an existing workflow.",
   hero: {
     src: "/dp-cropped-45f67a44.png",
     alt: "Mayank Kinger",
