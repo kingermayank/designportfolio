@@ -2318,7 +2318,8 @@ button.csNavItem {
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: 32px;
   align-items: start;
-  margin-bottom: 60px;
+  padding-top: 20px;
+  margin-bottom: 80px;
 }
 
 .aboutPageHeader {
