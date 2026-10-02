@@ -41,6 +41,8 @@ export default function About({ onClose }: AboutProps) {
                   {ABOUT_INTRO.summary.replace(/\.$/, "")}
                   <span className="workBrandDot">.</span>
                 </p>
+                <p className="aboutPageSummary">{ABOUT_INTRO.currentWork}</p>
+                <p className="aboutPageSummary">{ABOUT_INTRO.background}</p>
               </Rise>
             </header>
 
