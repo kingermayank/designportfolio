@@ -18,9 +18,9 @@ export const ABOUT_INTRO = {
   summary:
     "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   hero: {
-    src: "/about/hero-1000.webp",
+    src: "/dp.png",
     alt: "Mayank Kinger",
-    ar: 1984 / 1134,
+    ar: 1536 / 1024,
   } satisfies AboutPhoto,
   links: [
     { label: "X/Twitter", href: "https://x.com/kingermayank" },

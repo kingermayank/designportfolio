@@ -149,7 +149,7 @@ const personJsonLd = {
   "@type": "Person",
   name: "Mayank Kinger",
   url: SITE_URL.toString(),
-  image: new URL("/about/hero.jpg", SITE_URL).toString(),
+  image: new URL("/dp.png", SITE_URL).toString(),
   jobTitle: "Product Designer",
   description: DEFAULT_DESCRIPTION,
   sameAs: [

@@ -129,8 +129,8 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           <img
             src={ABOUT_INTRO.hero.src}
             alt={ABOUT_INTRO.hero.alt}
-            width={1000}
-            height={572}
+            width={1536}
+            height={1024}
             loading="eager"
             fetchPriority="high"
             decoding="async"
