@@ -127,22 +127,9 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
       </div>
 
       <section className="aboutLetterFrame" aria-labelledby="about-letter-title">
-        <div className="aboutLetterTop">
-          <h2 id="about-letter-title" className="aboutLetterTitle">
-            {HIRING_LETTER.title}
-          </h2>
-          <div className="aboutLetterAddressRow">
-            <div className="aboutLetterAddress">
-              <span className="aboutLetterAddressLabel">To:</span>
-              <p>{HIRING_LETTER.recipient}</p>
-            </div>
-            <div className="aboutLetterStamp" aria-hidden="true">
-              <span className="aboutLetterStampInitials">MK</span>
-              <span className="aboutLetterStampCaption">DESIGN · BUILD</span>
-            </div>
-          </div>
-        </div>
-        <div className="aboutLetterRule" />
+        <h2 id="about-letter-title" className="aboutLetterTitle">
+          {HIRING_LETTER.title}
+        </h2>
         <div className="aboutLetterText">
           <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>
           {HIRING_LETTER.body.map((paragraph) => (

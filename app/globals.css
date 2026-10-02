@@ -2974,100 +2974,14 @@ button.aboutCard:focus-visible {
   font-family: var(--font-body);
 }
 
-.aboutLetterTop {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: clamp(260px, 32vw, 340px);
-}
-
 .aboutLetterTitle {
   max-width: 16ch;
-  margin: 0;
+  margin: 0 0 40px;
   font-size: clamp(30px, 3.6vw, 46px);
   font-weight: 400;
   line-height: 1.12;
   letter-spacing: -0.045em;
   text-wrap: balance;
-}
-
-.aboutLetterAddressRow {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-}
-
-.aboutLetterAddress {
-  max-width: 38ch;
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.aboutLetterAddressLabel {
-  color: #686a63;
-}
-
-.aboutLetterAddress p {
-  margin: 12px 0 0;
-}
-
-.aboutLetterStamp {
-  position: relative;
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 104px;
-  height: 124px;
-  border: 6px dotted #73816e;
-  background: #dce3d4;
-  box-shadow: inset 0 0 0 1px #73816e;
-  color: #364536;
-  transform: rotate(5deg);
-}
-
-.aboutLetterStamp::before,
-.aboutLetterStamp::after {
-  content: "";
-  position: absolute;
-  right: calc(100% + 8px);
-  width: 56px;
-  height: 24px;
-  border-top: 1px solid #626b5f;
-  border-radius: 50%;
-  opacity: 0.7;
-  transform: rotate(-12deg);
-}
-
-.aboutLetterStamp::before {
-  top: 42px;
-}
-
-.aboutLetterStamp::after {
-  top: 54px;
-}
-
-.aboutLetterStampInitials {
-  font-family: var(--font-cesare), Georgia, serif;
-  font-size: 48px;
-  line-height: 1;
-}
-
-.aboutLetterStampCaption {
-  font-family: var(--font-label);
-  font-size: 7px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-}
-
-.aboutLetterRule {
-  height: 1px;
-  margin: 48px 0 40px;
-  background: #d7d8d0;
 }
 
 .aboutLetterText {
@@ -3098,38 +3012,9 @@ button.aboutCard:focus-visible {
     padding: 28px 24px 36px;
   }
 
-  .aboutLetterTop {
-    min-height: 260px;
-  }
-
   .aboutLetterTitle {
     font-size: 32px;
-  }
-
-  .aboutLetterAddress {
-    font-size: 15px;
-  }
-
-  .aboutLetterStamp {
-    width: 76px;
-    height: 94px;
-  }
-
-  .aboutLetterStamp::before,
-  .aboutLetterStamp::after {
-    width: 20px;
-  }
-
-  .aboutLetterStampInitials {
-    font-size: 36px;
-  }
-
-  .aboutLetterStampCaption {
-    font-size: 5px;
-  }
-
-  .aboutLetterRule {
-    margin: 36px 0 32px;
+    margin-bottom: 32px;
   }
 
   .aboutLetterText {
