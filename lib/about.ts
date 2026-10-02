@@ -179,7 +179,7 @@ export const ABOUT_CAREER: {
   },
 ];
 
-/** Work philosophy — its own full-width card, not a story section. */
+/** Work philosophy and its ten numbered principles. */
 export const ABOUT_PHILOSOPHY = {
   title: "My work philosophy.",
   lede: "I see design as a powerful strategic tool to solve complex business challenges and create lasting value. I feel that designers owe a certain amount of responsibility not just towards their work but also towards society and its people.",

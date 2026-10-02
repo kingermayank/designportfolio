@@ -2394,6 +2394,66 @@ button.csNavItem {
   letter-spacing: -0.035em;
 }
 
+.aboutPhilosophy {
+  border-top: 1px solid var(--sys-hairline);
+  padding-top: 120px;
+  margin-bottom: 120px;
+}
+
+.aboutPhilosophyTitle {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: clamp(32px, 3vw, 44px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.aboutPhilosophyLede {
+  max-width: 70ch;
+  margin: 24px 0 64px;
+  color: var(--body-text);
+  font-family: var(--font-body);
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+.aboutPhilosophy .aboutPrinciples {
+  margin-top: 0;
+}
+
+.aboutPhilosophy .aboutPrincipleSummary,
+.aboutPhilosophy .aboutPrinciplePanelInner {
+  grid-template-columns: 64px minmax(0, 1fr) 30px;
+}
+
+.aboutPhilosophy .aboutPrincipleSummary {
+  padding: 22px 0;
+}
+
+.aboutPhilosophy .aboutPrincipleIndex {
+  color: var(--color-accent-orange);
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.aboutPhilosophy .aboutPrincipleTitle {
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.2;
+}
+
+.aboutPhilosophy .aboutPrincipleText {
+  max-width: 70ch;
+  padding-bottom: 24px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
 .aboutFlow {
   width: 100%;
   max-width: none;
@@ -2468,30 +2528,18 @@ button.aboutCard:focus-visible {
   text-wrap: pretty;
 }
 
-.aboutSplitMid {
-  margin-top: 8px;
-}
-
-.aboutCardPhilosophy {
-  min-width: 0;
-}
-
 .aboutCardTestimonials {
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
-.aboutCardPhilosophy .aboutCardTitle {
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 32px;
-  margin-bottom: 8px;
+.aboutTestimonialsWide {
+  margin-top: 8px;
 }
 
-/* The accordion already draws its own rules; it needs no extra top gap here. */
-.aboutCardPhilosophy .aboutPrinciples {
-  margin-top: 28px;
+.aboutTestimonialsWide .aboutTmQuote {
+  max-width: 70ch;
 }
 
 .aboutCardTitle {
@@ -3596,6 +3644,15 @@ button.aboutCard:focus-visible {
 
   .aboutFocusGroup:nth-child(2) {
     padding-left: 0;
+  }
+
+  .aboutPhilosophy {
+    padding-top: 64px;
+    margin-bottom: 80px;
+  }
+
+  .aboutPhilosophyLede {
+    margin-bottom: 48px;
   }
 
   .csHeading.aboutHeading {

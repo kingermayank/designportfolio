@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AboutContent from "@/components/AboutContent";
+import AboutPhilosophy from "@/components/AboutPhilosophy";
 import CaseBack from "@/components/case-hero/CaseBack";
 import Rise from "@/components/Rise";
 import { ABOUT_FOCUS, ABOUT_INTRO } from "@/lib/about";
@@ -73,6 +74,7 @@ export default function About({ onClose }: AboutProps) {
                 </div>
               ))}
             </section>
+            <AboutPhilosophy />
             <AboutContent />
           </div>
         </div>
