@@ -20,7 +20,7 @@ export const ABOUT_INTRO = {
   currentWork:
     "I'm currently designing an AI-powered marketing copilot & customer intelligence platform for car dealerships that uses deterministic data signals to run targeted outreach campaigns and win back service revenue. I've previously worked at PathAI and BigBasket.",
   background:
-    "My background is in human-centered design, with a master’s in human computer interaction from the University of Michigan, where I specialized in UX research and design. I thrive on tackling new challenges and navigating ambiguity in complex, dynamic environments, especially when it comes to integrating AI into innovative design solutions.",
+    "I thrive on tackling new challenges and navigating ambiguity in complex, dynamic environments, especially when it comes to integrating AI into innovative design solutions.",
   hero: {
     src: "/dp-cropped-45f67a44.png",
     alt: "Mayank Kinger",
