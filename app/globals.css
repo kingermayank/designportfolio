@@ -2368,7 +2368,7 @@ button.csNavItem {
 
 .aboutFocusHeading {
   margin: 0 0 32px;
-  color: var(--color-accent-orange);
+  color: var(--color-secondary);
   font-family: var(--font-label);
   font-size: 13px;
   font-weight: 500;

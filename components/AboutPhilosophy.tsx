@@ -9,8 +9,7 @@ export default function AboutPhilosophy() {
   return (
     <section className="aboutPhilosophy" aria-labelledby="about-philosophy-title">
       <h2 id="about-philosophy-title" className="aboutPhilosophyTitle">
-        {ABOUT_PHILOSOPHY.title.replace(/\.$/, "")}
-        <span className="workBrandDot">.</span>
+        {ABOUT_PHILOSOPHY.title}
       </h2>
       <p className="aboutPhilosophyLede">{ABOUT_PHILOSOPHY.lede}</p>
 
