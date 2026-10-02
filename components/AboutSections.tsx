@@ -3,7 +3,7 @@ import { HIRING_LETTER } from "@/lib/letter";
 
 export function AboutCareerCard() {
   return (
-    <section className="aboutCard">
+    <section className="aboutCard aboutScrollCard">
       <h2 className="aboutCardTitle">
         Shaped by 7+ years of designing, building, learning, and
         experimenting<span className="workBrandDot">.</span>
@@ -62,7 +62,7 @@ export function AboutCareerCard() {
 
 export function AboutLetter() {
   return (
-    <section className="aboutLetterFrame" aria-labelledby="about-letter-title">
+    <section className="aboutLetterFrame aboutScrollCard" aria-labelledby="about-letter-title">
       <h2 id="about-letter-title" className="aboutLetterTitle">
         {HIRING_LETTER.title}<span className="workBrandDot">.</span>
       </h2>

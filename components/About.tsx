@@ -26,11 +26,10 @@ export default function About({ onClose }: AboutProps) {
 
   return (
     <div className="aboutPageRoot">
+      {onClose ? (
+        <CaseBack label="Back" onClick={onClose} />
+      ) : null}
       <div className="aboutPageScroll">
-        {onClose ? (
-          <CaseBack label="Back" onClick={onClose} />
-        ) : null}
-
         <div className="aboutPageContent">
           <div className="aboutPageIntro">
             <figure className={"aboutLedePortrait csFade" + (contentIn ? " in" : "")}>
@@ -64,7 +63,7 @@ export default function About({ onClose }: AboutProps) {
 
           <div className={"csFade" + (contentIn ? " in" : "")}>
             <AboutCareerCard />
-            <section className="aboutFocus" aria-label="What I work on and product types">
+            <section className="aboutCard aboutFocus aboutScrollCard" aria-label="What I work on and product types">
               {ABOUT_FOCUS.map((group) => (
                 <div className="aboutFocusGroup" key={group.heading}>
                   <h2 className="aboutFocusHeading">{group.heading}</h2>

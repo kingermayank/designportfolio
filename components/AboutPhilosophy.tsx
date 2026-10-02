@@ -7,7 +7,7 @@ export default function AboutPhilosophy() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <section className="aboutPhilosophy" aria-labelledby="about-philosophy-title">
+    <section className="aboutCard aboutPhilosophy aboutScrollCard" aria-labelledby="about-philosophy-title">
       <h2 id="about-philosophy-title" className="aboutPhilosophyTitle">
         {ABOUT_PHILOSOPHY.title}
       </h2>

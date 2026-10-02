@@ -42,12 +42,12 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
 
   return (
     <div className="aboutFlow">
-      <section className="aboutCard aboutCardPods">
+      <section className="aboutCard aboutCardPods aboutScrollCard">
         <h2 className="aboutCardTitle">Podcasts I&apos;m listening to<span className="workBrandDot">.</span></h2>
         <AboutPodcastTicker />
       </section>
 
-      <div ref={ref(0)} className="aboutCard aboutCardTestimonials aboutTestimonialsWide">
+      <div ref={ref(0)} className="aboutCard aboutCardTestimonials aboutTestimonialsWide aboutScrollCard">
         <AboutTestimonials testimonials={TESTIMONIALS} />
       </div>
 

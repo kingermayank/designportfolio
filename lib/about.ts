@@ -18,9 +18,9 @@ export const ABOUT_INTRO = {
   summary:
     "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   currentWork:
-    "I'm currently designing an AI-powered marketing copilot & customer intelligence platform for car dealerships that uses deterministic data signals to run targeted outreach campaigns and win back service revenue. I've previously worked at PathAI and BigBasket.",
+    "I'm currently designing a customer retention platform for automotive dealerships that uses deterministic location data to run targeted outreach campaigns and win back customers for service revenue.",
   background:
-    "I thrive on tackling new challenges and navigating ambiguity in complex, dynamic environments, especially when it comes to integrating AI into innovative design solutions.",
+    "I thrive on tackling new challenges and navigating ambiguity in complex, dynamic environments, especially where the product itself is being rethought around agents rather than adding AI onto an existing workflow.",
   hero: {
     src: "/dp-cropped-45f67a44.png",
     alt: "Mayank Kinger",
