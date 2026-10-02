@@ -18,7 +18,7 @@ export const ABOUT_INTRO = {
   summary:
     "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   hero: {
-    src: "/dp.png",
+    src: "/dp.png?v=3",
     alt: "Mayank Kinger",
     ar: 904 / 1024,
   } satisfies AboutPhoto,

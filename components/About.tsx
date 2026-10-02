@@ -54,7 +54,6 @@ export default function About({ onClose }: AboutProps) {
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
-                style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
               />
             </figure>
           </div>
