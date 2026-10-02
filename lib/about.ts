@@ -45,22 +45,6 @@ export const ABOUT_INTRO = {
     "https://drive.google.com/file/d/1XFSgyuKTiSk7ALuxrTojGSp3I4xfMe99/view?usp=sharing",
 };
 
-export const ABOUT_FOCUS = [
-  {
-    heading: "What I work on",
-    items: [
-      "Product direction",
-      "Product design",
-      "0→1 products",
-      "Ambiguous & complex problems",
-    ],
-  },
-  {
-    heading: "Product types",
-    items: ["AI & automation", "Mobile apps", "Web apps", "Design systems"],
-  },
-] as const;
-
 /** Display-sized square covers; full-resolution originals remain in `public/podcast`. */
 export const ABOUT_PODCASTS: {
   id: string;

@@ -6,7 +6,7 @@ import AboutPhilosophy from "@/components/AboutPhilosophy";
 import { AboutCareerCard, AboutLetter } from "@/components/AboutSections";
 import CaseBack from "@/components/case-hero/CaseBack";
 import Rise from "@/components/Rise";
-import { ABOUT_FOCUS, ABOUT_INTRO } from "@/lib/about";
+import { ABOUT_INTRO } from "@/lib/about";
 
 type AboutProps = {
   onClose?: () => void;
@@ -63,18 +63,6 @@ export default function About({ onClose }: AboutProps) {
 
           <div className={"csFade" + (contentIn ? " in" : "")}>
             <AboutCareerCard />
-            <section className="aboutCard aboutFocus aboutScrollCard" aria-label="What I work on and product types">
-              {ABOUT_FOCUS.map((group) => (
-                <div className="aboutFocusGroup" key={group.heading}>
-                  <h2 className="aboutFocusHeading">{group.heading}</h2>
-                  <ul className="aboutFocusList">
-                    {group.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </section>
             <AboutLetter />
             <AboutPhilosophy />
             <AboutContent />
