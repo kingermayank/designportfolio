@@ -2509,7 +2509,7 @@ button.aboutCard {
   align-items: stretch;
 }
 
-button.aboutCard:hover:not(.aboutCardOrigin):not(.aboutCardLetter) {
+button.aboutCard:hover:not(.aboutCardOrigin) {
   background: color-mix(in srgb, var(--color-surface) 88%, #fff 4%);
 }
 
@@ -2867,164 +2867,177 @@ button.aboutCard:focus-visible {
   transform: translate(-50%, 0);
 }
 
-.aboutCardLetter {
-  position: relative;
-  overflow: hidden;
-  flex: 1 1 auto;
-  min-height: 380px;
-  isolation: isolate;
+.aboutLetterFrame {
+  margin-top: 8px;
+  padding: clamp(28px, 5vw, 56px);
+  border-radius: 16px;
+  background: #f8f7f0;
+  color: #24251f;
+  font-family: var(--font-body);
 }
 
-.aboutCardLetter .aboutCardTitle {
-  position: relative;
-  z-index: 10;
-  margin-bottom: 0;
-  text-align: left;
-}
-
-.aboutLetterPreviewStage {
-  position: relative;
-  flex: 1 1 auto;
+.aboutLetterTop {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: clamp(260px, 32vw, 340px);
+}
+
+.aboutLetterTitle {
+  max-width: 16ch;
+  margin: 0;
+  font-size: clamp(30px, 3.6vw, 46px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.aboutLetterAddressRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.aboutLetterAddress {
+  max-width: 38ch;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.aboutLetterAddressLabel {
+  color: #686a63;
+}
+
+.aboutLetterAddress p {
+  margin: 12px 0 0;
+}
+
+.aboutLetterStamp {
+  position: relative;
+  display: flex;
+  flex: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 352px;
-  padding: 40px 8px 8px;
+  gap: 8px;
+  width: 104px;
+  height: 124px;
+  border: 6px dotted #73816e;
+  background: #dce3d4;
+  box-shadow: inset 0 0 0 1px #73816e;
+  color: #364536;
+  transform: rotate(5deg);
 }
 
-.aboutLetterPreview {
-  position: relative;
-  width: min(68%, 310px);
-  aspect-ratio: 1;
-  container-type: inline-size;
-  box-sizing: border-box;
-  background-color: #171f19;
-  background-image: url("/about/hiring-letter-paper.jpg");
-  background-position: 50%;
-  background-size: cover;
-  box-shadow:
-    0 18px 34px -18px rgba(0, 0, 0, 0.7),
-    0 2px 6px rgba(0, 0, 0, 0.26);
-  color: #131914;
-  font-family: var(--font-azeret), ui-sans-serif, system-ui, sans-serif;
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transform: translateY(0) rotate(-1.25deg);
-  transform-origin: center;
-  transition:
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-.aboutLetterPreviewContent {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3.75cqw;
-  min-height: 100%;
-  padding: 18.75cqw 12.5cqw;
-  box-sizing: border-box;
-}
-
-.aboutLetterPreviewClip {
+.aboutLetterStamp::before,
+.aboutLetterStamp::after {
+  content: "";
   position: absolute;
-  z-index: 2;
-  top: -5.375cqw;
-  right: 6.25cqw;
-  width: 18.75cqw;
-  aspect-ratio: 22 / 27;
-  background-image: url("/about/hiring-letter-paperclip.webp");
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  pointer-events: none;
+  right: calc(100% + 8px);
+  width: 56px;
+  height: 24px;
+  border-top: 1px solid #626b5f;
+  border-radius: 50%;
+  opacity: 0.7;
+  transform: rotate(-12deg);
 }
 
-.aboutLetterPreviewGreeting {
-  font-size: 5.0625cqw;
+.aboutLetterStamp::before {
+  top: 42px;
+}
+
+.aboutLetterStamp::after {
+  top: 54px;
+}
+
+.aboutLetterStampInitials {
+  font-family: var(--font-cesare), Georgia, serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.aboutLetterStampCaption {
+  font-family: var(--font-label);
+  font-size: 7px;
   font-weight: 500;
-  line-height: 5.625cqw;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
-.aboutLetterPreviewBody {
+.aboutLetterRule {
+  height: 1px;
+  margin: 48px 0 40px;
+  background: #d7d8d0;
+}
+
+.aboutLetterText {
   display: flex;
   flex-direction: column;
-  gap: 2.7cqw;
-}
-
-.aboutLetterPreviewBody > span,
-.aboutLetterPreviewSignoff {
-  font-size: 2.25cqw;
+  gap: 20px;
+  max-width: 740px;
+  font-size: 17px;
   font-weight: 400;
-  line-height: 1.2;
-  text-align: left;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
 }
 
-.aboutLetterPreviewHint {
-  margin-top: 22px;
-  font-family: var(--font-mono);
-  font-size: 10px;
+.aboutLetterText p {
+  margin: 0;
+}
+
+.aboutLetterGreeting {
   font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--muted);
-  opacity: 0.72;
-  transform: translateY(0);
-  transition:
-    color 167ms linear,
-    opacity 167ms linear,
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.aboutCardLetter:focus-visible .aboutLetterPreview {
-  transform: translateY(-12px) rotate(-0.35deg) scale(1.015);
-  box-shadow:
-    0 30px 48px -20px rgba(0, 0, 0, 0.82),
-    0 8px 16px rgba(0, 0, 0, 0.28);
+.aboutLetterSignoff {
+  padding-top: 20px;
 }
 
-.aboutCardLetter:focus-visible .aboutLetterPreviewHint {
-  color: var(--text);
-  opacity: 1;
-  transform: translateY(-3px);
-}
-
-@media (hover: hover) {
-  .aboutCardLetter:hover .aboutLetterPreview {
-    transform: translateY(-12px) rotate(-0.35deg) scale(1.015);
-    box-shadow:
-      0 30px 48px -20px rgba(0, 0, 0, 0.82),
-      0 8px 16px rgba(0, 0, 0, 0.28);
+@media (max-width: 720px) {
+  .aboutLetterFrame {
+    padding: 28px 24px 36px;
   }
 
-  .aboutCardLetter:hover .aboutLetterPreviewHint {
-    color: var(--text);
-    opacity: 1;
-    transform: translateY(-3px);
+  .aboutLetterTop {
+    min-height: 260px;
   }
-}
 
-.aboutCardLetter:active .aboutLetterPreview {
-  transform: translateY(-6px) rotate(-0.35deg) scale(0.99);
-  transition-duration: 90ms;
-}
+  .aboutLetterTitle {
+    font-size: 32px;
+  }
 
-.letterNote:hover {
-  transform: rotate(-0.5deg);
-}
+  .aboutLetterAddress {
+    font-size: 15px;
+  }
 
-.letterNote:focus {
-  outline: none;
-}
+  .aboutLetterStamp {
+    width: 76px;
+    height: 94px;
+  }
 
-.letterNote:focus-visible {
-  outline: 2px solid #121413;
-  outline-offset: 3px;
+  .aboutLetterStamp::before,
+  .aboutLetterStamp::after {
+    width: 20px;
+  }
+
+  .aboutLetterStampInitials {
+    font-size: 36px;
+  }
+
+  .aboutLetterStampCaption {
+    font-size: 5px;
+  }
+
+  .aboutLetterRule {
+    margin: 36px 0 32px;
+  }
+
+  .aboutLetterText {
+    font-size: 16px;
+    line-height: 1.55;
+  }
 }
 
 .aboutLede {
@@ -3483,10 +3496,6 @@ button.aboutCard:focus-visible {
     display: none;
   }
 
-  /* Letter keeps its tilt but does not animate into it. */
-  .letterNote {
-    transition: none;
-  }
 }
 
 
@@ -3666,8 +3675,7 @@ button.aboutCard:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .aboutCardOrigin,
-  .aboutCardLetter {
+  .aboutCardOrigin {
     flex: none;
   }
 
@@ -3675,24 +3683,11 @@ button.aboutCard:focus-visible {
     flex: none;
   }
 
-  .aboutLetterPreviewStage {
-    flex: none;
-  }
 }
 
 @media (max-width: 560px) {
   .aboutPageContent {
     padding-top: calc(var(--ch-space-3, 12px) + 44px + var(--space-4));
-  }
-}
-
-@media (max-width: 430px) {
-  .aboutLetterPreviewStage {
-    min-height: 310px;
-  }
-
-  .aboutLetterPreview {
-    width: min(82%, 300px);
   }
 }
 
@@ -6902,16 +6897,6 @@ button.aboutCard:focus-visible {
     transition: none;
   }
 
-  .aboutLetterPreview,
-  .aboutLetterPreviewHint {
-    transition: none;
-  }
-
-  .aboutCardLetter:hover .aboutLetterPreview,
-  .aboutCardLetter:focus-visible .aboutLetterPreview,
-  .aboutCardLetter:active .aboutLetterPreview {
-    transform: rotate(-1.25deg);
-  }
 }
 
 /* Work sidebar — CTA buttons under the intro */
@@ -7081,117 +7066,6 @@ button.aboutCard:focus-visible {
   border: 0;
 }
 
-/* Hiring letter note overlay */
-.letterScrim {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px;
-  overflow: auto;
-  background: color-mix(in srgb, #000 72%, transparent);
-  cursor: pointer;
-  animation: letterScrimIn 220ms linear both;
-  transition: opacity 220ms linear;
-}
-
-.letterScrim.is-static {
-  animation: none;
-}
-
-@keyframes letterScrimIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.letterNote {
-  position: relative;
-  width: min(720px, calc(100vw - 96px), calc(100dvh - 96px));
-  aspect-ratio: 1;
-  container-type: inline-size;
-  border-radius: 0;
-  /* Rests on a slight tilt and straightens toward the cursor. The open/close
-     flight sets an inline transform, then hands control back here. */
-  transform: rotate(-2deg);
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-  cursor: default;
-  background-color: #171f19;
-  background-image: url("/about/hiring-letter-paper.jpg");
-  background-position: 50%;
-  background-size: cover;
-  box-shadow: 32px 100px 150px #00000026;
-  color: #131914;
-  font-family: var(--font-azeret), ui-sans-serif, system-ui, sans-serif;
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.letterContent {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3.75cqw;
-  min-height: 100%;
-  padding: 18.75cqw 12.5cqw;
-  box-sizing: border-box;
-}
-
-.letterPaperclip {
-  position: absolute;
-  z-index: 2;
-  top: -5.375cqw;
-  right: 6.25cqw;
-  width: 18.75cqw;
-  aspect-ratio: 22 / 27;
-  background-image: url("/about/hiring-letter-paperclip.webp");
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  pointer-events: none;
-}
-
-.letterGreeting {
-  margin: 0;
-  font-family: inherit;
-  font-size: calc(5.0625cqw - 4px);
-  font-weight: 500;
-  line-height: calc(5.625cqw - 4px);
-  color: #131914;
-}
-
-.letterBody {
-  display: flex;
-  flex-direction: column;
-  gap: 2.7cqw;
-}
-
-.letterBody p {
-  margin: 0;
-  font-family: inherit;
-  font-size: 2.25cqw;
-  font-weight: 400;
-  line-height: 1.2;
-  color: #131914;
-  text-wrap: pretty;
-}
-
-.letterSignoff {
-  margin: 0;
-  font-family: inherit;
-  font-size: 2.25cqw;
-  font-weight: 400;
-  line-height: 1.2;
-  color: #131914;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .workFitBtn {
     transition: none;
@@ -7203,45 +7077,6 @@ button.aboutCard:focus-visible {
 
   .workFitBtn:active {
     transform: none;
-  }
-}
-
-@media (max-width: 720px) {
-  .letterScrim {
-    align-items: flex-start;
-    padding: 40px 16px 24px;
-  }
-
-  .letterNote {
-    width: min(100%, 480px);
-    aspect-ratio: auto;
-    min-height: calc(100dvh - 64px);
-  }
-
-  .letterContent {
-    gap: 24px;
-    padding: 72px 28px 40px;
-  }
-
-  .letterPaperclip {
-    top: -28px;
-    right: 18px;
-    width: 98px;
-  }
-
-  .letterGreeting {
-    font-size: 26px;
-    line-height: 30px;
-  }
-
-  .letterBody {
-    gap: 20px;
-  }
-
-  .letterBody p,
-  .letterSignoff {
-    font-size: 15px;
-    line-height: 1.35;
   }
 }
 

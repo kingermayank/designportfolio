@@ -1,6 +1,4 @@
 "use client";
-
-import { useRef, useState } from "react";
 import {
   ABOUT_CAREER,
   ABOUT_ORIGIN,
@@ -9,7 +7,6 @@ import {
 } from "@/lib/about";
 import AboutPodcastTicker from "@/components/AboutPodcastTicker";
 import AboutTestimonials from "@/components/AboutTestimonials";
-import HiringLetterOverlay from "@/components/HiringLetterOverlay";
 import DeferredImage from "@/components/DeferredImage";
 import { HIRING_LETTER } from "@/lib/letter";
 
@@ -27,20 +24,6 @@ type AboutContentProps = {
 export default function AboutContent({ registerSection }: AboutContentProps) {
   const ref = (i: number) => (el: HTMLElement | null) =>
     registerSection?.(i, el);
-  const [letterOpen, setLetterOpen] = useState(false);
-  // Where the letter should fly out of / back into.
-  const [letterOrigin, setLetterOrigin] = useState<DOMRect | null>(null);
-  const letterPreviewRef = useRef<HTMLDivElement>(null);
-
-  const openHiringLetter = () => {
-    if (letterOpen) return;
-    setLetterOrigin(
-      letterPreviewRef.current?.getBoundingClientRect() ?? null,
-    );
-    setLetterOpen(true);
-  };
-
-  const closeHiringLetter = () => setLetterOpen(false);
 
   return (
     <div className="aboutFlow">
@@ -119,54 +102,42 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
             </ul>
           </section>
 
-          <button
-            type="button"
-            className="aboutCard aboutCardLetter"
-            onClick={openHiringLetter}
-            aria-haspopup="dialog"
-            aria-expanded={letterOpen}
-          >
-            <span className="aboutCardTitle">
-              Letter to my future hiring manager<span className="workBrandDot">.</span>
-            </span>
-            <div className="aboutLetterPreviewStage" aria-hidden>
-              <div
-                ref={letterPreviewRef}
-                className="aboutLetterPreview"
-              >
-                <span className="aboutLetterPreviewClip" />
-                <div className="aboutLetterPreviewContent">
-                  <span className="aboutLetterPreviewGreeting">
-                    {HIRING_LETTER.greeting}
-                  </span>
-                  <div className="aboutLetterPreviewBody">
-                    {HIRING_LETTER.body.map((paragraph) => (
-                      <span key={paragraph.slice(0, 24)}>{paragraph}</span>
-                    ))}
-                  </div>
-                  <span className="aboutLetterPreviewSignoff">
-                    {HIRING_LETTER.signoff}
-                    <br />
-                    {HIRING_LETTER.signature}
-                  </span>
-                </div>
-              </div>
-              <span className="aboutLetterPreviewHint">Open letter</span>
-            </div>
-          </button>
         </div>
       </div>
+
+      <section className="aboutLetterFrame" aria-labelledby="about-letter-title">
+        <div className="aboutLetterTop">
+          <h2 id="about-letter-title" className="aboutLetterTitle">
+            {HIRING_LETTER.title}
+          </h2>
+          <div className="aboutLetterAddressRow">
+            <div className="aboutLetterAddress">
+              <span className="aboutLetterAddressLabel">To:</span>
+              <p>{HIRING_LETTER.recipient}</p>
+            </div>
+            <div className="aboutLetterStamp" aria-hidden="true">
+              <span className="aboutLetterStampInitials">MK</span>
+              <span className="aboutLetterStampCaption">DESIGN · BUILD</span>
+            </div>
+          </div>
+        </div>
+        <div className="aboutLetterRule" />
+        <div className="aboutLetterText">
+          <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>
+          {HIRING_LETTER.body.map((paragraph) => (
+            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+          ))}
+          <p className="aboutLetterSignoff">
+            {HIRING_LETTER.signoff}
+            <br />
+            {HIRING_LETTER.signature}
+          </p>
+        </div>
+      </section>
 
       <div ref={ref(0)} className="aboutCard aboutCardTestimonials aboutTestimonialsWide">
         <AboutTestimonials testimonials={TESTIMONIALS} />
       </div>
-
-      {letterOpen ? (
-        <HiringLetterOverlay
-          origin={letterOrigin}
-          onClose={closeHiringLetter}
-        />
-      ) : null}
 
       <div ref={ref(1)} className="aboutPtoGrid">
           {[0, 1].map((col) => (
