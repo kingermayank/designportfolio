@@ -2481,14 +2481,6 @@ button.csNavItem {
   width: 100%;
 }
 
-.aboutSplitCol {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  min-height: 0;
-}
-
 .aboutCard {
   margin: 0;
   padding: 24px;
@@ -2509,7 +2501,7 @@ button.aboutCard {
   align-items: stretch;
 }
 
-button.aboutCard:hover:not(.aboutCardOrigin) {
+button.aboutCard:hover {
   background: color-mix(in srgb, var(--color-surface) 88%, #fff 4%);
 }
 
@@ -2652,37 +2644,6 @@ button.aboutCard:focus-visible {
   letter-spacing: -0.02em;
   color: var(--text);
   text-wrap: pretty;
-}
-
-.aboutCardBody {
-  margin: 0 0 12px;
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--body-text);
-  text-wrap: pretty;
-}
-
-.aboutCardBody:last-child {
-  margin-bottom: 0;
-}
-
-.aboutCardOrigin {
-  align-items: stretch;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-.aboutCardOriginBody {
-  flex: 1 1 auto;
-  min-height: 0;
-  max-width: 75ch;
-}
-
-.aboutCardOriginBody .aboutCardBody {
-  font-size: 17px;
-  line-height: 26.5px;
 }
 
 .aboutCareer {
@@ -3656,14 +3617,6 @@ button.aboutCard:focus-visible {
 
   .aboutPtoGrid {
     grid-template-columns: 1fr;
-  }
-
-  .aboutCardOrigin {
-    flex: none;
-  }
-
-  .aboutCardOriginBody {
-    flex: none;
   }
 
 }

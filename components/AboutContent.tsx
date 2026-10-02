@@ -1,7 +1,6 @@
 "use client";
 import {
   ABOUT_CAREER,
-  ABOUT_ORIGIN,
   ABOUT_PTO,
   TESTIMONIALS,
 } from "@/lib/about";
@@ -49,81 +48,65 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
   return (
     <div className="aboutFlow">
       <div className="aboutSplit">
-        <div className="aboutSplitCol">
-          <section className="aboutCard aboutCardPods">
-            <h2 className="aboutCardTitle">Podcasts I&apos;m listening to<span className="workBrandDot">.</span></h2>
-            <AboutPodcastTicker />
-          </section>
+        <section className="aboutCard aboutCardPods">
+          <h2 className="aboutCardTitle">Podcasts I&apos;m listening to<span className="workBrandDot">.</span></h2>
+          <AboutPodcastTicker />
+        </section>
 
-          <section className="aboutCard aboutCardOrigin">
-            <h2 className="aboutCardTitle">{ABOUT_ORIGIN.heading.replace(/\.$/, "")}<span className="workBrandDot">.</span></h2>
-            <div className="aboutCardOriginBody">
-              {ABOUT_ORIGIN.body.map((p) => (
-                <p key={p.slice(0, 32)} className="aboutCardBody">
-                  {p}
-                </p>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <div className="aboutSplitCol">
-          <section className="aboutCard">
-            <h2 className="aboutCardTitle">
-              Shaped by 7+ years of designing, building, learning, and
-              experimenting<span className="workBrandDot">.</span>
-            </h2>
-            <ul className="aboutCareer">
-              {ABOUT_CAREER.map((job) => (
-                <li key={job.company}>
-                  <a
-                    className="aboutCareerRow"
-                    href={job.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${job.company}, ${job.title}, ${job.year} (opens LinkedIn)`}
+        <section className="aboutCard">
+          <h2 className="aboutCardTitle">
+            Shaped by 7+ years of designing, building, learning, and
+            experimenting<span className="workBrandDot">.</span>
+          </h2>
+          <ul className="aboutCareer">
+            {ABOUT_CAREER.map((job) => (
+              <li key={job.company}>
+                <a
+                  className="aboutCareerRow"
+                  href={job.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${job.company}, ${job.title}, ${job.year} (opens LinkedIn)`}
+                >
+                  <span
+                    className={
+                      "aboutCareerMark" +
+                      (job.logoFit === "contain" ? " is-contain" : "")
+                    }
                   >
-                    <span
-                      className={
-                        "aboutCareerMark" +
-                        (job.logoFit === "contain" ? " is-contain" : "")
-                      }
+                    {job.logo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={job.logo} alt="" />
+                    ) : (
+                      <span className="aboutCareerFill" aria-hidden />
+                    )}
+                  </span>
+                  <span className="aboutCareerName">{job.company}</span>
+                  <span className="aboutCareerMeta">
+                    <span className="aboutCareerCopy">
+                      <span className="aboutCareerRole">{job.title}</span>
+                      <span className="aboutCareerYear">{job.year}</span>
+                    </span>
+                    <svg
+                      className="aboutCareerArrow"
+                      viewBox="0 0 12 12"
+                      aria-hidden
                     >
-                      {job.logo ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={job.logo} alt="" />
-                      ) : (
-                        <span className="aboutCareerFill" aria-hidden />
-                      )}
-                    </span>
-                    <span className="aboutCareerName">{job.company}</span>
-                    <span className="aboutCareerMeta">
-                      <span className="aboutCareerCopy">
-                        <span className="aboutCareerRole">{job.title}</span>
-                        <span className="aboutCareerYear">{job.year}</span>
-                      </span>
-                      <svg
-                        className="aboutCareerArrow"
-                        viewBox="0 0 12 12"
-                        aria-hidden
-                      >
-                        <path
-                          d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.25"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-        </div>
+                      <path
+                        d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.25"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
 
       <section className="aboutLetterFrame" aria-labelledby="about-letter-title">
