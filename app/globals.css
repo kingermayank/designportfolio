@@ -3000,14 +3000,8 @@ button.aboutCard:focus-visible {
   margin: 0;
 }
 
-.aboutLetterGreeting {
-  font-weight: 500;
-  color: var(--text);
-}
-
 .aboutLetterSignoff {
   padding-top: 20px;
-  color: var(--text);
 }
 
 @media (max-width: 720px) {

@@ -131,12 +131,8 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
           {HIRING_LETTER.title}<span className="workBrandDot">.</span>
         </h2>
         <div className="aboutLetterText">
-          <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>
           {HIRING_LETTER.body.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)}>
-              {paragraph.endsWith(".") ? paragraph.slice(0, -1) : paragraph}
-              {paragraph.endsWith(".") && <span className="workBrandDot">.</span>}
-            </p>
+            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
           ))}
           <p className="aboutLetterSignoff">
             {HIRING_LETTER.signoff}

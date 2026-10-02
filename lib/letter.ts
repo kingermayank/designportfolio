@@ -1,7 +1,6 @@
 /** Hiring-manager letter content used by the About page letter frame. */
 export const HIRING_LETTER = {
   title: "A letter to my future hiring manager",
-  greeting: "Dear future hiring manager,",
   body: [
     "I've grown from a hot-headed young designer chasing perfection to operating as a strategic product builder with a broader lens working across design, product, execution, and scale to get great products out the door.",
     "My strength lies in designing the right product the right way with speed and intentionality. I bring a strong research foundation and a systems thinking mindset, leveraging AI to amplify my point of view on how products should feel and behave. Having worked across scrappy startups and large established teams, I have learnt when to move fast and when to be deliberate without compromising quality.",
