@@ -2327,7 +2327,7 @@ button.csNavItem {
 }
 
 .aboutPageTitle {
-  margin: 10px 0 0;
+  margin: 0;
   font-family: var(--font-cesare), "Times New Roman", serif;
   font-weight: 400;
   font-size: clamp(3.75rem, calc(8vw + 20px), 84px);
