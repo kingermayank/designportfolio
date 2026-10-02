@@ -2414,7 +2414,7 @@ button.csNavItem {
 }
 
 .aboutPhilosophyLede {
-  margin: 0 0 64px;
+  margin: 0 0 44px;
   color: var(--text);
   font-family: var(--font-body);
   font-size: 24px;
@@ -2444,14 +2444,14 @@ button.csNavItem {
 }
 
 .aboutPhilosophy .aboutPrincipleTitle {
-  font-size: clamp(16px, calc(2vw - 8px), 20px);
+  font-size: 18px;
   line-height: 1.2;
 }
 
 .aboutPhilosophy .aboutPrincipleText {
   max-width: 70ch;
   padding-bottom: 24px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -3653,7 +3653,7 @@ button.aboutCard:focus-visible {
   }
 
   .aboutPhilosophyLede {
-    margin-bottom: 48px;
+    margin-bottom: 28px;
   }
 
   .csHeading.aboutHeading {
