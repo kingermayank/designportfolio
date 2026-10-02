@@ -2313,8 +2313,16 @@ button.csNavItem {
   box-sizing: border-box;
 }
 
+.aboutPageIntro {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 60px;
+}
+
 .aboutPageHeader {
-  margin: 0 0 44px;
+  min-width: 0;
 }
 
 .aboutPageTitle {
@@ -2345,15 +2353,8 @@ button.csNavItem {
   max-width: none;
 }
 
-.aboutLedeSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin: 0;
-}
-
 .aboutLedePortrait {
-  margin: 0 0 60px;
+  margin: 0;
   width: 100%;
 }
 
@@ -3530,6 +3531,11 @@ button.aboutCard:focus-visible {
 
   .aboutPageTitle {
     font-size: clamp(3.25rem, calc(7vw + 20px), 4rem);
+  }
+
+  .aboutPageIntro {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 
   .csHeading.aboutHeading {

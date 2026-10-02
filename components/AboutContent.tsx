@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import {
   ABOUT_CAREER,
-  ABOUT_INTRO,
   ABOUT_ORIGIN,
   ABOUT_PHILOSOPHY,
   ABOUT_PTO,
@@ -123,22 +122,6 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
 
   return (
     <div className="aboutFlow">
-      <div className="aboutLedeSection">
-        <figure className="aboutLedePortrait">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={ABOUT_INTRO.hero.src}
-            alt={ABOUT_INTRO.hero.alt}
-            width={1536}
-            height={1024}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
-          />
-        </figure>
-      </div>
-
       <div className="aboutSplit">
         <div className="aboutSplitCol">
           <section className="aboutCard aboutCardPods">

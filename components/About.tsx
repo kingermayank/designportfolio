@@ -30,18 +30,34 @@ export default function About({ onClose }: AboutProps) {
         ) : null}
 
         <div className="aboutPageContent">
-          <header className="aboutPageHeader">
-            <Rise show={contentIn} delay={40}>
-              <h1 className="aboutPageTitle">
-                About me
-                <span className="workBrandDot">.</span>
-              </h1>
-              <p className="aboutPageSummary">
-                {ABOUT_INTRO.summary.replace(/\.$/, "")}
-                <span className="workBrandDot">.</span>
-              </p>
-            </Rise>
-          </header>
+          <div className="aboutPageIntro">
+            <header className="aboutPageHeader">
+              <Rise show={contentIn} delay={40}>
+                <h1 className="aboutPageTitle">
+                  About me
+                  <span className="workBrandDot">.</span>
+                </h1>
+                <p className="aboutPageSummary">
+                  {ABOUT_INTRO.summary.replace(/\.$/, "")}
+                  <span className="workBrandDot">.</span>
+                </p>
+              </Rise>
+            </header>
+
+            <figure className={"aboutLedePortrait csFade" + (contentIn ? " in" : "")}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ABOUT_INTRO.hero.src}
+                alt={ABOUT_INTRO.hero.alt}
+                width={1536}
+                height={1024}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                style={{ aspectRatio: ABOUT_INTRO.hero.ar }}
+              />
+            </figure>
+          </div>
 
           <div className={"csFade" + (contentIn ? " in" : "")}>
             <AboutContent />
