@@ -2401,25 +2401,26 @@ button.csNavItem {
 }
 
 .aboutPhilosophyTitle {
-  margin: 0;
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: clamp(32px, 3vw, 44px);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  color: var(--color-secondary);
+  font-family: var(--font-label);
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
+  line-height: 20px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .aboutPhilosophyLede {
-  max-width: 70ch;
-  margin: 24px 0 64px;
-  color: var(--body-text);
+  margin: 0 0 64px;
+  color: var(--text);
   font-family: var(--font-body);
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 32px;
   letter-spacing: -0.02em;
-  text-wrap: pretty;
 }
 
 .aboutPhilosophy .aboutPrinciples {
