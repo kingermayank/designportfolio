@@ -128,12 +128,15 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
 
       <section className="aboutLetterFrame" aria-labelledby="about-letter-title">
         <h2 id="about-letter-title" className="aboutLetterTitle">
-          {HIRING_LETTER.title}
+          {HIRING_LETTER.title}<span className="workBrandDot">.</span>
         </h2>
         <div className="aboutLetterText">
           <p className="aboutLetterGreeting">{HIRING_LETTER.greeting}</p>
           {HIRING_LETTER.body.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+            <p key={paragraph.slice(0, 24)}>
+              {paragraph.endsWith(".") ? paragraph.slice(0, -1) : paragraph}
+              {paragraph.endsWith(".") && <span className="workBrandDot">.</span>}
+            </p>
           ))}
           <p className="aboutLetterSignoff">
             {HIRING_LETTER.signoff}
