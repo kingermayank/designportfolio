@@ -2513,6 +2513,23 @@ button.csNavItem {
   }
 }
 
+/* The portrait is already on screen at load, so its travel is compressed
+   into the scroll that actually carries it off, and the shrink is larger. */
+@keyframes about-portrait-focus {
+  0% {
+    transform: translate3d(0, 72px, 0) scale(0.78);
+  }
+  40% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  68% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -200px, 0) scale(0.55);
+  }
+}
+
 @supports (animation-timeline: view()) {
   .aboutScrollCard {
     transform-origin: center center;
@@ -2520,10 +2537,16 @@ button.csNavItem {
     animation-timeline: view(block);
     animation-range: entry 0% exit 100%;
   }
+
+  .aboutLedePortrait.aboutScrollCard {
+    animation-name: about-portrait-focus;
+    animation-range: cover 25% cover 80%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aboutScrollCard {
+  .aboutScrollCard,
+  .aboutLedePortrait.aboutScrollCard {
     animation: none;
   }
 }
@@ -3625,6 +3648,23 @@ button.aboutCard:focus-visible {
   }
 
   .aboutScrollCard {
+    animation: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (max-width: 1100px) {
+    .aboutLedePortrait.aboutScrollCard {
+      transform-origin: center center;
+      animation: about-portrait-focus linear both;
+      animation-timeline: view(block);
+      animation-range: cover 25% cover 80%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aboutLedePortrait.aboutScrollCard {
     animation: none;
   }
 }

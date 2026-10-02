@@ -57,7 +57,7 @@ export const ABOUT_FOCUS = [
   },
   {
     heading: "Product types",
-    items: ["AI & automation", "Mobile apps", "Web apps", "Complex workflows"],
+    items: ["AI & automation", "Mobile apps", "Web apps", "Design systems"],
   },
 ] as const;
 

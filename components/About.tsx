@@ -32,7 +32,7 @@ export default function About({ onClose }: AboutProps) {
       <div className="aboutPageScroll">
         <div className="aboutPageContent">
           <div className="aboutPageIntro">
-            <figure className={"aboutLedePortrait csFade" + (contentIn ? " in" : "")}>
+            <figure className={"aboutLedePortrait aboutScrollCard csFade" + (contentIn ? " in" : "")}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={ABOUT_INTRO.hero.src}
