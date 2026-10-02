@@ -10,6 +10,27 @@ import AboutTestimonials from "@/components/AboutTestimonials";
 import DeferredImage from "@/components/DeferredImage";
 import { HIRING_LETTER } from "@/lib/letter";
 
+const askAiPrompt =
+  "Would Mayank Kinger be a good fit for what I'm building? Review his product design and design engineering work at https://www.kingermayank.com/, explain where he could be most useful, and point out any gaps or questions worth discussing. If you need more context about my project, ask me for a brief description first.";
+
+const askAiLinks = [
+  {
+    name: "ChatGPT",
+    href: `https://chatgpt.com/?${new URLSearchParams({ q: askAiPrompt })}`,
+    logo: "/all-logos/chatgpt.png",
+  },
+  {
+    name: "Claude",
+    href: `https://claude.ai/new?${new URLSearchParams({ q: askAiPrompt })}`,
+    logo: "/all-logos/claude.webp",
+  },
+  {
+    name: "Google",
+    href: `https://www.google.com/search?${new URLSearchParams({ udm: "50", q: askAiPrompt })}`,
+    logo: null,
+  },
+];
+
 type AboutContentProps = {
   /**
    * Registers each scrollable section by index. The /about page uses this to
@@ -138,6 +159,33 @@ export default function AboutContent({ registerSection }: AboutContentProps) {
       <div ref={ref(0)} className="aboutCard aboutCardTestimonials aboutTestimonialsWide">
         <AboutTestimonials testimonials={TESTIMONIALS} />
       </div>
+
+      <section className="aboutAskAi" aria-labelledby="about-ask-ai-title">
+        <p className="aboutAskAiEyebrow">Need more context?</p>
+        <h2 id="about-ask-ai-title" className="aboutAskAiTitle">
+          Ask your favorite AI if I&apos;d be a good fit for what you&apos;re building.
+        </h2>
+        <div className="aboutAskAiLinks">
+          {askAiLinks.map(({ name, href, logo }) => (
+            <a
+              className="aboutAskAiLink"
+              key={name}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Ask ${name} about Mayank Kinger (opens in a new tab)`}
+            >
+              {logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className={`aboutAskAiLogo aboutAskAiLogo${name}`} src={logo} alt="" />
+              ) : (
+                <span className="aboutAskAiGoogleMark" aria-hidden="true">G</span>
+              )}
+              <span>Ask {name}</span>
+            </a>
+          ))}
+        </div>
+      </section>
 
       <div ref={ref(1)} className="aboutPtoGrid">
           {[0, 1].map((col) => (

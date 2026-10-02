@@ -2543,6 +2543,104 @@ button.aboutCard:focus-visible {
   max-width: 70ch;
 }
 
+.aboutAskAi {
+  margin-top: 40px;
+  padding: 40px 24px;
+  border-top: 1px solid var(--sys-hairline);
+  border-bottom: 1px solid var(--sys-hairline);
+  text-align: center;
+}
+
+.aboutAskAiEyebrow {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.aboutAskAiTitle {
+  max-width: 30ch;
+  margin: 0 auto 32px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.aboutAskAiLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.aboutAskAiLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 12px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 167ms ease, border-color 167ms ease;
+}
+
+.aboutAskAiLink:hover {
+  background: color-mix(in srgb, var(--color-surface) 85%, white);
+  border-color: color-mix(in srgb, var(--color-border) 65%, white);
+}
+
+.aboutAskAiLink:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.aboutAskAiLogo,
+.aboutAskAiGoogleMark {
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+
+.aboutAskAiLogoChatGPT {
+  filter: invert(1);
+}
+
+.aboutAskAiGoogleMark {
+  font-family: Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+@media (max-width: 560px) {
+  .aboutAskAi {
+    padding-inline: 0;
+  }
+
+  .aboutAskAiLinks {
+    flex-direction: column;
+  }
+
+  .aboutAskAiLink {
+    width: 100%;
+  }
+}
+
 .aboutCardTitle {
   display: block;
   margin: 0 0 16px;
@@ -3505,6 +3603,10 @@ button.aboutCard:focus-visible {
   gap: 8px;
   align-items: start;
   margin-top: 8px;
+}
+
+.aboutAskAi + .aboutPtoGrid {
+  margin-top: 40px;
 }
 
 .aboutPtoCol {
