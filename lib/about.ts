@@ -16,7 +16,7 @@ export const ABOUT_INTRO = {
   pronunciation: "[pronounced my-yunk]",
   pronunciationHref: "https://www.youtube.com/watch?v=yisa-f1HAH4",
   summary:
-    "I am a T-shaped designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
+    "I am a systems-thinking designer who specializes in 0 → 1, B2B2C, and SaaS products w/ 5+ years of experience crafting web platforms, mobile apps, and design systems.",
   currentWork:
     "I'm currently designing a customer retention platform for automotive dealerships that uses deterministic location data to run targeted outreach campaigns and win back customers for service revenue.",
   background:
@@ -185,7 +185,7 @@ export const ABOUT_PHILOSOPHY = {
       },
       {
         title: "Design without borders.",
-        text: "I don't like to remain constrained by my job title. I bring my T-shaped skills and founder mentality to every project, understanding what it means to take full ownership. If something needs to be done, I'll step up, whether it's writing PRD's, troubleshooting with developers, or creating training materials, whatever helps the team succeed.",
+        text: "I don't like to remain constrained by my job title. I bring my systems-thinking skills and founder mentality to every project, understanding what it means to take full ownership. If something needs to be done, I'll step up, whether it's writing PRD's, troubleshooting with developers, or creating training materials, whatever helps the team succeed.",
       },
       {
         title: "Ambiguity fuels creativity.",
