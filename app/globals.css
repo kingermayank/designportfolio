@@ -2475,7 +2475,7 @@ button.csNavItem {
 
 .aboutSplit {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   align-items: stretch;
   width: 100%;
@@ -2677,6 +2677,7 @@ button.aboutCard:focus-visible {
 .aboutCardOriginBody {
   flex: 1 1 auto;
   min-height: 0;
+  max-width: 75ch;
 }
 
 .aboutCardOriginBody .aboutCardBody {
@@ -2887,7 +2888,7 @@ button.aboutCard:focus-visible {
 }
 
 .aboutPodItem {
-  --about-pod-size: calc((100cqi - 32px) / 3.15);
+  --about-pod-size: min(16rem, calc((100cqi - 32px) / 3.15));
   position: relative;
   flex-shrink: 0;
   width: var(--about-pod-size);
@@ -3661,8 +3662,7 @@ button.aboutCard:focus-visible {
     line-height: 1.15;
   }
 
-  .aboutPtoGrid,
-  .aboutSplit {
+  .aboutPtoGrid {
     grid-template-columns: 1fr;
   }
 
