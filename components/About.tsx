@@ -31,6 +31,19 @@ export default function About({ onClose }: AboutProps) {
 
         <div className="aboutPageContent">
           <div className="aboutPageIntro">
+            <figure className={"aboutLedePortrait csFade" + (contentIn ? " in" : "")}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={ABOUT_INTRO.hero.src}
+                alt={ABOUT_INTRO.hero.alt}
+                width={904}
+                height={1024}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </figure>
+
             <header className="aboutPageHeader">
               <Rise show={contentIn} delay={40}>
                 <h1 className="aboutPageTitle">
@@ -45,19 +58,6 @@ export default function About({ onClose }: AboutProps) {
                 <p className="aboutPageSummary">{ABOUT_INTRO.background}</p>
               </Rise>
             </header>
-
-            <figure className={"aboutLedePortrait csFade" + (contentIn ? " in" : "")}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={ABOUT_INTRO.hero.src}
-                alt={ABOUT_INTRO.hero.alt}
-                width={904}
-                height={1024}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-              />
-            </figure>
           </div>
 
           <div className={"csFade" + (contentIn ? " in" : "")}>
