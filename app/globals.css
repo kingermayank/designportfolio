@@ -2977,7 +2977,6 @@ button.aboutCard:focus-visible {
 }
 
 .aboutLetterTitle {
-  max-width: 16ch;
   margin: 0 0 40px;
   font-size: clamp(30px, 3.6vw, 46px);
   font-weight: 400;
@@ -2990,7 +2989,6 @@ button.aboutCard:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 740px;
   font-size: 17px;
   font-weight: 400;
   line-height: 1.6;
