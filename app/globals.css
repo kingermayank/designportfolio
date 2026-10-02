@@ -2306,7 +2306,7 @@ button.csNavItem {
 .aboutPageContent {
   /* Center the About page in its own narrower reading column. */
   --about-gutter: clamp(1rem, 5vw, 5rem);
-  --about-content-width: 55rem;
+  --about-content-width: calc(55rem + 80px);
   --about-inset: max(
     var(--about-gutter),
     calc((100% - var(--about-content-width)) / 2)
