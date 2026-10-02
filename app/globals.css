@@ -2486,6 +2486,11 @@ button.aboutCard:focus-visible {
   min-height: 0;
 }
 
+.aboutCardOriginBody .aboutCardBody {
+  font-size: 17px;
+  line-height: 26.5px;
+}
+
 .aboutCareer {
   list-style: none;
   margin: 0;
