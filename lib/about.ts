@@ -48,7 +48,8 @@ export const ABOUT_INTRO = {
 export const ABOUT_ORIGIN = {
   heading: "How it all started.",
   body: [
-    "I've always been passionate about creating and technology, so pursuing a degree in Computer Science during my undergraduate studies felt like a natural choice. However, I quickly realized that I was more interested in understanding the underlying principles and rationale behind the code I was writing. This led me to explore the world of design and creative fields like visual design, AR/VR, game design, and filmmaking, while working with student organizations and early-stage startups. Through these experiences, I developed a deep appreciation for the creative problem-solving involved in design.",
+    "I've always been passionate about creating and technology, so pursuing a degree in Computer Science during my undergraduate studies felt like a natural choice. However, I quickly realized that I was more interested in understanding the underlying principles and rationale behind the code I was writing.",
+    "This led me to explore the world of design and creative fields like visual design, AR/VR, game design, and filmmaking, while working with student organizations and early-stage startups. Through these experiences, I developed a deep appreciation for the creative problem-solving involved in design.",
     "This background has shaped me into a designer who values scalability and embraces a systems-thinking approach, enabling me to thrive in ambiguous environments while collaborating with cross-functional teams.",
   ],
 };
