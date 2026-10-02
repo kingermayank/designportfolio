@@ -2362,6 +2362,10 @@ button.csNavItem {
   min-width: 0;
 }
 
+.aboutFocusGroup:nth-child(2) {
+  padding-left: 40px;
+}
+
 .aboutFocusHeading {
   margin: 0 0 32px;
   color: var(--color-accent-orange);
@@ -3588,6 +3592,10 @@ button.aboutCard:focus-visible {
     grid-template-columns: 1fr;
     gap: 64px;
     margin-bottom: 80px;
+  }
+
+  .aboutFocusGroup:nth-child(2) {
+    padding-left: 0;
   }
 
   .csHeading.aboutHeading {
