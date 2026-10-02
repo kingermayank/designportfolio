@@ -2301,9 +2301,9 @@ button.csNavItem {
 }
 
 .aboutPageContent {
-  /* Same column as editorial case studies (Visual Craft). */
+  /* Center the About page in its own narrower reading column. */
   --about-gutter: clamp(1rem, 5vw, 5rem);
-  --about-content-width: 71.25rem;
+  --about-content-width: 61.25rem;
   --about-inset: max(
     var(--about-gutter),
     calc((100% - var(--about-content-width)) / 2)
