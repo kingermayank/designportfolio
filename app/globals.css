@@ -2888,7 +2888,7 @@ button.aboutCard:focus-visible {
 }
 
 .aboutPodItem {
-  --about-pod-size: min(16rem, calc((100cqi - 32px) / 3.15));
+  --about-pod-size: min(13.5rem, calc((100cqi - 32px) / 3.15));
   position: relative;
   flex-shrink: 0;
   width: var(--about-pod-size);
