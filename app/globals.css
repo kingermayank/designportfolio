@@ -2309,8 +2309,17 @@ button.csNavItem {
     calc((100% - var(--about-content-width)) / 2)
   );
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
   padding: clamp(1.5rem, 4vw, 3rem) var(--about-inset) var(--space-bar);
   box-sizing: border-box;
+}
+
+.aboutPageContent > .csFade {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 }
 
 .aboutPageIntro {
@@ -2319,7 +2328,6 @@ button.csNavItem {
   gap: 48px;
   align-items: start;
   padding-top: 90px;
-  margin-bottom: 120px;
 }
 
 .aboutPageHeader {
@@ -2353,9 +2361,6 @@ button.csNavItem {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 48px;
-  margin-bottom: 120px;
-  padding-top: 120px;
-  border-top: 1px solid var(--sys-hairline);
 }
 
 .aboutFocusGroup {
@@ -2392,12 +2397,6 @@ button.csNavItem {
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.035em;
-}
-
-.aboutPhilosophy {
-  border-top: 1px solid var(--sys-hairline);
-  padding-top: 120px;
-  margin-bottom: 120px;
 }
 
 .aboutPhilosophyTitle {
@@ -2458,6 +2457,9 @@ button.csNavItem {
 .aboutFlow {
   width: 100%;
   max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 }
 
 .aboutLedePortrait {
@@ -2476,7 +2478,7 @@ button.csNavItem {
 .aboutSplit {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+  gap: 60px;
   align-items: stretch;
   width: 100%;
 }
@@ -2527,19 +2529,12 @@ button.aboutCard:focus-visible {
   flex-direction: column;
 }
 
-.aboutTestimonialsWide {
-  margin-top: 8px;
-}
-
 .aboutTestimonialsWide .aboutTmQuote {
   max-width: 70ch;
 }
 
 .aboutAskAi {
-  margin-top: 40px;
-  padding: 40px 24px;
-  border-top: 1px solid var(--sys-hairline);
-  border-bottom: 1px solid var(--sys-hairline);
+  padding: 0 24px;
   text-align: center;
 }
 
@@ -2929,7 +2924,6 @@ button.aboutCard:focus-visible {
 }
 
 .aboutLetterFrame {
-  margin-top: 8px;
   padding: clamp(28px, 5vw, 56px);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
@@ -3445,11 +3439,6 @@ button.aboutCard:focus-visible {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   align-items: start;
-  margin-top: 8px;
-}
-
-.aboutAskAi + .aboutPtoGrid {
-  margin-top: 40px;
 }
 
 .aboutPtoCol {
@@ -3594,16 +3583,10 @@ button.aboutCard:focus-visible {
   .aboutFocus {
     grid-template-columns: 1fr;
     gap: 64px;
-    margin-bottom: 80px;
   }
 
   .aboutFocusGroup:nth-child(2) {
     padding-left: 0;
-  }
-
-  .aboutPhilosophy {
-    padding-top: 64px;
-    margin-bottom: 80px;
   }
 
   .aboutPhilosophyLede {
