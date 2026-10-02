@@ -2389,7 +2389,7 @@ button.csNavItem {
   color: var(--text);
   font-family: var(--font-body);
   font-size: clamp(24px, 2.1vw, 32px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.035em;
 }
