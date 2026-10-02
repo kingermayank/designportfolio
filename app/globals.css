@@ -2341,9 +2341,9 @@ button.csNavItem {
   max-width: 52rem;
   margin: var(--space-3) 0 0;
   font-family: var(--font-body);
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 400;
-  line-height: 29.2px;
+  line-height: 32px;
   letter-spacing: -0.02em;
   color: var(--text);
   text-wrap: pretty;
