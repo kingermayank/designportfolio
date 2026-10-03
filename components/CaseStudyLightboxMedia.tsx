@@ -99,7 +99,9 @@ export default function CaseStudyLightboxMedia({
           {video ? (
             <video src={videoAssetUrl(src)} controls autoPlay muted loop playsInline />
           ) : (
-            <DeferredImage src={src} alt={alt} eager />
+            // The lightbox should use the full-resolution original on demand.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={src} alt={alt} />
           )}
           <button
             ref={closeRef}
