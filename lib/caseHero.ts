@@ -40,7 +40,7 @@ const HERO_META: Record<string, HeroMeta> = {
   warpbnb: {
     titleAccent: "Airbnb for time travel",
     items: [
-      { label: "Project", value: "Warpbnb" },
+      { label: "Side Project", value: "Warpbnb" },
       { label: "Role", value: "Everything: design, code, content, motion, film" },
     ],
     tags: {
