@@ -663,9 +663,9 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
             <SocialMenu />
           </div>
           <p className="workSubtitle">
-            I&apos;m a systems-thinking <strong>product designer</strong> &amp; builder{" "}
-            with a high bar for craft, a bias for prototyping, an affinity with code,
-            and a lot of care.
+            I’m a <strong>product designer</strong> and builder specializing in complex
+            B2B products, working across strategy, craft, and code to solve ambiguous
+            problems and build experiences that scale.
           </p>
 
           <div className="workFit">
