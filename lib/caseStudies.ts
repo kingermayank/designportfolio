@@ -1575,6 +1575,7 @@ const rolipoli: CaseStudy = {
   year: 2024,
   category: "Product Design",
   shade: "#262626",
+  accent: "#F2C94C",
   workCover: "/rolipoli/thumbnail.mp4",
   workPoster: "/rolipoli/thumbs/thumbnail-700.webp?v=tree",
   linkable: false,

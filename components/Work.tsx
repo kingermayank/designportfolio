@@ -137,6 +137,7 @@ type Card = {
   year: number;
   category: string;
   shade: string;
+  accent?: string;
   media?: string;
   video?: boolean;
   thumb?: string;
@@ -231,6 +232,7 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
     year: VISUAL_CRAFT_YEAR_BY_SLUG[s.slug] ?? s.year,
     category: s.category,
     shade: s.shade,
+    accent: s.accent,
     media: coverVideo ? cover : still ? thumb : s.hero?.src,
     video: coverVideo ? true : still ? false : s.hero?.video,
     thumb,
@@ -736,18 +738,22 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
         </div>
 
         {showingProjects && (
-          <div className={"workHoverInfo" + (hoverOn ? " on" : "")}>
+          <div
+            className={"workHoverInfo" + (hoverOn ? " on" : "")}
+          >
             <div className="workHoverDescWrap">
               {cards.map((c, i) => (
                 <div
                   key={c.slug}
                   className="workHoverDescLayer"
                   style={{
+                    "--project-accent": c.accent ?? c.shade,
                     opacity: i === activeIdx ? 1 : 0,
                     transition: TEXT_FADE,
                     transitionDelay: i === activeIdx ? "333ms" : "0ms",
-                  }}
+                  } as CSSProperties}
                 >
+                  <div className="workDescriptionGlow" aria-hidden="true" />
                   <p className="workHoverDesc">{c.description}</p>
                   <div className="workHoverMeta">
                     <div
