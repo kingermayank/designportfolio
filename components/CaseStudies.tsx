@@ -194,7 +194,8 @@ function RevealedMediaFrame({
 function CaseCaptionTicker({ text }: { text: string }) {
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
-  const [overflowing, setOverflowing] = useState(false);
+  const [overflowPx, setOverflowPx] = useState(0);
+  const overflowing = overflowPx > 1;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -202,20 +203,22 @@ function CaseCaptionTicker({ text }: { text: string }) {
     if (!container || !label) return;
 
     let frame = 0;
+    let disposed = false;
     const measure = () => {
+      if (disposed) return;
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(() => {
-        setOverflowing(
-          label.getBoundingClientRect().width > container.clientWidth + 1,
-        );
+        setOverflowPx(Math.max(0, label.scrollWidth - container.clientWidth));
       });
     };
     const observer = new ResizeObserver(measure);
     observer.observe(container);
     observer.observe(label);
     measure();
+    void document.fonts.ready.then(measure);
 
     return () => {
+      disposed = true;
       window.cancelAnimationFrame(frame);
       observer.disconnect();
     };
@@ -229,20 +232,13 @@ function CaseCaptionTicker({ text }: { text: string }) {
       }
       style={
         {
-          "--cs-caption-marquee-duration": `${Math.max(7, text.length * 0.14)}s`,
+          "--cs-caption-travel": `${-overflowPx}px`,
+          "--cs-caption-marquee-duration": `${Math.max(6, overflowPx / 28 + 3)}s`,
         } as CSSProperties
       }
     >
       <span className="csMediaHoverCaptionTrack">
         <span ref={textRef}>{text}</span>
-        {overflowing ? (
-          <>
-            <span className="csMediaHoverCaptionGap" aria-hidden />
-            <span className="csMediaHoverCaptionDuplicate" aria-hidden>
-              {text}
-            </span>
-          </>
-        ) : null}
       </span>
     </span>
   );

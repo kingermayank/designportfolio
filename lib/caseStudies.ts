@@ -243,7 +243,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool1.webp",
         3840 / 2160,
         "#222627",
-        "Setting the tone at the front door with a sign-in that reads as software a dealer group can trust.",
+        "A trustworthy sign-in for dealer groups.",
       ),
     },
     {
@@ -310,7 +310,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool5.png",
         3880 / 2183,
         "#FFFFFF",
-        "Answers that lead with the number, then show the work and the next question worth asking.",
+        "Answers lead with the number, reasoning, and next question.",
       ),
     },
     {
@@ -331,7 +331,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool6.png",
         3836 / 2722,
         "#222627",
-        "Operational health at a glance, with pairing rates, inventory mix, and off-lot exposure in one view.",
+        "Pairing rates, inventory mix, and off-lot exposure at a glance.",
       ),
     },
     {
@@ -425,7 +425,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool10.png",
         3852 / 2167,
         "#FFFFFF",
-        "Draw, lasso, and pan tools for carving a geofence straight out of the lot.",
+        "Draw, lasso, and pan to create lot geofences.",
       ),
     },
     {
@@ -439,7 +439,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool_5.webp",
         6000 / 4500,
         "#222627",
-        "Scanning and pairing devices in the field with the mobile companion app.",
+        "Scan and pair devices in the field with the mobile app.",
       ),
     },
     {
@@ -475,7 +475,7 @@ const toolbox: CaseStudy = {
         "/toolbox/project/tool_device.webp",
         9104 / 5120,
         "#222627",
-        "Surfacing pairing errors with clear status and next steps so dealers can self-resolve.",
+        "Clear pairing errors and next steps help dealers self-resolve.",
       ),
     },
   ],
@@ -567,7 +567,7 @@ const warpbnb: CaseStudy = {
         video: true,
         ar: 4 / 5,
         fit: "contain",
-        caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness.",
+        caption: "Cursor-following Rive logo with a sense of awareness.",
       },
       right: [
         {
@@ -603,7 +603,7 @@ const warpbnb: CaseStudy = {
           video: true,
           ar: 4 / 5,
           inset: 0.08,
-          caption: "Transportation methods animated with Kling 3.0 for checkout.",
+          caption: "Kling 3.0 animations for checkout transportation.",
         },
       ],
     },
@@ -664,7 +664,7 @@ const warpbnb: CaseStudy = {
       ],
       media: [
         { shade: G, src: "/warpbnb/archive/reviews.mp4", video: true, ar: 1.78, caption: "Guest reviews generated with a custom-trained skill." },
-        { shade: G, src: "/warpbnb/archive/icons.png", ar: 1.78, caption: "64+ amenities matched to icons without a single manual instruction." },
+        { shade: G, src: "/warpbnb/archive/icons.png", ar: 1.78, caption: "64+ amenities matched to icons automatically." },
         { shade: G, src: "/warpbnb/archive/thiings.png", ar: 1.78, caption: "thiings.co handled most of the 3D illustration heavy lifting." },
       ],
     },
@@ -693,7 +693,7 @@ const warpbnb: CaseStudy = {
       media: [
         { shade: G, src: "/warpbnb/archive/particles.mp4", video: true, ar: 1.78, caption: "Hover, tap, jiggle, grow, snap back. Until Mindscapes?" },
         { shade: G, src: "/warpbnb/archive/snap.mp4", video: true, ar: 1.78, caption: "Thanos's snap from Infinity War. Press the button and it disintegrates." },
-        { shade: G, src: "/warpbnb/archive/rive-logo.mp4", video: true, ar: 1.78, caption: "A cursor-follow effect built in Rive to give the logo a sense of awareness." },
+        { shade: G, src: "/warpbnb/archive/rive-logo.mp4", video: true, ar: 1.78, caption: "Cursor-following Rive logo with a sense of awareness." },
       ],
     },
     {
@@ -704,7 +704,7 @@ const warpbnb: CaseStudy = {
         "For the voiceover I cloned an ad-read voice style in ElevenLabs. Writing a script that sounds right when spoken took more iteration than expected: some words needed phonetic spelling, and emphasis had to be marked manually to land excitement in the right places. The difference between a flat read and an energetic one is often just a few spelling tricks and some punctuation.",
       ],
       media: [
-        { shade: G, src: "/warpbnb/archive/commercial.png", ar: 1.78, caption: "The full commercial pipeline: every generation that went into the final cut." },
+        { shade: G, src: "/warpbnb/archive/commercial.png", ar: 1.78, caption: "Commercial pipeline: every generation behind the final cut." },
         { shade: G, src: "/warpbnb/archive/voiceover.png", ar: 1.78, caption: "The voiceover script: phonetic spelling and emphasis marks included." },
       ],
     },
@@ -869,7 +869,7 @@ const pathai: CaseStudy = {
         "/pathai/path11.webp",
         2738 / 1542,
         false,
-        "An email notifies a pathologist when they are tagged in a response.",
+        "Email alerts pathologists to tagged responses.",
       ),
     },
     {
@@ -878,7 +878,7 @@ const pathai: CaseStudy = {
         "/pathai/path8.png",
         2700 / 1520,
         false,
-        "Acceptance and rejection reasons support the give-and-take of review.",
+        "Acceptance and rejection reasons support collaborative review.",
       ),
     },
     // Region selection edge cases — closing interactive beat before impact.
@@ -1138,7 +1138,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/chaos.webp",
         3840 / 2160,
         false,
-        "The visual audit exposed duplicated patterns, inconsistent screens, and design debt across the app.",
+        "Visual audit: duplicate patterns, inconsistent screens, and design debt.",
       ),
     },
     {
@@ -1156,7 +1156,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/big_14.png",
         2223 / 1254,
         false,
-        "A unified system-icon library gave every product surface one consistent visual language.",
+        "One system-icon library across every product surface.",
       ),
     },
     {
@@ -1192,7 +1192,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/big_13.png",
         2816 / 1584,
         false,
-        "Special-offer card variants adapted one shared structure across timed, exclusive, seasonal, and unlocked promotions.",
+        "One offer-card structure for timed, exclusive, seasonal, and unlocked promotions.",
       ),
     },
     {
@@ -1201,7 +1201,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/Big_5.png",
         3778 / 2124,
         false,
-        "Native iOS and Android behavior, unified through Melon's typography and iconography.",
+        "Native iOS and Android behavior with shared Melon type and icons.",
       ),
     },
     {
@@ -1210,7 +1210,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/big_9.png",
         3200 / 1118,
         false,
-        "A watermelon analogy made Atomic Design tangible: atoms became components, patterns, templates, and screens.",
+        "Atomic Design through watermelon: atoms, components, patterns, templates, screens.",
       ),
     },
     {
@@ -1219,7 +1219,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/big_3.mp4",
         1862 / 1080,
         true,
-        "The Melon story deck I presented 20+ times to explain the system and earn organization-wide buy-in.",
+        "Melon deck presented 20+ times to earn organization-wide buy-in.",
       ),
     },
     {
@@ -1238,7 +1238,7 @@ const bigbasket: CaseStudy = {
           ...bb("/bigbasket/Artboard.png", 4 / 3),
           shade: "#F5F5F5",
           fit: "cover",
-          caption: "A repeatable template for component anatomy, usage, and behavior.",
+          caption: "Reusable template for component anatomy, usage, and behavior.",
         },
         {
           ...bbFigma("/bigbasket/spider.mp4", 4 / 3),
@@ -1253,7 +1253,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/guidelines.mp4",
         16 / 9,
         true,
-        "Guidance lived beside the components, so standards stayed easy to find and use.",
+        "Guidance beside components keeps standards easy to find and use.",
       ),
     },
     {
@@ -1262,7 +1262,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/big_11.png",
         3020 / 3744,
         false,
-        "End-to-end return, exchange, and cancellation flows tested the system against real customer journeys.",
+        "Return, exchange, and cancellation flows test real customer journeys.",
       ),
     },
     {
@@ -1271,7 +1271,7 @@ const bigbasket: CaseStudy = {
         "/bigbasket/big_12.png",
         3840 / 2160,
         false,
-        "The same visual language carried into team onboarding and recruitment materials.",
+        "Shared visual language for onboarding and recruitment.",
       ),
     },
   ],

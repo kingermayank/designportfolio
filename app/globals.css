@@ -2196,19 +2196,20 @@ button.csNavItem {
   white-space: nowrap;
 }
 
-.csMediaHoverCaptionGap,
-.csMediaHoverCaptionDuplicate {
-  display: none;
+/* Only overflow moves; pause at each end so the entire caption can be read. */
+.csMediaHoverCaption.is-overflowing { justify-content: flex-start; }
+.csMediaHoverCaptionTrack { flex-shrink: 0; }
+.csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
+  animation: cs-caption-pan var(--cs-caption-marquee-duration) ease-in-out infinite alternate;
+  animation-play-state: paused;
 }
-
-@keyframes cs-caption-marquee-rtl {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: translate3d(calc(-50% - 16px), 0, 0);
-  }
+.csMediaHover:hover .csMediaHoverCaptionTrack,
+.csMediaHover:focus-within .csMediaHoverCaptionTrack {
+  animation-play-state: running;
+}
+@keyframes cs-caption-pan {
+  0%, 18% { transform: translateX(0); }
+  82%, 100% { transform: translateX(var(--cs-caption-travel)); }
 }
 
 .csMediaHover:hover .csMediaHoverCaption,
@@ -7422,27 +7423,6 @@ button.aboutCard:focus-visible {
     font-size: 12px;
   }
 
-  .csMediaHoverCaption.is-overflowing {
-    justify-content: flex-start;
-  }
-
-  .csMediaHoverCaptionGap,
-  .csMediaHoverCaptionDuplicate {
-    display: inline-flex;
-  }
-
-  .csMediaHoverCaptionGap {
-    width: 32px;
-    flex: 0 0 32px;
-    justify-content: center;
-  }
-
-  .csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
-    animation: cs-caption-marquee-rtl
-      var(--cs-caption-marquee-duration) linear 600ms infinite both;
-    will-change: transform;
-  }
-
   .csListInner,
   .csDetailInner {
     flex-direction: column;
@@ -8800,4 +8780,21 @@ button:not([class*="Scrim"]):not([class*="Card"]):not([class*="Tile"]):not(.case
 input:is([type="button"], [type="submit"], [type="reset"]),
 a:is([role="button"], [class*="Btn"], [class*="Button"], [class*="Cta"], [class*="CTA"], .chBack) {
   border-radius: var(--radius-pill) !important;
+}
+
+@media (hover: none) {
+  .csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
+    animation-play-state: running;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .csMediaHoverCaption.is-overflowing {
+    overflow-x: auto;
+    pointer-events: auto;
+  }
+  .csMediaHoverCaption.is-overflowing .csMediaHoverCaptionTrack {
+    animation: none;
+    transform: none;
+  }
 }
