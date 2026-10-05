@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const SITE_URL = new URL("https://www.kingermayank.com");
 export const SITE_NAME = "Mayank Kinger — Portfolio";
-export const DEFAULT_TITLE = "Mayank Kinger — Product Designer & Design Engineer";
+export const DEFAULT_TITLE = "Mayank Kinger: Product Designer";
 export const DEFAULT_DESCRIPTION =
   "I’m a product designer and builder specializing in complex B2B systems, turning fragmented tools into cohesive, scalable product experiences through strategy, craft, and code.";
 
