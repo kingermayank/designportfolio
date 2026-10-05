@@ -2379,6 +2379,10 @@ button.csNavItem {
   text-wrap: pretty;
 }
 
+.aboutSummaryDot {
+  color: var(--color-secondary);
+}
+
 .aboutPhilosophyTitle {
   margin: 0 0 var(--space-2);
   padding: 0;
