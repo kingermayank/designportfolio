@@ -871,8 +871,9 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                 Mayank Kinger<span className="csDot">.</span>
               </div>
               <p className="csBio">
-                I&apos;m a systems-thinking product designer &amp; builder with a high bar
-                for craft, a bias for prototyping, an affinity with code, and a lot of care.
+                I’m a product designer and builder specializing in complex B2B systems,
+                turning fragmented tools into cohesive, scalable product experiences
+                through strategy, craft, and code.
               </p>
               <div className="csWorkBlock">
                 <div className="csTitleMask">

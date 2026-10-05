@@ -666,8 +666,8 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
           </div>
           <p className="workSubtitle">
             I’m a <strong>product designer</strong> and builder specializing in complex
-            B2B products, working across strategy, craft, and code to solve ambiguous
-            problems and build experiences that scale.
+            B2B systems, turning fragmented tools into cohesive, scalable product
+            experiences through strategy, craft, and code.
           </p>
 
           <div className="workFit">
