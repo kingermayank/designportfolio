@@ -9,7 +9,8 @@ import {
   useSyncExternalStore,
   type CSSProperties,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
+import WorkLensTransition from "@/components/WorkLensTransition";
 import posthog from "posthog-js";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
@@ -35,39 +36,8 @@ import {
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
 
-const LENS_INDEX: Record<WorkLensId, number> = {
-  visual: 0,
-  systems: 1,
-  engineering: 2,
-};
-
-const LENS_EASE = [0.22, 1, 0.36, 1] as const;
-
 /** Even gutter revealed on Systems card hover, in px on every side. */
 const SYS_HOVER_INSET = 12;
-
-// Lens panes travel along the nav: moving right in the list slides the new pane
-// in from the right while the old one leaves to the left, and vice versa.
-const lensPaneVariants = {
-  enter: (dir: number) => ({
-    opacity: 0,
-    x: dir >= 0 ? 28 : -28,
-  }),
-  center: {
-    opacity: 1,
-    x: 0,
-  },
-  exit: (dir: number) => ({
-    opacity: 0,
-    x: dir >= 0 ? -20 : 20,
-  }),
-};
-
-const lensPaneReduced = {
-  enter: { opacity: 0 },
-  center: { opacity: 1 },
-  exit: { opacity: 0 },
-};
 
 type Aspect = "4 / 5" | "5 / 3" | "4 / 3";
 const ASPECTS: Aspect[] = ["4 / 5", "5 / 3", "4 / 3", "4 / 5", "5 / 3", "4 / 3"];
@@ -504,7 +474,6 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
   const isNarrow = useIsNarrow();
   const reduceMotion = useReducedMotion();
   const [lens, setLens] = useState<WorkLensId>(initialLens ?? "visual");
-  const [lensDir, setLensDir] = useState(1);
   const [hoverIdx, setHoverIdx] = useState(-1);
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
   const [engActive, setEngActive] = useState<EngComponent | null>(() =>
@@ -558,7 +527,6 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
     if (rootRef.current) delete rootRef.current.dataset.projectRestored;
     const next = WORK_LENSES.find((l) => l.id === id);
     posthog.capture("work_lens_selected", { lens_id: id });
-    setLensDir(LENS_INDEX[id] - LENS_INDEX[lens] || 1);
     setLens(id);
     setEngActive(null);
     setSystemsActive(null);
@@ -575,7 +543,6 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
     const normalizedHash = hash === "product-thinking" ? "product-strategy" : hash;
     const match = WORK_LENSES.find((l) => l.anchor === normalizedHash);
     if (!match || match.id === "visual") return;
-    setLensDir(LENS_INDEX[match.id] - LENS_INDEX.visual || 1);
     setLens(match.id);
   }, [initialLens]);
 
@@ -809,23 +776,9 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
           })}
         </nav>
 
-        <AnimatePresence mode="wait" initial={false} custom={lensDir}>
-          <motion.div
-            key={lens}
-            className="workLensPane"
-            custom={lensDir}
-            variants={reduceMotion ? lensPaneReduced : lensPaneVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: reduceMotion ? 0.12 : 0.38,
-              ease: LENS_EASE,
-            }}
-          >
-            {body}
-          </motion.div>
-        </AnimatePresence>
+        <WorkLensTransition lens={lens}>
+          {body}
+        </WorkLensTransition>
       </div>
 
 

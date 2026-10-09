@@ -8167,7 +8167,7 @@ button.aboutCard:focus-visible {
 .chHeaderAction {
   position: fixed;
   right: var(--ch-space-5, 24px);
-  bottom: var(--ch-space-5, 24px);
+  top: max(var(--ch-space-5, 24px), env(safe-area-inset-top));
   z-index: 50;
 }
 
@@ -8229,7 +8229,7 @@ button.aboutCard:focus-visible {
 .csContactReveal {
   --contact-enter: 700ms;
   --contact-exit: 250ms;
-  --contact-distance: 12px;
+  --contact-distance: -12px;
   --contact-ease: cubic-bezier(0.22, 1, 0.36, 1);
   opacity: 0;
   visibility: hidden;
@@ -8717,7 +8717,7 @@ button.aboutCard:focus-visible {
 
   .chHeaderAction {
     right: var(--ch-space-3, 12px);
-    bottom: max(var(--ch-space-3, 12px), env(safe-area-inset-bottom));
+    top: max(var(--ch-space-3, 12px), env(safe-area-inset-top));
   }
 
   .chActions {

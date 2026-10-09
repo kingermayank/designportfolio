@@ -1,0 +1,4 @@
+/* The pane owns section arrival; avoid a second entrance on its cards. */
+.workLensDepth .workGrid .workCard {
+  animation: none;
+}

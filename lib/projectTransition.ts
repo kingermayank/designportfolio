@@ -368,6 +368,11 @@ export class ProjectTransition {
         navigate();
         const hero = await waitFor(() => location.pathname === targetPath
           ? main?.querySelector<HTMLElement>(`${heroSelector} .chMedia`) ?? null : null);
+        // The default page entrance translates the entire window by 8px.
+        // Its transform must not contaminate the measured cover endpoint or
+        // restart when the project-transition attribute is removed.
+        const pageWindow = hero.closest<HTMLElement>(".stage > .window");
+        if (pageWindow) pageWindow.dataset.projectStageSettled = "true";
         const scroller = hero.closest<HTMLElement>(".csDetail");
         if (scroller) scroller.scrollTop = 0;
         history.replaceState({ ...history.state, [HISTORY_KEY]: origin.id }, "");
@@ -397,6 +402,8 @@ export class ProjectTransition {
       navigate();
       const destination = await waitFor(() => location.pathname === targetPath
         ? main?.querySelector<HTMLElement>(cardSelector) ?? null : null);
+      const pageWindow = destination.closest<HTMLElement>(".stage > .window");
+      if (pageWindow) pageWindow.dataset.projectStageSettled = "true";
       const scroller = main?.querySelector<HTMLElement>(".workRoot");
       if (scroller) {
         scroller.dataset.projectRestored = "true";

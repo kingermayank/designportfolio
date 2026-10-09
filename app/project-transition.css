@@ -32,6 +32,14 @@ html[data-project-transition] {
   background: #0e0e0e;
 }
 
+/* The shared mask owns page arrival. A second translateY entrance would
+   shift measured endpoints and expose a strip that snaps away on cleanup.
+   Persist on the mounted window so removing the root flag cannot replay it. */
+html[data-project-transition] #main .stage > .window,
+.stage > .window[data-project-stage-settled] {
+  animation: none;
+}
+
 .projectTransitionBackdrop {
   position: absolute;
   inset: 0;
