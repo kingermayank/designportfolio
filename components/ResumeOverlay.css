@@ -1,0 +1,77 @@
+.resumeDialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  overflow: hidden;
+}
+.resumeDialog::backdrop { background: transparent; }
+.resumeOverlay { position: relative; height: 100%; isolation: isolate; }
+/* A stationary tint layer sits independently beneath the scrolling document. */
+.resumeScrim { position: absolute; inset: 0; z-index: 0; pointer-events: none; transform: translateZ(0); }
+/* Floating actions leave the portfolio visible; no toolbar surface or divider. */
+.resumeControls {
+  position: absolute;
+  z-index: 2;
+  top: max(24px, env(safe-area-inset-top));
+  left: max(24px, env(safe-area-inset-left));
+  right: max(24px, env(safe-area-inset-right));
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  pointer-events: none;
+}
+.resumeControls > * { pointer-events: auto; }
+.resumeControls svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.resumeStage {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+  overscroll-behavior: none;
+  padding: max(96px, calc(env(safe-area-inset-top) + 72px)) 24px max(96px, calc(env(safe-area-inset-bottom) + 72px));
+  scrollbar-gutter: stable both-edges;
+}
+.resumePaperSpace { position: relative; width: min(100%, 1020px); margin: 0 auto; }
+.resumePaperSpace[data-entering="true"] { perspective: 1400px; }
+.resumePaperSpace[data-entering="true"] .resumePaperEntrance { backface-visibility: hidden; }
+.resumePaperEntrance { transform-origin: 50% 80%; }
+.resumePaper { position: relative; background: #fff; border-radius: 7px; box-shadow: 0 48px 120px rgb(0 0 0 / .65), 0 16px 40px rgb(0 0 0 / .4), 0 2px 6px rgb(0 0 0 / .25); }
+.resumePaper img { display: block; width: 100%; height: auto; border-radius: inherit; }
+.resumeReader { display: block; width: min(100%, 1020px); height: 100%; min-height: 300px; margin: auto; border: 0; border-radius: 7px; box-shadow: 0 48px 120px #000a; background: white; }
+@media (max-width: 600px) {
+  .resumeControls { top: max(16px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); }
+  .resumeStage { padding-right: 12px; padding-left: 12px; }
+}
+
+/* Restrained matte-paper response, independent of the entrance animation. */
+.resumePaper {
+  transform: perspective(1800px) rotateX(var(--paper-rx, 0deg)) rotateY(var(--paper-ry, 0deg));
+  transform-origin: 50% 50%;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.resumePaper[data-hover="true"] { transition-duration: 250ms; }
+.resumePaperLight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at var(--paper-light-x, 50%) var(--paper-light-y, 50%), rgb(255 255 255 / .12), transparent 55%, rgb(66 48 28 / .04));
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .6);
+  transition: opacity 300ms ease-out;
+}
+.resumePaper[data-hover="true"] .resumePaperLight { opacity: 1; }
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .resumePaper { transform: none; transition: none; }
+  .resumePaperLight { display: none; }
+}

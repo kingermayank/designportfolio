@@ -36,13 +36,13 @@ export const ABOUT_INTRO = {
     { label: "Github", href: "https://github.com/kingermayank" },
     {
       label: "Resume",
-      href: "https://drive.google.com/file/d/1XFSgyuKTiSk7ALuxrTojGSp3I4xfMe99/view?usp=sharing",
+      href: "/resume/mayank-kinger.pdf",
     },
   ],
   email: "kingermayank@gmail.com",
-  /** Same Drive file as the Resume social — used by the Option 1 fit CTA. */
+  /** Same local PDF as the Resume social — used by the Option 1 fit CTA. */
   resumeHref:
-    "https://drive.google.com/file/d/1XFSgyuKTiSk7ALuxrTojGSp3I4xfMe99/view?usp=sharing",
+    "/resume/mayank-kinger.pdf",
 };
 
 /** Display-sized square covers; full-resolution originals remain in `public/podcast`. */

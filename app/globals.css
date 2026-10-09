@@ -4540,6 +4540,24 @@ button.aboutCard:focus-visible {
   pointer-events: auto;
 }
 
+/* Blur the page itself: the drawer portals and native résumé dialog stay sharp.
+   Keep the scrims tint-only so the blur is never applied twice. */
+body:has(.sysOverlay, .resumeDialog[open]) #main {
+  transition: filter 150ms ease-out;
+}
+body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
+  filter: blur(6px);
+}
+.sysOverlayScrim,
+.resumeScrim {
+  background: rgba(0, 0, 0, 0.8);
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(.sysOverlay, .resumeDialog[open]) #main {
+    transition: none;
+  }
+}
+
 .sysOverlayScrim {
   position: absolute;
   inset: 0;
@@ -4547,9 +4565,6 @@ button.aboutCard:focus-visible {
   padding: 0;
   margin: 0;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   opacity: 0;
   transition: opacity var(--sys-dur) var(--sys-ease);
 }

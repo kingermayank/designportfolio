@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useResume } from "@/components/ResumeOverlay";
 import posthog from "posthog-js";
 import { ABOUT_INTRO } from "@/lib/about";
 
@@ -133,6 +134,7 @@ const ICONS: Record<string, () => ReactNode> = {
 };
 
 export default function SocialMenu() {
+  const openResume = useResume();
   const [stage, setStage] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
@@ -228,7 +230,8 @@ export default function SocialMenu() {
                 scale: linksVisible ? 1 : MENU_LINKS.initialScale,
               }}
               transition={linkTransition}
-              onClick={() => {
+              onClick={(event) => {
+                if (link.label === "Resume" && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); openResume(); }
                 posthog.capture("social_link_opened", {
                   social_network: link.label,
                 });

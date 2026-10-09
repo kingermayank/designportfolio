@@ -4,6 +4,7 @@ import { Azeret_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import ClarityAnalytics from "@/components/Clarity";
 import PageTransition from "@/components/PageTransition";
+import ResumeProvider from "@/components/ResumeOverlay";
 import ClickSounds from "@/components/ClickSounds";
 import {
   createMetadata,
@@ -181,7 +182,7 @@ export default function RootLayout({
             __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        <PageTransition>{children}</PageTransition>
+        <ResumeProvider><PageTransition>{children}</PageTransition></ResumeProvider>
         <ClickSounds />
         <Analytics />
         <ClarityAnalytics />

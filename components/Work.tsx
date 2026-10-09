@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useReducedMotion } from "framer-motion";
 import WorkLensTransition from "@/components/WorkLensTransition";
+import { useResume } from "@/components/ResumeOverlay";
 import posthog from "posthog-js";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import DataDictionaryThumbnail from "@/components/DataDictionaryThumbnail";
@@ -471,6 +472,7 @@ function EngCard({
 }
 
 export default function Work({ initialLens, initialOpenItem }: { initialLens?: WorkLensId; initialOpenItem?: string }) {
+  const openResume = useResume();
   const isNarrow = useIsNarrow();
   const reduceMotion = useReducedMotion();
   const [lens, setLens] = useState<WorkLensId>(initialLens ?? "visual");
@@ -673,7 +675,8 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => {
+                onClick={(event) => {
+                  if (link.label === "Resume" && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); openResume(); }
                   posthog.capture("social_link_opened", {
                     social_network: link.label,
                   });
