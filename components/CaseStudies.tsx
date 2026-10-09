@@ -947,7 +947,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
           <div className={"csDetailInner" + (editorial ? " csEditorialDetail" : "")}>
             {editorial ? (
               <div className="csEditorialContent">
-                <div ref={heroRef} className="csCover">
+                <div ref={heroRef} className="csCover csCoverInset" data-project-hero={study.slug}>
                   <CaseHero
                     {...heroOnly}
                     media={{

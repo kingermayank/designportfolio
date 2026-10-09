@@ -1,0 +1,81 @@
+/* Project transition: one media layer persists outside the changing routes. */
+.projectTransitionLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: auto;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+.projectTransitionFrame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: clip-path;
+}
+
+.projectTransitionFrame canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+html[data-project-covered="true"] #main {
+  visibility: hidden;
+}
+
+html[data-project-transition] {
+  background: #0e0e0e;
+}
+
+.projectTransitionBackdrop {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--window, #0e0e0e);
+}
+
+/* Page content shares the media's rounded mask. A solid layer underneath
+   fills the outer window and keeps the inset gutter opaque. */
+html[data-project-transition="open"] #main {
+  position: relative;
+  z-index: 9999;
+  will-change: clip-path;
+  background: var(--window, #0e0e0e);
+}
+
+.projectTransitionSource {
+  position: fixed;
+  z-index: 9997;
+}
+
+.projectTransitionBacking {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--window, #0e0e0e);
+  pointer-events: none;
+  will-change: clip-path;
+}
+
+/* Back restores an existing grid position, not a fresh staggered entrance.
+   Keep this marker on the restored grid so cleanup cannot restart its cards. */
+.workRoot[data-project-restored] .workCard {
+  animation: none;
+}
+
+html[data-project-transition] .workRoot[data-project-restored] .workLensPane {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+html[data-project-transition] .workRoot {
+  scroll-behavior: auto;
+  overflow-anchor: none;
+}

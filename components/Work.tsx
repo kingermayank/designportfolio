@@ -259,6 +259,7 @@ function WorkCard({
   priority?: boolean;
 }) {
   const { open } = usePageTransition();
+  const mediaRef = useRef<HTMLDivElement>(null);
   const [previewing, setPreviewing] = useState(false);
   const restTime = HOVER_REST_TIME[card.slug];
   const playOnHover = restTime != null;
@@ -274,6 +275,7 @@ function WorkCard({
   const inner = (
     <div className="workCardInner">
       <div
+        ref={mediaRef}
         className="workCardMediaWrap"
         style={{ background: card.shade }}
       >
@@ -379,6 +381,7 @@ function WorkCard({
         open(`/work/${card.slug}`, {
           title: card.title,
           subtitle: `${card.category}, ${card.year}`,
+          source: mediaRef.current ?? undefined,
         });
       }}
       {...hoverProps}
@@ -551,6 +554,8 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
 
   const selectLens = (id: WorkLensId) => {
     if (id === lens) return;
+    // A restored grid skips its entrance only until a new lens is selected.
+    if (rootRef.current) delete rootRef.current.dataset.projectRestored;
     const next = WORK_LENSES.find((l) => l.id === id);
     posthog.capture("work_lens_selected", { lens_id: id });
     setLensDir(LENS_INDEX[id] - LENS_INDEX[lens] || 1);

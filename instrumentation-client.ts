@@ -8,8 +8,8 @@ if (!projectToken || !host) {
     : "NEXT_PUBLIC_POSTHOG_HOST";
 
   if (process.env.NODE_ENV !== "production") {
-    throw new Error(
-      `${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`,
+    console.warn(
+      `${missingVariable} is not configured. Analytics is disabled for this local preview.`,
     );
   }
 } else {

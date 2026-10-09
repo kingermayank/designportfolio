@@ -12,6 +12,7 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 import "./globals.css";
+import "./project-transition.css";
 
 // The whole site runs on three faces: Azeret (everything), Azeret Mono (small
 // labels — dates, badges, button text), and Cesare (the Work 1 wordmark).

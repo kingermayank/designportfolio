@@ -2,6 +2,7 @@
 
 import { animate, useReducedMotion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
+import { ProjectTransition } from "@/lib/projectTransition";
 import {
   createContext,
   useCallback,
@@ -17,7 +18,7 @@ const GLIDE_DISTANCE = 20;
 const GLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 const LOAD_TIMEOUT = 6000;
 
-export type TransitionDetail = { title: string; subtitle?: string };
+export type TransitionDetail = { title: string; subtitle?: string; source?: HTMLElement };
 export type TransitionDirection = "forward" | "back";
 
 type Target = {
@@ -51,6 +52,25 @@ export default function PageTransition({
   const router = useRouter();
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const projectTransition = useRef<ProjectTransition | null>(null);
+  const [projectBusy, setProjectBusy] = useState(false);
+
+  useEffect(() => {
+    const transition = new ProjectTransition({
+      push: (href) => router.push(href, { scroll: false }),
+      back: () => router.back(),
+      prefetch: (href) => router.prefetch(href),
+    }, setProjectBusy);
+    projectTransition.current = transition;
+    return () => {
+      transition.dispose();
+      projectTransition.current = null;
+    };
+  }, [router]);
+
+  useEffect(() => {
+    projectTransition.current?.setPath(pathname);
+  }, [pathname]);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [target, setTarget] = useState<Target | null>(null);
@@ -64,10 +84,11 @@ export default function PageTransition({
   const open = useCallback(
     (
       href: string,
-      _detail?: TransitionDetail,
+      detail?: TransitionDetail,
       direction: TransitionDirection = "forward",
     ) => {
-      if (phase !== "idle") return;
+      if (phase !== "idle" || projectBusy) return;
+      if (projectTransition.current?.open(href, detail?.source)) return;
       if (reduce) {
         router.push(href);
         return;
@@ -76,7 +97,7 @@ export default function PageTransition({
       setTarget({ href, direction });
       setPhase("exit");
     },
-    [phase, reduce, router],
+    [phase, projectBusy, reduce, router],
   );
 
   // Glide the current route away from the direction of travel.
@@ -159,7 +180,7 @@ export default function PageTransition({
     };
   }, [arrived, target]);
 
-  const busy = phase !== "idle";
+  const busy = phase !== "idle" || projectBusy;
   const ctx = useMemo(() => ({ open, busy }), [open, busy]);
 
   return (
