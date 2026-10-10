@@ -25,6 +25,8 @@ import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { WORK_FIT_CTA } from "@/lib/letter";
 import { ABOUT_INTRO } from "@/lib/about";
+import { SOCIAL_LINK_PREVIEWS } from "@/lib/socialLinkPreviews";
+import { HoverLinkPreview } from "@/components/ui/hover-link-preview";
 import {
   ENG_COMPONENTS,
   SYSTEMS_LIST,
@@ -291,8 +293,13 @@ function WorkCard({
       onHover?.(card);
       setPreviewing(true);
     },
-    onMouseLeave: () => setPreviewing(false),
-    onFocus: () => onHover?.(card),
+    onMouseLeave: () => {
+      onHover?.(null);
+      setPreviewing(false);
+    },
+    onFocus: (event: React.FocusEvent<HTMLElement>) => {
+      if (event.currentTarget.matches(":focus-visible")) onHover?.(card);
+    },
     onBlur: () => {
       onHover?.(null);
       setPreviewing(false);
@@ -344,6 +351,8 @@ function WorkCard({
       style={cardStyle}
       onNavigate={(e) => {
         e.preventDefault();
+        onHover?.(null);
+        setPreviewing(false);
         posthog.capture("portfolio_item_opened", {
           item_id: card.slug,
           portfolio_section: "visual",
@@ -513,7 +522,7 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
   const setHoverCard = (card: Card | null) => {
     // AnimatePresence keeps Visual Craft cards mounted during the lens exit.
     // A mouseenter/focus on those exiting cards must not re-hide the socials.
-    if (lensRef.current !== "visual" || !card) {
+    if (lensRef.current !== "visual" || !card || document.documentElement.hasAttribute("data-project-transition")) {
       setHoverIdx(-1);
       return;
     }
@@ -646,18 +655,29 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
 
           <div className="workFit">
             <div className="workFitActions">
-              <button
-                type="button"
+              <HoverLinkPreview
+                href="/about"
+                target={undefined}
+                rel={undefined}
+                previewImage={ABOUT_INTRO.hero.src}
+                previewWidth={112.32}
+                previewPlacement="top"
+                imageAlt={ABOUT_INTRO.hero.alt}
+                imageWidth={904}
+                imageHeight={1024}
                 className="workFitBtn workFitBtnGhost"
-                onClick={() =>
+                onPreviewActivate={(event, preview) => {
+                  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                  event.preventDefault();
                   open("/about", {
                     title: "About Me",
                     subtitle: "Mayank Kinger",
-                  })
-                }
+                    source: preview ?? event.currentTarget,
+                  });
+                }}
               >
                 {WORK_FIT_CTA.aboutLabel}
-              </button>
+              </HoverLinkPreview>
               <CopyEmailButton
                 email={WORK_FIT_CTA.email}
                 label={WORK_FIT_CTA.contactLabel}
@@ -669,10 +689,11 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
 
           <div className="workSocials">
             {ABOUT_INTRO.links.map((link) => (
-              <a
+              <HoverLinkPreview
                 key={link.label}
                 className="workSocial"
                 href={link.href}
+                {...SOCIAL_LINK_PREVIEWS[link.label]}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(event) => {
@@ -682,32 +703,24 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
                   });
                 }}
               >
-                <span className="workSocialSwap">
-                  {[0, 1].map((copy) => (
-                    <span
-                      key={copy}
-                      className="workSocialSwapRow"
-                      aria-hidden={copy === 1 ? true : undefined}
-                    >
-                      {link.label}
-                      <svg
-                        className="workSocialArrow"
-                        viewBox="0 0 12 12"
-                        aria-hidden
-                      >
-                        <path
-                          d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.25"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  ))}
+                <span className="workSocialLabel">
+                  {link.label}
+                  <svg
+                    className="workSocialArrow"
+                    viewBox="0 0 12 12"
+                    aria-hidden
+                  >
+                    <path
+                      d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5V7.75"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.25"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </span>
-              </a>
+              </HoverLinkPreview>
             ))}
           </div>
         </div>

@@ -4,6 +4,12 @@ import { clipBox, fitMedia, transitionFrame, PROJECT_DURATION, type Box, type Po
 
 const HISTORY_KEY = "portfolioProjectOrigin";
 
+/** Let Next carry its internal history fields; pass only our own marker. */
+export function replaceProjectHistoryUrl(href: string) {
+  const origin = history.state?.[HISTORY_KEY];
+  history.replaceState(origin ? { [HISTORY_KEY]: origin } : null, "", href);
+}
+
 type Still = { canvas: HTMLCanvasElement; position: [number, number]; pose: Pose; videoTime?: number };
 type Origin = { id: string; path: string; slug: string; scrollTop: number; still: Still; cover?: Box };
 type Navigation = { push: (href: string) => void; back: () => void; prefetch: (href: string) => void };
@@ -60,7 +66,7 @@ function snapshot(element: HTMLElement, resume: Array<() => void>): Still | null
 
 /** Keep an inert visual copy across route mounting, including nested scroll
  * and the current hover/animation pose. */
-function freezePage(main: HTMLElement, parent: HTMLElement, resume: Array<() => void>, source = false): HTMLElement {
+export function freezePage(main: HTMLElement, parent: HTMLElement, resume: Array<() => void>, source = false): HTMLElement {
   const clone = main.cloneNode(true) as HTMLElement;
   const originals = [main, ...main.querySelectorAll<HTMLElement>("*")];
   const copies = [clone, ...clone.querySelectorAll<HTMLElement>("*")];
@@ -159,7 +165,14 @@ export class ProjectTransition {
 
   setPath(path: string) {
     this.path = path;
-    if (path !== "/" && path !== this.origin?.path) this.origin = null;
+    if (path !== "/" && path !== this.origin?.path) {
+      const stream = document.querySelector<HTMLElement>("[data-craft-entry]");
+      if (this.origin && stream && history.state?.[HISTORY_KEY] === this.origin.id && path.startsWith("/work/")) {
+        // Scrolling replaces this history entry, but its return thumbnail stays
+        // the card that originally opened the reading session.
+        this.origin.path = path;
+      } else this.origin = null;
+    }
   }
 
   dispose() {
@@ -222,13 +235,16 @@ export class ProjectTransition {
     const previouslyInert = main?.inert ?? false;
     const targetPath = direction === "open" ? origin.path : "/";
     const cardSelector = `.workCard[data-slug="${origin.slug}"] .workCardMediaWrap`;
-    const heroSelector = `[data-project-hero="${origin.slug}"]`;
+    const heroSlug = origin.path.split("/").pop() ?? origin.slug;
+    const heroSelector = `[data-project-hero="${heroSlug}"]`;
     // Use the actual cover's inset and radius for the animation endpoint,
     // rather than briefly expanding to a square, edge-to-edge viewport.
     const readCover = () => {
       const cover = main?.querySelector<HTMLElement>(heroSelector);
       const hero = cover?.querySelector<HTMLElement>(".chMedia");
       if (!cover || !hero) return null;
+      const stream = hero.closest<HTMLElement>(".craftStream");
+      if (stream && direction === "close") return origin.cover ?? fullscreen();
       const bounds = box(hero);
       // The hero uses svh; innerHeight can differ when mobile browser chrome
       // changes. Measure the rendered cover rather than guessing its height.
@@ -461,10 +477,12 @@ export class ProjectTransition {
       backing.remove();
       backdrop?.remove();
       if (main) main.style.clipPath = previousClip;
+      if (main) main.inert = previouslyInert;
+      // Restore keyboard focus while hover handlers still know this is a
+      // transition handoff, rather than a new interaction with the card.
+      focusTarget?.focus({ preventScroll: true });
       delete root.dataset.projectCovered;
       delete root.dataset.projectTransition;
-      if (main) main.inert = previouslyInert;
-      focusTarget?.focus({ preventScroll: true });
       if (this.abort === controller) {
         this.abort = null;
         this.pendingPath = null;

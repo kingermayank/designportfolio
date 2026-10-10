@@ -1,0 +1,41 @@
+.preview {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  width: 208px;
+  max-width: calc(100vw - 24px);
+  padding: 6px;
+  box-sizing: border-box;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 8px;
+  background: var(--color-surface, #242424);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 40%);
+}
+
+.preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.caption {
+  padding: 8px 2px 4px;
+  color: var(--color-text, #fff);
+  font-family: var(--font-body, sans-serif);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.circle img {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+}

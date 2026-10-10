@@ -6623,35 +6623,11 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
   display: block;
 }
 
-.workSocialSwap {
-  display: inline-grid;
-  overflow: hidden;
-  height: 1.2em;
-}
-
-.workSocialSwapRow {
-  grid-area: 1 / 1;
+.workSocialLabel {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   white-space: nowrap;
-  transition: transform 180ms ease;
-}
-
-.workSocialSwapRow:nth-child(2) {
-  transform: translateY(100%);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .workSocial:hover .workSocialSwapRow:nth-child(1),
-  .workSocial:focus-visible .workSocialSwapRow:nth-child(1) {
-    transform: translateY(-100%);
-  }
-
-  .workSocial:hover .workSocialSwapRow:nth-child(2),
-  .workSocial:focus-visible .workSocialSwapRow:nth-child(2) {
-    transform: translateY(0);
-  }
 }
 
 .workSocial:hover,
@@ -7879,17 +7855,6 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
 @media (prefers-reduced-motion: reduce) {
   .socialMenuPanel {
     will-change: auto;
-  }
-
-  .workSocialSwapRow,
-  .workSocial:hover .workSocialSwapRow,
-  .workSocial:focus-visible .workSocialSwapRow {
-    transition: none;
-    transform: none;
-  }
-
-  .workSocialSwapRow:nth-child(2) {
-    visibility: hidden;
   }
 
   .floatingVideoControlDisc,

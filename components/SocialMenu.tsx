@@ -5,6 +5,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useResume } from "@/components/ResumeOverlay";
 import posthog from "posthog-js";
 import { ABOUT_INTRO } from "@/lib/about";
+import { SOCIAL_LINK_PREVIEWS } from "@/lib/socialLinkPreviews";
+import { HoverLinkPreview } from "@/components/ui/hover-link-preview";
 
 /* ─────────────────────────────────────────────────────────
  * ANIMATION STORYBOARD
@@ -216,10 +218,11 @@ export default function SocialMenu() {
                 };
 
           return (
-            <motion.a
+            <HoverLinkPreview
               key={link.label}
               className="socialMenuLink"
               href={link.href}
+              {...SOCIAL_LINK_PREVIEWS[link.label]}
               target="_blank"
               rel="noopener noreferrer"
               tabIndex={open ? 0 : -1}
@@ -242,7 +245,7 @@ export default function SocialMenu() {
                 {Icon ? <Icon /> : null}
               </span>
               {link.label}
-            </motion.a>
+            </HoverLinkPreview>
           );
         })}
       </motion.nav>

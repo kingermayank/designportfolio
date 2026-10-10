@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { HoverLinkPreview } from "@/components/ui/hover-link-preview";
+import { websiteLinkPreview } from "@/lib/websiteLinkPreviews";
 
 export type PrimaryButtonProps = {
   children: ReactNode;
@@ -56,6 +58,8 @@ export default function PrimaryButton({
 
   if (href) {
     const external = isExternal(href);
+    const preview = websiteLinkPreview(href);
+    if (preview) return <HoverLinkPreview href={href} className={cls} {...preview}>{body}</HoverLinkPreview>;
     return (
       <a
         className={cls}

@@ -1,0 +1,44 @@
+html[data-about-transition] #main {
+  position: relative;
+  z-index: 9991;
+  background: var(--bg, #0e0e0e);
+}
+html[data-about-transition] #main .stage > .window {
+  animation: none;
+}
+html[data-about-transition] .aboutPageRoot .riseInner {
+  transform: none !important;
+  transition: none !important;
+}
+html[data-about-transition] .aboutPageRoot .csFade {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.aboutTransitionPhoto {
+  position: fixed;
+  inset: 0;
+  z-index: 9993;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+.aboutTransitionCurtain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  border-style: solid;
+  overflow: hidden;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.aboutTransitionCurtain img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}

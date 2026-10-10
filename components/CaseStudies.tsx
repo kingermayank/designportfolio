@@ -8,6 +8,8 @@ import {
   useState,
   type CSSProperties,
   type ReactNode,
+  type RefObject,
+  useId,
 } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import posthog from "posthog-js";
@@ -34,6 +36,8 @@ import DeferredImage from "@/components/DeferredImage";
 import Rise from "@/components/Rise";
 import CopyEmailButton from "@/components/CopyEmailButton";
 import { WORK_FIT_CTA } from "@/lib/letter";
+import { HoverLinkPreview } from "@/components/ui/hover-link-preview";
+import { PATHAI_PRESS_URL, websiteLinkPreview } from "@/lib/websiteLinkPreviews";
 
 // /toolbox/hero.mp4 -> /toolbox/thumbs/hero.jpg
 // /warpbnb/archive/topaz.mp4 -> /warpbnb/archive/thumbs/topaz.jpg
@@ -493,6 +497,9 @@ type Props = {
   externalEntry?: CaseExternalEntry | null;
   /** Editorial edge-to-edge project detail treatment. */
   layout?: "standard" | "editorial";
+  /** Render in the continuous Visual Craft reader's shared scroll viewport. */
+  flow?: { active: boolean; scrollRef: RefObject<HTMLDivElement | null>; wrapCover: (cover: ReactNode) => ReactNode };
+
 };
 
 function indexForSlug(slug: string): number {
@@ -508,6 +515,14 @@ function ImpactCopy({ text }: { text: string }) {
       {parts.map((part, i) => {
         const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
         if (!link) return <span key={i}>{part}</span>;
+        if (link[2] === "https://builtbydesigners.com/projects/warpbnb/") {
+          return (
+            <HoverLinkPreview key={i} href={link[2]}
+              {...websiteLinkPreview(link[2])}>
+              {link[1]}
+            </HoverLinkPreview>
+          );
+        }
         return (
           <a key={i} href={link[2]} target="_blank" rel="noopener noreferrer">
             {link[1]}
@@ -518,7 +533,8 @@ function ImpactCopy({ text }: { text: string }) {
   );
 }
 
-export default function CaseStudies({ externalEntry = null, layout = "standard" }: Props) {
+export default function CaseStudies({ externalEntry = null, layout = "standard", flow }: Props) {
+  const closerId = useId();
   const reduceMotion = useReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const chipRef = useRef<HTMLDivElement | null>(null);
@@ -574,8 +590,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     setListFade(false);
     setContentIn(true);
     setCasePanelOpen(false);
-    requestAnimationFrame(() => detailScrollRef.current?.scrollTo(0, 0));
-  }, []);
+    if (!flow) requestAnimationFrame(() => detailScrollRef.current?.scrollTo(0, 0));
+  }, [flow]);
 
   const openCase = useCallback(
     (idx: number, _el?: HTMLElement) => {
@@ -654,13 +670,13 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
   }, [view]);
 
   useEffect(() => {
-    detailScrollRef.current?.scrollTo(0, 0);
-  }, [detailIdx]);
+    if (!flow) detailScrollRef.current?.scrollTo(0, 0);
+  }, [detailIdx, flow]);
 
   useEffect(() => {
     const root = detailScrollRef.current;
     const hero = heroRef.current;
-    if (view !== "detail" || layout !== "editorial" || !root || !hero) return;
+    if (flow || view !== "detail" || layout !== "editorial" || !root || !hero) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -674,15 +690,16 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
     );
     observer.observe(hero);
     return () => observer.disconnect();
-  }, [view, detailIdx, layout]);
+  }, [view, detailIdx, layout, flow]);
 
   useEffect(() => {
+    if (flow && !flow.active) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !casePanelOpenRef.current) startCloseRef.current();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [flow]);
 
   const onListScroll = useCallback(() => {
     const sc = listScrollRef.current;
@@ -941,13 +958,13 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
       {view === "detail" && (
         <div
           ref={detailScrollRef}
-          className={"csDetail" + (closing ? " closing" : "")}
+          className={(flow ? "csDetailFlow" : "csDetail") + (closing ? " closing" : "")}
           onScroll={onDetailScroll}
         >
           <div className={"csDetailInner" + (editorial ? " csEditorialDetail" : "")}>
             {editorial ? (
               <div className="csEditorialContent">
-                <div ref={heroRef} className="csCover csCoverInset" data-project-hero={study.slug}>
+                {(flow?.wrapCover ?? ((cover: ReactNode) => cover))(<div ref={heroRef} className="csCover csCoverInset" data-project-hero={study.slug}>
                   <CaseHero
                     {...heroOnly}
                     media={{
@@ -956,9 +973,9 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     }}
                     accent={overviewAccent}
                     className="csCaseHero"
-                    back={{ label: "Back", onClick: startClose }}
+                    back={flow ? undefined : { label: "Back", onClick: startClose }}
                     headerAction={
-                      isVisualCraft(study) ? (
+                      !flow && isVisualCraft(study) ? (
                         <div
                           className="csContactReveal"
                           data-visible={contactVisible}
@@ -980,8 +997,8 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                     className="csCoverScroll"
                     aria-label="Scroll to project overview"
                     onClick={() => {
-                      const scroller = detailScrollRef.current;
-                      const cover = heroRef.current;
+                      const scroller = flow?.scrollRef.current ?? detailScrollRef.current;
+                      const cover = heroRef.current?.closest<HTMLElement>(".craftCoverRunway") ?? heroRef.current;
                       if (!scroller || !cover) return;
                       scroller.scrollTo({
                         top: scroller.scrollTop + cover.getBoundingClientRect().bottom - scroller.getBoundingClientRect().top + 1,
@@ -993,7 +1010,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                       <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
-                </div>
+                </div>)}
 
                 <section
                   className={
@@ -1127,9 +1144,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-2h7z" />
                             </svg>
                           </button>
-                          {pathaiHasCaseStudy ? <a
+                          {pathaiHasCaseStudy ? <HoverLinkPreview
                             className="csCaseStudyOpen csPressReleaseOpen"
-                            href="https://www.pathai.com/news/pathai-launches-new-pathologist-centric-features-on-aisight-to-enable-efficient-case-review-through-intelligent-case-prioritization-and-real-time-multi-institut"
+                            href={PATHAI_PRESS_URL}
+                            {...websiteLinkPreview(PATHAI_PRESS_URL)}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -1148,7 +1166,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                               <path d="M7 17 17 7" />
                               <path d="M7 7h10v10" />
                             </svg>
-                          </a> : null}
+                          </HoverLinkPreview> : null}
                         </>
                       ) : null}
                     </div>
@@ -1171,10 +1189,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   <section
                     className={"csStudyCloser csFade" + (contentIn ? " in" : "")}
                     style={overviewCtaStyle}
-                    aria-labelledby="study-closer-heading"
+                    aria-labelledby={closerId}
                   >
                     <div className="csStudyCloserCopy">
-                      <h2 id="study-closer-heading">{studyCloser.prompt}</h2>
+                      <h2 id={closerId}>{studyCloser.prompt}</h2>
                     </div>
                     {studyCloser.href ? (
                       <a
@@ -1226,7 +1244,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                   </section>
                 ) : null}
 
-                {isVisualCraft(study) ? (
+                {isVisualCraft(study) && !flow ? (
                   <div className={"csFade" + (contentIn ? " in" : "")}>
                     <MoreProjects currentSlug={study.slug} />
                   </div>
@@ -1318,9 +1336,10 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                         : 320
                     }
                   >
-                    <a
+                    <HoverLinkPreview
                       className="csWebsiteCta"
                       href={study.websiteUrl}
+                      {...websiteLinkPreview(study.websiteUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={
@@ -1345,7 +1364,7 @@ export default function CaseStudies({ externalEntry = null, layout = "standard" 
                           strokeLinejoin="round"
                         />
                       </svg>
-                    </a>
+                    </HoverLinkPreview>
                   </Rise>
                 )}
               </div>
