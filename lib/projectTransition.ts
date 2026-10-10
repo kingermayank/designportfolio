@@ -10,7 +10,8 @@ export function replaceProjectHistoryUrl(href: string) {
   history.replaceState(origin ? { [HISTORY_KEY]: origin } : null, "", href);
 }
 
-type Still = { canvas: HTMLCanvasElement; position: [number, number]; pose: Pose; videoTime?: number };
+type Still = { canvas: HTMLCanvasElement; position: [number, number]; pose: Pose;
+  videoTime?: number; videoSrc?: string; playbackRate?: number };
 type Origin = { id: string; path: string; slug: string; scrollTop: number; still: Still; cover?: Box };
 type Navigation = { push: (href: string) => void; back: () => void; prefetch: (href: string) => void };
 
@@ -58,7 +59,10 @@ function snapshot(element: HTMLElement, resume: Array<() => void>): Still | null
   const anchor: [number, number] = [fraction(position[0]), fraction(position[1])];
   const bounds = media.getBoundingClientRect();
   const scale = Math.max(bounds.width / canvas.width, bounds.height / canvas.height);
-  return { canvas, position: anchor, videoTime: media instanceof HTMLVideoElement ? media.currentTime : undefined, pose: {
+  return { canvas, position: anchor,
+    videoSrc: media instanceof HTMLVideoElement ? media.currentSrc : undefined,
+    playbackRate: media instanceof HTMLVideoElement ? media.playbackRate : undefined,
+    videoTime: media instanceof HTMLVideoElement ? media.currentTime : undefined, pose: {
     x: bounds.x + (bounds.width - canvas.width * scale) * anchor[0],
     y: bounds.y + (bounds.height - canvas.height * scale) * anchor[1], scale,
   } };
@@ -266,6 +270,10 @@ export class ProjectTransition {
     let backdrop: HTMLElement | null = null;
     const previousClip = main?.style.clipPath ?? "";
     const animations = new Set<ReturnType<typeof animate>>();
+    const playback: { video: HTMLVideoElement | null } = { video: null };
+    let returningVideo: HTMLVideoElement | null = null;
+    let returningStill: Still | null = null;
+    let stopVideo = () => {};
     const stop = () => animations.forEach((animation) => animation.stop());
     signal.addEventListener("abort", stop, { once: true });
 
@@ -312,6 +320,64 @@ export class ProjectTransition {
       canvas.height = still.canvas.height;
       canvas.getContext("2d")?.drawImage(still.canvas, 0, 0);
       frame.append(canvas);
+      if (still.videoSrc) {
+        // Decode independently of React's route-owned video. Draw into the
+        // same canvas so the mask, crop and fallback never change layers.
+        const video = document.createElement("video");
+        playback.video = video;
+        video.muted = true;
+        video.playsInline = true;
+        video.loop = true;
+        video.preload = "auto";
+        video.playbackRate = still.playbackRate ?? 1;
+        video.style.cssText = "position:absolute;width:1px;height:1px;opacity:0;pointer-events:none";
+        overlay.append(video);
+        let ready = false;
+        let raf = 0;
+        let videoFrame = 0;
+        let stopped = false;
+        const draw = () => {
+          if (stopped) return;
+          if (ready && !video.seeking && video.readyState >= 2) {
+            try {
+              canvas.getContext("2d")?.drawImage(video, 0, 0, canvas.width, canvas.height);
+              still.videoTime = video.currentTime;
+            } catch { /* Retain the last decoded frame. */ }
+          }
+          if (typeof video.requestVideoFrameCallback === "function") {
+            videoFrame = video.requestVideoFrameCallback(draw);
+          } else raf = requestAnimationFrame(draw);
+        };
+        const play = () => {
+          if (stopped) return;
+          ready = true;
+          void video.play().catch(() => { ready = false; });
+        };
+        const seek = () => {
+          const time = still.videoTime ?? 0;
+          const target = Number.isFinite(video.duration) && video.duration > 0 ? time % video.duration : time;
+          if (Math.abs(video.currentTime - target) < 0.01) play();
+          else {
+            video.addEventListener("seeked", play, { once: true });
+            try { video.currentTime = target; } catch { play(); }
+          }
+        };
+        video.addEventListener("loadedmetadata", seek, { once: true });
+        video.src = still.videoSrc;
+        draw();
+        stopVideo = () => {
+          stopped = true;
+          cancelAnimationFrame(raf);
+          if (videoFrame) video.cancelVideoFrameCallback(videoFrame);
+          still.canvas.getContext("2d")?.drawImage(canvas, 0, 0);
+          video.removeEventListener("loadedmetadata", seek);
+          video.removeEventListener("seeked", play);
+          video.pause();
+          video.removeAttribute("src");
+          video.load();
+          video.remove();
+        };
+      }
       return canvas;
     };
     const fit = (still: Still, rect: Box): Pose =>
@@ -440,10 +506,14 @@ export class ProjectTransition {
       });
       if (!visible(box(destination))) destination.scrollIntoView({ block: "center", behavior: "instant" });
       const video = destination.querySelector("video");
-      if (video && video.readyState >= 2 && still.videoTime !== undefined) {
-        // Hover-only videos may have no source after the homepage remounts.
-        // Synchronize only an already loaded video; never gate Back on it.
-        try { video.currentTime = still.videoTime; } catch { /* Keep the saved frame. */ }
+      if (video && still.videoSrc && still.videoTime !== undefined) {
+        returningVideo = video;
+        returningStill = still;
+        // Let DeferredVideo load its own source and suppress its initial
+        // poster-time seek. It retains ownership of hover/autoplay behavior.
+        video.dispatchEvent(new CustomEvent("portfolio:video-handoff", {
+          detail: { time: still.videoTime, hold: true },
+        }));
       }
       const destinationBox = box(destination);
       // The original pixels already live in `still`. Only the restored card's
@@ -462,6 +532,25 @@ export class ProjectTransition {
         const pageClip = paintCurtain(first, still, destinationBox, destinationPose, seconds);
         if (backdrop) backdrop.style.clipPath = pageClip;
       });
+      // Hand the last moving frame back to the restored thumbnail. Bound the
+      // seek wait so lazy media or a blocked decoder can never hold navigation.
+      if (video && video.readyState >= 1 && playback.video && still.videoTime !== undefined) {
+        playback.video.pause();
+        await new Promise<void>((resolve) => {
+          const finish = () => {
+            clearTimeout(timeout);
+            video.removeEventListener("seeked", finish);
+            signal.removeEventListener("abort", finish);
+            resolve();
+          };
+          const timeout = window.setTimeout(finish, 180);
+          video.addEventListener("seeked", finish, { once: true });
+          signal.addEventListener("abort", finish, { once: true });
+          video.dispatchEvent(new CustomEvent("portfolio:video-handoff", {
+            detail: { time: still.videoTime, hold: true },
+          }));
+        });
+      }
       focusTarget = destination.closest<HTMLElement>("a");
     } catch {
       // Missing media, cancelled navigation, or a slow route must never trap
@@ -472,6 +561,12 @@ export class ProjectTransition {
       window.removeEventListener("resize", resize);
       signal.removeEventListener("abort", stop);
       stop();
+      stopVideo();
+      if (returningVideo?.isConnected && returningStill?.videoTime !== undefined) {
+        returningVideo.dispatchEvent(new CustomEvent("portfolio:video-handoff", {
+          detail: { time: returningStill.videoTime, hold: false },
+        }));
+      }
       resume.forEach((restore) => restore());
       overlay.remove();
       backing.remove();

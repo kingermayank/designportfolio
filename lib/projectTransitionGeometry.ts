@@ -2,7 +2,7 @@ export type Box = { x: number; y: number; width: number; height: number; radius:
 export type Pose = { x: number; y: number; scale: number };
 
 // Shared by both directions; returning samples this timeline backwards.
-export const PROJECT_TIMING = { expand: 1.25, slideStart: 0, reveal: 1.25 };
+export const PROJECT_TIMING = { expand: 0.65, slideStart: 0, reveal: 0.65 };
 export const PROJECT_DURATION = Math.max(PROJECT_TIMING.expand, PROJECT_TIMING.slideStart + PROJECT_TIMING.reveal);
 
 export function motionEase(progress: number): number {

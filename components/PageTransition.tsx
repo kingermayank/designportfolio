@@ -65,7 +65,7 @@ export default function PageTransition({
       prefetch: (href) => router.prefetch(href),
     }, setProjectBusy);
     projectTransition.current = transition;
-    const about = new AboutTransition();
+    const about = new AboutTransition(() => router.back(), setProjectBusy);
     aboutTransition.current = about;
     return () => {
       transition.dispose();
@@ -77,6 +77,7 @@ export default function PageTransition({
 
   useEffect(() => {
     projectTransition.current?.setPath(pathname);
+    aboutTransition.current?.setPath(pathname);
   }, [pathname]);
 
   const [phase, setPhase] = useState<Phase>("idle");
@@ -96,9 +97,10 @@ export default function PageTransition({
     ) => {
       if (phase !== "idle" || projectBusy) return;
       if (href === "/about" && detail?.source && !reduce && aboutTransition.current) {
-        aboutTransition.current.open(detail.source, () => router.push(href, { scroll: false }), setProjectBusy);
+        aboutTransition.current.open(detail.source, () => router.push(href, { scroll: false }));
         return;
       }
+      if (href === "/" && !reduce && aboutTransition.current?.close()) return;
       if (projectTransition.current?.open(href, detail?.source)) return;
       if (reduce) {
         router.push(href);

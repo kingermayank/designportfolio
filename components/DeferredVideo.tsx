@@ -83,6 +83,8 @@ export default function DeferredVideo({
 }: DeferredVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const restPending = useRef(posterTime != null);
+  const transitionTime = useRef<number | null>(null);
+  const transitionHeld = useRef(false);
   const reducedMotion = useReducedMotion();
   const [requested, setRequested] = useState(activation === "eager" && !playOnHover);
   const [visible, setVisible] = useState(activation === "eager");
@@ -143,6 +145,20 @@ export default function DeferredVideo({
     (video: HTMLVideoElement) => {
       video.playbackRate = playbackRate;
 
+      // A returning card can be newly mounted with no src yet. Seek the
+      // transition frame before revealing it, without overriding hover intent.
+      if (transitionTime.current !== null) {
+        video.pause();
+        if (video.readyState < 2 || video.seeking) return;
+        if (Math.abs(video.currentTime - transitionTime.current) > 0.03) {
+          try { video.currentTime = transitionTime.current; } catch { transitionTime.current = null; }
+          return;
+        }
+        transitionTime.current = null;
+        setRevealed(true);
+      }
+      if (transitionHeld.current) { video.pause(); return; }
+
       const shouldPlay =
         motionAllowed &&
         (playbackIntent === "playing"
@@ -187,6 +203,27 @@ export default function DeferredVideo({
     },
     [motionAllowed, playOnHover, playbackIntent, playbackRate, posterTime, visible],
   );
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const handoff = (event: Event) => {
+      const { time, hold } = (event as CustomEvent<{ time: number; hold: boolean }>).detail;
+      if (!Number.isFinite(time) || time < 0) return;
+      restPending.current = false;
+      transitionTime.current = time;
+      transitionHeld.current = hold;
+      setRequested(true);
+      syncPlayback(video);
+    };
+    const settled = () => syncPlayback(video);
+    video.addEventListener("portfolio:video-handoff", handoff);
+    video.addEventListener("seeked", settled);
+    return () => {
+      video.removeEventListener("portfolio:video-handoff", handoff);
+      video.removeEventListener("seeked", settled);
+    };
+  }, [syncPlayback]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -240,6 +277,7 @@ export default function DeferredVideo({
       ) : null}
       <video
         ref={setVideoNode}
+        data-transition-playback={playOnHover ? "hover" : "auto"}
         className={className}
         width={aspectRatio ? 1600 : undefined}
         height={aspectRatio ? Math.max(1, Math.round(1600 / aspectRatio)) : undefined}
