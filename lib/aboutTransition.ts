@@ -1,9 +1,7 @@
 import { ABOUT_INTRO } from "./about";
 import { freezePage } from "./projectTransition";
 
-import { clipBox, motionEase, PROJECT_DURATION, type Box } from "./projectTransitionGeometry";
-
-export type AboutMotion = "aperture" | "settle" | "turn";
+import { motionEase, PROJECT_DURATION, type Box } from "./projectTransitionGeometry";
 
 function readBox(element: HTMLElement): Box {
   const rect = element.getBoundingClientRect();
@@ -18,7 +16,7 @@ export class AboutTransition {
 
   dispose() { this.controller?.abort(); }
 
-  open(source: HTMLElement, navigate: () => void, setBusy: (busy: boolean) => void, variant: AboutMotion = "aperture") {
+  open(source: HTMLElement, navigate: () => void, setBusy: (busy: boolean) => void) {
     if (this.controller) return;
     const main = document.getElementById("main");
     if (!main) { navigate(); return; }
@@ -71,34 +69,16 @@ export class AboutTransition {
       const progress = Math.min(1, seconds / PROJECT_DURATION);
       const eased = motionEase(progress);
       const remaining = 1 - eased;
-      let frame = interpolate(full, eased);
-      let angle = 0;
-      if (variant === "settle") {
-        frame = interpolate(portraitBox, eased);
-        main.style.clipPath = "none";
-        main.style.opacity = String(motionEase(Math.min(1, progress / 0.8)));
-      } else if (variant === "turn") {
-        // The front turns edge-on, then the destination unfolds from its back.
-        const reveal = motionEase(Math.max(0, (progress - 0.4) / 0.6));
-        frame = interpolate(full, reveal);
-        const front = motionEase(Math.min(1, progress / 0.4));
-        angle = -90 * front;
-        curtain.style.opacity = progress < 0.4 ? "1" : "0";
-        main.style.clipPath = clipBox(frame, full);
-        main.style.opacity = progress < 0.4 ? "0" : "1";
-        main.style.transformOrigin = `${frame.x + frame.width / 2}px ${frame.y + frame.height / 2}px`;
-        main.style.transform = `perspective(1600px) rotateY(${75 * (1 - reveal)}deg)`;
-      } else {
-        main.style.clipPath = clipBox(frame, full);
-        curtain.style.opacity = String(1 - motionEase(Math.min(1, progress / 0.72)));
-      }
+      const frame = interpolate(portraitBox, eased);
+      main.style.clipPath = "none";
+      main.style.opacity = String(motionEase(Math.min(1, progress / 0.8)));
       curtain.style.width = `${frame.width}px`;
       curtain.style.height = `${frame.height}px`;
-      curtain.style.transform = `translate3d(${frame.x}px,${frame.y}px,0) perspective(800px) rotateY(${angle}deg)`;
+      curtain.style.transform = `translate3d(${frame.x}px,${frame.y}px,0)`;
       curtain.style.padding = `${padding * remaining}px`;
       curtain.style.borderWidth = `${border * remaining}px`;
       curtain.style.borderRadius = `${frame.radius}px`;
-      image.style.borderRadius = `${variant === "settle" ? 6 : 6 * remaining}px`;
+      image.style.borderRadius = "6px";
     };
     paint(0);
     document.body.append(photo);
@@ -132,7 +112,7 @@ export class AboutTransition {
         portrait = imageTarget;
         portraitBox = readBox(portrait);
         portraitVisibility = portrait.style.visibility;
-        if (variant === "settle") portrait.style.visibility = "hidden";
+        portrait.style.visibility = "hidden";
         paint(0);
         main.style.visibility = saved.visibility;
         const started = performance.now();

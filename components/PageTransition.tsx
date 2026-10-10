@@ -3,8 +3,7 @@
 import { animate, useReducedMotion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { ProjectTransition } from "@/lib/projectTransition";
-import { AboutTransition, type AboutMotion } from "@/lib/aboutTransition";
-import AboutMotionLab from "@/components/AboutMotionLab";
+import { AboutTransition } from "@/lib/aboutTransition";
 import "@/app/about-transition.css";
 import {
   createContext,
@@ -58,7 +57,6 @@ export default function PageTransition({
   const projectTransition = useRef<ProjectTransition | null>(null);
   const aboutTransition = useRef<AboutTransition | null>(null);
   const [projectBusy, setProjectBusy] = useState(false);
-  const [aboutMotion, setAboutMotion] = useState<AboutMotion>("aperture");
 
   useEffect(() => {
     const transition = new ProjectTransition({
@@ -98,7 +96,7 @@ export default function PageTransition({
     ) => {
       if (phase !== "idle" || projectBusy) return;
       if (href === "/about" && detail?.source && !reduce && aboutTransition.current) {
-        aboutTransition.current.open(detail.source, () => router.push(href, { scroll: false }), setProjectBusy, aboutMotion);
+        aboutTransition.current.open(detail.source, () => router.push(href, { scroll: false }), setProjectBusy);
         return;
       }
       if (projectTransition.current?.open(href, detail?.source)) return;
@@ -110,7 +108,7 @@ export default function PageTransition({
       setTarget({ href, direction });
       setPhase("exit");
     },
-    [phase, projectBusy, reduce, router, aboutMotion],
+    [phase, projectBusy, reduce, router],
   );
 
   // Glide the current route away from the direction of travel.
@@ -201,11 +199,6 @@ export default function PageTransition({
       <div id="main" ref={mainRef} data-transition-busy={busy || undefined}>
         {children}
       </div>
-      {(pathname === "/" || pathname === "/about") && <AboutMotionLab
-        selected={aboutMotion} onSelect={setAboutMotion} busy={busy} onAbout={pathname === "/about"}
-        onPreview={(source) => open("/about", { title: "About Me", source })}
-        onBack={() => open("/", { title: "Home" }, "back")}
-      />}
     </TransitionCtx.Provider>
   );
 }
