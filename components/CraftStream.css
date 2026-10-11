@@ -89,9 +89,22 @@
 
 .craftIndexHeading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 
-.craftProjectIndex a[data-next="true"] .craftIndexStatus {
+/* "Up next" rests grey like the other chips; it turns white when its row is
+   hovered or focused. */
+.craftProjectIndex .craftIndexStatus {
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.craftProjectIndex a[data-next="true"]:focus-visible .craftIndexStatus {
   background: #fff;
   color: #111;
+}
+
+@media (hover: hover) {
+  .craftProjectIndex a[data-next="true"]:hover .craftIndexStatus {
+    background: #fff;
+    color: #111;
+  }
 }
 
 @media (hover: hover) {
