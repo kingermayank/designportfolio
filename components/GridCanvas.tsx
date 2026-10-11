@@ -12,6 +12,7 @@ import posthog from "posthog-js";
 import { homeViewHref, VIEW_SWITCHER_ENABLED, type HomeView } from "@/lib/homeViews";
 import { captureLayout, playLayout, type LayoutSnapshot } from "@/lib/layoutFlip";
 import type { WorkLensId } from "@/lib/workLenses";
+import { toSite } from "@/lib/sitePath";
 
 type Target = {
   x: number;
@@ -105,7 +106,7 @@ export default function GridCanvas({
       if (next === view) return;
       if (!reduce && workRef.current) pendingFlip.current = captureLayout(workRef.current);
       setView(next);
-      window.history.replaceState(null, "", homeViewHref(next));
+      window.history.replaceState(null, "", toSite(homeViewHref(next)));
       posthog.capture("home_view_selected", { view: next });
     },
     [view, reduce],
@@ -466,7 +467,7 @@ export default function GridCanvas({
       {initialView && VIEW_SWITCHER_ENABLED ? <ViewSwitcher view={view} onChange={changeView} /> : null}
 
       {mode === "grid" ? (
-        <ModeToggle on onToggle={() => router.push("/about")} />
+        <ModeToggle on onToggle={() => router.push(toSite("/about"))} />
       ) : null}
     </div>
   );

@@ -8,6 +8,8 @@ import { LINKABLE_CASE_STUDIES } from "@/lib/caseStudies";
 import { WORK_FIT_CTA } from "@/lib/letter";
 import { brandColor } from "@/lib/brandColors";
 import { replaceProjectHistoryUrl } from "@/lib/projectTransition";
+import { fromSite } from "@/lib/sitePath";
+import { useSiteHref } from "@/lib/useSitePath";
 import "./CraftStream.css";
 
 const studies = LINKABLE_CASE_STUDIES;
@@ -22,6 +24,7 @@ function ChapterFooter({ index, start, visited, onJump }: {
   const study = studyAt(start, index);
   const next = studyAt(start, index + 1);
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
+  const siteHref = useSiteHref();
   const previewStudy = studies.find(item => item.slug === previewSlug) ?? next;
   const poster = posterFor(previewStudy);
   const jumpLink = (event: MouseEvent<HTMLAnchorElement>, slug: string) => {
@@ -34,7 +37,7 @@ function ChapterFooter({ index, start, visited, onJump }: {
     onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPreviewSlug(null); }}>
     <h2 className="moreProjectsTitle">More projects<span className="moreProjectsDot">.</span></h2>
     <div className="craftFooterGrid">
-      <a className="craftNextPreview" href={`/work/${previewStudy.slug}`} onClick={event => jumpLink(event, previewStudy.slug)}>
+      <a className="craftNextPreview" href={siteHref(`/work/${previewStudy.slug}`)} onClick={event => jumpLink(event, previewStudy.slug)}>
         <div className="craftNextCopy"><span className="craftFooterEyebrow">{previewSlug ? "Explore this project" : orderAt(start, index + 1) === 0 ? "Back to the first chapter" : "Up next"}</span>
           <h3>{previewStudy.title}</h3><p>{previewStudy.workSummary ?? previewStudy.tagline}</p>
         </div>
@@ -50,7 +53,7 @@ function ChapterFooter({ index, start, visited, onJump }: {
       <nav className="craftProjectIndex" aria-label="Visual Craft case studies">
         <div className="craftIndexHeading craftFooterEyebrow"><span>Project index</span></div>
         <ol>{studies.map((item, order) => <li key={item.slug}>
-          <a href={`/work/${item.slug}`} aria-current={item.slug === study.slug ? "step" : undefined}
+          <a href={siteHref(`/work/${item.slug}`)} aria-current={item.slug === study.slug ? "step" : undefined}
             onPointerEnter={event => { if (event.pointerType === "mouse") setPreviewSlug(item.slug); }}
             onFocus={() => setPreviewSlug(item.slug)}
             data-previewed={previewSlug === item.slug}
@@ -210,7 +213,7 @@ export default function CraftStream({ slug, onClose }: { slug: string; onClose: 
 
   useEffect(() => {
     if (travelling.current) return;
-    if (active === 0 && location.pathname === `/work/${slug}`) return;
+    if (active === 0 && fromSite(location.pathname) === `/work/${slug}`) return;
     const study = studyAt(start, active);
     // Native replacement retains Next's routing state and the original homepage
     // history entry. Copying the URL or refreshing opens this individual project.

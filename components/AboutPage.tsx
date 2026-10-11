@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import About from "@/components/About";
 import ModeToggle from "@/components/ModeToggle";
 import { usePageTransition } from "@/components/PageTransition";
+import { toSite } from "@/lib/sitePath";
 
 export default function AboutPage() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function AboutPage() {
           open("/", { title: "Home", subtitle: "Mayank Kinger" }, "back")
         }
       />
-      <ModeToggle on={false} onToggle={() => router.push("/?view=grid")} />
+      <ModeToggle on={false} onToggle={() => router.push(toSite("/?view=grid"))} />
     </div>
   );
 }

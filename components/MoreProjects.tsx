@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import DeferredVideo from "@/components/DeferredVideo";
 import DeferredImage from "@/components/DeferredImage";
 import { usePageTransition } from "@/components/PageTransition";
+import { useSiteHref } from "@/lib/useSitePath";
 import {
   VISUAL_CRAFT_STUDIES,
   type CaseStudy,
@@ -80,6 +81,7 @@ function cardFromStudy(s: CaseStudy): Card {
 
 function MoreProjectCard({ card }: { card: Card }) {
   const { open } = usePageTransition();
+  const siteHref = useSiteHref();
   const gridSrc = card.video ? card.media : undefined;
 
   const cardStyle = {
@@ -150,7 +152,7 @@ function MoreProjectCard({ card }: { card: Card }) {
 
   return (
     <Link
-      href={`/work/${card.slug}`}
+      href={siteHref(`/work/${card.slug}`)}
       className="workCard"
       data-slug={card.slug}
       style={cardStyle}

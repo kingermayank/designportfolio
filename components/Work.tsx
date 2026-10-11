@@ -37,6 +37,8 @@ import {
   type WorkLensId,
   type WorkListItem,
 } from "@/lib/workLenses";
+import { toSite } from "@/lib/sitePath";
+import { useSiteHref } from "@/lib/useSitePath";
 
 // Same fade choreography as the case-study list description (koto timings).
 const TEXT_FADE = "opacity 167ms linear";
@@ -210,6 +212,7 @@ function WorkCard({
   priority?: boolean;
 }) {
   const { open } = usePageTransition();
+  const siteHref = useSiteHref();
   const mediaRef = useRef<HTMLDivElement>(null);
   const [previewing, setPreviewing] = useState(false);
   const restTime = HOVER_REST_TIME[card.slug];
@@ -323,7 +326,7 @@ function WorkCard({
 
   return (
     <Link
-      href={`/work/${card.slug}`}
+      href={siteHref(`/work/${card.slug}`)}
       className="workCard"
       data-slug={card.slug}
       style={cardStyle}
@@ -524,6 +527,7 @@ export default function Work({
   const lensDotRef = useRef<HTMLSpanElement | null>(null);
   const dotLens = useRef<WorkLensId | null>(null);
   const { open } = usePageTransition();
+  const siteHref = useSiteHref();
   // The panel's hover rail belongs to the project grid — only while Visual
   // Craft, and only in the split layout where the panel sits beside the grid.
   const showingProjects = lens === "visual" && layout === "split";
@@ -638,7 +642,7 @@ export default function Work({
     setEngActive(null);
     setSystemsActive(null);
     setHoverIdx(-1);
-    if (next) window.history.replaceState(null, "", next.path);
+    if (next) window.history.replaceState(null, "", toSite(next.path));
     rootRef.current?.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
@@ -705,7 +709,7 @@ export default function Work({
               setHoverIdx(-1);
               setSystemsActive(item);
               const slug = item.slug ?? item.id;
-              window.history.pushState(null, "", `/product-strategy/${slug}`);
+              window.history.pushState(null, "", toSite(`/product-strategy/${slug}`));
               pushedOverlayUrl.current = true;
             }}
           />
@@ -724,7 +728,7 @@ export default function Work({
                 destination: "detail_overlay",
               });
               setEngActive(item);
-              window.history.pushState(null, "", `/design-engineering/${item.id}`);
+              window.history.pushState(null, "", toSite(`/design-engineering/${item.id}`));
               pushedOverlayUrl.current = true;
             }}
           />
@@ -755,7 +759,7 @@ export default function Work({
           <div className="workFit">
             <div className="workFitActions">
               <HoverLinkPreview
-                href="/about"
+                href={siteHref("/about")}
                 target={undefined}
                 rel={undefined}
                 previewImage={ABOUT_INTRO.hero.src}
@@ -908,7 +912,7 @@ export default function Work({
             pushedOverlayUrl.current = false;
             window.history.back();
           } else {
-            window.history.replaceState(null, "", "/design-engineering");
+            window.history.replaceState(null, "", toSite("/design-engineering"));
           }
         }} />
       ) : null}
@@ -922,7 +926,7 @@ export default function Work({
               pushedOverlayUrl.current = false;
               window.history.back();
             } else {
-              window.history.replaceState(null, "", "/product-strategy");
+              window.history.replaceState(null, "", toSite("/product-strategy"));
             }
           }}
         />

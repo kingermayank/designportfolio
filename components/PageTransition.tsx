@@ -3,6 +3,7 @@
 import { animate, useReducedMotion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { ProjectTransition } from "@/lib/projectTransition";
+import { fromSite, toSite } from "@/lib/sitePath";
 import {
   createContext,
   useCallback,
@@ -57,16 +58,18 @@ export default function PageTransition({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
+  // Callers and this component speak public paths; the review copy (/dive)
+  // only differs at the router boundary.
+  const pathname = fromSite(usePathname() ?? "/");
   const reduce = useReducedMotion();
   const projectTransition = useRef<ProjectTransition | null>(null);
   const [projectBusy, setProjectBusy] = useState(false);
 
   useEffect(() => {
     const transition = new ProjectTransition({
-      push: (href) => router.push(href, { scroll: false }),
+      push: (href) => router.push(toSite(href), { scroll: false }),
       back: () => router.back(),
-      prefetch: (href) => router.prefetch(href),
+      prefetch: (href) => router.prefetch(toSite(href)),
     }, setProjectBusy);
     projectTransition.current = transition;
     return () => {
@@ -97,7 +100,7 @@ export default function PageTransition({
       if (phase !== "idle" || projectBusy) return;
       if (projectTransition.current?.open(href, detail?.source)) return;
       if (reduce) {
-        router.push(href);
+        router.push(toSite(href));
         return;
       }
 
@@ -156,7 +159,7 @@ export default function PageTransition({
       main.style.filter = target.style === "depth" ? "" : "blur(3px)";
     }
 
-    router.push(target.href);
+    router.push(toSite(target.href));
     const timeout = window.setTimeout(() => setStalled(true), LOAD_TIMEOUT);
     return () => window.clearTimeout(timeout);
   }, [phase, target, router]);

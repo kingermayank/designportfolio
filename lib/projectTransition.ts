@@ -1,3 +1,4 @@
+import { fromSite, toSite } from "@/lib/sitePath";
 import { animate } from "framer-motion";
 
 import { clipBox, fitMedia, transitionFrame, PROJECT_DURATION, type Box, type Pose } from "./projectTransitionGeometry";
@@ -9,7 +10,7 @@ const HISTORY_KEY = "portfolioProjectOrigin";
 /** Let Next carry its internal history fields; pass only our own marker. */
 export function replaceProjectHistoryUrl(href: string) {
   const origin = history.state?.[HISTORY_KEY];
-  history.replaceState(origin ? { [HISTORY_KEY]: origin } : null, "", href);
+  history.replaceState(origin ? { [HISTORY_KEY]: origin } : null, "", toSite(href));
 }
 
 type Still = { canvas: HTMLCanvasElement; position: [number, number]; pose: Pose;
@@ -165,7 +166,7 @@ export class ProjectTransition {
   private path: string;
 
   constructor(private navigation: Navigation, private setBusy: (busy: boolean) => void) {
-    this.path = location.pathname;
+    this.path = fromSite(location.pathname);
     window.addEventListener("popstate", this.onPop, true);
   }
 
@@ -240,13 +241,13 @@ export class ProjectTransition {
   private onPop = () => {
     if (this.abort) {
       // The Back button's intentional history navigation completes this run.
-      if (location.pathname === this.pendingPath) return;
+      if (fromSite(location.pathname) === this.pendingPath) return;
       this.abort.abort();
       return;
     }
     if (!this.origin || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const goingBack = this.path === this.origin.path && location.pathname === "/";
-    const goingForward = this.path === "/" && location.pathname === this.origin.path;
+    const goingBack = this.path === this.origin.path && fromSite(location.pathname) === "/";
+    const goingForward = this.path === "/" && fromSite(location.pathname) === this.origin.path;
     if ((!goingBack && !goingForward) || history.state?.[HISTORY_KEY] !== this.origin.id) return;
     const source = goingBack ? null : document.querySelector<HTMLElement>(`.workCard[data-slug="${this.origin.slug}"] .workCardMediaWrap`);
     if (goingForward && source) {
@@ -476,7 +477,7 @@ export class ProjectTransition {
         // Mount the real page before starting the reveal. A slow route holds
         // the original thumbnail, rather than splitting motion at fullscreen.
         navigate();
-        const hero = await waitFor(() => location.pathname === targetPath
+        const hero = await waitFor(() => fromSite(location.pathname) === targetPath
           ? main?.querySelector<HTMLElement>(`${heroSelector} .chMedia`) ?? null : null);
         // The default page entrance translates the entire window by 8px.
         // Its transform must not contaminate the measured cover endpoint or
@@ -510,7 +511,7 @@ export class ProjectTransition {
       // Next restores the homepage underneath it, including Browser Back.
       root.dataset.projectCovered = "true";
       navigate();
-      const destination = await waitFor(() => location.pathname === targetPath
+      const destination = await waitFor(() => fromSite(location.pathname) === targetPath
         ? main?.querySelector<HTMLElement>(cardSelector) ?? null : null);
       const pageWindow = destination.closest<HTMLElement>(".stage > .window");
       if (pageWindow) pageWindow.dataset.projectStageSettled = "true";
