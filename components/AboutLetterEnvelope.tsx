@@ -15,11 +15,13 @@ import { HIRING_LETTER, WORK_FIT_CTA } from "@/lib/letter";
  *    0ms   "Open letter" fades
  *    0ms   letter is launched upward out of the pocket; the same spring
  *          turns it and settles it in place while it grows to full length
- *    0ms   the envelope fades away, uncovering the rest of the letter
+ *    0ms   the envelope dims to 50%; its front dips out just long enough for
+ *          the letter to pass in front of it, then returns at 50% around it
  *
  * Close (the reverse)
  *    0ms   letter shrinks; launched upward again, it turns and sinks home
- *  180ms   the envelope fades back in around it
+ *    0ms   the envelope front dips out so the letter can pass behind it
+ *  180ms   the envelope returns to full strength around it
  *  240ms   "Open letter" fades back in
  * ───────────────────────────────────────────────────────── */
 
@@ -31,12 +33,12 @@ const MOVE = { type: "spring", stiffness: 120, damping: 22 } as const;
 // turns and settles in one smooth arc — no pause at the top.
 const OPEN_LAUNCH = -800;
 const CLOSE_LAUNCH = -600;
-const FRONT_OUT = { duration: 0.35, ease: [0.22, 1, 0.36, 1] } as const;
-const FRONT_IN = {
-  duration: 0.4,
-  delay: 0.18,
-  ease: [0.22, 1, 0.36, 1],
-} as const;
+const ENVELOPE_DIM = 0.5; // envelope opacity while the letter is open
+const EASE = [0.22, 1, 0.36, 1] as const;
+const DIM = { duration: 0.35, ease: EASE };
+const DIP = { duration: 0.16, ease: EASE }; // front out, so the letter can change layer
+const RETURN = { duration: 0.3, ease: EASE };
+const FRONT_IN = { duration: 0.4, delay: 0.18, ease: EASE };
 const FADE = { duration: 0.2, ease: [0.22, 1, 0.36, 1] } as const;
 
 // Closed letter height, as fractions of the envelope width (see .envLetter).
@@ -94,8 +96,9 @@ export default function AboutLetterEnvelope() {
     setOpen(true);
 
     if (reduce) {
-      front.style.opacity = "0";
-      back.style.opacity = "0";
+      front.style.opacity = String(ENVELOPE_DIM);
+      back.style.opacity = String(ENVELOPE_DIM);
+      letter.style.zIndex = "5";
       letter.style.transform = `translateY(${OPEN_Y}px)`;
       letter.style.height = "auto";
       busy.current = false;
@@ -103,7 +106,14 @@ export default function AboutLetterEnvelope() {
     }
 
     void animate(openBtn, { opacity: 0, scale: 0.96 }, FADE);
-    void animate([front, back], { opacity: 0 }, FRONT_OUT);
+    void animate(back, { opacity: ENVELOPE_DIM }, DIM);
+    // The front sits above the letter. Dip it out, move the letter in front
+    // while nothing of the front is visible, then bring it back dimmed.
+    void (async () => {
+      await animate(front, { opacity: 0 }, DIP);
+      letter.style.zIndex = "5";
+      await animate(front, { opacity: ENVELOPE_DIM }, RETURN);
+    })();
     await Promise.all([
       animate(letter, { y: OPEN_Y }, { ...MOVE, velocity: OPEN_LAUNCH }),
       animate(letter, { height: full }, MOVE),
@@ -123,13 +133,19 @@ export default function AboutLetterEnvelope() {
     if (reduce) {
       front.style.opacity = "";
       back.style.opacity = "";
+      letter.style.zIndex = "";
       letter.style.transform = "";
       letter.style.height = "";
       busy.current = false;
       return;
     }
 
-    void animate([front, back], { opacity: 1 }, FRONT_IN);
+    void animate(back, { opacity: 1 }, FRONT_IN);
+    void (async () => {
+      await animate(front, { opacity: 0 }, DIP);
+      letter.style.zIndex = "";
+      await animate(front, { opacity: 1 }, FRONT_IN);
+    })();
     void animate(openBtn, { opacity: 1, scale: 1 }, { ...FADE, delay: 0.24 });
     await Promise.all([
       animate(letter, { y: 0 }, { ...MOVE, velocity: CLOSE_LAUNCH }),

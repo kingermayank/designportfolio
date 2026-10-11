@@ -58,3 +58,19 @@ test("real attribute mismatch alongside the extension still surfaces", () => {
 test("non-hydration errors are untouched", () => {
   assert.equal(isExtensionNoise(["Something else broke"]), false);
 });
+
+test("Next 16.2+: diff folded into the first argument or an Error", () => {
+  const diff = `
+    <div
+      className="workHoverThumb"
++     style={undefined}
+-     style={{clip-path:"path(\\"M 9..."}}
+    >`;
+  assert.equal(isExtensionNoise([`${MESSAGE}\n${diff}`]), true);
+  assert.equal(isExtensionNoise([new Error(`${MESSAGE}\n${diff}`)]), true);
+  // …while a genuine mismatch in that shape still surfaces.
+  const real = `
++     className="a"
+-     className="b"`;
+  assert.equal(isExtensionNoise([`${MESSAGE}\n${real}`]), false);
+});

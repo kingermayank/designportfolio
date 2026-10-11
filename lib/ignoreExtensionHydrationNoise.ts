@@ -39,16 +39,25 @@ function onlyInjected(server: Map<string, string>, client: Map<string, string>) 
   return true;
 }
 
+// A changed line in React's component diff is JSX: a tag, an attribute, a
+// style property inside an expanded `style={{ … }}`, or a brace/quote-wrapped
+// value. The explanation's own "- A server/client branch…" bullets are prose,
+// so they never match.
+const DIFF_LINE = /^(<|\/?>|[\w:.-]+=|[\w-]+:\s*"|\{|")/;
+
+const asText = (a: unknown) => (typeof a === "string" ? a : a instanceof Error ? a.message : "");
+
 export function isExtensionNoise(args: unknown[]): boolean {
-  if (typeof args[0] !== "string" || !args[0].includes(MISMATCH)) return false;
-  // args[0] is the explanation (its own "- " bullets aren't diff lines);
-  // the component diff arrives in the substitution args after it.
-  const text = args.slice(1).filter((a): a is string => typeof a === "string").join("\n");
+  // The diff may come as a substitution arg after the explanation, or (Next
+  // 16.2+) already folded into the first argument / an Error's message.
+  const text = args.map(asText).join("\n");
+  if (!text.includes(MISMATCH)) return false;
   const changed = text
     .split("\n")
     .map((line) => line.match(/^\s*([+-])\s+(.*)$/))
     .filter((m): m is RegExpMatchArray => !!m)
-    .map(([, sign, line]) => ({ sign, line: line.trim() }));
+    .map(([, sign, line]) => ({ sign, line: line.trim() }))
+    .filter(({ line }) => DIFF_LINE.test(line));
   if (!changed.length) return false;
 
   // Compact form: the whole style attribute differs, e.g.
