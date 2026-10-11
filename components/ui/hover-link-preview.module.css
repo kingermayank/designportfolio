@@ -57,54 +57,44 @@
   letter-spacing: -0.01em;
 }
 
-/* Copy confirmation: a text-selection highlight in the brand orange sweeps
-   across the address, holds, then fades (sweep 0–30%, hold, fade 65–100%). */
+/* Copy confirmation, played on the letters themselves: a quick orange glint
+   travels left to right, each character hopping 2px as it passes, then
+   fading straight back to white behind it (a shine, but per letter).
+   Starts on the first frame; the full pass is ~0.75s. */
 .textValue {
-  position: relative;
-  isolation: isolate;
+  --copy-orange: var(--color-accent-orange, #ff6a1f);
+  --copy-step: 13ms; /* stagger between characters */
+  display: inline-block;
 }
 
-.sweep {
-  position: absolute;
-  inset: -1px -3px;
-  z-index: -1;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--color-accent-orange, #ff6a1f) 42%, transparent);
-  clip-path: inset(0 100% 0 0 round 3px);
-  animation: copy-sweep 850ms forwards;
-  pointer-events: none;
+.char {
+  display: inline-block;
 }
 
-@keyframes copy-sweep {
-  0% {
-    clip-path: inset(0 100% 0 0 round 3px);
-    opacity: 1;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  30% {
-    clip-path: inset(0 0 0 0 round 3px);
-    opacity: 1;
-  }
-  65% {
-    clip-path: inset(0 0 0 0 round 3px);
-    opacity: 1;
-    animation-timing-function: ease-out;
-  }
-  100% {
-    clip-path: inset(0 0 0 0 round 3px);
-    opacity: 0;
-  }
+.textValue[data-copied] .char {
+  animation:
+    copy-glint 460ms linear both,
+    copy-hop 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i) * var(--copy-step));
+}
+
+@keyframes copy-glint {
+  0% { color: inherit; }
+  8% { color: var(--copy-orange); }
+  30% { color: var(--copy-orange); }
+  100% { color: inherit; }
+}
+
+@keyframes copy-hop {
+  0% { transform: translateY(0); }
+  35% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* No sweep: just a brief highlight that fades. */
-  .sweep {
-    clip-path: none;
-    animation: copy-highlight 700ms ease-out forwards;
-  }
-
-  @keyframes copy-highlight {
-    0%, 40% { opacity: 1; }
-    100% { opacity: 0; }
+  /* No travelling motion: the whole address briefly turns orange. */
+  .textValue[data-copied] .char {
+    animation: copy-glint 700ms linear both;
+    animation-delay: 0ms;
   }
 }

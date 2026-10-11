@@ -149,12 +149,13 @@ export function HoverLinkPreview({ href, previewImage, imageAlt = "Link preview"
 
 let measureCanvas: HTMLCanvasElement | null = null;
 
+
 /** Hover card that shows a line of text (e.g. an email address) in the same
  * floating frame as the link previews. Wraps any interactive child. */
 export function HoverTextPreview({ text, placement = "top", flash = 0, children }: {
   text: string; placement?: Placement;
-  /** Change (e.g. a copy timestamp) to sweep a selection highlight across
-   * the text, confirming that exactly this text was copied. 0 = never. */
+  /** Change (e.g. a copy timestamp) to play the copied-confirmation effect
+   * across the text, confirming that exactly this text was copied. 0 = never. */
   flash?: number;
   children: React.ReactNode;
 }) {
@@ -169,20 +170,42 @@ export function HoverTextPreview({ text, placement = "top", flash = 0, children 
     return { width: Math.ceil(textWidth) + 2 * (12 + 1), height: 20 + 2 * (6 + 1) };
   }, placement);
 
+  // The card is created fresh on every hover. Copies made before it opened
+  // are already acknowledged, so only a copy *while it is open* plays the
+  // effect — hovering never replays it.
+  const [seenFlash, setSeenFlash] = React.useState(flash);
+  const copiedNow = flash !== 0 && flash !== seenFlash;
+
   return <>
     <span className={styles.textTrigger}
-      onPointerEnter={enter}
+      onPointerEnter={(event) => {
+        setSeenFlash(flash);
+        enter(event);
+      }}
       onPointerMove={move}
       onPointerLeave={dismiss}
-      onFocus={(event) => focus(event.target as HTMLElement)}
+      onFocus={(event) => {
+        setSeenFlash(flash);
+        focus(event.target as HTMLElement);
+      }}
       onBlur={dismiss}
     >{children}</span>
     {typeof document !== "undefined" && createPortal(
       <AnimatePresence>{showPreview && <motion.div {...card} className={`${styles.preview} ${styles.textPreview}`}>
-        <span className={styles.textValue}>
-          {/* Remounts per copy so the sweep replays every time. */}
-          {flash ? <span key={flash} className={styles.sweep} /> : null}
-          {text}
+        {/* Keyed per copy so the effect replays every time. Per-character
+            spans let the colour travel left to right; the whole string stays
+            one accessible label. */}
+        <span
+          key={flash}
+          className={styles.textValue}
+          data-copied={copiedNow ? "" : undefined}
+          aria-label={text}
+        >
+          {Array.from(text).map((char, i) => (
+            <span key={i} className={styles.char} style={{ "--i": i } as React.CSSProperties} aria-hidden="true">
+              {char}
+            </span>
+          ))}
         </span>
       </motion.div>}</AnimatePresence>, document.body
     )}

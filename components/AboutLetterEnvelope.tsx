@@ -3,30 +3,40 @@
 import { useRef, useState } from "react";
 import { useAnimate, useReducedMotion } from "framer-motion";
 import posthog from "posthog-js";
-import { HIRING_LETTER } from "@/lib/letter";
+import CopyEmailButton from "@/components/CopyEmailButton";
+import { HoverTextPreview } from "@/components/ui/hover-link-preview";
+import { HIRING_LETTER, WORK_FIT_CTA } from "@/lib/letter";
 
 /* ─────────────────────────────────────────────────────────
- * ANIMATION STORYBOARD — springs, phases overlap so it reads as one motion.
+ * ANIMATION STORYBOARD — each direction is ONE spring per property, so the
+ * letter never stops, snaps, or changes layer mid-flight.
  *
  * Open
- *    0ms   "Open letter" fades; page glides so the title sits at the top
- *    0ms   letter lifts out of the pocket (behind the envelope front)
- *  260ms   letter passes in front of the envelope…
- *  260ms   …and keeps going: settles and unfolds to full length
+ *    0ms   "Open letter" fades
+ *    0ms   letter is launched upward out of the pocket; the same spring
+ *          turns it and settles it in place while it grows to full length
+ *    0ms   the envelope fades away, uncovering the rest of the letter
  *
  * Close (the reverse)
- *    0ms   page glides back to the title; letter folds up and lifts
- *  420ms   letter passes behind the envelope front and sinks into the pocket
- *  560ms   "Open letter" fades back in
+ *    0ms   letter shrinks; launched upward again, it turns and sinks home
+ *  180ms   the envelope fades back in around it
+ *  240ms   "Open letter" fades back in
  * ───────────────────────────────────────────────────────── */
 
-const LIFT_Y = -48; // px above the resting peek while passing the pocket rim
-const OPEN_Y = -12; // resting offset once unfolded
-const SWAP_AT = 0.26; // s — when the letter crosses in front of / behind the front
-const LIFT = { type: "spring", bounce: 0, duration: 0.5 } as const;
-const UNFOLD = { type: "spring", bounce: 0.08, duration: 0.85 } as const;
-const FOLD = { type: "spring", bounce: 0, duration: 0.6 } as const;
-const TUCK = { type: "spring", bounce: 0.12, duration: 0.6 } as const;
+const OPEN_Y = -12; // resting offset once open
+// Critically damped (damping = 2·√stiffness): no wobble, and unlike a
+// duration-based spring it honours a launch velocity.
+const MOVE = { type: "spring", stiffness: 120, damping: 22 } as const;
+// Upward launch speed (px/s). Launched against its target, the letter rises,
+// turns and settles in one smooth arc — no pause at the top.
+const OPEN_LAUNCH = -800;
+const CLOSE_LAUNCH = -600;
+const FRONT_OUT = { duration: 0.35, ease: [0.22, 1, 0.36, 1] } as const;
+const FRONT_IN = {
+  duration: 0.4,
+  delay: 0.18,
+  ease: [0.22, 1, 0.36, 1],
+} as const;
 const FADE = { duration: 0.2, ease: [0.22, 1, 0.36, 1] } as const;
 
 // Closed letter height, as fractions of the envelope width (see .envLetter).
@@ -34,12 +44,13 @@ const FLAP = 0.25;
 const POCKET = 0.5625;
 const PEEK = 0.88;
 
-const wait = (seconds: number) => new Promise((r) => setTimeout(r, seconds * 1000));
+const ACTIONS_SPACE = 76; // px the action row needs below the open letter
 
 /** Medify-style envelope: the letter peeks out of the pocket until opened. */
 export default function AboutLetterEnvelope() {
   const [scope, animate] = useAnimate<HTMLDivElement>();
   const [open, setOpen] = useState(false);
+  const [emailCopiedAt, setEmailCopiedAt] = useState(0);
   const busy = useRef(false);
   const reduce = useReducedMotion();
 
@@ -49,44 +60,54 @@ export default function AboutLetterEnvelope() {
       root,
       letter: root.querySelector<HTMLElement>(".envLetter")!,
       content: root.querySelector<HTMLElement>(".envLetterContent")!,
+      front: root.querySelector<HTMLElement>(".envFront")!,
+      back: root.querySelector<HTMLElement>(".envBack")!,
       openBtn: root.querySelector<HTMLElement>(".envOpen")!,
     };
   };
 
-  // Keep the section title at the top of the view while the letter grows or
-  // shrinks, so the whole letter (and its Close control) fits on screen and
-  // closing never strands the reader in empty space.
-  const frameTitle = () =>
-    document.getElementById("about-letter-title")?.scrollIntoView({
+  // Bring the title to the top only when the open letter (and its actions)
+  // wouldn't otherwise fit, so the page doesn't move against the letter.
+  const frameTitle = (bottom: number) => {
+    const title = document.getElementById("about-letter-title");
+    if (!title) return;
+    const top = title.getBoundingClientRect().top;
+    if (top >= 0 && bottom <= window.innerHeight) return;
+    title.scrollIntoView({
       behavior: reduce ? "auto" : "smooth",
       block: "start",
     });
+  };
 
   async function openLetter() {
     if (open || busy.current) return;
     busy.current = true;
-    posthog.capture("about_letter_opened");
-    const { letter, content, openBtn } = parts();
-    const full = content.offsetHeight;
-    frameTitle();
+    // Off the click's critical path so the first frame isn't delayed.
+    setTimeout(() => posthog.capture("about_letter_opened"), 400);
+    const { letter, content, front, back, openBtn } = parts();
+    // Content plus the letter's own border, so "auto" afterwards matches exactly.
+    const full =
+      content.offsetHeight + (letter.offsetHeight - letter.clientHeight);
+    frameTitle(
+      letter.getBoundingClientRect().top + OPEN_Y + full + ACTIONS_SPACE,
+    );
+    setOpen(true);
 
     if (reduce) {
-      letter.style.zIndex = "5";
+      front.style.opacity = "0";
+      back.style.opacity = "0";
+      letter.style.transform = `translateY(${OPEN_Y}px)`;
       letter.style.height = "auto";
-      setOpen(true);
       busy.current = false;
       return;
     }
 
     void animate(openBtn, { opacity: 0, scale: 0.96 }, FADE);
-    void animate(letter, { y: LIFT_Y }, LIFT);
-    await wait(SWAP_AT);
-    // Clear of the pocket rim: cross in front and carry straight on into the
-    // unfold. A new spring on a moving value inherits its velocity, so the
-    // handoff has no pause or jolt.
-    letter.style.zIndex = "5";
-    setOpen(true);
-    await animate(letter, { y: OPEN_Y, height: full }, UNFOLD);
+    void animate([front, back], { opacity: 0 }, FRONT_OUT);
+    await Promise.all([
+      animate(letter, { y: OPEN_Y }, { ...MOVE, velocity: OPEN_LAUNCH }),
+      animate(letter, { height: full }, MOVE),
+    ]);
     letter.style.height = "auto";
     busy.current = false;
   }
@@ -94,27 +115,26 @@ export default function AboutLetterEnvelope() {
   async function closeLetter() {
     if (!open || busy.current) return;
     busy.current = true;
-    const { root, letter, openBtn } = parts();
+    const { root, letter, front, back, openBtn } = parts();
     const closed = root.offsetWidth * (FLAP + POCKET * PEEK);
-    frameTitle();
+    frameTitle(0);
+    setOpen(false);
 
     if (reduce) {
-      letter.style.zIndex = "";
+      front.style.opacity = "";
+      back.style.opacity = "";
+      letter.style.transform = "";
       letter.style.height = "";
-      setOpen(false);
       busy.current = false;
       return;
     }
 
-    setOpen(false);
-    void animate(letter, { y: LIFT_Y, height: [letter.offsetHeight, closed] }, FOLD);
-    await wait(0.42);
-    // Mostly folded and above the rim: drop behind the front and sink in.
-    letter.style.zIndex = "";
-    const tuck = animate(letter, { y: 0, height: closed }, TUCK);
-    await wait(0.14);
-    void animate(openBtn, { opacity: 1, scale: 1 }, FADE);
-    await tuck;
+    void animate([front, back], { opacity: 1 }, FRONT_IN);
+    void animate(openBtn, { opacity: 1, scale: 1 }, { ...FADE, delay: 0.24 });
+    await Promise.all([
+      animate(letter, { y: 0 }, { ...MOVE, velocity: CLOSE_LAUNCH }),
+      animate(letter, { height: [letter.offsetHeight, closed] }, MOVE),
+    ]);
     letter.style.height = "";
     busy.current = false;
   }
@@ -122,7 +142,12 @@ export default function AboutLetterEnvelope() {
   return (
     <div ref={scope} className="envStage" data-open={open || undefined}>
       {/* Back of the envelope with its flap folded open above the pocket. */}
-      <svg className="envBack" viewBox="0 0 100 81.25" preserveAspectRatio="none" aria-hidden="true">
+      <svg
+        className="envBack"
+        viewBox="0 0 100 81.25"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
         <path className="envBackFlap" d="M0 25 L50 0 L100 25 Z" />
         <path className="envBackBody" d="M0 25 H100 V81.25 H0 Z" />
       </svg>
@@ -143,11 +168,22 @@ export default function AboutLetterEnvelope() {
       </article>
 
       {/* Front pocket: two side flaps meeting in a V, over a bottom flap. */}
-      <svg className="envFront" viewBox="0 0 100 56.25" preserveAspectRatio="none" aria-hidden="true">
+      <svg
+        className="envFront"
+        viewBox="0 0 100 56.25"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
         <path className="envFlapBottom" d="M0 56.25 L50 30 L100 56.25 Z" />
         <path className="envFlapSide" d="M0 0 L50 30 L0 56.25 Z" />
-        <path className="envFlapSide envFlapRight" d="M100 0 L50 30 L100 56.25 Z" />
-        <path className="envFlapEdge" d="M0 0 L50 30 L100 0 M0 56.25 L50 30 L100 56.25" />
+        <path
+          className="envFlapSide envFlapRight"
+          d="M100 0 L50 30 L100 56.25 Z"
+        />
+        <path
+          className="envFlapEdge"
+          d="M0 0 L50 30 L100 0 M0 56.25 L50 30 L100 56.25"
+        />
       </svg>
 
       <button
@@ -158,19 +194,46 @@ export default function AboutLetterEnvelope() {
         tabIndex={open ? -1 : 0}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-          <path d="M7 2.5v9M2.5 7h9" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          <path
+            d="M7 2.5v9M2.5 7h9"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
         </svg>
         Open letter
       </button>
 
-      {open ? (
-        <button type="button" className="envAction envClose" onClick={closeLetter}>
+      {/* Always mounted (hidden while closed) so opening doesn't pay for
+          mounting these mid-animation. */}
+      <div className="envActions" inert={!open}>
+        <button
+          type="button"
+          className="envAction envClose"
+          onClick={closeLetter}
+        >
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-            <path d="M3.5 3.5l7 7M10.5 3.5l-7 7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            <path
+              d="M3.5 3.5l7 7M10.5 3.5l-7 7"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
           </svg>
           Close letter
         </button>
-      ) : null}
+        <HoverTextPreview text={WORK_FIT_CTA.email} flash={emailCopiedAt}>
+          <CopyEmailButton
+            email={WORK_FIT_CTA.email}
+            label={WORK_FIT_CTA.contactLabel}
+            copiedLabel="Email copied"
+            className="workFitBtn workFitBtnSolid"
+            onCopy={() => setEmailCopiedAt(Date.now())}
+          />
+        </HoverTextPreview>
+      </div>
     </div>
   );
 }

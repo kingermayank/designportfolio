@@ -3141,16 +3141,55 @@ button.aboutCard:focus-visible {
   translate: -50% -50%;
 }
 
+/* Open is the primary action: white fill, dark label. Close stays grey. */
+.envOpen,
+.envOpen:active {
+  background: #fafafa;
+  color: #111;
+}
+
+.envOpen:hover {
+  background: #e4e4e4;
+}
+
 .envStage[data-open] .envOpen {
   pointer-events: none;
   visibility: hidden;
 }
 
-.envClose {
+/* Close (grey) on the left, Get in touch (white) on the right. */
+.envActions {
   position: relative;
   z-index: 5;
   display: flex;
-  margin: 16px auto 0;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  animation: env-actions-in 300ms 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.envStage:not([data-open]) .envActions {
+  display: none;
+}
+
+/* Match the site's touch-sized buttons (.workFitBtn) on small screens. */
+@media (max-width: 900px) {
+  .envActions .envAction {
+    min-height: 44px;
+  }
+}
+
+@keyframes env-actions-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envActions {
+    animation: none;
+  }
 }
 
 @media (max-width: 600px) {
