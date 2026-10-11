@@ -164,6 +164,10 @@ export function CopyButton({
     <motion.button
       ref={buttonRef}
       type="button"
+      // Corner-smoothing extensions rewrite this element's inline style before
+      // React hydrates (see lib/ignoreExtensionHydrationNoise.ts). Shallow:
+      // only this element's own attributes.
+      suppressHydrationWarning
       disabled={disabled}
       aria-label={label}
       onClick={() => {

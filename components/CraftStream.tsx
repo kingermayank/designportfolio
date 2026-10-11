@@ -35,7 +35,7 @@ function ChapterFooter({ index, start, visited, onJump }: {
     <h2 className="moreProjectsTitle">More projects<span className="moreProjectsDot">.</span></h2>
     <div className="craftFooterGrid">
       <a className="craftNextPreview" href={`/work/${previewStudy.slug}`} onClick={event => jumpLink(event, previewStudy.slug)}>
-        <div className="craftNextCopy"><span className="craftFooterEyebrow">{previewSlug ? "Explore this chapter" : orderAt(start, index + 1) === 0 ? "Back to the first chapter" : "Up next"}</span>
+        <div className="craftNextCopy"><span className="craftFooterEyebrow">{previewSlug ? "Explore this project" : orderAt(start, index + 1) === 0 ? "Back to the first chapter" : "Up next"}</span>
           <h3>{previewStudy.title}</h3><p>{previewStudy.workSummary ?? previewStudy.tagline}</p>
         </div>
         {poster && <div className="craftNextThumbnail" data-previewing={!!previewSlug}>
@@ -48,7 +48,7 @@ function ChapterFooter({ index, start, visited, onJump }: {
         </div>}
       </a>
       <nav className="craftProjectIndex" aria-label="Visual Craft case studies">
-        <div className="craftIndexHeading craftFooterEyebrow"><span>Project index</span><span>{String(orderAt(start, index) + 1).padStart(2, "0")}/{String(studies.length).padStart(2, "0")}</span></div>
+        <div className="craftIndexHeading craftFooterEyebrow"><span>Project index</span></div>
         <ol>{studies.map((item, order) => <li key={item.slug}>
           <a href={`/work/${item.slug}`} aria-current={item.slug === study.slug ? "step" : undefined}
             onPointerEnter={event => { if (event.pointerType === "mouse") setPreviewSlug(item.slug); }}
@@ -64,9 +64,6 @@ function ChapterFooter({ index, start, visited, onJump }: {
         </li>)}</ol>
       </nav>
     </div>
-    <a className="craftIndexContinue" href={`/work/${next.slug}`} onClick={event => jumpLink(event, next.slug)}>
-      <span>Keep scrolling for <strong>{next.title}</strong></span>
-    </a>
   </footer>;
 }
 

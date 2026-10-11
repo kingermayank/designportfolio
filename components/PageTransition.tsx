@@ -3,8 +3,6 @@
 import { animate, useReducedMotion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { ProjectTransition } from "@/lib/projectTransition";
-import { AboutTransition } from "@/lib/aboutTransition";
-import "@/app/about-transition.css";
 import {
   createContext,
   useCallback,
@@ -20,12 +18,19 @@ const GLIDE_DISTANCE = 20;
 const GLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 const LOAD_TIMEOUT = 6000;
 
+// About uses the same depth swap as the Visual Craft / Product Strategy /
+// Design Engineering lenses (WorkLensTransition) instead of a sideways glide.
+const DEPTH_EASE = [0.22, 1, 0.36, 1] as const;
+const DEPTH_EXIT = { duration: 0.16, y: -8, scale: 0.985 };
+const DEPTH_ENTER = { duration: 0.42, y: 20, scale: 0.965 };
+
 export type TransitionDetail = { title: string; subtitle?: string; source?: HTMLElement };
 export type TransitionDirection = "forward" | "back";
 
 type Target = {
   href: string;
   direction: TransitionDirection;
+  style: "glide" | "depth";
 };
 type Phase = "idle" | "exit" | "load";
 
@@ -55,7 +60,6 @@ export default function PageTransition({
   const pathname = usePathname();
   const reduce = useReducedMotion();
   const projectTransition = useRef<ProjectTransition | null>(null);
-  const aboutTransition = useRef<AboutTransition | null>(null);
   const [projectBusy, setProjectBusy] = useState(false);
 
   useEffect(() => {
@@ -65,19 +69,14 @@ export default function PageTransition({
       prefetch: (href) => router.prefetch(href),
     }, setProjectBusy);
     projectTransition.current = transition;
-    const about = new AboutTransition(() => router.back(), setProjectBusy);
-    aboutTransition.current = about;
     return () => {
       transition.dispose();
-      about.dispose();
-      aboutTransition.current = null;
       projectTransition.current = null;
     };
   }, [router]);
 
   useEffect(() => {
     projectTransition.current?.setPath(pathname);
-    aboutTransition.current?.setPath(pathname);
   }, [pathname]);
 
   const [phase, setPhase] = useState<Phase>("idle");
@@ -96,21 +95,17 @@ export default function PageTransition({
       direction: TransitionDirection = "forward",
     ) => {
       if (phase !== "idle" || projectBusy) return;
-      if (href === "/about" && detail?.source && !reduce && aboutTransition.current) {
-        aboutTransition.current.open(detail.source, () => router.push(href, { scroll: false }));
-        return;
-      }
-      if (href === "/" && !reduce && aboutTransition.current?.close()) return;
       if (projectTransition.current?.open(href, detail?.source)) return;
       if (reduce) {
         router.push(href);
         return;
       }
 
-      setTarget({ href, direction });
+      const style = href === "/about" || pathname === "/about" ? "depth" : "glide";
+      setTarget({ href, direction, style });
       setPhase("exit");
     },
-    [phase, projectBusy, reduce, router],
+    [phase, projectBusy, reduce, router, pathname],
   );
 
   // Glide the current route away from the direction of travel.
@@ -121,15 +116,21 @@ export default function PageTransition({
     const main = mainRef.current;
     if (!main) return;
     const exitX = target.direction === "forward" ? -GLIDE_DISTANCE : GLIDE_DISTANCE;
-    const play = animate(
-      main,
-      {
-        x: [0, exitX],
-        opacity: [1, 0],
-        filter: ["blur(0px)", "blur(3px)"],
-      },
-      { duration: GLIDE_DUR, ease: GLIDE_EASE },
-    );
+    const play = target.style === "depth"
+      ? animate(
+          main,
+          { y: [0, DEPTH_EXIT.y], scale: [1, DEPTH_EXIT.scale], opacity: [1, 0] },
+          { duration: DEPTH_EXIT.duration, ease: DEPTH_EASE },
+        )
+      : animate(
+          main,
+          {
+            x: [0, exitX],
+            opacity: [1, 0],
+            filter: ["blur(0px)", "blur(3px)"],
+          },
+          { duration: GLIDE_DUR, ease: GLIDE_EASE },
+        );
 
     let cancelled = false;
     void play.finished.then(() => {
@@ -147,9 +148,12 @@ export default function PageTransition({
     const main = mainRef.current;
     const enterX = target.direction === "forward" ? GLIDE_DISTANCE : -GLIDE_DISTANCE;
     if (main) {
-      main.style.transform = `translateX(${enterX}px)`;
+      main.style.transform = target.style === "depth"
+        ? `translateY(${DEPTH_ENTER.y}px) scale(${DEPTH_ENTER.scale})`
+        : `translateX(${enterX}px)`;
+      main.style.transformOrigin = target.style === "depth" ? "50% 0%" : "";
       main.style.opacity = "0";
-      main.style.filter = "blur(3px)";
+      main.style.filter = target.style === "depth" ? "" : "blur(3px)";
     }
 
     router.push(target.href);
@@ -166,21 +170,28 @@ export default function PageTransition({
     const main = mainRef.current;
     if (!main) return;
     const enterX = target.direction === "forward" ? GLIDE_DISTANCE : -GLIDE_DISTANCE;
-    const play = animate(
-      main,
-      {
-        x: [enterX, 0],
-        opacity: [0, 1],
-        filter: ["blur(3px)", "blur(0px)"],
-      },
-      { duration: GLIDE_DUR, ease: GLIDE_EASE },
-    );
+    const play = target.style === "depth"
+      ? animate(
+          main,
+          { y: [DEPTH_ENTER.y, 0], scale: [DEPTH_ENTER.scale, 1], opacity: [0, 1] },
+          { duration: DEPTH_ENTER.duration, ease: DEPTH_EASE },
+        )
+      : animate(
+          main,
+          {
+            x: [enterX, 0],
+            opacity: [0, 1],
+            filter: ["blur(3px)", "blur(0px)"],
+          },
+          { duration: GLIDE_DUR, ease: GLIDE_EASE },
+        );
 
     let cancelled = false;
     void play.finished.then(() => {
       if (cancelled) return;
 
       main.style.transform = "";
+      main.style.transformOrigin = "";
       main.style.opacity = "";
       main.style.filter = "";
       ran.current = null;

@@ -2935,55 +2935,231 @@ button.aboutCard:focus-visible {
   transform: translate(-50%, 0);
 }
 
+/* Hiring letter — an envelope the letter is pulled out of (AboutLetterEnvelope).
+   Geometry is in container-width units so the envelope keeps its shape:
+   flap 25cqw tall, pocket 56.25cqw (16:9), V point 30cqw into the pocket. */
 .aboutLetterFrame {
-  padding: clamp(28px, 5vw, 56px);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  padding: clamp(28px, 5vw, 56px) 0;
   color: var(--text);
   font-family: var(--font-body);
 }
 
 .aboutLetterTitle {
-  margin: 0 0 40px;
+  /* Clear of the fixed Back button when the letter scrolls the title up. */
+  scroll-margin-top: 76px;
+  margin: 0 0 clamp(24px, 3vw, 32px);
   font-size: clamp(18px, calc(3.6vw - 12px), 34px);
   font-weight: 400;
   line-height: 1.12;
   letter-spacing: -0.045em;
+  text-align: center;
   text-wrap: balance;
 }
 
-.aboutLetterText {
+.envWrap {
+  container-type: inline-size;
+  width: min(100%, 720px);
+  margin: 0 auto;
+}
+
+/* Letter fade: full opacity at the top, 20% at the pocket while closed;
+   lifts to fully opaque as the letter opens. */
+@property --env-fade {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0.2;
+}
+
+.envStage {
+  --env-flap: 25cqw;
+  --env-pocket: 56.25cqw;
+  --env-top: 3cqw;
+  position: relative;
+  min-height: calc(var(--env-top) + var(--env-flap) + var(--env-pocket));
+  padding-top: var(--env-top);
+}
+
+/* Back and front share one origin (--env-top) so their edges meet exactly. */
+.envBack {
+  position: absolute;
+  top: var(--env-top);
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: calc(var(--env-flap) + var(--env-pocket));
+  overflow: visible;
+}
+
+.envBackFlap {
+  fill: #151515;
+  stroke: rgb(255 255 255 / 6%);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.envBackBody {
+  fill: #121212;
+}
+
+.envLetter {
+  --env-fade: 0.2;
+  position: relative;
+  z-index: 2;
+  width: min(100cqw, calc(72cqw + 80px));
+  /* Closed: tucked into the pocket, cut off just above its floor. */
+  height: calc(var(--env-flap) + var(--env-pocket) * 0.88);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: 14px;
+  background: #262626;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 4%) inset;
+  -webkit-mask-image: linear-gradient(to bottom, #000, rgb(0 0 0 / var(--env-fade)));
+  mask-image: linear-gradient(to bottom, #000, rgb(0 0 0 / var(--env-fade)));
+  transition:
+    --env-fade 600ms ease,
+    box-shadow 400ms ease;
+}
+
+.envStage[data-open] .envLetter {
+  --env-fade: 1;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 4%) inset,
+    0 24px 48px rgb(0 0 0 / 45%);
+}
+
+.envLetterContent {
+  padding: clamp(22px, 5.2cqw, 40px);
+}
+
+.envBody {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  font-size: 17px;
-  font-weight: 400;
+  gap: 14px;
+  font-size: 15px;
   line-height: 1.6;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--muted);
 }
 
-.aboutLetterText p {
+.envBody p {
   margin: 0;
 }
 
-.aboutLetterSignoff {
-  padding-top: 20px;
+.envBody p:first-child {
+  color: var(--text);
 }
 
-@media (max-width: 720px) {
-  .aboutLetterFrame {
-    padding: 28px 24px 36px;
+.envSign {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 24px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.envSignature {
+  color: var(--text);
+}
+
+.envFront {
+  position: absolute;
+  top: calc(var(--env-top) + var(--env-flap));
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: var(--env-pocket);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.envFlapBottom {
+  fill: #191919;
+}
+
+.envFlapSide {
+  fill: #1f1f1f;
+}
+
+.envFlapRight {
+  fill: #1c1c1c;
+}
+
+.envFlapEdge {
+  fill: none;
+  stroke: rgb(255 255 255 / 7%);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Both envelope controls mirror the page's Back button (.chBack). */
+.envAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: #353535;
+  color: #fafafa;
+  font: 500 14px/1 var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 150ms ease-in-out;
+}
+
+.envAction svg {
+  flex-shrink: 0;
+}
+
+.envAction:hover {
+  background: #4a4a4a;
+}
+
+.envAction:active {
+  background: #353535;
+  transform: scale(0.97);
+  transition-duration: 80ms;
+}
+
+.envAction:focus-visible {
+  outline: 1px solid var(--color-border);
+  outline-offset: 2px;
+}
+
+.envOpen {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--env-top) + var(--env-flap) + 30cqw);
+  z-index: 4;
+  translate: -50% -50%;
+}
+
+.envStage[data-open] .envOpen {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.envClose {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  margin: 16px auto 0;
+}
+
+@media (max-width: 600px) {
+  .envLetter {
+    width: 88cqw;
   }
 
-  .aboutLetterTitle {
-    font-size: 20px;
-    margin-bottom: 32px;
-  }
-
-  .aboutLetterText {
-    font-size: 16px;
-    line-height: 1.55;
+  .envBody {
+    font-size: 15px;
   }
 }
 
@@ -4004,6 +4180,31 @@ button.aboutCard:focus-visible {
 .workLens.on {
   color: var(--text);
   font-weight: 500;
+}
+
+/* Active-lens marker: sits just right of the selected label, outside the
+   text flow so labels never shift, and hops between lenses. */
+.workLenses {
+  position: relative;
+}
+
+.workLensDot {
+  /* Hop height multiplier, in dot diameters (see LENS_DOT_HOP in Work.tsx). */
+  --lens-dot-hop: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+}
+
+.workLensDot[data-ready] {
+  opacity: 1;
 }
 
 .workLens:focus-visible {
@@ -6281,6 +6482,17 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
 }
 
 @media (max-width: 720px) {
+  /* Room for the active dot right of the last tab inside the scroller
+     (specific enough to beat the later padding shorthand). */
+  .workMain .workLenses {
+    padding-inline-end: 12px;
+  }
+
+  /* The scrolling row clips overflow, so keep the hop inside it. */
+  .workLensDot {
+    --lens-dot-hop: 0.3;
+  }
+
   .workLenses {
     flex-wrap: nowrap;
     gap: 16px 30px;
@@ -6419,12 +6631,11 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
   color: var(--color-accent-orange);
 }
 
+/* The dot only bounces as part of the load intro (see the intro rules);
+   any other homepage visit shows it already resting in place. */
 .workBrandDotBounce {
   display: inline-block;
   transform-origin: 50% 85%;
-  animation:
-    work-brand-dot-bounce 1260ms linear 250ms both,
-    work-brand-dot-impact 1260ms ease-in-out 250ms both;
 }
 
 /* Quadratic flight curves: gravity accelerates falls and slows each rise.
@@ -8802,7 +9013,12 @@ a:is([role="button"], [class*="Btn"], [class*="Button"], [class*="Cta"], [class*
 }
 
 /* ── Load intro: grid → wireframe → page ─────────────────────────────── */
-/* Hidden unless the pre-paint gate in app/page.tsx chose to play it. */
+/* Hidden unless the pre-paint gate chose to play it. */
+:root {
+  /* Stretches the whole intro (CSS durations and IntroWireframe's timeline). */
+  --intro-speed: 1.6;
+}
+
 .intro {
   display: none;
 }
@@ -8824,7 +9040,7 @@ html[data-intro="play"] .intro {
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size: 8px 8px;
   /* Failsafe: never trap the page if the script stalls. */
-  animation: intro-out 300ms ease-out 5s forwards;
+  animation: intro-out 300ms ease-out calc(5s * var(--intro-speed)) forwards;
 }
 
 /* Once the SVG takes over it draws its own ground (so the mask can cut it). */
@@ -8838,11 +9054,14 @@ html[data-intro="play"] .intro.is-skipping {
   transition: opacity 200ms ease-out;
 }
 
-/* Hold the wordmark dot's drop until the intro has revealed the heading
-   (its slot opens ~820ms and finishes fading in ~1240ms), so the bounce
-   plays in view instead of behind the wireframe. */
+/* The wordmark dot's drop is part of the intro: it waits until the heading
+   is revealed (its slot opens ~820ms and finishes fading in ~1240ms at 1×;
+   both scale with --intro-speed — the bounce itself keeps its own pace), plays
+   once, and IntroWireframe then sets data-intro-done so it never replays. */
 html[data-intro="play"]:not([data-intro-done]) .workBrandDotBounce {
-  animation-delay: 1250ms, 1250ms;
+  animation:
+    work-brand-dot-bounce 1260ms linear calc(1250ms * var(--intro-speed)) both,
+    work-brand-dot-impact 1260ms ease-in-out calc(1250ms * var(--intro-speed)) both;
 }
 
 /* The intro is the entrance — don't double up the window/card rise beneath
@@ -8874,7 +9093,7 @@ html[data-intro="play"] .workGrid > .workCol > .workCard {
   transform-box: fill-box;
   transform-origin: top;
   transform: scaleY(0);
-  animation: intro-col 700ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation: intro-col calc(700ms * var(--intro-speed)) cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
 .introSafe {
@@ -8883,18 +9102,18 @@ html[data-intro="play"] .workGrid > .workCol > .workCard {
   stroke-width: 1;
   stroke-dasharray: 3 4;
   opacity: 0;
-  animation: intro-in 300ms ease-out forwards;
+  animation: intro-in calc(300ms * var(--intro-speed)) ease-out forwards;
 }
 
 .introGround.is-timed,
 .introWire {
-  animation: intro-out 400ms ease-out forwards;
+  animation: intro-out calc(400ms * var(--intro-speed)) ease-out forwards;
 }
 
 .introHole {
   fill: #000;
   opacity: 0;
-  animation: intro-in 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: intro-in calc(420ms * var(--intro-speed)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .introDraw {
@@ -8902,7 +9121,7 @@ html[data-intro="play"] .workGrid > .workCol > .workCard {
   stroke-width: 1;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: intro-draw 450ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: intro-draw calc(450ms * var(--intro-speed)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .introWire.is-text .introDraw {
@@ -8921,7 +9140,7 @@ html[data-intro="play"] .workGrid > .workCol > .workCard {
 
 .introDiag {
   stroke-opacity: 0.55;
-  animation-duration: 380ms;
+  animation-duration: calc(380ms * var(--intro-speed));
 }
 
 .introLabels {
@@ -8947,8 +9166,8 @@ html[data-intro="play"] .workGrid > .workCol > .workCard {
   opacity: 0;
   transform: translateY(calc(-100% - 1px));
   animation:
-    intro-label 220ms ease-out forwards,
-    intro-out 300ms ease-out forwards;
+    intro-label calc(220ms * var(--intro-speed)) ease-out forwards,
+    intro-out calc(300ms * var(--intro-speed)) ease-out forwards;
 }
 
 .introLabel.is-text {

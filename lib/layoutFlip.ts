@@ -2,7 +2,7 @@
 // measured before and after a class change, then each one animates from where
 // it was to where it now sits, so the page rearranges instead of being swapped.
 
-const TEXT = ".workBrand, .workSubtitle, .workFitBtn, .workSocial, .workLens";
+const TEXT = ".workBrand, .workSubtitle, .workFitBtn, .workSocial, .workLens, .workLensDot";
 const BOXES = ".workCard, .sysCard, .engCard";
 
 const DURATION = 560;

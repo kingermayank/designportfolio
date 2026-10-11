@@ -101,6 +101,13 @@ export default function DeferredVideo({
   const setVideoNode = useCallback(
     (video: HTMLVideoElement | null) => {
       videoRef.current = video;
+      // Server-rendered autoplay can start (or even pause again) before React
+      // attaches onPlay, so that event is lost and the poster would cover a
+      // running video forever. Adopt the element's real state on attach.
+      if (video && (!video.paused || video.currentTime > 0)) {
+        setRevealed(true);
+        setPlaying(!video.paused);
+      }
       setControlHost(
         floatingControls && floatingControlPlacement === "container"
           ? (video?.closest<HTMLElement>(".csMediaHoverWrap") ??
@@ -217,11 +224,18 @@ export default function DeferredVideo({
       syncPlayback(video);
     };
     const settled = () => syncPlayback(video);
+    // Browsers pause silent video in background tabs, and an early play() can
+    // reject before canplay re-fires. Re-sync whenever the page is shown again.
+    const shown = () => {
+      if (document.visibilityState === "visible" && video.currentSrc) syncPlayback(video);
+    };
     video.addEventListener("portfolio:video-handoff", handoff);
     video.addEventListener("seeked", settled);
+    document.addEventListener("visibilitychange", shown);
     return () => {
       video.removeEventListener("portfolio:video-handoff", handoff);
       video.removeEventListener("seeked", settled);
+      document.removeEventListener("visibilitychange", shown);
     };
   }, [syncPlayback]);
 

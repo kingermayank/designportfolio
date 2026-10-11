@@ -9,7 +9,7 @@ import ModeToggle from "@/components/ModeToggle";
 import ViewSwitcher from "@/components/ViewSwitcher";
 import Work from "@/components/Work";
 import posthog from "posthog-js";
-import { homeViewHref, type HomeView } from "@/lib/homeViews";
+import { homeViewHref, VIEW_SWITCHER_ENABLED, type HomeView } from "@/lib/homeViews";
 import { captureLayout, playLayout, type LayoutSnapshot } from "@/lib/layoutFlip";
 import type { WorkLensId } from "@/lib/workLenses";
 
@@ -463,7 +463,7 @@ export default function GridCanvas({
         </AnimatePresence>
       </div>
 
-      {initialView ? <ViewSwitcher view={view} onChange={changeView} /> : null}
+      {initialView && VIEW_SWITCHER_ENABLED ? <ViewSwitcher view={view} onChange={changeView} /> : null}
 
       {mode === "grid" ? (
         <ModeToggle on onToggle={() => router.push("/about")} />

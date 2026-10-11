@@ -20,7 +20,11 @@ interface HoverLinkPreviewProps extends Omit<HTMLMotionProps<"a">, "children" | 
   children: React.ReactNode;
 }
 
-export function HoverLinkPreview({ href, previewImage, imageAlt = "Link preview", imageWidth = 1200, imageHeight = 630, previewTitle, previewWidth = 208, previewAspectRatio, previewPlacement = "auto", previewShape = "rectangle", children, onClick, onPreviewActivate, ...anchorProps }: HoverLinkPreviewProps) {
+type Placement = "auto" | "top";
+
+/** Cursor-following card shared by link (image) and text previews: springs
+ * after the pointer, tilts with horizontal movement, prefers sitting above. */
+function useCursorPreview(size: () => { width: number; height: number }, placement: Placement) {
   const [showPreview, setShowPreview] = React.useState(false);
   const previewRef = React.useRef<HTMLDivElement>(null);
   const prevX = React.useRef<number | null>(null);
@@ -54,12 +58,9 @@ export function HoverLinkPreview({ href, previewImage, imageAlt = "Link preview"
   }, [showPreview]);
 
   function position(x: number, y: number, initial = false) {
-    const width = Math.min(previewWidth, window.innerWidth - 24);
-    // Match the artwork aspect ratio, frame, and optional profile caption.
-    const ratio = previewShape === "circle" ? 1 : previewAspectRatio ?? imageWidth / imageHeight;
-    const height = (width - 14) / ratio + 14 + (previewTitle ? 32 : 0);
+    const { width, height } = size();
     const left = Math.max(12, Math.min(window.innerWidth - width - 12, x - width / 2));
-    const top = Math.max(12, Math.min(window.innerHeight - height - 12, previewPlacement === "top" || y > height + 40 ? y - height - 24 : y + 24));
+    const top = Math.max(12, Math.min(window.innerHeight - height - 12, placement === "top" || y > height + 40 ? y - height - 24 : y + 24));
     if (initial || reduceMotion) {
       springLeft.jump(left);
       springTop.jump(top);
@@ -69,28 +70,59 @@ export function HoverLinkPreview({ href, previewImage, imageAlt = "Link preview"
     motionTop.set(top);
   }
 
+  function enter(event: React.PointerEvent) {
+    if (event.pointerType !== "mouse") return;
+    prevX.current = null;
+    motionRotate.set(0);
+    position(event.clientX, event.clientY, true);
+    setShowPreview(true);
+  }
+
+  function move(event: React.PointerEvent) {
+    if (event.pointerType !== "mouse" || !showPreview) return;
+    position(event.clientX, event.clientY);
+    if (!reduceMotion && prevX.current !== null) motionRotate.set(Math.max(-8, Math.min(8, (event.clientX - prevX.current) * 1.2)));
+    prevX.current = event.clientX;
+  }
+
+  function focus(element: HTMLElement) {
+    if (!element.matches(":focus-visible")) return;
+    const rect = element.getBoundingClientRect();
+    position(rect.left + rect.width / 2, rect.top, true);
+    setShowPreview(true);
+  }
+
+  const card = {
+    "aria-hidden": true as const,
+    ref: previewRef,
+    initial: { opacity: 0, scale: reduceMotion ? 1 : 0.92, y: reduceMotion ? 0 : 6 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: reduceMotion ? 1 : 0.96, y: reduceMotion ? 0 : 4 },
+    transition: { duration: reduceMotion ? 0 : 0.15 },
+    style: { top: springTop, left: springLeft, rotate: reduceMotion ? 0 : springRotate },
+  };
+
+  return { showPreview, previewRef, dismiss, enter, move, focus, card };
+}
+
+export function HoverLinkPreview({ href, previewImage, imageAlt = "Link preview", imageWidth = 1200, imageHeight = 630, previewTitle, previewWidth = 208, previewAspectRatio, previewPlacement = "auto", previewShape = "rectangle", children, onClick, onPreviewActivate, ...anchorProps }: HoverLinkPreviewProps) {
+  const { showPreview, previewRef, dismiss, enter, move, focus, card } = useCursorPreview(() => {
+    const width = Math.min(previewWidth, window.innerWidth - 24);
+    // Match the artwork aspect ratio, frame, and optional profile caption.
+    const ratio = previewShape === "circle" ? 1 : previewAspectRatio ?? imageWidth / imageHeight;
+    return { width, height: (width - 14) / ratio + 14 + (previewTitle ? 32 : 0) };
+  }, previewPlacement);
+
   return <>
     <motion.a href={href} target="_blank" rel="noopener noreferrer" {...anchorProps}
-      onPointerEnter={(event) => {
-        if (!previewImage || event.pointerType !== "mouse") return;
-        prevX.current = null;
-        motionRotate.set(0);
-        position(event.clientX, event.clientY, true);
-        setShowPreview(true);
-      }}
-      onPointerMove={(event) => {
-        if (event.pointerType !== "mouse" || !showPreview) return;
-        position(event.clientX, event.clientY);
-        if (!reduceMotion && prevX.current !== null) motionRotate.set(Math.max(-8, Math.min(8, (event.clientX - prevX.current) * 1.2)));
-        prevX.current = event.clientX;
-      }}
+      // Corner-smoothing extensions rewrite this element's inline style before
+      // React hydrates (see lib/ignoreExtensionHydrationNoise.ts). Shallow:
+      // only this element's own attributes.
+      suppressHydrationWarning
+      onPointerEnter={(event) => { if (previewImage) enter(event); }}
+      onPointerMove={move}
       onPointerLeave={dismiss}
-      onFocus={(event) => {
-        if (!previewImage || !event.currentTarget.matches(":focus-visible")) return;
-        const rect = event.currentTarget.getBoundingClientRect();
-        position(rect.left + rect.width / 2, rect.top, true);
-        setShowPreview(true);
-      }}
+      onFocus={(event) => { if (previewImage) focus(event.currentTarget); }}
       onBlur={dismiss}
       onClick={(event) => {
         onPreviewActivate?.(event, showPreview ? previewRef.current : null);
@@ -101,20 +133,57 @@ export function HoverLinkPreview({ href, previewImage, imageAlt = "Link preview"
     >{children}</motion.a>
     {typeof document !== "undefined" && createPortal(
       <AnimatePresence>{showPreview && previewImage && <motion.div
-        aria-hidden="true"
-        ref={previewRef}
+        {...card}
         className={`${styles.preview}${previewShape === "circle" ? ` ${styles.circle}` : ""}`}
-        initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.92, y: reduceMotion ? 0 : 6 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: reduceMotion ? 1 : 0.96, y: reduceMotion ? 0 : 4 }}
-        transition={{ duration: reduceMotion ? 0 : 0.15 }}
-        style={{ width: previewWidth, top: springTop, left: springLeft, rotate: reduceMotion ? 0 : springRotate }}
+        style={{ ...card.style, width: previewWidth }}
       >
         {/* Remote editorial artwork; a plain image avoids adding a global image host policy. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={previewImage} alt={imageAlt} width={imageWidth} height={imageHeight} draggable={false}
           style={previewAspectRatio ? { aspectRatio: previewAspectRatio, objectFit: "contain", objectPosition: "center" } : undefined} />
         {previewTitle && <div className={styles.caption}>{previewTitle}</div>}
+      </motion.div>}</AnimatePresence>, document.body
+    )}
+  </>;
+}
+
+let measureCanvas: HTMLCanvasElement | null = null;
+
+/** Hover card that shows a line of text (e.g. an email address) in the same
+ * floating frame as the link previews. Wraps any interactive child. */
+export function HoverTextPreview({ text, placement = "top", flash = 0, children }: {
+  text: string; placement?: Placement;
+  /** Change (e.g. a copy timestamp) to sweep a selection highlight across
+   * the text, confirming that exactly this text was copied. 0 = never. */
+  flash?: number;
+  children: React.ReactNode;
+}) {
+  const { showPreview, dismiss, enter, move, focus, card } = useCursorPreview(() => {
+    // Size the card from the text itself so it centers on the cursor from
+    // the very first frame (.textPreview: 12px/6px padding, 1px border).
+    measureCanvas ??= document.createElement("canvas");
+    const context = measureCanvas.getContext("2d");
+    const font = getComputedStyle(document.body).fontFamily;
+    if (context) context.font = `500 14px ${font}`;
+    const textWidth = context ? context.measureText(text).width : text.length * 8;
+    return { width: Math.ceil(textWidth) + 2 * (12 + 1), height: 20 + 2 * (6 + 1) };
+  }, placement);
+
+  return <>
+    <span className={styles.textTrigger}
+      onPointerEnter={enter}
+      onPointerMove={move}
+      onPointerLeave={dismiss}
+      onFocus={(event) => focus(event.target as HTMLElement)}
+      onBlur={dismiss}
+    >{children}</span>
+    {typeof document !== "undefined" && createPortal(
+      <AnimatePresence>{showPreview && <motion.div {...card} className={`${styles.preview} ${styles.textPreview}`}>
+        <span className={styles.textValue}>
+          {/* Remounts per copy so the sweep replays every time. */}
+          {flash ? <span key={flash} className={styles.sweep} /> : null}
+          {text}
+        </span>
       </motion.div>}</AnimatePresence>, document.body
     )}
   </>;

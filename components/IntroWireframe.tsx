@@ -39,6 +39,9 @@ const TARGETS: { sel: string; kind: Kind; label: (el: Element) => string; snug?:
 ];
 
 // Timeline, ms from mount.
+// Timeline values below are at 1×; everything is stretched by --intro-speed
+// (globals.css), read once at mount so CSS and script stay in step.
+let SPEED = 1;
 const COL_STAGGER = 45;
 const COL_DUR = 700;
 const SAFE_AT = 350;
@@ -97,8 +100,8 @@ export default function IntroWireframe() {
   const mountAt = useRef(0);
 
   useEffect(() => {
-    // Back on home after the intro already ran: let intro-only timing
-    // overrides (e.g. the wordmark dot delay) fall away.
+    // Back on home after the intro already ran (even if it was left before
+    // the dot landed): intro-only motion such as the dot bounce stays off.
     if (!active) {
       document.documentElement.dataset.introDone = "1";
       return;
@@ -107,7 +110,18 @@ export default function IntroWireframe() {
     // Not playing: the overlay stays display:none via CSS.
     if (document.documentElement.dataset.intro !== "play") return;
 
+    // The wordmark dot's bounce belongs to this intro. Once it lands, mark the
+    // intro done so later homepage visits in this session show it at rest.
+    const root = document.documentElement;
+    const onDotLanded = (event: AnimationEvent) => {
+      if (event.animationName !== "work-brand-dot-bounce") return;
+      root.dataset.introDone = "1";
+      document.removeEventListener("animationend", onDotLanded);
+    };
+    document.addEventListener("animationend", onDotLanded);
+
     let cancelled = false;
+    SPEED = parseFloat(getComputedStyle(root).getPropertyValue("--intro-speed")) || 1;
     mountAt.current = performance.now();
     const raf = requestAnimationFrame(() => {
       setView({ w: window.innerWidth, h: window.innerHeight });
@@ -121,6 +135,7 @@ export default function IntroWireframe() {
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
+      document.removeEventListener("animationend", onDotLanded);
     };
   }, [active]);
 
@@ -131,7 +146,7 @@ export default function IntroWireframe() {
   useEffect(() => {
     if (!timeline || document.documentElement.dataset.introHold) return;
     const elapsed = performance.now() - mountAt.current;
-    const t = window.setTimeout(() => setGone(true), Math.max(0, timeline.end - elapsed));
+    const t = window.setTimeout(() => setGone(true), Math.max(0, timeline.end * SPEED - elapsed));
     return () => window.clearTimeout(t);
   }, [timeline?.end]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -145,7 +160,9 @@ export default function IntroWireframe() {
 
   // CSS animations count their delay from insertion, so traced elements
   // (mounted after the first frame) are shifted back by the time already spent.
-  const at = (ms: number) => `${Math.round(ms - (trace?.offset ?? 0))}ms`;
+  // Timeline times are 1× values; scale to the intro speed, then shift back
+  // by the real time already spent before the traced elements mounted.
+  const at = (ms: number) => `${Math.round(ms * SPEED - (trace?.offset ?? 0))}ms`;
 
   const cols = view ? (view.w < 768 ? 4 : 12) : 12;
   const margin = view && view.w < 768 ? 16 : 24;
@@ -197,8 +214,8 @@ export default function IntroWireframe() {
                 width={colW}
                 height={view.h}
                 style={{
-                  animationDelay: `${i * COL_STAGGER}ms`,
-                  animationDuration: `${COL_DUR + (i % 3) * 90}ms`,
+                  animationDelay: `${i * COL_STAGGER * SPEED}ms`,
+                  animationDuration: `${(COL_DUR + (i % 3) * 90) * SPEED}ms`,
                 }}
               />
             ))}
@@ -208,7 +225,7 @@ export default function IntroWireframe() {
               y={margin / 2}
               width={view.w - margin}
               height={view.h - margin}
-              style={{ animationDelay: `${SAFE_AT}ms` }}
+              style={{ animationDelay: `${SAFE_AT * SPEED}ms` }}
             />
           </g>
 

@@ -9,6 +9,8 @@ type CopyEmailButtonProps = {
   errorLabel?: string;
   showIcon?: boolean;
   className?: string;
+  /** Fires only after the email actually reached the clipboard. */
+  onCopy?: (value: string) => void;
 };
 
 export default function CopyEmailButton({
@@ -18,6 +20,7 @@ export default function CopyEmailButton({
   errorLabel = "Failed",
   showIcon = true,
   className = "workFitBtn workFitBtnGhost",
+  onCopy,
 }: CopyEmailButtonProps) {
   return (
     <CopyButton
@@ -28,6 +31,7 @@ export default function CopyEmailButton({
       showIcon={showIcon}
       idleIcon="email"
       className={className}
+      onCopy={onCopy}
     />
   );
 }

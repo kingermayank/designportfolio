@@ -1,6 +1,8 @@
 import { animate } from "framer-motion";
 
 import { clipBox, fitMedia, transitionFrame, PROJECT_DURATION, type Box, type Pose } from "./projectTransitionGeometry";
+import { CASE_STUDIES } from "./caseStudies";
+import { workCardThumb } from "./workCardThumb";
 
 const HISTORY_KEY = "portfolioProjectOrigin";
 
@@ -172,11 +174,37 @@ export class ProjectTransition {
     if (path !== "/" && path !== this.origin?.path) {
       const stream = document.querySelector<HTMLElement>("[data-craft-entry]");
       if (this.origin && stream && history.state?.[HISTORY_KEY] === this.origin.id && path.startsWith("/work/")) {
-        // Scrolling replaces this history entry, but its return thumbnail stays
-        // the card that originally opened the reading session.
+        // Scrolling replaces this history entry. Back returns to the card of
+        // the project now being read, not the one that opened the session.
         this.origin.path = path;
+        this.follow(this.origin, path.split("/").pop() ?? "");
       } else this.origin = null;
     }
+  }
+
+  /** Retarget the return animation to another project's card. The slug and
+   * its curtain image switch together, only once the card still has loaded,
+   * so the contracting image always matches the card it lands on. */
+  private follow(origin: Origin, slug: string) {
+    if (!slug || slug === origin.slug) return;
+    const study = CASE_STUDIES.find((s) => s.slug === slug);
+    const src = study && workCardThumb(study);
+    if (!src) return;
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = () => {
+      // A later scroll or a new session may have moved on meanwhile.
+      if (this.origin !== origin || origin.path.split("/").pop() !== slug) return;
+      const canvas = document.createElement("canvas");
+      const resolution = Math.min(1, 1920 / Math.max(image.naturalWidth, image.naturalHeight));
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * resolution));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * resolution));
+      canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height);
+      // Cards center their cover crop; pose is only read when opening.
+      origin.still = { canvas, position: [0.5, 0.5], pose: { x: 0, y: 0, scale: 1 } };
+      origin.slug = slug;
+    };
+    image.src = src;
   }
 
   dispose() {

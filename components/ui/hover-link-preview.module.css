@@ -39,3 +39,72 @@
   object-fit: cover;
   object-position: center top;
 }
+
+/* Wrapper adds hover behavior without becoming a layout box. */
+.textTrigger {
+  display: contents;
+}
+
+.textPreview {
+  width: auto;
+  white-space: nowrap;
+  padding: 6px 12px;
+  color: var(--color-text, #fff);
+  font-family: var(--font-body, sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+}
+
+/* Copy confirmation: a text-selection highlight in the brand orange sweeps
+   across the address, holds, then fades (sweep 0–30%, hold, fade 65–100%). */
+.textValue {
+  position: relative;
+  isolation: isolate;
+}
+
+.sweep {
+  position: absolute;
+  inset: -1px -3px;
+  z-index: -1;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-accent-orange, #ff6a1f) 42%, transparent);
+  clip-path: inset(0 100% 0 0 round 3px);
+  animation: copy-sweep 850ms forwards;
+  pointer-events: none;
+}
+
+@keyframes copy-sweep {
+  0% {
+    clip-path: inset(0 100% 0 0 round 3px);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  30% {
+    clip-path: inset(0 0 0 0 round 3px);
+    opacity: 1;
+  }
+  65% {
+    clip-path: inset(0 0 0 0 round 3px);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  100% {
+    clip-path: inset(0 0 0 0 round 3px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No sweep: just a brief highlight that fades. */
+  .sweep {
+    clip-path: none;
+    animation: copy-highlight 700ms ease-out forwards;
+  }
+
+  @keyframes copy-highlight {
+    0%, 40% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}

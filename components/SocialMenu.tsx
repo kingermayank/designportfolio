@@ -258,6 +258,10 @@ export default function SocialMenu() {
         aria-controls={panelId}
         onClick={toggleMenu}
         whileTap={reduceMotion ? undefined : { scale: MENU_SHELL.pressScale }}
+        // Corner-smoothing extensions rewrite this element's inline style before
+        // React hydrates (see lib/ignoreExtensionHydrationNoise.ts). Shallow:
+        // only this element's own attributes.
+        suppressHydrationWarning
       >
         <span className="socialMenuGlyph" aria-hidden="true">
           <motion.svg

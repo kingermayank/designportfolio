@@ -132,7 +132,10 @@ export type EngKind =
   | "3D Model"
   | "Prototyping Sandbox"
   | "Side Project"
-  | "3D Racing Game";
+  | "3D Racing Game"
+  | "3D Character Studio"
+  | "macOS App"
+  | "3D Learning Game";
 
 
 
@@ -257,6 +260,128 @@ export const ENG_COMPONENTS: EngComponent[] = [
     frame: "site",
     matte: "#D6E8F7",
     stack: ["Next.js", "Vercel", "Brand system"],
+  },
+  {
+    id: "bot-cottage",
+    tools: [
+      { name: "Claude Code", logo: "/all-logos/claude.webp", href: "https://claude.com/product/claude-code" },
+      { name: "Three.js", logo: "/all-logos/threejs.webp", href: "https://threejs.org/" },
+    ],
+    title: "Bot Cottage",
+    kind: "3D Character Studio",
+    body: "A studio for eight AI-tool mascots. Swap expressions and poses, restyle colors and materials, and export a PNG.",
+    shade: "#f3f2ee",
+    thumb: "/bot-cottage/thumbs/preview.jpg?v=2",
+    src: "/bot-cottage/thumbs/preview.mp4?v=2",
+    video: true,
+    href: "https://bot-cottage.vercel.app/",
+    hrefLabel: "Open Studio",
+    embedUrl: "https://bot-cottage.vercel.app/",
+    content: [
+      {
+        id: "bot-cottage-overview",
+        type: "text",
+        monoTitle: true,
+        title: "Overview",
+        body: "Bot Cottage is home to a cast of mascots for the AI tools I use every day: Grok, Claude Code, Meta and ChatGPT. Pick a character, cycle through ten expressions and six poses, tune gloss, glow, fur and motion, then copy the config or save a PNG. A lineup, a character sheet and Blender renders show the whole cast together.",
+      },
+      {
+        id: "bot-cottage-impact",
+        type: "text",
+        monoTitle: true,
+        title: "Impact",
+        body: "A reusable mascot kit: consistent characters that can be posed, recolored and exported in seconds for decks, docs and posts, without opening a 3D tool.",
+      },
+      {
+        id: "bot-cottage-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "The characters are built in Blender from a Python script, and every expression is a shape key. The models load into a vanilla Three.js scene bundled with Vite, so expressions blend live in the browser instead of swapping baked frames.",
+      },
+    ],
+    frame: "cover",
+    stack: ["Three.js", "Blender", "Vite"],
+  },
+  {
+    id: "windfall",
+    tools: [{ name: "Claude Code", logo: "/all-logos/claude.webp", href: "https://claude.com/product/claude-code" }],
+    title: "Windfall",
+    kind: "macOS App",
+    body: "Autumn leaves drift onto your Mac desktop, one at a time. When the pile gets deep, a leaf blower sends them over the edge.",
+    shade: "#898d7b",
+    thumb: "/windfall/thumbs/preview.jpg?v=2",
+    src: "/windfall/thumbs/preview.mp4?v=2",
+    video: true,
+    href: "https://windfall-phi.vercel.app/",
+    embedUrl: "https://windfall-phi.vercel.app/",
+    content: [
+      {
+        id: "windfall-overview",
+        type: "text",
+        monoTitle: true,
+        title: "Overview",
+        body: "Windfall is a small seasonal app for macOS. All autumn it drifts maple, oak, birch and ginkgo leaves onto the desktop, one at a time. When the pile gets deep, ⌥⌘L brings out the leaf blower to clear it.",
+      },
+      {
+        id: "windfall-impact",
+        type: "text",
+        monoTitle: true,
+        title: "Impact",
+        body: "A bit of seasonal delight that lives where people spend their day, and a test of how much character a tiny, single-purpose utility can carry.",
+      },
+      {
+        id: "windfall-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "The landing page doubles as the demo: a recreated Mac desktop where leaves fall on a canvas and pressing and holding fires up the blower, with its sound synthesized live through the Web Audio API. The whole page runs on about 50 KB of vanilla JavaScript, split into a scene, a leaf simulation and hand-drawn leaf art.",
+      },
+    ],
+    frame: "cover",
+    stack: ["macOS", "Canvas 2D", "Web Audio API"],
+  },
+  {
+    id: "jigger-and-tin",
+    tools: [
+      { name: "Claude Code", logo: "/all-logos/claude.webp", href: "https://claude.com/product/claude-code" },
+      { name: "Three.js", logo: "/all-logos/threejs.webp", href: "https://threejs.org/" },
+    ],
+    title: "Jigger & Tin",
+    kind: "3D Learning Game",
+    body: "A bartending school in 3D. Learn three classic cocktails by pouring, squeezing and shaking with real measures and timing.",
+    shade: "#efede3",
+    thumb: "/jigger-and-tin/thumbs/preview.jpg",
+    src: "/jigger-and-tin/thumbs/preview.mp4",
+    video: true,
+    href: "https://jigger-and-tin.vercel.app/",
+    hrefLabel: "Start a Lesson",
+    embedUrl: "https://jigger-and-tin.vercel.app/",
+    content: [
+      {
+        id: "jigger-overview",
+        type: "text",
+        monoTitle: true,
+        title: "Overview",
+        body: "Three classic cocktails, three techniques: a shaken Margarita, a stirred Old Fashioned and a muddled Mojito. You tap what the bar points to and hold to pour, squeeze and shake. The bar does the moving, so you learn the measures, the timing and why each step matters.",
+      },
+      {
+        id: "jigger-impact",
+        type: "text",
+        monoTitle: true,
+        title: "Impact",
+        body: "Turns a recipe card into practice: every pour is measured as you make it, so the lesson is about technique and feel rather than memorizing quantities.",
+      },
+      {
+        id: "jigger-process",
+        type: "text",
+        monoTitle: true,
+        title: "Process breakdown",
+        body: "Built on Three.js as plain ES modules, with no bundler. Rapier runs the rigid-body physics and reports how hard things hit, so sounds and breakage react to the actual impact. Pouring is simulated: a tilted bottle releases liquid from the low point of its rim along a real ballistic arc, and that same arc decides what lands in the jigger, so what you see and what gets measured always agree.",
+      },
+    ],
+    frame: "cover",
+    stack: ["Three.js", "Rapier physics", "Web Audio API"],
   },
   {
     id: "warpbnb-site",

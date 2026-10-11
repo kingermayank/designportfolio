@@ -1,5 +1,6 @@
 import { ABOUT_CAREER } from "@/lib/about";
 import { HIRING_LETTER } from "@/lib/letter";
+import AboutLetterEnvelope from "@/components/AboutLetterEnvelope";
 
 export function AboutCareerCard() {
   return (
@@ -66,15 +67,8 @@ export function AboutLetter() {
       <h2 id="about-letter-title" className="aboutLetterTitle">
         {HIRING_LETTER.title}<span className="workBrandDot">.</span>
       </h2>
-      <div className="aboutLetterText">
-        {HIRING_LETTER.body.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-        ))}
-        <p className="aboutLetterSignoff">
-          {HIRING_LETTER.signoff}
-          <br />
-          {HIRING_LETTER.signature}
-        </p>
+      <div className="envWrap">
+        <AboutLetterEnvelope />
       </div>
     </section>
   );

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -23,10 +24,11 @@ import SocialMenu from "@/components/SocialMenu";
 import SystemsDetailOverlay from "@/components/SystemsDetailOverlay";
 import { usePageTransition } from "@/components/PageTransition";
 import { CASE_STUDIES } from "@/lib/caseStudies";
+import { isVideoSrc, workCardThumb } from "@/lib/workCardThumb";
 import { WORK_FIT_CTA } from "@/lib/letter";
 import { ABOUT_INTRO } from "@/lib/about";
 import { SOCIAL_LINK_PREVIEWS } from "@/lib/socialLinkPreviews";
-import { HoverLinkPreview } from "@/components/ui/hover-link-preview";
+import { HoverLinkPreview, HoverTextPreview } from "@/components/ui/hover-link-preview";
 import {
   ENG_COMPONENTS,
   SYSTEMS_LIST,
@@ -60,23 +62,6 @@ const VISUAL_CRAFT_YEAR_BY_SLUG: Partial<Record<string, number>> = {
   warpbnb: 2026,
   rolipoli: 2023,
 };
-
-function thumbFor(src?: string): string | undefined {
-  if (!src) return undefined;
-  // Nested paths like /toolbox/new/cover.mp4 → /toolbox/thumbs/cover.jpg
-  const nested = src.match(
-    /^\/([^/]+)\/(?:new\/)?([^/.]+)\.(mp4|png|jpg|jpeg|webp)$/i,
-  );
-  if (nested) {
-    const [, folder, name] = nested;
-    return `/${folder}/thumbs/${name}.jpg`;
-  }
-  return src.startsWith("/") ? src : undefined;
-}
-
-function isVideoSrc(src?: string): boolean {
-  return Boolean(src && /\.(mp4|webm|mov)$/i.test(src));
-}
 
 function subscribeNarrow(onChange: () => void) {
   const mql = window.matchMedia("(max-width: 900px)");
@@ -187,14 +172,7 @@ const PROJECTS: Card[] = CASE_STUDIES.filter(
 ).map((s, i) => {
   const cover = s.workCover;
   const coverVideo = isVideoSrc(cover);
-  // A workCover is a purpose-built card asset (thumbnail.png / .mp4) — use it
-  // as given. Only fall back to the derived /thumbs/ path when there isn't one.
-  const thumb =
-    s.workPoster ??
-    (cover && !coverVideo ? cover : undefined) ??
-    (coverVideo ? thumbFor(cover) : undefined) ??
-    thumbFor(s.hero?.src) ??
-    s.hero?.src;
+  const thumb = workCardThumb(s);
   // Still cover image locks the card to a photo; video covers (and hero) can loop.
   const still = Boolean((cover && !coverVideo) || s.workStill);
   return {
@@ -480,6 +458,37 @@ function EngCard({
   );
 }
 
+// Active-lens dot hop, sampled frame by frame (30fps) from the reference:
+// [time 0–1, horizontal progress 0–1, rise in dot diameters, scaleX, scaleY].
+// Same arc for every distance: ~4 diameters up, stretched in flight, a squash
+// on landing, then one small rebound. The frame at t≈0.59 was a duplicated
+// video frame (4% then 11% steps) and is dropped so long hops don't lurch.
+const LENS_DOT_HOP: [number, number, number, number, number][] = [
+  [0.000, 0.000, 0.000, 1.000, 1.000],
+  [0.045, 0.000, -0.230, 1.000, 1.037],
+  [0.091, 0.057, -0.926, 0.963, 1.074],
+  [0.136, 0.143, -2.000, 0.926, 1.148],
+  [0.181, 0.228, -2.741, 0.889, 1.185],
+  [0.228, 0.301, -3.352, 0.889, 1.222],
+  [0.273, 0.373, -3.774, 0.852, 1.259],
+  [0.318, 0.444, -3.970, 0.852, 1.259],
+  [0.364, 0.515, -3.970, 0.852, 1.259],
+  [0.409, 0.600, -3.781, 0.852, 1.259],
+  [0.454, 0.672, -3.352, 0.889, 1.222],
+  [0.501, 0.743, -2.748, 0.889, 1.185],
+  [0.546, 0.814, -2.000, 0.926, 1.148],
+  [0.637, 0.972, -0.233, 1.000, 1.037],
+  [0.682, 1.000, 0.022, 1.185, 0.852],
+  [0.727, 1.000, -0.226, 1.037, 1.000],
+  [0.774, 1.000, -0.374, 0.963, 1.074],
+  [0.819, 1.000, -0.441, 0.963, 1.111],
+  [0.864, 1.000, -0.211, 1.000, 1.000],
+  [0.910, 1.000, -0.044, 1.037, 0.963],
+  [0.955, 1.000, 0.030, 1.074, 0.963],
+  [1.000, 1.000, 0.022, 1.000, 1.000],
+];
+const LENS_DOT_GAP = 5; // px between the label and the dot
+
 export type WorkLayout = "split" | "stack";
 
 export default function Work({
@@ -497,6 +506,7 @@ export default function Work({
   const reduceMotion = useReducedMotion();
   const [lens, setLens] = useState<WorkLensId>(initialLens ?? "visual");
   const [hoverIdx, setHoverIdx] = useState(-1);
+  const [emailCopiedAt, setEmailCopiedAt] = useState(0);
   const [lastHoverIdx, setLastHoverIdx] = useState(0);
   const [engActive, setEngActive] = useState<EngComponent | null>(() =>
     initialOpenItem && initialLens === "engineering"
@@ -510,6 +520,9 @@ export default function Work({
   );
   const pushedOverlayUrl = useRef(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const lensNavRef = useRef<HTMLElement | null>(null);
+  const lensDotRef = useRef<HTMLSpanElement | null>(null);
+  const dotLens = useRef<WorkLensId | null>(null);
   const { open } = usePageTransition();
   // The panel's hover rail belongs to the project grid — only while Visual
   // Craft, and only in the split layout where the panel sits beside the grid.
@@ -543,6 +556,77 @@ export default function Work({
     setHoverIdx(idx);
     setLastHoverIdx(idx);
   };
+
+  // One dot rides just right of the active lens label and hops to a new lens
+  // (LENS_DOT_HOP). Layout/resize moves snap it; the view switch FLIPs it.
+  useLayoutEffect(() => {
+    const nav = lensNavRef.current;
+    const dot = lensDotRef.current;
+    if (!nav || !dot) return;
+    // Rects are in screen pixels; a page entrance (e.g. the About → Home depth
+    // swap at scale 0.965) would shrink every gap. Divide the ancestors'
+    // scale back out so the dot lands in the nav's own CSS pixels.
+    const scale = () => {
+      const n = nav.getBoundingClientRect();
+      return {
+        x: nav.offsetWidth ? n.width / nav.offsetWidth : 1,
+        y: nav.offsetHeight ? n.height / nav.offsetHeight : 1,
+      };
+    };
+    const target = () => {
+      const label = nav.querySelector<HTMLElement>(".workLens.on .workLensLabel");
+      if (!label) return null;
+      const n = nav.getBoundingClientRect();
+      const r = label.getBoundingClientRect();
+      const k = scale();
+      const size = dot.offsetWidth;
+      return {
+        left: (r.right - n.left) / k.x + nav.scrollLeft + LENS_DOT_GAP,
+        top: (r.top - n.top + r.height / 2) / k.y - size / 2,
+      };
+    };
+    const place = (hop: boolean) => {
+      const to = target();
+      if (!to) return;
+      // Start from wherever the dot is drawn now, even mid-hop.
+      const n = nav.getBoundingClientRect();
+      const d = dot.getBoundingClientRect();
+      const k = scale();
+      const from = {
+        left: (d.left + d.width / 2 - n.left) / k.x - dot.offsetWidth / 2 + nav.scrollLeft,
+        top: (d.top + d.height / 2 - n.top) / k.y - dot.offsetHeight / 2,
+      };
+      dot.getAnimations().forEach((a) => a.cancel());
+      dot.style.left = `${to.left}px`;
+      dot.style.top = `${to.top}px`;
+      dot.dataset.ready = "true";
+      if (!hop) return;
+      const dx = from.left - to.left;
+      const dy = from.top - to.top;
+      const size = dot.offsetWidth;
+      const lift = size * (parseFloat(getComputedStyle(dot).getPropertyValue("--lens-dot-hop")) || 1);
+      dot.animate(
+        LENS_DOT_HOP.map(([offset, along, rise, sx, sy]) => ({
+          offset,
+          transform: `translate(${(1 - along) * dx}px, ${(1 - along) * dy + rise * lift}px) scale(${sx}, ${sy})`,
+        })),
+        { duration: 733, easing: "linear" },
+      );
+    };
+    place(dotLens.current !== null && dotLens.current !== lens && !reduceMotion);
+    dotLens.current = lens;
+    // ResizeObserver reports once on observe; only real size changes re-place
+    // (otherwise that first report would cancel the hop that just started).
+    let size = `${nav.clientWidth}x${nav.clientHeight}`;
+    const observer = new ResizeObserver(() => {
+      const next = `${nav.clientWidth}x${nav.clientHeight}`;
+      if (next === size) return;
+      size = next;
+      place(false);
+    });
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [lens, layout, reduceMotion]);
 
   const selectLens = (id: WorkLensId) => {
     if (id === lens) return;
@@ -693,12 +777,15 @@ export default function Work({
               >
                 {WORK_FIT_CTA.aboutLabel}
               </HoverLinkPreview>
-              <CopyEmailButton
-                email={WORK_FIT_CTA.email}
-                label={WORK_FIT_CTA.contactLabel}
-                copiedLabel="Email copied"
-                className="workFitBtn workFitBtnSolid"
-              />
+              <HoverTextPreview text={WORK_FIT_CTA.email} flash={emailCopiedAt}>
+                <CopyEmailButton
+                  email={WORK_FIT_CTA.email}
+                  label={WORK_FIT_CTA.contactLabel}
+                  copiedLabel="Email copied"
+                  className="workFitBtn workFitBtnSolid"
+                  onCopy={() => setEmailCopiedAt(Date.now())}
+                />
+              </HoverTextPreview>
             </div>
           </div>
 
@@ -787,7 +874,8 @@ export default function Work({
       </aside>
 
       <div className="workMain" onMouseLeave={() => setHoverCard(null)}>
-        <nav className="workLenses" aria-label="Work categories">
+        <nav ref={lensNavRef} className="workLenses" aria-label="Work categories">
+          <span ref={lensDotRef} className="workLensDot" aria-hidden="true" />
           {WORK_LENSES.map((l) => {
             const active = lens === l.id;
             return (
