@@ -60,28 +60,29 @@ export function isExtensionNoise(args: unknown[]): boolean {
     .filter(({ line }) => DIFF_LINE.test(line));
   if (!changed.length) return false;
 
-  // Compact form: the whole style attribute differs, e.g.
-  //   + style={undefined}            (client: no style at all)
-  //   - style={{clip-path:"path(…"}} (server HTML, after the extension)
-  // Pair client/server style lines in order and compare without injections.
-  const client = changed.filter((c) => c.sign === "+" && parseStyle(c.line));
-  const server = changed.filter((c) => c.sign === "-" && parseStyle(c.line));
-  const paired = new Set<(typeof changed)[number]>();
-  if (client.length === server.length) {
-    server.forEach((s, k) => {
-      if (onlyInjected(parseStyle(s.line)!, parseStyle(client[k].line)!)) {
-        paired.add(s);
-        paired.add(client[k]);
-      }
-    });
-  }
-
+  // Shape-agnostic. React prints the same injection several ways:
+  //   + style={undefined} / - style={{clip-path:"path(…"}}   (paired)
+  //   - style={{clip-path:"path(…"}}                         (server only:
+  //     the element has no style prop, so there's no client line at all)
+  //   + style={{opacity:"1"}} / - style={{opacity:"1",clip-path:…}}
+  //   - clip-path: "path(…"  inside an expanded style={{ … }} block
+  // So: pool every compact style on each side, drop injected properties,
+  // and require what's left to match. Any other changed line is real.
+  const serverStyle = new Map<string, string>();
+  const clientStyle = new Map<string, string>();
   const unmatched = changed.filter((c) => {
-    if (paired.has(c)) return false;
+    const style = parseStyle(c.line);
+    if (style) {
+      for (const [name, value] of style) (c.sign === "-" ? serverStyle : clientStyle).set(name, value);
+      return false;
+    }
     const m = c.line.match(INJECTED_LINE);
     // Expanded form: a server-only injected property line.
     return !(c.sign === "-" && m && injectedProp(m[1] ?? m[3], m[2] ?? m[4]));
   });
+  if (!onlyInjected(serverStyle, clientStyle)) {
+    unmatched.push({ sign: "±", line: "style differs beyond injected properties" });
+  }
   if (unmatched.length === 0) return true;
   // The extension was involved but changed something this filter doesn't
   // recognise yet: name it, so the pattern (or a suppression) can be added.

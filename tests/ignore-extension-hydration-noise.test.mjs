@@ -74,3 +74,18 @@ test("Next 16.2+: diff folded into the first argument or an Error", () => {
 -     className="b"`;
   assert.equal(isExtensionNoise([`${MESSAGE}\n${real}`]), false);
 });
+
+test("server-only style line: element has no style prop on the client", () => {
+  const diff = `
+    <div
+      className="engCard"
+      onClick={function onOpen}
+-     style={{clip-path:"path(\\"M 9..."}}
+    >`;
+  assert.equal(isExtensionNoise(report(diff)), true);
+  assert.equal(isExtensionNoise([`${MESSAGE}\n${diff}`]), true);
+  // A server-only style with a real property still surfaces.
+  const real = `
+-     style={{opacity:"0",clip-path:"path(\\"M 9..."}}`;
+  assert.equal(isExtensionNoise(report(real)), false);
+});
