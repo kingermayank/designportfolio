@@ -8800,3 +8800,349 @@ a:is([role="button"], [class*="Btn"], [class*="Button"], [class*="Cta"], [class*
     transform: none;
   }
 }
+
+/* ── Load intro: grid → wireframe → page ─────────────────────────────── */
+/* Hidden unless the pre-paint gate in app/page.tsx chose to play it. */
+.intro {
+  display: none;
+}
+
+html[data-intro="play"] .intro {
+  --intro-bg: #0d0508;
+  --intro-col: rgba(232, 80, 140, 0.07);
+  --intro-col-edge: rgba(232, 80, 140, 0.18);
+  --intro-text: #3f8be8;
+  --intro-media: #e8508c;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: block;
+  cursor: pointer;
+  background-color: var(--intro-bg);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 8px 8px;
+  /* Failsafe: never trap the page if the script stalls. */
+  animation: intro-out 300ms ease-out 5s forwards;
+}
+
+/* Once the SVG takes over it draws its own ground (so the mask can cut it). */
+html[data-intro="play"] .intro.is-live {
+  background: transparent;
+  animation: none;
+}
+
+html[data-intro="play"] .intro.is-skipping {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+/* Hold the wordmark dot's drop until the intro has revealed the heading
+   (its slot opens ~820ms and finishes fading in ~1240ms), so the bounce
+   plays in view instead of behind the wireframe. */
+html[data-intro="play"]:not([data-intro-done]) .workBrandDotBounce {
+  animation-delay: 1250ms, 1250ms;
+}
+
+/* The intro is the entrance — don't double up the window/card rise beneath
+   it (and keep the traced boxes from shifting mid-measure). */
+html[data-intro="play"] .stage > .window,
+html[data-intro="play"] .workGrid > .workCol > .workCard {
+  animation: none;
+}
+
+.introSvg {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.introBg {
+  fill: var(--intro-bg);
+}
+
+.introPxLine {
+  stroke: rgba(255, 255, 255, 0.03);
+  stroke-width: 1;
+}
+
+.introCol {
+  fill: var(--intro-col);
+  stroke: var(--intro-col-edge);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: top;
+  transform: scaleY(0);
+  animation: intro-col 700ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.introSafe {
+  fill: none;
+  stroke: rgba(232, 80, 140, 0.5);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+  opacity: 0;
+  animation: intro-in 300ms ease-out forwards;
+}
+
+.introGround.is-timed,
+.introWire {
+  animation: intro-out 400ms ease-out forwards;
+}
+
+.introHole {
+  fill: #000;
+  opacity: 0;
+  animation: intro-in 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.introDraw {
+  fill: none;
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 450ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.introWire.is-text .introDraw {
+  stroke: var(--intro-text);
+}
+
+.introWire.is-text rect.introDraw {
+  fill: rgba(63, 139, 232, 0.08);
+  fill-opacity: 0;
+  animation-name: intro-draw-fill;
+}
+
+.introWire.is-media .introDraw {
+  stroke: var(--intro-media);
+}
+
+.introDiag {
+  stroke-opacity: 0.55;
+  animation-duration: 380ms;
+}
+
+.introLabels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.introLabel {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 5px;
+  border-radius: 0;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(calc(-100% - 1px));
+  animation:
+    intro-label 220ms ease-out forwards,
+    intro-out 300ms ease-out forwards;
+}
+
+.introLabel.is-text {
+  background: var(--intro-text);
+}
+
+.introLabel.is-media {
+  background: var(--intro-media);
+}
+
+@keyframes intro-col {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes intro-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes intro-draw-fill {
+  to {
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+  }
+}
+
+/* Chips sit just clear of the box they name. */
+@keyframes intro-label {
+  to {
+    opacity: 1;
+    transform: translateY(calc(-100% - 4px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-intro="play"] .intro {
+    display: none;
+  }
+}
+
+/* ── Homepage view switcher + alternate layouts ─────────────────────── */
+.viewSwitcher {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 90;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-canvas) 72%, transparent);
+  box-shadow: inset 0 0 0 1px var(--sys-hairline);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.viewSwitcherBtn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-secondary);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color var(--sys-hover-ms) linear;
+}
+
+/* 28px visual, 44px hit area. */
+.viewSwitcherBtn::after {
+  content: "";
+  position: absolute;
+  inset: -8px -1px;
+}
+
+.viewSwitcherBtn:hover,
+.viewSwitcherBtn.on {
+  color: var(--color-text);
+}
+
+.viewSwitcherBtn:focus-visible {
+  outline: 1px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.viewSwitcherThumb {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--sys-glass-strong);
+}
+
+.viewSwitcherBtn svg {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+/* Phones and small tablets already get one tuned stacked layout. */
+@media (max-width: 900px) {
+  .viewSwitcher {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) {
+  /* Editorial — intro centered on top, the split view's masonry full width below. */
+  .workLayout-stack {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .workLayout-stack .workPanel {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 112px var(--space-5) var(--space-8);
+  }
+
+  .workLayout-stack .workPanelTop {
+    align-items: center;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .workLayout-stack .workBrandRow {
+    justify-content: center;
+  }
+
+  .workLayout-stack .workSubtitle {
+    max-width: 34em;
+    margin-top: var(--space-5);
+    font-size: 15px;
+  }
+
+  /* Buttons belong to the bio; socials sit apart as their own group. */
+  .workLayout-stack .workFit {
+    justify-content: center;
+    margin-top: var(--space-5);
+  }
+
+  .workLayout-stack .workFitActions {
+    justify-content: center;
+    width: auto;
+  }
+
+  .workLayout-stack .workSocials {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 20px;
+    margin-top: var(--space-7);
+    padding: 0;
+  }
+
+  /* Same two-column masonry as split, held to the case-study reading column
+     (.csEditorialContent): centered 71.25rem, never closer than its gutter.
+     Padding % resolves against the full-width root, like that 100%. */
+  .workLayout-stack .workMain {
+    width: 100%;
+    padding: 0
+      max(clamp(1rem, 5vw, 5rem), calc((100% - 71.25rem) / 2))
+      var(--space-bar);
+  }
+
+  .workLayout-stack .workLenses {
+    justify-content: center;
+    padding-bottom: 32px;
+  }
+}

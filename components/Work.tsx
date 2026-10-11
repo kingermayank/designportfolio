@@ -480,7 +480,18 @@ function EngCard({
   );
 }
 
-export default function Work({ initialLens, initialOpenItem }: { initialLens?: WorkLensId; initialOpenItem?: string }) {
+export type WorkLayout = "split" | "stack";
+
+export default function Work({
+  initialLens,
+  initialOpenItem,
+  layout = "split",
+}: {
+  initialLens?: WorkLensId;
+  initialOpenItem?: string;
+  /** Homepage view: side panel beside the masonry, or the intro centered above it. */
+  layout?: WorkLayout;
+}) {
   const openResume = useResume();
   const isNarrow = useIsNarrow();
   const reduceMotion = useReducedMotion();
@@ -500,8 +511,9 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
   const pushedOverlayUrl = useRef(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const { open } = usePageTransition();
-  // The panel's hover rail belongs to the project grid — only while Visual Craft.
-  const showingProjects = lens === "visual";
+  // The panel's hover rail belongs to the project grid — only while Visual
+  // Craft, and only in the split layout where the panel sits beside the grid.
+  const showingProjects = lens === "visual" && layout === "split";
   const lensRef = useRef(lens);
   lensRef.current = lens;
 
@@ -637,7 +649,10 @@ export default function Work({ initialLens, initialOpenItem }: { initialLens?: W
     );
 
   return (
-    <div ref={rootRef} className="workRoot workUniform">
+    <div
+      ref={rootRef}
+      className={"workRoot workUniform" + (layout === "split" ? "" : ` workLayout-${layout}`)}
+    >
       <aside className={"workPanel" + (hoverOn ? " is-project-hover" : "")}>
         <div className="workPanelTop">
           <div className="workBrandRow">

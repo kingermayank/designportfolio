@@ -1,4 +1,7 @@
 import posthog from "posthog-js";
+import { ignoreExtensionHydrationNoise } from "@/lib/ignoreExtensionHydrationNoise";
+
+ignoreExtensionHydrationNoise();
 
 const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;

@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import DeferredVideo from "@/components/DeferredVideo";
 import { TILES, packRows } from "@/lib/tiles";
 import ModeToggle from "@/components/ModeToggle";
+import ViewSwitcher from "@/components/ViewSwitcher";
 import Work from "@/components/Work";
+import posthog from "posthog-js";
+import { homeViewHref, type HomeView } from "@/lib/homeViews";
+import { captureLayout, playLayout, type LayoutSnapshot } from "@/lib/layoutFlip";
 import type { WorkLensId } from "@/lib/workLenses";
 
 type Target = {
@@ -72,11 +76,12 @@ const DRIFT_PX_PER_SEC = 33; // 1.5× prior pace — still readable, more alive
 const COPY_STRIDE = 100000; // uid namespace per duplicated copy
 
 export default function GridCanvas({
-  initialMode = "work",
+  initialView,
   initialLens,
   initialOpenItem,
 }: {
-  initialMode?: Mode;
+  /** Set on the homepage only — enables the top-right layout switcher. */
+  initialView?: HomeView;
   initialLens?: WorkLensId;
   initialOpenItem?: string;
 }) {
@@ -87,14 +92,39 @@ export default function GridCanvas({
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const router = useRouter();
-  const mode = initialMode;
+  const reduce = useReducedMotion();
+  const [view, setView] = useState<HomeView>(initialView ?? "split");
+  const mode: Mode = view === "wall" ? "grid" : "work";
+  const workRef = useRef<HTMLDivElement | null>(null);
+  const pendingFlip = useRef<LayoutSnapshot | null>(null);
+
+  // Split ⇄ editorial keeps the same Work tree mounted: record every element's
+  // box, swap the layout class, then let each element travel to its new spot.
+  const changeView = useCallback(
+    (next: HomeView) => {
+      if (next === view) return;
+      if (!reduce && workRef.current) pendingFlip.current = captureLayout(workRef.current);
+      setView(next);
+      window.history.replaceState(null, "", homeViewHref(next));
+      posthog.capture("home_view_selected", { view: next });
+    },
+    [view, reduce],
+  );
+
+  useLayoutEffect(() => {
+    const snap = pendingFlip.current;
+    if (!snap) return;
+    pendingFlip.current = null;
+    // Each layout starts at its top, so the intro is in view on both ends.
+    workRef.current?.querySelector(".workRoot")?.scrollTo({ top: 0 });
+    playLayout(snap);
+  }, [view]);
   const [zoom, setZoom] = useState(1);
   const [containerW, setContainerW] = useState(1200);
   const [focused, setFocused] = useState<number | null>(null);
   const [lastFocused, setLastFocused] = useState<number | null>(null);
   const [targets, setTargets] = useState<Map<number, Target> | null>(null);
 
-  const reduce = useReducedMotion();
   const focusedRef = useRef(focused);
   focusedRef.current = focused;
 
@@ -294,13 +324,18 @@ export default function GridCanvas({
       <AnimatePresence initial={false}>
         <motion.div
           key={mode}
+          ref={mode === "work" ? workRef : undefined}
           className="viewLayer"
           initial={anim.initial}
           animate={anim.animate}
           exit={anim.exit}
         >
           {mode === "work" ? (
-            <Work initialLens={initialLens} initialOpenItem={initialOpenItem} />
+            <Work
+              initialLens={initialLens}
+              initialOpenItem={initialOpenItem}
+              layout={view === "stack" ? "stack" : "split"}
+            />
           ) : (
             <>
               <div ref={scrollRef} className="scroller" onClick={() => closeRef.current()}>
@@ -427,6 +462,8 @@ export default function GridCanvas({
           )}
         </AnimatePresence>
       </div>
+
+      {initialView ? <ViewSwitcher view={view} onChange={changeView} /> : null}
 
       {mode === "grid" ? (
         <ModeToggle on onToggle={() => router.push("/about")} />

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Azeret_Mono } from "next/font/google";
+import { Azeret_Mono, Inter } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import ClarityAnalytics from "@/components/Clarity";
 import PageTransition from "@/components/PageTransition";
 import ResumeProvider from "@/components/ResumeOverlay";
 import ClickSounds from "@/components/ClickSounds";
+import { INTRO_GATE } from "@/lib/introGate";
 import {
   createMetadata,
   DEFAULT_DESCRIPTION,
@@ -47,6 +49,15 @@ const azeretMono = Azeret_Mono({
   weight: ["400", "500"],
   variable: "--font-azeret-mono",
   display: "swap",
+});
+
+// Load-intro wireframe labels only (IntroWireframe) — not preloaded site-wide.
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["600"],
+  variable: "--font-inter",
+  display: "swap",
+  preload: false,
 });
 
 // Work 1 wordmark
@@ -173,9 +184,13 @@ export default function RootLayout({
       // Recorder extensions may inject root attributes before React hydrates.
       // Suppression is shallow: page content still receives hydration checks.
       suppressHydrationWarning
-      className={`${azeret.variable} ${azeretMono.variable} ${cesare.variable} ${palmerLakePrint.variable} ${palmerLakeScript.variable} ${gothamNarrow.variable}`}
+      className={`${azeret.variable} ${azeretMono.variable} ${inter.variable} ${cesare.variable} ${palmerLakePrint.variable} ${palmerLakeScript.variable} ${gothamNarrow.variable}`}
     >
       <body>
+        {/* Decides before first paint whether the home load intro plays. */}
+        <Script id="intro-gate" strategy="beforeInteractive">
+          {INTRO_GATE}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

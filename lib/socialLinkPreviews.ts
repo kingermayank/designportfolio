@@ -1,4 +1,4 @@
-/** Profile header captures; LinkedIn retains its public artwork until a capture is available. */
+/** Profile header captures. */
 export const SOCIAL_LINK_PREVIEWS: Record<string, {
   previewImage: string;
   imageAlt: string;
@@ -14,9 +14,9 @@ export const SOCIAL_LINK_PREVIEWS: Record<string, {
     previewTitle: "@kingermayank",
   },
   LinkedIn: {
-    previewImage: "https://media.licdn.com/dms/image/v2/D5603AQFPB3Zwi94cuw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1676988636543?e=2147483647&v=beta&t=lvaTc1SKf0QoDZIFfGA9_g9DXujsqyT8TYTgb2qsQes",
+    previewImage: "/social/profiles/linkedin.jpg",
     imageAlt: "Mayank Kinger on LinkedIn",
-    imageWidth: 200, imageHeight: 200,
+    imageWidth: 1200, imageHeight: 740, previewWidth: 277.2,
     previewTitle: "Mayank Kinger",
   },
   Substack: {
