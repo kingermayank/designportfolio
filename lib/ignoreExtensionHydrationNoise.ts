@@ -7,9 +7,16 @@
 const MISMATCH = "didn't match the client properties";
 
 /** A style property the extension injects (as written in React's diff). */
-const injectedProp = (name: string, value: string) =>
+const injectedProp = (name: string, value: string, hasCornerPath = false) =>
   (name === "clip-path" && value.startsWith("path(")) ||
-  (/^border-(top|right|bottom|left)-color$/.test(name) && value === "transparent");
+  (/^border-(top|right|bottom|left)-color$/.test(name) &&
+    (value === "transparent" ||
+      // React abbreviates long style diffs, including "transparent" → "tran...".
+      // Accept that prefix only alongside the corner-smoothing path signature.
+      (hasCornerPath &&
+        value.endsWith("...") &&
+        value.length >= 7 &&
+        "transparent".startsWith(value.slice(0, -3)))));
 
 // Expanded diff form: one property per line inside a `style={{ … }}` block.
 const INJECTED_LINE = /^(clip-path):\s*"(.*)$|^(border-(?:top|right|bottom|left)-color):\s*"([^"]*)"/;
@@ -28,8 +35,9 @@ function parseStyle(line: string): Map<string, string> | null {
 
 /** Does a server-side style differ from the client's only by injected properties? */
 function onlyInjected(server: Map<string, string>, client: Map<string, string>) {
+  const hasCornerPath = server.get("clip-path")?.startsWith("path(") ?? false;
   for (const [name, value] of server) {
-    if (injectedProp(name, value)) continue;
+    if (injectedProp(name, value, hasCornerPath)) continue;
     const mine = client.get(name);
     // React truncates long values with "..." — compare the visible prefix.
     const visible = value.endsWith("...") ? value.slice(0, -3) : value;
@@ -70,6 +78,9 @@ export function isExtensionNoise(args: unknown[]): boolean {
   // and require what's left to match. Any other changed line is real.
   const serverStyle = new Map<string, string>();
   const clientStyle = new Map<string, string>();
+  const hasCornerPath = changed.some(
+    ({ sign, line }) => sign === "-" && /clip-path:\s*"path\(/.test(line),
+  );
   const unmatched = changed.filter((c) => {
     const style = parseStyle(c.line);
     if (style) {
@@ -78,7 +89,7 @@ export function isExtensionNoise(args: unknown[]): boolean {
     }
     const m = c.line.match(INJECTED_LINE);
     // Expanded form: a server-only injected property line.
-    return !(c.sign === "-" && m && injectedProp(m[1] ?? m[3], m[2] ?? m[4]));
+    return !(c.sign === "-" && m && injectedProp(m[1] ?? m[3], m[2] ?? m[4], hasCornerPath));
   });
   if (!onlyInjected(serverStyle, clientStyle)) {
     unmatched.push({ sign: "±", line: "style differs beyond injected properties" });

@@ -89,3 +89,44 @@ test("server-only style line: element has no style prop on the client", () => {
 -     style={{opacity:"0",clip-path:"path(\\"M 9..."}}`;
   assert.equal(isExtensionNoise(report(real)), false);
 });
+
+test("Back button: React truncates the injected transparent border value", () => {
+  const diff = `
+    <button
+      className="chBack"
+      aria-label="Back"
+-     style={{clip-path:"path(\\"M 2...",border-top-color:"transparent",border-right-color:"tran...", ...}}
+    >`;
+  assert.equal(isExtensionNoise(report(diff)), true);
+  assert.equal(isExtensionNoise([new Error(`${MESSAGE}\n${diff}`)]), true);
+});
+
+test("expanded truncated border value requires the corner path signature", () => {
+  const borders = `
+-     border-right-color: "tran..."`;
+  assert.equal(isExtensionNoise(report(borders)), false);
+  assert.equal(
+    isExtensionNoise(report(`\n- clip-path: "path(\\"M 2..."\n${borders}`)),
+    true,
+  );
+});
+
+test("truncated extension styles do not hide other mismatches", () => {
+  for (const real of [
+    'opacity:"0"',
+    'border-right-color:"red"',
+    'border-right-color:"transition..."',
+  ]) {
+    assert.equal(
+      isExtensionNoise(report(`\n- style={{clip-path:"path(\\"M 2...",${real}}}`)),
+      false,
+    );
+  }
+  assert.equal(
+    isExtensionNoise(report(`
+- style={{clip-path:"path(\\"M 2...",border-right-color:"tran..."}}
++ aria-label="Go back"
+- aria-label="Back"`)),
+    false,
+  );
+});
