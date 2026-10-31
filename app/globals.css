@@ -8508,19 +8508,25 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
 }
 
 .csContactReveal {
-  --contact-enter: 700ms;
-  --contact-exit: 250ms;
-  --contact-distance: -12px;
+  --contact-enter: 500ms;
+  --contact-exit: 200ms;
+  --contact-distance: -10px;
   --contact-ease: cubic-bezier(0.22, 1, 0.36, 1);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transform: translateY(var(--contact-distance));
-  filter: blur(4px);
+  filter: blur(6px);
+  /* Sweep a soft edge down the button, rather than uncovering a hard clip. */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 33.333%, transparent 66.667%, transparent 100%);
+  mask-size: 100% 300%;
+  mask-position: 0 100%;
+  mask-repeat: no-repeat;
   transition:
-    opacity var(--contact-exit) var(--contact-ease),
+    opacity var(--contact-exit) linear,
     transform var(--contact-exit) var(--contact-ease),
     filter var(--contact-exit) var(--contact-ease),
+    mask-position var(--contact-exit) linear,
     visibility 0s var(--contact-exit);
 }
 
@@ -8530,11 +8536,17 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
   pointer-events: auto;
   transform: translateY(0);
   filter: blur(0);
+  mask-position: 0 0;
   transition:
-    opacity var(--contact-enter) var(--contact-ease),
+    opacity var(--contact-enter) linear,
     transform var(--contact-enter) var(--contact-ease),
     filter var(--contact-enter) var(--contact-ease),
+    mask-position var(--contact-enter) linear,
     visibility 0s;
+}
+
+.craftStreamControls > .csContactReveal[data-visible="false"] {
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -8542,6 +8554,7 @@ body:has(.sysOverlay.is-open, .resumeDialog[open][data-visible="true"]) #main {
     transition: none;
     transform: none;
     filter: none;
+    mask-image: none;
   }
 }
 

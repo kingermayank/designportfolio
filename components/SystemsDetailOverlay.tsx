@@ -11,6 +11,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import { ElasticPagination } from "@/components/ui/elastic-pagination";
 import { CASE_STUDIES, type CaseMedia } from "@/lib/caseStudies";
 import { boldRuns } from "@/lib/richText";
 import type { WorkListItem } from "@/lib/workLenses";
@@ -300,6 +301,12 @@ export default function SystemsDetailOverlay({ item, onClose }: Props) {
 
                   {hasGallery ? (
                     <>
+                      <ElasticPagination count={shots.length} index={shotIdx} overlay
+                        label="Choose a project image" itemLabel="image"
+                        onSelect={(next) => {
+                          setShotDir(next >= shotIdx ? 1 : -1);
+                          setShotIdx(next);
+                        }} />
                       <button
                         type="button"
                         className="sysOverlayFigureNav is-prev"

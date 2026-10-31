@@ -22,9 +22,9 @@ export const ABOUT_INTRO = {
   background:
     "I thrive on tackling new challenges and navigating ambiguity in complex environments, especially when the product itself is being rethought around agents rather than adding AI onto an existing workflow.",
   hero: {
-    src: "/about/portrait.webp",
+    src: "/about/portrait-2026-10.webp",
     alt: "Mayank Kinger",
-    ar: 904 / 1024,
+    ar: 1178 / 1335,
   } satisfies AboutPhoto,
   links: [
     { label: "X/Twitter", href: "https://x.com/kingermayank" },

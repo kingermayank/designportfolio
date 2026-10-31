@@ -333,7 +333,9 @@ export default function CraftStream({ slug, onClose }: { slug: string; onClose: 
     </div>
     <div className="craftStreamControls">
       <button type="button" className="workFitBtn workFitBtnGhost" onClick={onClose}>← Back</button>
-      {!inCover && <CopyEmailButton email={WORK_FIT_CTA.email} label={WORK_FIT_CTA.contactLabel} copiedLabel="Email copied" className="workFitBtn workFitBtnSolid" />}
+      <div className="csContactReveal" data-visible={!inCover} inert={inCover} aria-hidden={inCover}>
+        <CopyEmailButton email={WORK_FIT_CTA.email} label={WORK_FIT_CTA.contactLabel} copiedLabel="Email copied" className="workFitBtn workFitBtnSolid" />
+      </div>
     </div>
 
   </>;
